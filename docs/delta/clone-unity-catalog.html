@@ -1,0 +1,507 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use shallow clone with Unity Catalog tables on Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Shallow clone for Unity Catalog tables">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Shallow clone for Unity Catalog tables &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/delta/clone-unity-catalog.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/delta/clone-unity-catalog.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/delta/clone-unity-catalog.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/delta/clone-unity-catalog.html" class="notranslate">English</option>
+    <option value="../../ja/delta/clone-unity-catalog.html" class="notranslate">日本語</option>
+    <option value="../../pt/delta/clone-unity-catalog.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Shallow clone for Unity Catalog tables</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="shallow-clone-for-unity-catalog-tables">
+<span id="shallow-clone-for-uc-tables"></span><h1>Shallow clone for Unity Catalog tables<a class="headerlink" href="#shallow-clone-for-unity-catalog-tables" title="Permalink to this headline"> </a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Shallow clone support for Unity Catalog managed tables is in Public Preview in Databricks Runtime 13.1 and above. Shallow clone support for Unity Catalog external table is in Public Preview in Databricks Runtime 14.2 and above.</p>
+</div>
+<p>You can use shallow clone to create new Unity Catalog tables from existing Unity Catalog tables. Shallow clone support for Unity Catalog allows you to create tables with access control privileges independent from their parent tables without needing to copy underlying data files.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You can only clone Unity Catalog managed tables to Unity Catalog managed tables and Unity Catalog external tables to Unity Catalog external tables. <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> behavior differs between managed and external tables. See <a class="reference internal" href="#vacuum"><span class="std std-ref">Vacuum and Unity Catalog shallow clones</span></a>.</p>
+</div>
+<p>For more on Delta clone, see <a class="reference internal" href="clone.html"><span class="doc">Clone a table on Databricks</span></a>.</p>
+<p>For more on Unity Catalog tables, see <a class="reference internal" href="../data-governance/unity-catalog/create-tables.html"><span class="doc">Create tables</span></a>.</p>
+<div class="section" id="create-a-shallow-clone-on-unity-catalog">
+<span id="create-a-shallow-clone-on-uc"></span><h2>Create a shallow clone on Unity Catalog<a class="headerlink" href="#create-a-shallow-clone-on-unity-catalog" title="Permalink to this headline"> </a></h2>
+<p>You can create a shallow clone in Unity Catalog using the same syntax available for shallow clones throughout the product, as shown in the following syntax example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">catalog</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">schema</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="n">target</span><span class="o">-</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SHALLOW</span><span class="w"> </span><span class="n">CLONE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">catalog</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">schema</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">source</span><span class="o">-</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>To create a shallow clone on Unity Catalog, you must have sufficient privileges on both the source and target resources, as detailed in the following table:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 63%" />
+<col style="width: 37%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Resource</p></th>
+<th class="head"><p>Permissions required</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> Source table</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">SELECT</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p> Source schema</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p> Source catalog</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p> Target schema</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p> Target catalog</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p> Target external location (external tables only)</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">TABLE</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Like other create table statements, the user who creates a shallow clone is the owner of the target table. The owner of a target cloned table can control the access rights for that table independently of the source table.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The owner of a cloned table might be different than the owner of a source table.</p>
+</div>
+</div>
+<div class="section" id="query-or-modify-a-shallow-cloned-table-on-unity-catalog">
+<span id="query-or-modify-a-shallow-cloned-table-on-uc"></span><span id="query-permissions"></span><h2>Query or modify a shallow cloned table on Unity Catalog<a class="headerlink" href="#query-or-modify-a-shallow-cloned-table-on-unity-catalog" title="Permalink to this headline"> </a></h2>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The instructions in this section describe privileges needed for compute configured with shared access mode. For Single User access mode, see <a class="reference internal" href="#single-user"><span class="std std-ref">Work with shallow cloned tables in Single User access mode</span></a>.</p>
+</div>
+<p>To query a shallow clone on Unity Catalog, you must have sufficient privileges on the table and containing resources, as detailed in the following table:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 71%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Resource</p></th>
+<th class="head"><p>Permissions required</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> Catalog</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p> Schema</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p> Table</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">SELECT</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>You must also have <code class="docutils literal notranslate"><span class="pre">MODIFY</span></code> permissions on the target of the clone operation to complete the following actions:</p>
+<ul class="simple">
+<li><p>Insert records</p></li>
+<li><p>Delete records</p></li>
+<li><p>Update records</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MERGE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">OR</span> <span class="pre">REPLACE</span> <span class="pre">TABLE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">TABLE</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="vacuum-and-unity-catalog-shallow-clones">
+<span id="vacuum-and-uc-shallow-clones"></span><span id="vacuum"></span><h2>Vacuum and Unity Catalog shallow clones<a class="headerlink" href="#vacuum-and-unity-catalog-shallow-clones" title="Permalink to this headline"> </a></h2>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This behavior is in Public Preview in Databricks Runtime 13.2 and above for managed tables and Databricks Runtime 14.2 and above for external tables.</p>
+</div>
+<p>When you use Unity Catalog tables for the source and target of a shallow clone operation, Unity Catalog manages the underlying data files to improve reliability for the source and target of the clone operation. Running <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> on the source of a shallow clone does not break the cloned table.</p>
+<p>Normally, when <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> identifies valid files for a given retention threshold, only the metadata for the current table is considered. Shallow clone support for Unity Catalog tracks the relationships between all cloned tables and the source data files, so valid files are expanded to include data files necessary for returning queries for any shallow cloned table as well as the source table.</p>
+<p>This means that for Unity Catalog shallow clone <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> semantics, a valid data file is any file within the specified retention threshold for the source table or any cloned table. Managed tables and external tables have slightly different semantics.</p>
+<p>This enhanced tracking of metadata changes how <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> operations impact data files backing the Delta tables, with the following semantics:</p>
+<ul class="simple">
+<li><p>For managed tables, <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> operations against either the source or target of a shallow clone operation might delete data files from the source table.</p></li>
+<li><p>For external tables, <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> operations only remove data files from the source table when run against the source table.</p></li>
+<li><p>Only data files not considered valid for the source table or any shallow clone against the source are removed.</p></li>
+<li><p>If multiple shallow clones are defined against a single source table, running <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> on any of the cloned tables does not remove valid data files for other cloned tables.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Databricks recommends never running <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> with a retention setting of less than 7 days to avoid corrupting ongoing long-running transactions. If you need to run <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> with a lower retention threshold, make sure you understand how <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> on shallow clones in Unity Catalog differs from how <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> interacts with other cloned tables on Databricks. See <a class="reference internal" href="clone.html"><span class="doc">Clone a table on Databricks</span></a>.</p>
+</div>
+</div>
+<div class="section" id="work-with-shallow-cloned-tables-in-single-user-access-mode">
+<span id="single-user"></span><h2>Work with shallow cloned tables in Single User access mode<a class="headerlink" href="#work-with-shallow-cloned-tables-in-single-user-access-mode" title="Permalink to this headline"> </a></h2>
+<p>When working with Unity Catalog shallow clones in Single User access mode, you must have permissions on the resources for the cloned table source as well as the target table.</p>
+<p>This means that for simple queries in addition to the <a class="reference internal" href="#query-permissions"><span class="std std-ref">required permissions on the target table</span></a>, you must have <code class="docutils literal notranslate"><span class="pre">USE</span></code> permissions on the source catalog and schema and <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> permissions on the source table. For any queries that would update or insert records to the target table, you must also have <code class="docutils literal notranslate"><span class="pre">MODIFY</span></code> permissions on the source table.</p>
+<p>Databricks recommends working with Unity Catalog clones on compute with shared access mode as this allows independent evolution of permissions for Unity Catalog shallow clone targets and their source tables.</p>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>Shallow clones on external tables must be external tables. Shallow clones on managed tables must be managed tables.</p></li>
+<li><p>You cannot share shallow clones using Delta Sharing.</p></li>
+<li><p>You cannot nest shallow clones, meaning you cannot make a shallow clone from a shallow clone.</p></li>
+<li><p>In Databricks Runtime 13.1, running <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> on the source table breaks the target table.</p></li>
+<li><p>For managed tables, dropping the source table breaks the target table for shallow clones. Data files backing external tables are not removed by <code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">TABLE</span></code> operations, and so shallow clones of external tables are not impacted by dropping the source.</p></li>
+<li><p>Unity Catalog allows users to <code class="docutils literal notranslate"><span class="pre">UNDROP</span></code> managed tables for around 7 days after a <code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">TABLE</span></code> command. In Databricks Runtime 13.2 and above, managed shallow clones based on a dropped managed table continue to work during this time. If you do not <code class="docutils literal notranslate"><span class="pre">UNDROP</span></code> the source table in this window, the shallow clone stops functioning once the source table’s data files are garbage collected.</p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

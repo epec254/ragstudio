@@ -1,0 +1,703 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use Okta SCIM provisioning to manage your Databricks account and workspace users." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Configure SCIM provisioning for Okta">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Configure SCIM provisioning for Okta &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/administration-guide/users-groups/scim/okta.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/administration-guide/users-groups/scim/okta.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/administration-guide/users-groups/scim/okta.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../../en/administration-guide/users-groups/scim/okta.html" class="notranslate">English</option>
+    <option value="../../../../ja/administration-guide/users-groups/scim/okta.html" class="notranslate">日本語</option>
+    <option value="../../../../pt/administration-guide/users-groups/scim/okta.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Configure SCIM provisioning for Okta</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="configure-scim-provisioning-for-okta">
+<h1>Configure SCIM provisioning for Okta<a class="headerlink" href="#configure-scim-provisioning-for-okta" title="Permalink to this headline"> </a></h1>
+<p>This article describes how to set up Databricks provisioning using Okta.</p>
+<p>You can set set up provisioning at the Databricks account level or at the Databricks workspace level.</p>
+<p>Databricks recommends that you provision users, service principals, and groups to the account level and assign users and groups to workspaces using <a class="reference internal" href="../index.html#enable-identity-federation"><span class="std std-ref">identity federation</span></a>. If you have any workspaces not enabled for identity federation, you must continue to provision users, service principals, and groups directly to those workspaces.</p>
+<p>To learn more about SCIM provisioning in Databricks, including an explanation of the impact of identity federation on provisioning and advice about when to use account-level and workspace-level provisioning, see <a class="reference internal" href="index.html"><span class="doc">Sync users and groups from your identity provider</span></a>.</p>
+<p>To configure single sign-on with Okta see, <a class="reference internal" href="../single-sign-on/index.html"><span class="doc">Set up SSO for your workspace</span></a>.</p>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline"> </a></h2>
+<p>Databricks is available as a provisioning app in the Okta Integration Network (OIN), enabling you to use Okta to provision users and groups with Databricks automatically.</p>
+<p>The Databricks Okta application allows you to:</p>
+<ul class="simple">
+<li><p>Invite users to a Databricks account or workspace</p></li>
+<li><p>Add invited or active users to groups</p></li>
+<li><p>Deactivate existing users in a Databricks account or workspace</p></li>
+<li><p>Manage groups and group membership</p></li>
+<li><p>Update and manage profiles</p></li>
+</ul>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>Your Databricks account must have the <a class="reference external" href="https://databricks.com/product/pricing/platform-addons">Premium plan or above</a>.</p></li>
+<li><p>You must be an Okta developer user.</p></li>
+<li><p>To set up provisioning for your Databricks account, you must be Databricks account admin.</p></li>
+<li><p>To set up provisioning for a Databricks workspace, you must be Databricks workspace admin.</p></li>
+</ul>
+</div>
+<div class="section" id="set-up-account-level-scim-provisioning-using-okta">
+<h2>Set up account-level SCIM provisioning using Okta<a class="headerlink" href="#set-up-account-level-scim-provisioning-using-okta" title="Permalink to this headline"> </a></h2>
+<p>This section describes how to configure an Okta SCIM connector to provision users and groups to your account.</p>
+<div class="section" id="get-the-scim-token-and-account-scim-url-in-databricks">
+<h3>Get the SCIM token and account SCIM URL in Databricks<a class="headerlink" href="#get-the-scim-token-and-account-scim-url-in-databricks" title="Permalink to this headline"> </a></h3>
+<ol class="arabic">
+<li><p>As an account admin, log in to the Databricks <a class="reference external" href="https://accounts.cloud.databricks.com">account console</a>.</p>
+<ol class="arabic">
+<li><p>Click <img alt="User Settings Icon" src="../../../_images/user-settings-icon.png" /> <strong>Settings</strong>.</p></li>
+<li><p>Click <strong>User Provisioning</strong>.</p></li>
+<li><p>Click <strong>Enable user provisioning</strong>.</p>
+<p>Copy the SCIM token and the Account SCIM URL. You will use these to configure your connector in Okta.</p>
+</li>
+</ol>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The SCIM token is restricted to the Account SCIM API <code class="docutils literal notranslate"><span class="pre">/api/2.0/accounts/{account_id}/scim/v2/</span></code> and cannot be used to authenticate to other Databricks REST APIs.</p>
+</div>
+</div>
+<div class="section" id="configure-scim-provisioning-in-okta">
+<h3>Configure SCIM provisioning in Okta<a class="headerlink" href="#configure-scim-provisioning-in-okta" title="Permalink to this headline"> </a></h3>
+<ol class="arabic simple">
+<li><p>Log in to the Okta admin portal.</p></li>
+<li><p>Go to <strong>Applications</strong> and click <strong>Browse App Catalog</strong>.</p></li>
+<li><p>Search for Databricks in the <strong>Browse App Integration Catalog</strong>.</p></li>
+<li><p>Click <strong>Add integration</strong>.</p></li>
+<li><p>In <strong>Add Databricks</strong> configure the following:</p>
+<ul class="simple">
+<li><p>In <strong>Application label</strong>, enter a name for your application.</p></li>
+<li><p>Select <strong>Do not display application icon to users</strong>.</p></li>
+<li><p>Select <strong>Do not display application icon in the Okta Mobile App</strong>.</p></li>
+</ul>
+</li>
+<li><p>Click <strong>Done</strong>.</p></li>
+<li><p>Click <strong>Provisioning</strong> and enter the following:</p>
+<ul class="simple">
+<li><p>In <strong>Provisioning Base URL</strong>, enter the SCIM URL you copied from Databricks.</p></li>
+<li><p>In <strong>Provisioning API Token</strong>, enter the SCIM token you copied from Databricks.</p></li>
+</ul>
+</li>
+<li><p>Click <strong>Test API Credentials</strong>, verify the connection was successful, and then click <strong>Save</strong>.</p></li>
+<li><p>Reload the <strong>Provisioning</strong> tab. Additional settings appear after a successful test of the API credentials.</p></li>
+<li><p>To configure the behavior when pushing Okta changes to Databricks, click <strong>Provisioning to App</strong>.</p>
+<ul class="simple">
+<li><p>Click <strong>Edit</strong>. Enable the features you need. Databricks recommends enabling <strong>Create users</strong>, <strong>Update user attributes</strong>, and <strong>Deactivate users</strong>.</p></li>
+<li><p>In <strong>Databricks Attribute Mappings</strong>, verify your Databricks Attribute Mappings. These mappings will depend on the options you enabled above. You can add and edit mappings to fit your needs. See <a class="reference external" href="https://help.okta.com/en/prod/Content/Topics/users-groups-profiles/usgp-map-attributes-provisioning.htm">Map application attributes on the Provisioning page</a> in the Okta documentation.</p></li>
+</ul>
+</li>
+<li><p>To configure the behavior when pushing Databricks changes to Okta, click <strong>To Okta</strong>. The default settings work well for Databricks provisioning. If you want to update the default settings and attribute mappings, see <a class="reference external" href="https://help.okta.com/en/prod/Content/Topics/Apps/Provisioning_Deprovisioning_Overview.htm">Provisioning and Deprovisioning</a> in the Okta documentation.</p></li>
+</ol>
+</div>
+<div class="section" id="test-the-integration">
+<h3>Test the integration<a class="headerlink" href="#test-the-integration" title="Permalink to this headline"> </a></h3>
+<p>To test the configuration, use Okta to invite a user to your Databricks account.</p>
+<ol class="arabic simple">
+<li><p>In Okta, go to <strong>Applications</strong> and click <strong>Databricks</strong>.</p></li>
+<li><p>Click <strong>Provisioning</strong>.</p></li>
+<li><p>Click <strong>Assign</strong>, then <strong>Assign to people</strong>.</p></li>
+<li><p>Search for an Okta user, and click <strong>Assign</strong>.</p></li>
+<li><p>Confirm the user’s details, click <strong>Assign and go back</strong>, and then click <strong>Done</strong>.</p></li>
+<li><p>Log in to the <a class="reference external" href="https://accounts.cloud.databricks.com">account console</a>, click <img alt="Account Console user management icon" src="../../../_images/user-management.png" /> <strong>User management</strong>, and then confirm that the user has been added.</p></li>
+</ol>
+<p>After this simple test, you can perform bulk operations as described in <a class="reference internal" href="#manage-users"><span class="std std-ref">Use Okta to manage users and groups in Databricks</span></a></p>
+</div>
+</div>
+<div class="section" id="set-up-workspace-level-scim-provisioning-using-okta">
+<h2>Set up workspace-level SCIM provisioning using Okta<a class="headerlink" href="#set-up-workspace-level-scim-provisioning-using-okta" title="Permalink to this headline"> </a></h2>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../../../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<p>This section describes how to set up provisioning from Okta directly to Databricks workspaces.</p>
+<div class="section" id="get-the-api-token-and-scim-url-in-databricks">
+<h3>Get the API token and SCIM URL in Databricks<a class="headerlink" href="#get-the-api-token-and-scim-url-in-databricks" title="Permalink to this headline"> </a></h3>
+<ol class="arabic">
+<li><p>As a Databricks workspace administrator, generate a personal access token. See <a class="reference external" href="https://docs.databricks.com/api/workspace/tokenmanagement">Token management</a>. Store the personal access token in a secure location.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The user who owns this personal access token must not be managed within Okta. Otherwise, removing the user from Okta would disrupt the SCIM integration.</p>
+</div>
+</li>
+<li><p>Make a note of the following URL, which is required for configuring Okta:</p>
+<p><code class="docutils literal notranslate"><span class="pre">https://&lt;databricks-instance&gt;/api/2.0/preview/scim/v2</span></code></p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;databricks-instance&gt;</span></code> with the <a class="reference internal" href="../../../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace URL</span></a> of your Databricks deployment. See <a class="reference internal" href="../../../workspace/workspace-details.html"><span class="doc">Get identifiers for workspace objects</span></a>.</p>
+</li>
+</ol>
+<p>Keep this browser tab open.</p>
+</div>
+<div class="section" id="configure-scim-provisioning-in-the-databricks-saml-application-in-okta">
+<h3>Configure SCIM provisioning in the Databricks SAML application in Okta<a class="headerlink" href="#configure-scim-provisioning-in-the-databricks-saml-application-in-okta" title="Permalink to this headline"> </a></h3>
+<ol class="arabic simple">
+<li><p>Go to <strong>Applications</strong> and click <strong>Databricks</strong>.</p></li>
+<li><p>Click <strong>Provisioning</strong>. Enter the following information obtained from the above section:</p>
+<ul class="simple">
+<li><p><strong>Provisioning Base URL:</strong> the provisioning endpoint</p></li>
+<li><p><strong>Provisioning API Token:</strong> the personal access token</p></li>
+</ul>
+</li>
+<li><p>Click <strong>Test API Credentials</strong>.</p></li>
+<li><p>Reload the <strong>Provisioning</strong> tab. Additional settings appear after a successful test of the API credentials.</p></li>
+<li><p>To configure the behavior when pushing Okta changes to Databricks, click <strong>To App</strong>.</p>
+<ul class="simple">
+<li><p>In <strong>General</strong>, click <strong>Edit</strong>. Enable the features you need. Databricks recommends enabling <strong>Create users</strong> at a minimum.</p></li>
+<li><p>In <strong>Databricks Attribute Mappings</strong>, verify your Databricks Attribute Mappings. These mappings will depend on the options you enabled above. You can add and edit mappings to fit your needs. See <a class="reference external" href="https://help.okta.com/en/prod/Content/Topics/users-groups-profiles/usgp-map-attributes-provisioning.htm">Map application attributes on the Provisioning page</a> in the Okta documentation.</p></li>
+</ul>
+</li>
+<li><p>To configure the behavior when pushing Databricks changes to Okta, click <strong>To Okta</strong>. The default settings work well for Databricks provisioning. If you want to update the default settings and attribute mappings, see <a class="reference external" href="https://help.okta.com/en/prod/Content/Topics/Apps/Provisioning_Deprovisioning_Overview.htm">Provisioning and Deprovisioning</a> in the Okta documentation.</p></li>
+</ol>
+</div>
+<div class="section" id="test-the-integration">
+<span id="test-the-integration-1"></span><h3>Test the integration<a class="headerlink" href="#test-the-integration" title="Permalink to this headline"> </a></h3>
+<p>To test the configuration, use Okta to invite a user to your Databricks workspace.</p>
+<ol class="arabic simple">
+<li><p>In Okta, go to <strong>Applications</strong> and click <strong>Databricks</strong>.</p></li>
+<li><p>Click <strong>Provisioning</strong>.</p></li>
+<li><p>Click <strong>Assign</strong>, then <strong>Assign to people</strong>.</p></li>
+<li><p>Search for an Okta user, and click <strong>Assign</strong>.</p></li>
+<li><p>Confirm the user’s details, then click <strong>Assign and go back</strong>. Click <strong>Done</strong>.</p></li>
+<li><p>In the Databricks workspace admin settings page, click <strong>Identity and access</strong> tab, then go to the <strong>Users</strong> section and confirm that the user is added. At a minimum, grant the user the Workspace entitlement.</p></li>
+</ol>
+<p>After this simple test, you can perform bulk operations, as described in the following sections.</p>
+</div>
+</div>
+<div class="section" id="use-okta-to-manage-users-and-groups-in-databricks">
+<span id="manage-users"></span><h2>Use Okta to manage users and groups in Databricks<a class="headerlink" href="#use-okta-to-manage-users-and-groups-in-databricks" title="Permalink to this headline"> </a></h2>
+<p>This section describes bulk operations you can perform using Okta SCIM provisioning to your Databricks account or workspaces.</p>
+<div class="section" id="import-users-from-the-databricks-workspace-to-okta">
+<h3>Import users from the Databricks workspace to Okta<a class="headerlink" href="#import-users-from-the-databricks-workspace-to-okta" title="Permalink to this headline"> </a></h3>
+<p>To import users from Databricks to Okta, go to the <strong>Import</strong> tab and click <strong>Import Now</strong>. You are prompted to review and confirm assignments for any users who are not automatically matched to existing Okta users by email address.</p>
+</div>
+<div class="section" id="add-user-and-group-assignments-to-the-databricks">
+<h3>Add user and group assignments to the Databricks<a class="headerlink" href="#add-user-and-group-assignments-to-the-databricks" title="Permalink to this headline"> </a></h3>
+<p>To verify or add user and group assignments, go to the <strong>Assignments</strong> tab. Databricks recommends adding the Okta group named <strong>Everyone</strong> to the account-level SCIM provisioning application. This syncs all users in your organization to the Databricks account.</p>
+</div>
+<div class="section" id="push-groups-to-databricks">
+<h3>Push groups to Databricks<a class="headerlink" href="#push-groups-to-databricks" title="Permalink to this headline"> </a></h3>
+<p>To push groups from Okta to Databricks, go to the <strong>Push Groups</strong> tab. Users who already exist in Databricks are matched by email address.</p>
+</div>
+<div class="section" id="delete-a-user-or-group-from-the-account">
+<h3>Delete a user or group from the account<a class="headerlink" href="#delete-a-user-or-group-from-the-account" title="Permalink to this headline"> </a></h3>
+<p>If you delete a user from the account-level Databricks application in Okta, the user is deleted in the Databricks account and loses access to all workspaces, whether or not those workspaces are enabled for identity federation.</p>
+<p>If you delete a group from the account-level Databricks application in Okta, all users in that group are deleted from the account and lose access to any workspaces they had access to (unless they are members of another group or have been directly granted access to the account or any workspaces). Databricks recommends that you refrain from deleting account-level groups unless you want them to lose access to all workspaces in the account.</p>
+<p>Be aware of the following consequences of deleting users:</p>
+<ul class="simple">
+<li><p>Applications or scripts that use the tokens generated by the user can no longer access Databricks APIs</p>
+<ul>
+<li><p>Jobs owned by the user fail</p></li>
+<li><p>Clusters owned by the user stop</p></li>
+<li><p>Queries or dashboards created by the user and shared using the Run as Owner credential have to be assigned to a new owner to prevent sharing from failing</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="delete-a-deactivated-user-from-the-workspace">
+<span id="delete-a-deactivated-user"></span><h3>Delete a deactivated user from the workspace<a class="headerlink" href="#delete-a-deactivated-user-from-the-workspace" title="Permalink to this headline"> </a></h3>
+<p>If you delete a user from the workspace-level Databricks application in Okta, the user is <em>deactivated</em> in the Databricks workspace but is not removed from the workspace. A deactivated user does not have the <code class="docutils literal notranslate"><span class="pre">workspace-access</span></code> or <code class="docutils literal notranslate"><span class="pre">databricks-sql-access</span></code> entitlement. Reactivating a deactivated user is reversible, either by re-adding the user in Okta or by using the Databricks SCIM API directly. Removing a user from a Databricks workspace is disruptive and non-reversible.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Do not deactivate the administrator who configured the Okta SCIM provisioning app. Otherwise, the SCIM integration cannot authenticate to Databricks.</p>
+</div>
+<p>To remove a user from a Databricks workspace:</p>
+<ol class="arabic simple">
+<li><p>In the admin settings page, go to the <strong>Users</strong> tab.</p></li>
+<li><p>Click the <strong>x</strong> at the end of the line for the user.</p></li>
+</ol>
+<p>Be aware of the following consequences of removing the user:</p>
+<ul class="simple">
+<li><p>Applications or scripts that use the tokens generated by the user will no longer be able to access the Databricks API</p></li>
+<li><p>Jobs owned by the user will fail</p></li>
+<li><p>Clusters owned by the user will stop</p></li>
+<li><p>Queries or dashboards created by the user and shared using the Run as Owner credential will have to be assigned to a new owner to prevent sharing from failing</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="use-okta-to-manage-workspace-admins-entitlements-and-iam-roles">
+<span id="use-okta-to-manage-users-and-groups-in-databricks"></span><h2>Use Okta to manage workspace admins, entitlements, and IAM roles<a class="headerlink" href="#use-okta-to-manage-workspace-admins-entitlements-and-iam-roles" title="Permalink to this headline"> </a></h2>
+<p>Databricks supports the assignment of workspace admins, IAM roles, and workspace entitlements from workspace-level Databricks applications in Okta. The assignment of roles and entitlements is not supported from the account-level Databricks application in Okta. If you want to assign IAM roles and workspace entitlements from Okta, you must create a workspace-level Databricks application in Okta to that workspace.</p>
+<p>Databricks recommends that you instead use an account-level Databricks application in Okta to provision users, service principals, and groups to the account level. You assign users and groups to workspaces using <a class="reference internal" href="../index.html#enable-identity-federation"><span class="std std-ref">identity federation</span></a> and manage their entitlements and IAM roles within Databricks.</p>
+<div class="section" id="sync-workspace-admins">
+<h3>Sync workspace admins<a class="headerlink" href="#sync-workspace-admins" title="Permalink to this headline"> </a></h3>
+<p>Databricks supports the assignment of the workspace admin role from the workspace-level Databricks application in Okta. Workspace admins are members of the Databricks <code class="docutils literal notranslate"><span class="pre">admins</span></code> group. Databricks groups are automatically pushed to Okta. To add a new admin user in Okta, add that user to the <code class="docutils literal notranslate"><span class="pre">admins</span></code> group.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Do not remove the administrator who configured the Okta SCIM provisioning app, and do not remove them from the <code class="docutils literal notranslate"><span class="pre">admins</span></code> group. Otherwise, the SCIM integration cannot authenticate to Databricks.</p>
+</div>
+</div>
+<div class="section" id="assign-workspace-entitlements-from-okta">
+<h3>Assign workspace entitlements from Okta<a class="headerlink" href="#assign-workspace-entitlements-from-okta" title="Permalink to this headline"> </a></h3>
+<p>Databricks supports the assignment of entitlements from the workspace-level Databricks application in Okta. However, in most instances, Databricks recommends managing entitlements from within Databricks. Within Databricks, you can easily assign or revoke an entitlement. Configuring the mappings in Okta is complex, and you must configure two mappings for each entitlement.</p>
+<p>This section describes how to configure the mappings to grant the <code class="docutils literal notranslate"><span class="pre">databricks-sql-access</span></code> entitlement to an Okta user.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>By default, Databricks users inherit the <code class="docutils literal notranslate"><span class="pre">workspace-access</span></code> and <code class="docutils literal notranslate"><span class="pre">databricks-sql-access</span></code> entitlements. By default, Databricks admin users inherit the <code class="docutils literal notranslate"><span class="pre">create-cluster</span></code> entitlement. You don’t need to assign these inherited entitlements from Okta.</p>
+<p>To revoke an inherited entitlement from a user, either remove the user from the group or remove the entitlement from the group. To remove an entitlement, you must use the Databricks admin console.</p>
+</div>
+<p>To assign the <code class="docutils literal notranslate"><span class="pre">databricks-sql-access</span></code> entitlement:</p>
+<ol class="arabic">
+<li><p>In the Okta admin console, go to <strong>Directory &gt; Profile Editor</strong>.</p></li>
+<li><p>Click the <strong>Profile</strong> edit button for the Okta user profile.</p></li>
+<li><p>Click the <strong>+ Add Attribute</strong> button to add a role.</p></li>
+<li><p>In the Add Attribute dialog, set the <strong>Display name</strong> to <code class="docutils literal notranslate"><span class="pre">Databricks</span> <span class="pre">SQL</span></code> and the <strong>Variable name</strong> to <code class="docutils literal notranslate"><span class="pre">databricks_sql</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Okta variables cannot contain the hyphen (<code class="docutils literal notranslate"><span class="pre">-</span></code>) character.</p>
+</div>
+</li>
+<li><p>Return to the Profile Editor and click the <strong>Profile</strong> edit button for the Databricks provisioning app user profile.</p></li>
+<li><p>Click the <strong>+ Add Attribute</strong> button to add a role.</p></li>
+<li><p>On the Add Attribute dialog, give the role attribute the following values:</p>
+<ul class="simple">
+<li><p><strong>Display name</strong>: <code class="docutils literal notranslate"><span class="pre">Databricks</span> <span class="pre">SQL</span></code></p></li>
+<li><p><strong>Variable name</strong>: <code class="docutils literal notranslate"><span class="pre">databricks_sql</span></code></p></li>
+<li><p><strong>External Name</strong> in the format <code class="docutils literal notranslate"><span class="pre">entitlements.^[type==‘$TYPE’].value</span></code>. <code class="docutils literal notranslate"><span class="pre">$TYPE</span></code> is the <a class="reference internal" href="../users.html#manage-user-entitlements"><span class="std std-ref">API name</span></a> of the entitlement without dashes (<code class="docutils literal notranslate"><span class="pre">-</span></code>). For example, the External Name for <code class="docutils literal notranslate"><span class="pre">databricks-sql-access</span></code> is <code class="docutils literal notranslate"><span class="pre">entitlements.^[type=='databrickssqlaccess'].value</span></code>.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>In the External Name format, you must use apostrophe characters (<code class="docutils literal notranslate"><span class="pre">'</span></code>). If you use curly quote characters (<code class="docutils literal notranslate"><span class="pre">’</span></code>), a <code class="docutils literal notranslate"><span class="pre">Request</span> <span class="pre">is</span> <span class="pre">unparseable</span></code> error occurs.</p>
+</div>
+<ul class="simple">
+<li><p><strong>External Namespace</strong>: <code class="docutils literal notranslate"><span class="pre">urn:ietf:params:scim:schemas:core:2.0:User</span></code>.</p></li>
+</ul>
+<div class="figure align-default">
+<img alt="add Databricks role attribute" src="../../../_images/okta-add-databricks-attrib-role.png" />
+</div>
+</li>
+<li><p>Return to the Profile Editor and click the <strong>Mappings</strong> edit button for the Databricks provisioning app user profile.</p></li>
+<li><p>For <strong>Databricks to Okta</strong>, map <code class="docutils literal notranslate"><span class="pre">appuser.databricks_sql</span></code> in the Databricks column to <code class="docutils literal notranslate"><span class="pre">databricks_sql</span></code> in the Okta column.</p></li>
+<li><p>For <strong>Okta to Databricks</strong>, map <code class="docutils literal notranslate"><span class="pre">user.databricks_sql</span></code> in the Databricks column to <code class="docutils literal notranslate"><span class="pre">databricks_sql</span></code> in the Okta column.</p></li>
+<li><p>Click <strong>Save Mappings</strong>.</p></li>
+<li><p>To add an entitlement value to a user, go to <strong>Directory &gt; People</strong>, select a user, and go to the <strong>Profile</strong> tab in the user page.</p>
+<p>Click the <strong>Edit</strong> button. In the field for the entitlement, enter the API name of the entitlement without dashes, such as <code class="docutils literal notranslate"><span class="pre">databrickssqlaccess</span></code>. When you assign the user to the app, the role is populated with the value that you entered.</p>
+</li>
+</ol>
+<p>Repeat this procedure to assign additional entitlements.</p>
+</div>
+<div class="section" id="assign-iam-roles-from-okta">
+<h3>Assign IAM roles from Okta<a class="headerlink" href="#assign-iam-roles-from-okta" title="Permalink to this headline"> </a></h3>
+<p>In order to assign IAM roles to users from Okta, you must create a multi-valued attribute in the Okta user profile and the Okta Databricks provisioning app profile, and then map these attributes to attributes in the Databricks SCIM API. For example, if you want to assign two IAM roles to a user, you must create two attributes in the Databricks provisioning app and map one Okta user attribute to each.</p>
+<p>Databricks recommends managing IAM role assignments from within Databricks. Within Databricks, you can easily assign or revoke an IAM role. Configuring the mappings in Okta is complex, and you must configure separate mappings for each IAM role.</p>
+<p>The following instructions assign the <code class="docutils literal notranslate"><span class="pre">primary_role</span></code> attribute.</p>
+<ol class="arabic">
+<li><p>In the Okta admin console, go to <strong>Directory &gt; Profile Editor</strong>.</p></li>
+<li><p>Click the <strong>Profile</strong> edit button for the Okta user profile.</p></li>
+<li><p>Click the <strong>+ Add Attribute</strong> button to add a role.</p></li>
+<li><p>In the Add Attribute dialog, set <strong>Display name</strong> to <code class="docutils literal notranslate"><span class="pre">Primary</span> <span class="pre">role</span></code> and <strong>Variable name</strong> to <code class="docutils literal notranslate"><span class="pre">primary_role</span></code>.</p>
+<div class="figure align-default">
+<img alt="add okta role attribute" src="../../../_images/okta-add-attrib-role.png" />
+</div>
+</li>
+<li><p>Return to the Profile Editor and click the <strong>Profile</strong> edit button for the Databricks provisioning app user profile.</p></li>
+<li><p>Click the <strong>+ Add Attribute</strong> button to add a role.</p></li>
+<li><p>On the Add Attribute dialog, give the role attribute the following values:</p>
+<p><strong>Display name</strong>: <code class="docutils literal notranslate"><span class="pre">Primary</span> <span class="pre">role</span></code></p>
+<p><strong>Variable name</strong>: <code class="docutils literal notranslate"><span class="pre">primary_role</span></code></p>
+<p><strong>External Name</strong> in the format <code class="docutils literal notranslate"><span class="pre">roles.^[type=='$TYPE'].value</span></code>, where <code class="docutils literal notranslate"><span class="pre">$TYPE</span></code> is a string describing the role; in this case, if $TYPE were <code class="docutils literal notranslate"><span class="pre">primary</span></code>, the External Name would be roles.^[type==’primary’].value.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>In the External Name format, you must use apostrophe characters (<code class="docutils literal notranslate"><span class="pre">'</span></code>). If you use curly quote characters (<code class="docutils literal notranslate"><span class="pre">’</span></code>), a <code class="docutils literal notranslate"><span class="pre">Request</span> <span class="pre">is</span> <span class="pre">unparseable</span></code> error occurs.</p>
+</div>
+<p><strong>External Namespace</strong>: <code class="docutils literal notranslate"><span class="pre">urn:ietf:params:scim:schemas:core:2.0:User</span></code>.</p>
+<div class="figure align-default">
+<img alt="add Databricks role attribute" src="../../../_images/okta-add-databricks-attrib-role.png" />
+</div>
+</li>
+<li><p>Return to the Profile Editor and click the <strong>Mappings</strong> edit button for the Databricks provisioning app user profile.</p></li>
+<li><p>For <strong>Databricks to Okta</strong>, map <code class="docutils literal notranslate"><span class="pre">appuser.primary_role</span></code> in the Databricks column to <code class="docutils literal notranslate"><span class="pre">primary_role</span></code> in the Okta column.</p></li>
+<li><p>For <strong>Okta to Databricks</strong>, map <code class="docutils literal notranslate"><span class="pre">user.primary_role</span></code> in the Databricks column to <code class="docutils literal notranslate"><span class="pre">primary_role</span></code> in the Okta column.</p></li>
+<li><p>Click <strong>Save Mappings</strong>.</p></li>
+<li><p>To add a role attribute value to a user, go to <strong>Directory &gt; People</strong>, select a user, and go to the <strong>Profile</strong> tab in the user page.</p>
+<p>Click the <strong>Edit</strong> button to enter a Primary role value for the user. When you assign the user to the app, the role is populated with the value that you entered.</p>
+</li>
+</ol>
+<p>Repeat this procedure to assign additional roles.</p>
+</div>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>Removing a user from the workspace-level Okta application deactivates the user in Databricks, rather than deleting the user. You must <a class="reference internal" href="#delete-a-deactivated-user"><span class="std std-ref">delete the user from Databricks directly</span></a>.</p></li>
+<li><p>You can reactivate a deactivated user by removing then re-adding them to Okta, with the exact same email address.</p></li>
+</ul>
+</div>
+<div class="section" id="troubleshooting-and-tips">
+<h2>Troubleshooting and tips<a class="headerlink" href="#troubleshooting-and-tips" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>Users without either First Name or Last Name in their Databricks profiles cannot be imported to Okta as new users.</p></li>
+<li><p>Users who existed in Databricks prior to provisioning setup:</p>
+<ul>
+<li><p>Are automatically linked to an Okta user if they already exist in Okta and are matched based on email address (username).</p></li>
+<li><p>Can be manually linked to an existing user or created as a new user in Okta if they are not automatically matched.</p></li>
+</ul>
+</li>
+<li><p>User permissions that are assigned individually and duplicated through membership in a group remain after the group membership is removed for the user.</p></li>
+<li><p>Users removed from a Databricks workspace lose access to that workspace, but they might still have access to other Databricks workspaces.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">admins</span></code> group is a reserved group in Databricks and cannot be removed.</p></li>
+<li><p>You cannot rename groups in Databricks; do not attempt to rename them in Okta.</p></li>
+<li><p>You can use the Databricks <a class="reference external" href="https://docs.databricks.com/api/workspace/groups">Groups API</a> or the <a class="reference internal" href="../groups.html"><span class="doc">Groups UI</span></a> to get a list of members of any Databricks workspace-level group.</p></li>
+<li><p>You cannot update Databricks usernames and email addresses.</p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

@@ -1,0 +1,499 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use COPY INTO to load data from cloud object storage into a table in Databricks SQL." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Load data using COPY INTO with an instance profile">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Load data using COPY INTO with an instance profile &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/ingestion/copy-into/tutorial-dbsql.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/ingestion/copy-into/tutorial-dbsql.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/ingestion/copy-into/tutorial-dbsql.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/ingestion/copy-into/tutorial-dbsql.html" class="notranslate">English</option>
+    <option value="../../../ja/ingestion/copy-into/tutorial-dbsql.html" class="notranslate">日本語</option>
+    <option value="../../../pt/ingestion/copy-into/tutorial-dbsql.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Load data using COPY INTO with an instance profile</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="load-data-using-copy-into-with-an-instance-profile">
+<span id="load-data-using-copy-into-with-compute-credentials"></span><h1>Load data using COPY INTO with an instance profile<a class="headerlink" href="#load-data-using-copy-into-with-an-instance-profile" title="Permalink to this headline"> </a></h1>
+<p></p>
+<p></p>
+<p>This article describes how to use the <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code> command to load data from an Amazon S3 bucket in your AWS account into a table in Databricks SQL.</p>
+<p>The steps in this article assume that your admin has configured a SQL warehouse to use an AWS instance profile so that you can access your source files in S3. If your admin configured a Unity Catalog external location with a storage credential, see <a class="reference internal" href="unity-catalog.html"><span class="doc">Load data using COPY INTO with Unity Catalog volumes or external locations</span></a> instead. If your admin gave you temporary credentials (an AWS access key ID, a secret key, and a session token), see <a class="reference internal" href="temporary-credentials.html"><span class="doc">Load data using COPY INTO with temporary credentials</span></a> instead.</p>
+<p>Databricks recommends using the <a class="reference internal" href="index.html"><span class="doc">COPY INTO</span></a> command for incremental and bulk data loading with Databricks SQL.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code> works well for data sources that contain thousands of files. Databricks recommends that you use <a class="reference internal" href="../auto-loader/index.html"><span class="doc">Auto Loader</span></a> for loading millions of files, which is not supported in Databricks SQL.</p>
+</div>
+<p></p>
+<div class="section" id="before-you-begin">
+<h2>Before you begin<a class="headerlink" href="#before-you-begin" title="Permalink to this headline"> </a></h2>
+<p>Before you load data into Databricks, make sure you have the following:</p>
+<ul class="simple">
+<li><p>Access to data in S3. Your admin must first complete the steps in <a class="reference internal" href="configure-data-access.html"><span class="doc">Configure data access for ingestion</span></a> so your Databricks SQL warehouse can read your source files.</p></li>
+<li><p>A Databricks SQL warehouse that uses the instance profile that your admin created.</p></li>
+<li><p>The <strong>Can manage</strong> permission on the SQL warehouse.</p></li>
+<li><p>The fully qualified S3 URI.</p></li>
+<li><p>Familiarity with the Databricks SQL user interface.</p></li>
+</ul>
+</div>
+<div class="section" id="step-1-confirm-access-to-data-in-cloud-storage">
+<span id="confirm-data-access"></span><h2>Step 1: Confirm access to data in cloud storage<a class="headerlink" href="#step-1-confirm-access-to-data-in-cloud-storage" title="Permalink to this headline"> </a></h2>
+<p>To confirm that you have access to the correct data in cloud object storage, do the following:</p>
+<ol class="arabic">
+<li><p>In the sidebar, click <strong>Create &gt; Query</strong>.</p></li>
+<li><p>In the SQL editor’s menu bar, select a SQL warehouse.</p></li>
+<li><p>In the SQL editor, paste the following code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">csv.</span><span class="o">&lt;</span><span class="n">path</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;path&gt;</span></code> with the S3 URI that you received from your admin. For example, <code class="docutils literal notranslate"><span class="pre">s3://&lt;bucket&gt;/&lt;folder&gt;/</span></code>.</p>
+</li>
+<li><p>Click <strong>Run</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="step-2-create-a-table">
+<span id="create-table"></span><h2>Step 2: Create a table<a class="headerlink" href="#step-2-create-a-table" title="Permalink to this headline"> </a></h2>
+<p>This step describes how to create a table in your Databricks workspace to hold the incoming data.</p>
+<ol class="arabic">
+<li><p>In the SQL editor, paste the following code:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">catalog_name</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">schema_name</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">tpep_pickup_datetime</span><span class="w">  </span><span class="k">TIMESTAMP</span><span class="p">,</span>
+<span class="w">  </span><span class="n">tpep_dropoff_datetime</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">,</span>
+<span class="w">  </span><span class="n">trip_distance</span><span class="w"> </span><span class="n">DOUBLE</span><span class="p">,</span>
+<span class="w">  </span><span class="n">fare_amount</span><span class="w"> </span><span class="n">DOUBLE</span><span class="p">,</span>
+<span class="w">  </span><span class="n">pickup_zip</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
+<span class="w">  </span><span class="n">dropoff_zip</span><span class="w"> </span><span class="nb">INT</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Click <strong>Run</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="step-3-load-data-from-cloud-storage-into-the-table">
+<span id="load-data"></span><h2>Step 3: Load data from cloud storage into the table<a class="headerlink" href="#step-3-load-data-from-cloud-storage-into-the-table" title="Permalink to this headline"> </a></h2>
+<p>This step describes how to load data from an S3 bucket into the table you created in your Databricks workspace.</p>
+<ol class="arabic">
+<li><p>In the sidebar, click <strong>Create &gt; Query</strong>.</p></li>
+<li><p>In the SQL editor’s menu bar, select a SQL warehouse and make sure the SQL warehouse is running.</p></li>
+<li><p>In the SQL editor, paste the following code. In this code, replace:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket&gt;</span></code> with the name of your S3 bucket.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;folder&gt;</span></code> with the name of the folder in your S3 bucket.</p></li>
+</ul>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">COPY</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="o">&lt;</span><span class="k">catalog</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">schema</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s1">&#39;s3://&lt;s3-bucket&gt;/&lt;folder&gt;/&#39;</span>
+<span class="n">FILEFORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CSV</span>
+<span class="n">FORMAT_OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="s1">&#39;header&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">&#39;inferSchema&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;true&#39;</span>
+<span class="p">)</span>
+<span class="n">COPY_OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">   </span><span class="s1">&#39;mergeSchema&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;true&#39;</span>
+<span class="p">);</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="o">&lt;</span><span class="k">catalog_name</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">schema_name</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">FORMAT_OPTIONS</span></code> differs depending on <code class="docutils literal notranslate"><span class="pre">FILEFORMAT</span></code>. In this case, the <code class="docutils literal notranslate"><span class="pre">header</span></code> option instructs Databricks to treat the first row of the CSV file as a header, and the <code class="docutils literal notranslate"><span class="pre">inferSchema</span></code> options instructs Databricks to automatically determine the data type of each field in the CSV file.</p>
+</div>
+</li>
+<li><p>Click <strong>Run</strong>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you click <strong>Run</strong> again, no new data is loaded into the table. This is because the <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code> command only processes what it considers to be new data.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="clean-up">
+<h2>Clean up<a class="headerlink" href="#clean-up" title="Permalink to this headline"> </a></h2>
+<p>You can clean up the associated resources in your workspace if you no longer want to keep them.</p>
+<div class="section" id="delete-the-tables">
+<span id="delete-tables"></span><h3>Delete the tables<a class="headerlink" href="#delete-the-tables" title="Permalink to this headline"> </a></h3>
+<ol class="arabic">
+<li><p>In the sidebar, click <strong>Create &gt; Query</strong>.</p></li>
+<li><p>Select a SQL warehouse and make sure that the SQL warehouse is running.</p></li>
+<li><p>Paste the following code:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">catalog</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">schema</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Click <strong>Run</strong>.</p></li>
+<li><p>Hover over the tab for this query, and then click the <strong>X</strong> icon.</p></li>
+</ol>
+</div>
+<div class="section" id="delete-the-queries-in-the-sql-editor">
+<span id="delete-queries"></span><h3>Delete the queries in the SQL editor<a class="headerlink" href="#delete-the-queries-in-the-sql-editor" title="Permalink to this headline"> </a></h3>
+<ol class="arabic simple">
+<li><p>In the sidebar, click <strong>SQL Editor</strong>.</p></li>
+<li><p>In the SQL editor’s menu bar, hover over the tab for each query that you created for this tutorial, and then click the <strong>X</strong> icon.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>The <a class="reference internal" href="../../sql/language-manual/delta-copy-into.html"><span class="doc">COPY INTO</span></a> reference article</p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

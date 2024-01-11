@@ -1,0 +1,510 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn techniques for using Databricks Repos in CI/CD workflows. Integrating Git repos with Databricks Repos provides source control for project files." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="CI/CD techniques with Git and Databricks Repos">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>CI/CD techniques with Git and Databricks Repos &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/repos/ci-cd-techniques-with-repos.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/repos/ci-cd-techniques-with-repos.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/repos/ci-cd-techniques-with-repos.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/repos/ci-cd-techniques-with-repos.html" class="notranslate">English</option>
+    <option value="../../ja/repos/ci-cd-techniques-with-repos.html" class="notranslate">日本語</option>
+    <option value="../../pt/repos/ci-cd-techniques-with-repos.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>CI/CD techniques with Git and Databricks Repos</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="cicd-techniques-with-git-and-databricks-repos">
+<h1>CI/CD techniques with Git and Databricks Repos<a class="headerlink" href="#cicd-techniques-with-git-and-databricks-repos" title="Permalink to this headline"> </a></h1>
+<p>Learn techniques for using Databricks Repos in CI/CD workflows. Integrating Git repos with Databricks Repos provides source control for project files.</p>
+<p>The following figure shows an overview of the techniques and workflow.</p>
+<div class="figure align-default">
+<img alt="Overview of CI/CD techniques for Repos." src="../_images/repos-cicd-techniques.png" />
+</div>
+<p>For an overview of CI/CD with Databricks, see <a class="reference internal" href="../dev-tools/index-ci-cd.html"><span class="doc">What is CI/CD on Databricks?</span></a>.</p>
+<div class="section" id="development-flow">
+<h2>Development flow<a class="headerlink" href="#development-flow" title="Permalink to this headline"> </a></h2>
+<p>Databricks Repos have user-level folders and non-user top level folders. User-level folders are automatically created when users first clone a remote repository. You can think of Databricks Repos in user folders as “local checkouts” that are individual for each user and where users make changes to their code.</p>
+<p>In your user folder in Databricks Repos, clone your remote repository. A best practice is to <a class="reference internal" href="git-operations-with-repos.html#create-a-new-branch"><span class="std std-ref">create a new feature branch</span></a> or select a previously created branch for your work, instead of directly committing and pushing changes to the main branch. You can make changes, commit, and push changes in that branch. When you are ready to merge your code, you can do so in the Repos UI.</p>
+<div class="section" id="requirements">
+<h3>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h3>
+<p>This workflow requires that you have already <a class="reference internal" href="repos-setup.html"><span class="doc">set up your Git integration</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Databricks recommends that each developer works on their own feature branch. For information about how to resolve merge conflicts, see <a class="reference internal" href="git-operations-with-repos.html#merge-conflicts"><span class="std std-ref">Resolve merge conflicts</span></a>.</p>
+</div>
+</div>
+<div class="section" id="collaborate-in-repos">
+<h3>Collaborate in Repos<a class="headerlink" href="#collaborate-in-repos" title="Permalink to this headline"> </a></h3>
+<p>In the following workflow uses a branch called <em>feature-b</em> that is based on the main branch.</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="git-operations-with-repos.html#clone-repo"><span class="std std-ref">Clone your existing Git repository to your Databricks workspace</span></a>.</p></li>
+<li><p>Use the Repos UI to <a class="reference internal" href="git-operations-with-repos.html#create-a-new-branch"><span class="std std-ref">create a feature branch</span></a> from the main branch. This example uses a single feature branch <em>feature-b</em> for simplicity. You can create and use multiple feature branches to do your work.</p></li>
+<li><p>Make your modifications to Databricks notebooks and other files in the repo.</p></li>
+<li><p><a class="reference internal" href="git-operations-with-repos.html#commit-push"><span class="std std-ref">Commit and push your changes to your Git provider</span></a>.</p></li>
+<li><p>Contributors can now clone the Git repository into their own user folder.</p>
+<ol class="loweralpha simple">
+<li><p>Working on a new branch, a coworker makes changes to the notebooks and other files in the Repo.</p></li>
+<li><p>The contributor <a class="reference internal" href="git-operations-with-repos.html#commit-push"><span class="std std-ref">commits and pushes their changes to the Git provider</span></a>.</p></li>
+</ol>
+</li>
+<li><p>To merge changes from other branches or rebase the <em>feature-b</em> branch in Databricks, in the Repos UI use one of the following workflows:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="git-operations-with-repos.html#merge-branches"><span class="std std-ref">Merge branches</span></a>. If there’s no conflict, the merge is pushed to the remote repo using <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span></code>.</p></li>
+<li><p><a class="reference internal" href="git-operations-with-repos.html#rebase"><span class="std std-ref">Rebase on another branch</span></a>.</p></li>
+</ul>
+</li>
+<li><p>When you are ready to merge your work to the remote repo and main branch, use the Repos UI to merge the changes from <em>feature-b</em>. If you prefer, you can instead merge changes in your Git provider.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="production-job-workflow">
+<h2>Production job workflow<a class="headerlink" href="#production-job-workflow" title="Permalink to this headline"> </a></h2>
+<p>Databricks Repos provides two options for running your production jobs:</p>
+<ul class="simple">
+<li><p><strong>Option 1</strong>: Provide a remote Git ref in the job definition, for example, a specific notebook in main branch of a Github repository.</p></li>
+<li><p><strong>Option 2</strong>: Set up a production repo and use Repos APIs to update it programmatically. Then run jobs against this Databricks repo.</p></li>
+</ul>
+</div>
+<div class="section" id="option-1-run-jobs-using-notebooks-in-a-remote-repo">
+<h2>Option 1: Run jobs using notebooks in a remote repo<a class="headerlink" href="#option-1-run-jobs-using-notebooks-in-a-remote-repo" title="Permalink to this headline"> </a></h2>
+<p>Simplify the job definition process and keep a single source of truth by running a Databricks job using notebooks located in a remote Git repository. This Git reference can be a Git commit, tag, or branch and is provided by you in the job definition.</p>
+<p>This helps prevent unintentional changes to your production job, for example, when a user makes local edits in a production repo or switches branches. It also automates the CD step as you do not need to create a separate production repo in Databricks, manage permissions for it, and keep it updated.</p>
+<p>See <a class="reference internal" href="../workflows/jobs/how-to/use-repos.html"><span class="doc">Use version controlled source code in a Databricks job</span></a>.</p>
+</div>
+<div class="section" id="option-2-set-up-a-production-repo-and-git-automation">
+<span id="automate-production"></span><h2>Option 2: Set up a production repo and Git automation<a class="headerlink" href="#option-2-set-up-a-production-repo-and-git-automation" title="Permalink to this headline"> </a></h2>
+<p>In this option, you set up a production repo and Git automation to update Databricks Repos on merge.</p>
+<div class="section" id="step-1-set-up-top-level-folders">
+<h3>Step 1: Set up top-level folders<a class="headerlink" href="#step-1-set-up-top-level-folders" title="Permalink to this headline"> </a></h3>
+<p>The admin creates non-user top-level folders. The most common use case for these top-level folders is to create development, staging, and production folders that contain Databricks Repos for the appropriate versions or branches for development, staging, and production. For example, if your company uses the Main branch for production, the production folder would contain a repo that is checked out to the Main branch.</p>
+<p>Typically permissions on these top-level folders are read-only for all non-admin users within the workspace. For such top-level folders we recommend you only provide service principal(s) with <strong>Can Edit</strong> and <strong>Can Manage</strong> permissions to avoid accidental edits to your production code by workspace users.</p>
+<div class="figure align-default">
+<img alt="Top-level repo folders." src="../_images/top-level-repo-folders.png" />
+</div>
+</div>
+<div class="section" id="step-2-set-up-automated-updates-to-databricks-repos-via-the-repos-api">
+<h3>Step 2: Set up automated updates to Databricks Repos via the Repos API<a class="headerlink" href="#step-2-set-up-automated-updates-to-databricks-repos-via-the-repos-api" title="Permalink to this headline"> </a></h3>
+<p>In this step, use the <a class="reference external" href="https://docs.databricks.com/api/workspace/repos">Repos API</a> to set up automation to update Databricks Repos upon a merge event.</p>
+<p>To keep a repo in Databricks at the latest version, you can set up Git automation to call the <a class="reference external" href="https://docs.databricks.com/api/workspace/repos">Repos API</a>. In your Git provider, set up automation that—after every successful merge of a PR into the main branch—calls the Repos API endpoint on the appropriate repo in the Production folder to pull the changes and update that repo to the latest version.</p>
+<p>For example, on GitHub this can be achieved with <a class="reference external" href="https://github.com/features/actions">GitHub Actions</a>.</p>
+<p>To call any Databricks REST API from within a Databricks notebook cell, first install the Databricks SDK with <code class="docutils literal notranslate"><span class="pre">%pip</span> <span class="pre">install</span> <span class="pre">databricks-sdk</span> <span class="pre">--upgrade</span></code> (for the latest Databricks REST APIs) and then import <code class="docutils literal notranslate"><span class="pre">ApiClient</span></code> from <code class="docutils literal notranslate"><span class="pre">databricks.sdk.core</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">%pip</span> <span class="pre">install</span> <span class="pre">databricks-sdk</span> <span class="pre">--upgrade</span></code> returns an error that “The package could not be found”, then the <code class="docutils literal notranslate"><span class="pre">databricks-sdk</span></code> package has not been previously installed. Re-run the command without the <code class="docutils literal notranslate"><span class="pre">--upgrade</span></code> flag: <code class="docutils literal notranslate"><span class="pre">%pip</span> <span class="pre">install</span> <span class="pre">databricks-sdk</span></code>.</p>
+</div>
+<p>You can also run Databricks SDK APIs from a notebook to retrieve the service principals for your workspace. Here’s an example using Python and the <a class="reference external" href="https://databricks-sdk-py.readthedocs.io/en/latest/workspace/service_principals.html">Databricks SDK for Python</a>.</p>
+<p>You can also use tools such as <code class="docutils literal notranslate"><span class="pre">curl</span></code>, Postman, or Terraform. You cannot use the Databricks user interface.</p>
+<p>To learn more about service principals on Databricks, see <a class="reference internal" href="../administration-guide/users-groups/service-principals.html"><span class="doc">Manage service principals</span></a>. For information about service principals and CI/CD, see <a class="reference internal" href="../dev-tools/ci-cd/ci-cd-sp.html"><span class="doc">Service principals for CI/CD</span></a>. For more details on using the Databricks SDK from a notebook, read <a class="reference internal" href="../dev-tools/sdk-python.html#notebook"><span class="std std-ref">Use the Databricks SDK for Python from within a Databricks notebook</span></a>.</p>
+</div>
+</div>
+<div class="section" id="use-a-service-principal-with-databricks-repos">
+<span id="option-2-set-up-a-production-repo-and-git-automation"></span><h2>Use a service principal with Databricks Repos<a class="headerlink" href="#use-a-service-principal-with-databricks-repos" title="Permalink to this headline"> </a></h2>
+<p>To run the above mentioned workflows with service principals:</p>
+<ol class="arabic simple">
+<li><p>Create a service principal with Databricks.</p></li>
+<li><p>Add the git credentials: Your Git provider PAT for the service principal.</p></li>
+</ol>
+<p>To set up service principals and then add Git provider credentials:</p>
+<ol class="arabic simple">
+<li><p>Create a Databricks service principal in your workspace with the <a class="reference external" href="https://docs.databricks.com/api/workspace/serviceprincipals">Service Principals API</a>.</p></li>
+<li><p>Create a Databricks access token for a Databricks service principal with the <a class="reference external" href="https://docs.databricks.com/api/workspace/tokenmanagement">Token management API</a>.</p></li>
+<li><p>Add your Git provider credentials to your workspace with your Databricks access token and the <a class="reference external" href="https://docs.databricks.com/api/workspace/gitcredentials">Git Credentials API</a>.</p></li>
+</ol>
+</div>
+<div class="section" id="terraform-integration">
+<h2>Terraform integration<a class="headerlink" href="#terraform-integration" title="Permalink to this headline"> </a></h2>
+<p>You can also manage Databricks Repos in a fully automated setup using <a class="reference internal" href="../dev-tools/terraform/index.html"><span class="doc">Terraform</span></a> and <a class="reference external" href="https://registry.terraform.io/providers/databrickslabs/databricks/latest/docs/resources/repo">databricks_repo</a>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>resource &quot;databricks_repo&quot; &quot;this&quot; {
+  url = &quot;https://github.com/user/demo.git&quot;
+}
+</pre></div>
+</div>
+<p>To use Terraform to add Git credentials to a service principal, add the following configuration:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  provider &quot;databricks&quot; {
+    # Configuration options
+  }
+
+  provider &quot;databricks&quot; {
+    alias = &quot;sp&quot;
+    host = &quot;https://....cloud.databricks.com&quot;
+    token = databricks_obo_token.this.token_value
+  }
+
+  resource &quot;databricks_service_principal&quot; &quot;sp&quot; {
+    display_name = &quot;service_principal_name_here&quot;
+  }
+
+  resource &quot;databricks_obo_token&quot; &quot;this&quot; {
+    application_id   = databricks_service_principal.sp.application_id
+    comment          = &quot;PAT on behalf of ${databricks_service_principal.sp.display_name}&quot;
+    lifetime_seconds = 3600
+  }
+
+  resource &quot;databricks_git_credential&quot; &quot;sp&quot; {
+    provider = databricks.sp
+    depends_on = [databricks_obo_token.this]
+    git_username          = &quot;myuser&quot;
+    git_provider          = &quot;azureDevOpsServices&quot;
+    personal_access_token = &quot;sometoken&quot;
+  }
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

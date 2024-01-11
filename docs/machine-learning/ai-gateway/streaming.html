@@ -1,0 +1,637 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="This article describes how to enable streaming output in Databricks AI gateway for chat and completions LLM tasks." name="description" />
+<meta content="noindex" name="robots" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Enable streaming output in Databricks AI gateway">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Enable streaming output in Databricks AI gateway &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/machine-learning/ai-gateway/streaming.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/machine-learning/ai-gateway/streaming.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/machine-learning/ai-gateway/streaming.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/machine-learning/ai-gateway/streaming.html" class="notranslate">English</option>
+    <option value="../../../ja/machine-learning/ai-gateway/streaming.html" class="notranslate">日本語</option>
+    <option value="../../../pt/machine-learning/ai-gateway/streaming.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Enable streaming output in Databricks AI gateway</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <p></p>
+<div class="section" id="enable-streaming-output-in-databricks-ai-gateway">
+<h1>Enable streaming output in Databricks AI gateway<a class="headerlink" href="#enable-streaming-output-in-databricks-ai-gateway" title="Permalink to this headline"> </a></h1>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../../release-notes/release-types.html"><span class="doc">Private Preview</span></a>. To try it, reach out to your Databricks contact.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The guidance in this article is for AI Gateway in Private Preview. Databricks recommends you migrate to the public preview experience called <a class="reference internal" href="../../generative-ai/external-models/index.html"><span class="doc">External Models</span></a>.</p>
+</div>
+<p>When making a scoring request, you can set the <code class="docutils literal notranslate"><span class="pre">stream</span></code> parameter to incrementally stream the response
+using <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">sever-sent events (SSE)</a>. Instead of waiting for the entire response to be generated, you can access results as it is generated, making it ideal for applications like chat bots that require immediate responses.</p>
+<p>The following providers support streaming:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 65%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Provider</p></th>
+<th class="head"><p>Route types</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> Anthropic</p></td>
+<td><p> completions</p></td>
+</tr>
+<tr class="row-odd"><td><p> Cohere</p></td>
+<td><p> completions</p></td>
+</tr>
+<tr class="row-even"><td><p> OpenAI</p></td>
+<td><p> chat, completions</p></td>
+</tr>
+</tbody>
+</table>
+<p>Learn more about <a class="reference internal" href="index.html"><span class="doc">Databricks AI Gateway</span></a>.</p>
+<div class="section" id="chat-request-example">
+<h2>Chat request example<a class="headerlink" href="#chat-request-example" title="Permalink to this headline"> </a></h2>
+<p>The following is a chat request example</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="nv">$DATABRICKS_HOST</span>/gateway/<span class="nv">$ROUTE</span>/invocations<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$DATABRICKS_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">    &quot;messages&quot;: [</span>
+<span class="s1">      {</span>
+<span class="s1">        &quot;role&quot;: &quot;user&quot;,</span>
+<span class="s1">        &quot;content&quot;: &quot;What is MLflow?&quot;</span>
+<span class="s1">      }</span>
+<span class="s1">    ],</span>
+<span class="s1">    &quot;stream&quot;: true</span>
+<span class="s1">  }&#39;</span>
+</pre></div>
+</div>
+<div class="compound-middle highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">DATABRICKS_HOST</span><span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DATABRICKS_HOST&quot;</span><span class="p">]</span>
+<span class="n">DATABRICKS_TOKEN</span><span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DATABRICKS_TOKEN&quot;</span><span class="p">]</span>
+<span class="n">ROUTE</span><span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;ROUTE&quot;</span><span class="p">]</span>
+
+<span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">DATABRICKS_HOST</span><span class="si">}</span><span class="s2">/gateway/</span><span class="si">{</span><span class="n">ROUTE</span><span class="si">}</span><span class="s2">/invocations&quot;</span><span class="p">,</span>
+    <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">DATABRICKS_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">},</span>
+    <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What is MLflow?&quot;</span><span class="p">}],</span>
+        <span class="s2">&quot;stream&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">iter_lines</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">DATABRICKS_HOST</span><span class="p">,</span><span class="w"> </span><span class="nx">DATABRICKS_TOKEN</span><span class="p">,</span><span class="w"> </span><span class="nx">ROUTE</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span>
+<span class="w">    </span><span class="sb">`</span><span class="si">${</span><span class="nx">DATABRICKS_HOST</span><span class="si">}</span><span class="sb">/gateway/</span><span class="si">${</span><span class="nx">ROUTE</span><span class="si">}</span><span class="sb">/invocations`</span><span class="p">,</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">messages</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;What is MLflow?&quot;</span><span class="w"> </span><span class="p">}],</span>
+<span class="w">        </span><span class="nx">stream</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="p">}),</span>
+<span class="w">      </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">Authorization</span><span class="o">:</span><span class="w"> </span><span class="sb">`Bearer </span><span class="si">${</span><span class="nx">DATABRICKS_TOKEN</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">);</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">reader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">getReader</span><span class="p">();</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">decoder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">TextDecoder</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">done</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">reader</span><span class="p">.</span><span class="nx">read</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">done</span><span class="p">)</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">decoder</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="nx">value</span><span class="p">));</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">main</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="chat-response-format-and-example">
+<h2>Chat response format and example<a class="headerlink" href="#chat-response-format-and-example" title="Permalink to this headline"> </a></h2>
+<p>The following shows the query response format, where <code class="docutils literal notranslate"><span class="pre">role</span></code>, <code class="docutils literal notranslate"><span class="pre">content</span></code> and <code class="docutils literal notranslate"><span class="pre">finish_reason</span></code> are optional parameters.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;candidates&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">integer</span><span class="p">,</span>
+      <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="n">string</span><span class="p">,</span> <span class="c1"># optional</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">string</span> <span class="c1"># optional</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;finish_reason&quot;</span><span class="p">:</span> <span class="n">string</span> <span class="c1"># optional</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">string</span><span class="p">,</span>
+    <span class="s2">&quot;route_type&quot;</span><span class="p">:</span> <span class="n">string</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The following is a chat response example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="n">event</span><span class="p">:</span> <span class="n">output</span>
+<span class="n">data</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;candidates&quot;</span><span class="p">:[{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;message&quot;</span><span class="p">:{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">},</span><span class="s2">&quot;metadata&quot;</span><span class="p">:{}}],</span><span class="s2">&quot;metadata&quot;</span><span class="p">:{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span><span class="s2">&quot;gpt-3.5-turbo-0613&quot;</span><span class="p">,</span><span class="s2">&quot;route_type&quot;</span><span class="p">:</span><span class="s2">&quot;llm/v1/chat&quot;</span><span class="p">}}</span>
+
+<span class="n">event</span><span class="p">:</span> <span class="n">output</span>
+<span class="n">data</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;candidates&quot;</span><span class="p">:[{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;message&quot;</span><span class="p">:{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;an&quot;</span><span class="p">},</span><span class="s2">&quot;metadata&quot;</span><span class="p">:{}}],</span><span class="s2">&quot;metadata&quot;</span><span class="p">:{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span><span class="s2">&quot;gpt-3.5-turbo-0613&quot;</span><span class="p">,</span><span class="s2">&quot;route_type&quot;</span><span class="p">:</span><span class="s2">&quot;llm/v1/chat&quot;</span><span class="p">}}</span>
+
+<span class="o">...</span>
+
+<span class="n">event</span><span class="p">:</span> <span class="n">output</span>
+<span class="n">data</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;candidates&quot;</span><span class="p">:[{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;message&quot;</span><span class="p">:{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;.&quot;</span><span class="p">},</span><span class="s2">&quot;metadata&quot;</span><span class="p">:{}}],</span><span class="s2">&quot;metadata&quot;</span><span class="p">:{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span><span class="s2">&quot;gpt-3.5-turbo-0613&quot;</span><span class="p">,</span><span class="s2">&quot;route_type&quot;</span><span class="p">:</span><span class="s2">&quot;llm/v1/chat&quot;</span><span class="p">}}</span>
+
+<span class="n">event</span><span class="p">:</span> <span class="n">output</span>
+<span class="n">data</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;candidates&quot;</span><span class="p">:[{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;message&quot;</span><span class="p">:{},</span><span class="s2">&quot;metadata&quot;</span><span class="p">:{</span><span class="s2">&quot;finish_reason&quot;</span><span class="p">:</span><span class="s2">&quot;stop&quot;</span><span class="p">}}],</span><span class="s2">&quot;metadata&quot;</span><span class="p">:{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span><span class="s2">&quot;gpt-3.5-turbo-0613&quot;</span><span class="p">,</span><span class="s2">&quot;route_type&quot;</span><span class="p">:</span><span class="s2">&quot;llm/v1/chat&quot;</span><span class="p">}}</span>
+
+<span class="n">event</span><span class="p">:</span> <span class="n">done</span>
+<span class="n">data</span><span class="p">:</span> <span class="p">{}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="completions-request-example">
+<h2>Completions request example<a class="headerlink" href="#completions-request-example" title="Permalink to this headline"> </a></h2>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="nv">$DATABRICKS_HOST</span>/gateway/<span class="nv">$ROUTE</span>/invocations<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$DATABRICKS_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">    &quot;prompt&quot;: &quot;MLflow is&quot;,</span>
+<span class="s1">    &quot;stream&quot;: true</span>
+<span class="s1">  }&#39;</span>
+</pre></div>
+</div>
+<div class="compound-middle highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="n">DATABRICKS_HOST</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DATABRICKS_HOST&quot;</span><span class="p">]</span>
+<span class="n">DATABRICKS_TOKEN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DATABRICKS_TOKEN&quot;</span><span class="p">]</span>
+<span class="n">ROUTE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;ROUTE&quot;</span><span class="p">]</span>
+
+<span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">DATABRICKS_HOST</span><span class="si">}</span><span class="s2">/gateway/</span><span class="si">{</span><span class="n">ROUTE</span><span class="si">}</span><span class="s2">/invocations&quot;</span><span class="p">,</span>
+    <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">DATABRICKS_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">},</span>
+    <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;MLflow is&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;stream&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">iter_lines</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">DATABRICKS_HOST</span><span class="p">,</span><span class="w"> </span><span class="nx">DATABRICKS_TOKEN</span><span class="p">,</span><span class="w"> </span><span class="nx">ROUTE</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span>
+<span class="w">    </span><span class="sb">`</span><span class="si">${</span><span class="nx">DATABRICKS_HOST</span><span class="si">}</span><span class="sb">/gateway/</span><span class="si">${</span><span class="nx">ROUTE</span><span class="si">}</span><span class="sb">/invocations`</span><span class="p">,</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;MLflow is&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">stream</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="p">}),</span>
+<span class="w">      </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">Authorization</span><span class="o">:</span><span class="w"> </span><span class="sb">`Bearer </span><span class="si">${</span><span class="nx">DATABRICKS_TOKEN</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">);</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">reader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">getReader</span><span class="p">();</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">decoder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">TextDecoder</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">done</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">reader</span><span class="p">.</span><span class="nx">read</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">done</span><span class="p">)</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">decoder</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="nx">value</span><span class="p">));</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">main</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="completions-response-format-and-example">
+<h2>Completions response format and example<a class="headerlink" href="#completions-response-format-and-example" title="Permalink to this headline"> </a></h2>
+<p>The following shows the query response format, where <code class="docutils literal notranslate"><span class="pre">finish_reason</span></code> is an optional parameter.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;candidates&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">integer</span><span class="p">,</span>
+      <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">string</span><span class="p">,</span>
+      <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;finish_reason&quot;</span><span class="p">:</span> <span class="n">string</span> <span class="c1"># optional</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">string</span><span class="p">,</span>
+    <span class="s2">&quot;route_type&quot;</span><span class="p">:</span> <span class="n">string</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The following is a completions response example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="n">event</span><span class="p">:</span> <span class="n">output</span>
+<span class="n">data</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;candidates&quot;</span><span class="p">:[{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;text&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;metadata&quot;</span><span class="p">:{}}],</span><span class="s2">&quot;metadata&quot;</span><span class="p">:{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span><span class="s2">&quot;gpt-3.5-turbo-0613&quot;</span><span class="p">,</span><span class="s2">&quot;route_type&quot;</span><span class="p">:</span><span class="s2">&quot;llm/v1/completions&quot;</span><span class="p">}}</span>
+
+<span class="n">event</span><span class="p">:</span> <span class="n">output</span>
+<span class="n">data</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;candidates&quot;</span><span class="p">:[{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;text&quot;</span><span class="p">:</span><span class="s2">&quot;an&quot;</span><span class="p">,</span><span class="s2">&quot;metadata&quot;</span><span class="p">:{}}],</span><span class="s2">&quot;metadata&quot;</span><span class="p">:{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span><span class="s2">&quot;gpt-3.5-turbo-0613&quot;</span><span class="p">,</span><span class="s2">&quot;route_type&quot;</span><span class="p">:</span><span class="s2">&quot;llm/v1/completions&quot;</span><span class="p">}}</span>
+
+<span class="o">...</span>
+
+<span class="n">event</span><span class="p">:</span> <span class="n">output</span>
+<span class="n">data</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;candidates&quot;</span><span class="p">:[{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;text&quot;</span><span class="p">:</span><span class="s2">&quot;.&quot;</span><span class="p">,</span><span class="s2">&quot;metadata&quot;</span><span class="p">:{}}],</span><span class="s2">&quot;metadata&quot;</span><span class="p">:{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span><span class="s2">&quot;gpt-3.5-turbo-0613&quot;</span><span class="p">,</span><span class="s2">&quot;route_type&quot;</span><span class="p">:</span><span class="s2">&quot;llm/v1/completions&quot;</span><span class="p">}}</span>
+
+<span class="n">event</span><span class="p">:</span> <span class="n">output</span>
+<span class="n">data</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;candidates&quot;</span><span class="p">:[{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;text&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;metadata&quot;</span><span class="p">:{</span><span class="s2">&quot;finish_reason&quot;</span><span class="p">:</span><span class="s2">&quot;stop&quot;</span><span class="p">}}],</span><span class="s2">&quot;metadata&quot;</span><span class="p">:{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span><span class="s2">&quot;gpt-3.5-turbo-0613&quot;</span><span class="p">,</span><span class="s2">&quot;route_type&quot;</span><span class="p">:</span><span class="s2">&quot;llm/v1/completions&quot;</span><span class="p">}}</span>
+
+<span class="n">event</span><span class="p">:</span> <span class="n">done</span>
+<span class="n">data</span><span class="p">:</span> <span class="p">{}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="index.html"><span class="doc">Databricks AI Gateway</span></a></p></li>
+<li><p><a class="reference internal" href="ai-gateway-tutorial.html"><span class="doc">Tutorial: Create routes and query OpenAI provider models using Databricks AI Gateway</span></a></p></li>
+<li><p><a class="reference internal" href="query-ai-gateway-mlflow-models.html"><span class="doc">Query the AI Gateway using an MLflow model</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

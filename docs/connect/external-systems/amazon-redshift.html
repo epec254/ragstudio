@@ -1,0 +1,1264 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to read and write data to Amazon Redshift on Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Query Amazon Redshift using Databricks">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Query Amazon Redshift using Databricks &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/connect/external-systems/amazon-redshift.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/connect/external-systems/amazon-redshift.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/connect/external-systems/amazon-redshift.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/connect/external-systems/amazon-redshift.html" class="notranslate">English</option>
+    <option value="../../../ja/connect/external-systems/amazon-redshift.html" class="notranslate">日本語</option>
+    <option value="../../../pt/connect/external-systems/amazon-redshift.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Query Amazon Redshift using Databricks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <p></p>
+<div class="section" id="query-amazon-redshift-using-databricks">
+<h1>Query Amazon Redshift using Databricks<a class="headerlink" href="#query-amazon-redshift-using-databricks" title="Permalink to this headline"> </a></h1>
+<p>You can read and write tables from Amazon Redshift with Databricks.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You may prefer Lakehouse Federation for managing queries to Redshift. See <a class="reference internal" href="../../query-federation/index.html"><span class="doc">Run queries using Lakehouse Federation</span></a>.</p>
+</div>
+<p>The Databricks Redshift data source uses Amazon S3 to efficiently transfer data in and out of Redshift and uses JDBC to automatically trigger the appropriate <code class="docutils literal notranslate"><span class="pre">COPY</span></code> and <code class="docutils literal notranslate"><span class="pre">UNLOAD</span></code> commands on Redshift.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In Databricks Runtime 11.3 LTS and above, Databricks Runtime includes the Redshift JDBC driver, accessible using the <code class="docutils literal notranslate"><span class="pre">redshift</span></code> keyword for the format option. See <a class="reference internal" href="../../release-notes/runtime/index.html"><span class="doc">Databricks Runtime release notes versions and compatibility</span></a> for driver versions included in each Databricks Runtime. User-provided drivers are still supported and take precedence over the bundled JDBC driver.</p>
+<p>In Databricks Runtime 10.4 LTS and below, manual installation of the Redshift JDBC driver is required, and queries should use the driver (<code class="docutils literal notranslate"><span class="pre">com.databricks.spark.redshift</span></code>) for the format. See <a class="reference internal" href="#installation"><span class="std std-ref">Redshift driver installation</span></a>.</p>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"> </a></h2>
+<p>The following examples demonstrate connecting with the Redshift driver. Replace the <code class="docutils literal notranslate"><span class="pre">url</span></code> parameter values if you’re using the PostgreSQL JDBC driver.</p>
+<p>Once you have <a class="reference internal" href="#redshift-aws-credentials"><span class="std std-ref">configured your AWS credentials</span></a>, you can use the data source with the Spark data source API in Python, SQL, R, or Scala.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><a class="reference internal" href="../unity-catalog/external-locations.html"><span class="doc">External locations defined in Unity Catalog</span></a> are not supported as <code class="docutils literal notranslate"><span class="pre">tempdir</span></code> locations.</p>
+</div>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="python">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read data from a table using Databricks Runtime 10.4 LTS and below</span>
+<span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">read</span>
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;redshift&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;dbtable&quot;</span><span class="p">,</span> <span class="n">table_name</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;tempdir&quot;</span><span class="p">,</span> <span class="s2">&quot;s3a://&lt;bucket&gt;/&lt;directory-path&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;jdbc:redshift://&lt;database-host-url&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;forward_spark_s3_credentials&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="c1"># Read data from a table using Databricks Runtime 11.3 LTS and above</span>
+<span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">read</span>
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;redshift&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="s2">&quot;hostname&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;port&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">)</span> <span class="c1"># Optional - will use default port 5439 if not specified.</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;username&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;database&quot;</span><span class="p">,</span> <span class="s2">&quot;database-name&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;dbtable&quot;</span><span class="p">,</span> <span class="s2">&quot;schema-name.table-name&quot;</span><span class="p">)</span> <span class="c1"># if schema-name is not specified, default to &quot;public&quot;.</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;tempdir&quot;</span><span class="p">,</span> <span class="s2">&quot;s3a://&lt;bucket&gt;/&lt;directory-path&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;forward_spark_s3_credentials&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="c1"># Read data from a query</span>
+<span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">read</span>
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;redshift&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="s2">&quot;select x, count(*) &lt;your-table-name&gt; group by x&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;tempdir&quot;</span><span class="p">,</span> <span class="s2">&quot;s3a://&lt;bucket&gt;/&lt;directory-path&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;jdbc:redshift://&lt;database-host-url&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;forward_spark_s3_credentials&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="c1"># After you have applied transformations to the data, you can use</span>
+<span class="c1"># the data source API to write the data back to another table</span>
+
+<span class="c1"># Write back to a table</span>
+<span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">write</span>
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;redshift&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;dbtable&quot;</span><span class="p">,</span> <span class="n">table_name</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;tempdir&quot;</span><span class="p">,</span> <span class="s2">&quot;s3a://&lt;bucket&gt;/&lt;directory-path&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;jdbc:redshift://&lt;database-host-url&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="c1"># Write back to a table using IAM Role based authentication</span>
+<span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">write</span>
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;redshift&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;dbtable&quot;</span><span class="p">,</span> <span class="n">table_name</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;tempdir&quot;</span><span class="p">,</span> <span class="s2">&quot;s3a://&lt;bucket&gt;/&lt;directory-path&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;jdbc:redshift://&lt;database-host-url&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;aws_iam_role&quot;</span><span class="p">,</span> <span class="s2">&quot;arn:aws:iam::123456789000:role/redshift_iam_role&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-middle compound" lang="sql">
+<p class="compound-first">Read data using SQL on Databricks Runtime 10.4 LTS and below:</p>
+<div class="compound-middle highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">redshift_table</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">redshift_table</span>
+<span class="k">USING</span><span class="w"> </span><span class="n">redshift</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">dbtable</span><span class="w"> </span><span class="s1">&#39;&lt;table-name&gt;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">tempdir</span><span class="w"> </span><span class="s1">&#39;s3a://&lt;bucket&gt;/&lt;directory-path&gt;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">url</span><span class="w"> </span><span class="s1">&#39;jdbc:redshift://&lt;database-host-url&gt;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="k">user</span><span class="w"> </span><span class="s1">&#39;&lt;username&gt;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">password</span><span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">forward_spark_s3_credentials</span><span class="w"> </span><span class="s1">&#39;true&#39;</span>
+<span class="p">);</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">redshift_table</span><span class="p">;</span>
+</pre></div>
+</div>
+<p class="compound-middle">Read data using SQL on Databricks Runtime 11.3 LTS and above:</p>
+<div class="compound-middle highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">redshift_table</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">redshift_table</span>
+<span class="k">USING</span><span class="w"> </span><span class="n">redshift</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="k">host</span><span class="w"> </span><span class="s1">&#39;&lt;hostname&gt;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">port</span><span class="w"> </span><span class="s1">&#39;&lt;port&gt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="cm">/* Optional - will use default port 5439 if not specified. *./</span>
+<span class="cm">  user &#39;&lt;username&gt;&#39;,</span>
+<span class="cm">  password &#39;&lt;password&gt;&#39;,</span>
+<span class="cm">  database &#39;&lt;database-name&gt;&#39;</span>
+<span class="cm">  dbtable &#39;&lt;schema-name&gt;.&lt;table-name&gt;&#39;, /* if schema-name not provided, default to &quot;public&quot;. */</span>
+<span class="cm">  tempdir &#39;s3a://&lt;bucket&gt;/&lt;directory-path&gt;&#39;,</span>
+<span class="cm">  forward_spark_s3_credentials &#39;true&#39;</span>
+<span class="cm">);</span>
+<span class="cm">SELECT * FROM redshift_table;</span>
+</pre></div>
+</div>
+<p class="compound-middle">Write data using SQL:</p>
+<div class="compound-middle highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">redshift_table</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">redshift_table_new</span>
+<span class="k">USING</span><span class="w"> </span><span class="n">redshift</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">dbtable</span><span class="w"> </span><span class="s1">&#39;&lt;new-table-name&gt;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">tempdir</span><span class="w"> </span><span class="s1">&#39;s3a://&lt;bucket&gt;/&lt;directory-path&gt;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">url</span><span class="w"> </span><span class="s1">&#39;jdbc:redshift://&lt;database-host-url&gt;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="k">user</span><span class="w"> </span><span class="s1">&#39;&lt;username&gt;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">password</span><span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">forward_spark_s3_credentials</span><span class="w"> </span><span class="s1">&#39;true&#39;</span>
+<span class="p">)</span><span class="w"> </span><span class="k">AS</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">table_name</span><span class="p">;</span>
+</pre></div>
+</div>
+<p class="compound-last">The SQL API supports only the creation of new tables and not overwriting or appending.</p>
+</div>
+<div class="compound-middle compound" lang="r">
+<p class="compound-first">Read data using R on Databricks Runtime 10.4 LTS and below:</p>
+<div class="compound-middle highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read.df</span><span class="p">(</span>
+<span class="w">   </span><span class="kc">NULL</span><span class="p">,</span>
+<span class="w">   </span><span class="s">&quot;com.databricks.spark.redshift&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="n">tempdir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;s3a://&lt;your-bucket&gt;/&lt;your-directory-path&gt;&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="n">dbtable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&lt;your-table-name&gt;&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;jdbc:redshift://&lt;the-rest-of-the-connection-string&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="compound-middle">Read data using R on Databricks Runtime 11.3 LTS and above:</p>
+<div class="compound-last highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read.df</span><span class="p">(</span>
+<span class="w">  </span><span class="kc">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="s">&quot;redshift&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;hostname&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;port&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;username&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;password&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;database-name&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">dbtable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;schema-name.table-name&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">tempdir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;s3a://&lt;your-bucket&gt;/&lt;your-directory-path&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">forward_spark_s3_credentials</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">dbtable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&lt;your-table-name&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="scala">
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// Read data from a table using Databricks Runtime 10.4 LTS and below</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;redshift&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;dbtable&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">table_name</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;tempdir&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;s3a://&lt;bucket&gt;/&lt;directory-path&gt;&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;url&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jdbc:redshift://&lt;database-host-url&gt;&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;user&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">username</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;password&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;forward_spark_s3_credentials&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">True</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">load</span><span class="p">()</span>
+
+<span class="c1">// Read data from a table using Databricks Runtime 11.3 LTS and above</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;redshift&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;hostname&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;port&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;port&quot;</span><span class="p">)</span><span class="w"> </span><span class="cm">/* Optional - will use default port 5439 if not specified. */</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;user&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;username&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;password&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;password&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;database&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;database-name&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;dbtable&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;schema-name.table-name&quot;</span><span class="p">)</span><span class="w"> </span><span class="cm">/* if schema-name is not specified, default to &quot;public&quot;. */</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;tempdir&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;s3a://&lt;bucket&gt;/&lt;directory-path&gt;&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;forward_spark_s3_credentials&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">load</span><span class="p">()</span>
+
+<span class="c1">// Read data from a query</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;redshift&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;query&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;select x, count(*) &lt;your-table-name&gt; group by x&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;tempdir&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;s3a://&lt;bucket&gt;/&lt;directory-path&gt;&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;url&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jdbc:redshift://&lt;database-host-url&gt;&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;user&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">username</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;password&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;forward_spark_s3_credentials&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">True</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">load</span><span class="p">()</span>
+
+<span class="c1">// After you have applied transformations to the data, you can use</span>
+<span class="c1">// the data source API to write the data back to another table</span>
+
+<span class="c1">// Write back to a table</span>
+<span class="n">df</span><span class="p">.</span><span class="n">write</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;redshift&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;dbtable&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">table_name</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;tempdir&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;s3a://&lt;bucket&gt;/&lt;directory-path&gt;&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;url&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jdbc:redshift://&lt;database-host-url&gt;&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;user&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">username</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;password&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">mode</span><span class="p">(</span><span class="s">&quot;error&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">save</span><span class="p">()</span>
+
+<span class="c1">// Write back to a table using IAM Role based authentication</span>
+<span class="n">df</span><span class="p">.</span><span class="n">write</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;redshift&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;dbtable&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">table_name</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;tempdir&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;s3a://&lt;bucket&gt;/&lt;directory-path&gt;&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;url&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jdbc:redshift://&lt;database-host-url&gt;&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;user&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">username</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;password&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;aws_iam_role&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;arn:aws:iam::123456789000:role/redshift_iam_role&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">mode</span><span class="p">(</span><span class="s">&quot;error&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="recommendations-for-working-with-redshift">
+<h2>Recommendations for working with Redshift<a class="headerlink" href="#recommendations-for-working-with-redshift" title="Permalink to this headline"> </a></h2>
+<p>Query execution may extract large amounts of data to S3. If you plan to perform several queries against the same data in Redshift, Databricks recommends saving the extracted data using <a class="reference internal" href="../../delta/index.html"><span class="doc">Delta Lake</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You should not create a Redshift cluster inside the Databricks managed VPC as it can lead to permissions issues due to the security model in the Databricks VPC. You should create your own VPC and then perform <a class="reference internal" href="../../security/network/classic/vpc-peering.html"><span class="doc">VPC peering</span></a> to connect Databricks to your Redshift instance.</p>
+</div>
+<p></p>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline"> </a></h2>
+<div class="section" id="authenticating-to-s3-and-redshift">
+<span id="redshift-aws-credentials"></span><h3>Authenticating to S3 and Redshift<a class="headerlink" href="#authenticating-to-s3-and-redshift" title="Permalink to this headline"> </a></h3>
+<p>The data source involves several network connections, illustrated in the following diagram:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                            ┌───────┐
+       ┌───────────────────&gt;│  S3   │&lt;─────────────────┐
+       │    IAM or keys     └───────┘    IAM or keys   │
+       │                        ^                      │
+       │                        │ IAM or keys          │
+       v                        v               ┌──────v────┐
+┌────────────┐            ┌───────────┐         │┌──────────┴┐
+│  Redshift  │            │  Spark    │         ││   Spark   │
+│            │&lt;──────────&gt;│  Driver   │&lt;────────&gt;| Executors │
+└────────────┘            └───────────┘          └───────────┘
+               JDBC with                  Configured
+               username /                     in
+               password                     Spark
+        (SSL enabled by default)
+</pre></div>
+</div>
+<p>The data source reads and writes data to S3 when transferring data to/from Redshift. As a result, it requires AWS credentials with read and write access to an S3 bucket (specified using the <code class="docutils literal notranslate"><span class="pre">tempdir</span></code> configuration parameter).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The data source does not clean up the temporary files that it creates in S3. As a result, we recommend that you use a dedicated temporary S3 bucket with an <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html">object lifecycle configuration</a> to ensure that temporary files are automatically deleted after a specified expiration period. See the <a class="reference internal" href="#redshift-encryption"><span class="std std-ref">Encryption</span></a> section of this document for a discussion of how to encrypt these files. You cannot use an <a class="reference internal" href="../unity-catalog/external-locations.html"><span class="doc">External location defined in Unity Catalog</span></a> as a <code class="docutils literal notranslate"><span class="pre">tempdir</span></code> location.</p>
+</div>
+<p>The following sections describe each connection’s authentication configuration options:</p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#spark-driver-to-redshift" id="id1">Spark driver to Redshift</a></p></li>
+<li><p><a class="reference internal" href="#spark-to-s3" id="id2">Spark to S3</a></p></li>
+<li><p><a class="reference internal" href="#redshift-to-s3" id="id3">Redshift to S3</a></p></li>
+</ul>
+</div>
+<div class="section" id="spark-driver-to-redshift">
+<h4><a class="toc-backref" href="#id1">Spark driver to Redshift</a><a class="headerlink" href="#spark-driver-to-redshift" title="Permalink to this headline"> </a></h4>
+<p>The Spark driver connects to Redshift via JDBC using a username and password. Redshift does not support the use of IAM roles to authenticate this connection. By default, this connection uses SSL encryption; for more details, see <a class="reference internal" href="#redshift-encryption"><span class="std std-ref">Encryption</span></a>.</p>
+</div>
+<div class="section" id="spark-to-s3">
+<h4><a class="toc-backref" href="#id2">Spark to S3</a><a class="headerlink" href="#spark-to-s3" title="Permalink to this headline"> </a></h4>
+<p>S3 acts as an intermediary to store bulk data when reading from or writing to Redshift. Spark connects to S3 using both the Hadoop FileSystem interfaces and directly using the Amazon Java SDK’s S3 client.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You cannot use DBFS mounts to configure access to S3 for Redshift.</p>
+</div>
+<ul>
+<li><p><strong>Default Credential Provider Chain (best option for most users):</strong> AWS credentials are automatically retrieved through the <a class="reference external" href="https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html">DefaultAWSCredentialsProviderChain</a>. If you use <a class="reference internal" href="../storage/tutorial-s3-instance-profile.html"><span class="doc">instance profiles</span></a> to authenticate to S3 then you should probably use this method.</p>
+<p>The following methods of providing credentials take precedence over this default.</p>
+</li>
+<li><p><strong>By assuming an IAM role</strong>: You can use an IAM role that the instance profile can assume. To specify the role ARN, you must <a class="reference internal" href="../../compute/configure.html#instance-profiles"><span class="std std-ref">attach an instance profile to the cluster</span></a>, and provide the following configuration keys:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="scala">
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="p">.</span><span class="n">hadoopConfiguration</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.s3a.credentialsType&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;AssumeRole&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="p">.</span><span class="n">hadoopConfiguration</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.s3a.stsAssumeRole.arn&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">iam</span><span class="o">-</span><span class="n">role</span><span class="o">-</span><span class="n">arn</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">be</span><span class="o">-</span><span class="n">assumed</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="c1">// An optional duration, expressed as a quantity and a unit of</span>
+<span class="c1">// time, such as &quot;15m&quot; or &quot;1h&quot;</span>
+<span class="n">sc</span><span class="p">.</span><span class="n">hadoopConfiguration</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.s3a.assumed.role.session.duration&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">duration</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="python">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">_jsc</span><span class="o">.</span><span class="n">hadoopConfiguration</span><span class="p">()</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;fs.s3a.credentialsType&quot;</span><span class="p">,</span> <span class="s2">&quot;AssumeRole&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">_jsc</span><span class="o">.</span><span class="n">hadoopConfiguration</span><span class="p">()</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;fs.s3a.stsAssumeRole.arn&quot;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">iam</span><span class="o">-</span><span class="n">role</span><span class="o">-</span><span class="n">arn</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">be</span><span class="o">-</span><span class="n">assumed</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="c1"># An optional duration, expressed as a quantity and a unit of</span>
+<span class="c1"># time, such as &quot;15m&quot; or &quot;1h&quot;</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">_jsc</span><span class="o">.</span><span class="n">hadoopConfiguration</span><span class="p">()</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;fs.s3a.assumed.role.session.duration&quot;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">duration</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</li>
+</ul>
+<ul>
+<li><p><strong>Set keys in Hadoop conf:</strong> You can specify AWS keys using <a class="reference external" href="https://github.com/apache/hadoop/blob/trunk/hadoop-tools/hadoop-aws/src/site/markdown/tools/hadoop-aws/index.md">Hadoop configuration properties</a>. If your <code class="docutils literal notranslate"><span class="pre">tempdir</span></code> configuration points to an <code class="docutils literal notranslate"><span class="pre">s3a://</span></code> filesystem, you can set the <code class="docutils literal notranslate"><span class="pre">fs.s3a.access.key</span></code> and <code class="docutils literal notranslate"><span class="pre">fs.s3a.secret.key</span></code> properties in a Hadoop XML configuration file or call <code class="docutils literal notranslate"><span class="pre">sc.hadoopConfiguration.set()</span></code> to configure Spark’s global Hadoop configuration. If you use an <code class="docutils literal notranslate"><span class="pre">s3n://</span></code> filesystem, you can provide the legacy configuration keys as shown in the following example.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="scala">
+<p class="compound-first">For example, if you are using the <code class="docutils literal notranslate"><span class="pre">s3a</span></code> filesystem, add:</p>
+<div class="compound-middle highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="p">.</span><span class="n">hadoopConfiguration</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.s3a.access.key&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&lt;your-access-key-id&gt;&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="p">.</span><span class="n">hadoopConfiguration</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.s3a.secret.key&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&lt;your-secret-key&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="compound-middle">For the legacy <code class="docutils literal notranslate"><span class="pre">s3n</span></code> filesystem, add:</p>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="p">.</span><span class="n">hadoopConfiguration</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.s3n.awsAccessKeyId&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&lt;your-access-key-id&gt;&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="p">.</span><span class="n">hadoopConfiguration</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.s3n.awsSecretAccessKey&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&lt;your-secret-key&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="python">
+<p class="compound-first">The following command relies on some Spark internals, but should work with all PySpark versions and is unlikely to change in the future:</p>
+<div class="compound-last highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">sc</span><span class="o">.</span><span class="n">_jsc</span><span class="o">.</span><span class="n">hadoopConfiguration</span><span class="p">()</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;fs.s3a.access.key&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;your-access-key-id&gt;&quot;</span><span class="p">)</span>
+  <span class="n">sc</span><span class="o">.</span><span class="n">_jsc</span><span class="o">.</span><span class="n">hadoopConfiguration</span><span class="p">()</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;fs.s3a.secret.key&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;your-secret-key&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="redshift-to-s3">
+<h4><a class="toc-backref" href="#id3">Redshift to S3</a><a class="headerlink" href="#redshift-to-s3" title="Permalink to this headline"> </a></h4>
+<p>Redshift also connects to S3 during <code class="docutils literal notranslate"><span class="pre">COPY</span></code> and <code class="docutils literal notranslate"><span class="pre">UNLOAD</span></code> queries. There are three methods of authenticating this connection:</p>
+<ul class="simple">
+<li><p><strong>Have Redshift assume an IAM role (most secure)</strong>: You can grant Redshift permission to assume an IAM role during <code class="docutils literal notranslate"><span class="pre">COPY</span></code> or <code class="docutils literal notranslate"><span class="pre">UNLOAD</span></code> operations and then configure the data source to instruct Redshift to use that role:</p>
+<ol class="arabic simple">
+<li><p>Create an IAM role granting appropriate S3 permissions to your bucket.</p></li>
+<li><p>Follow the guide <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/mgmt/authorizing-redshift-service.html">Authorizing Amazon Redshift to Access Other AWS Services On Your Behalf</a> to configure this role’s trust policy in order to allow Redshift to assume this role.</p></li>
+<li><p>Follow the steps in the <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/mgmt/copy-unload-iam-role.html">Authorizing COPY and UNLOAD Operations Using IAM Roles</a> guide to associate that IAM role with your Redshift cluster.</p></li>
+<li><p>Set the data source’s <code class="docutils literal notranslate"><span class="pre">aws_iam_role</span></code> option to the role’s ARN.</p></li>
+</ol>
+</li>
+<li><p><strong>Forward Spark’s S3 credentials to Redshift</strong>: if the <code class="docutils literal notranslate"><span class="pre">forward_spark_s3_credentials</span></code> option is set to <code class="docutils literal notranslate"><span class="pre">true</span></code> then the data source automatically discovers the credentials that Spark is using to connect to S3 and forwards those credentials to Redshift over JDBC. If Spark is authenticating to S3 using an instance profile then a set of temporary STS credentials is forwarded to Redshift; otherwise, AWS keys are forwarded. The JDBC query embeds these credentials so therefore Databricks strongly recommends that you enable SSL encryption of the JDBC connection when using this authentication method.</p></li>
+<li><p><strong>Use Security Token Service (STS) credentials</strong>: You may configure the <code class="docutils literal notranslate"><span class="pre">temporary_aws_access_key_id</span></code>, <code class="docutils literal notranslate"><span class="pre">temporary_aws_secret_access_key</span></code>, and <code class="docutils literal notranslate"><span class="pre">temporary_aws_session_token</span></code> configuration properties to point to temporary keys created via the AWS <a class="reference external" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp.html">Security Token Service</a>. The JDBC query embeds these credentials so therefore it is <strong>strongly recommended</strong> to enable SSL encryption of the JDBC connection when using this authentication method. If you choose this option then be aware of the risk that the credentials expire before the read / write operation succeeds.</p></li>
+</ul>
+<p>These three options are mutually exclusive and you must explicitly choose which one to use.</p>
+</div>
+</div>
+<div class="section" id="encryption">
+<span id="redshift-encryption"></span><h3>Encryption<a class="headerlink" href="#encryption" title="Permalink to this headline"> </a></h3>
+<ul>
+<li><p><strong>Securing JDBC</strong>: Unless any SSL-related settings are present in the JDBC URL, the data source by default enables SSL encryption and also verifies that the Redshift server is trustworthy (that is, <code class="docutils literal notranslate"><span class="pre">sslmode=verify-full</span></code>). For that, a server certificate is automatically downloaded from the Amazon servers the first time it is needed. In case that fails, a pre-bundled certificate file is used as a fallback. This holds for both the Redshift and the PostgreSQL JDBC drivers.</p>
+<p>In case there are any issues with this feature, or you simply want to disable SSL, you can call <code class="docutils literal notranslate"><span class="pre">.option(&quot;autoenablessl&quot;,</span> <span class="pre">&quot;false&quot;)</span></code> on your <code class="docutils literal notranslate"><span class="pre">DataFrameReader</span></code> or <code class="docutils literal notranslate"><span class="pre">DataFrameWriter</span></code>.</p>
+<p>If you want to specify custom SSL-related settings, you can follow the instructions in the Redshift documentation: <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/mgmt/connecting-ssl-support.html#connecting-ssl-support-java">Using SSL and Server Certificates in Java</a>
+and <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/mgmt/configure-jdbc-options.html">JDBC Driver Configuration Options</a> Any SSL-related options present in the JDBC <code class="docutils literal notranslate"><span class="pre">url</span></code> used with the data source take precedence (that is, the auto-configuration will not trigger).</p>
+</li>
+<li><p><strong>Encrypting UNLOAD data stored in S3 (data stored when reading from Redshift)</strong>: According to the Redshift documentation on <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/t_Unloading_tables.html">Unloading Data to S3</a>, “UNLOAD automatically encrypts data files using Amazon S3 server-side encryption (SSE-S3).”</p>
+<p>Redshift also supports client-side encryption with a custom key (see: <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/t_unloading_encrypted_files.html">Unloading Encrypted Data Files</a>) but the data source lacks the capability to specify the required symmetric key.</p>
+</li>
+<li><p><strong>Encrypting COPY data stored in S3 (data stored when writing to Redshift)</strong>: According to the Redshift documentation on <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/c_loading-encrypted-files.html">Loading Encrypted Data Files from Amazon S3</a>:</p></li>
+</ul>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">COPY</span></code> command to load data files that were uploaded to Amazon S3 using server-side encryption with AWS-managed encryption keys (SSE-S3 or SSE-KMS), client-side encryption, or both. COPY does not support Amazon S3 server-side encryption with a customer-supplied key (SSE-C).</p>
+<p>To use this capability, configure your Hadoop S3 filesystem to use <a class="reference internal" href="../../dbfs/mounts.html#s3-encryption"><span class="std std-ref">Amazon S3 encryption</span></a>. This will not encrypt the <code class="docutils literal notranslate"><span class="pre">MANIFEST</span></code> file that contains a list of all files written.</p>
+</div>
+<div class="section" id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline"> </a></h3>
+<p>The parameter map or OPTIONS provided in Spark SQL support the following settings:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>dbtable</p></td>
+<td><p>Yes, unless query is specified.</p></td>
+<td><p>None</p></td>
+<td><p>The table to create or read from in Redshift. This parameter is required when saving data
+back to Redshift.</p></td>
+</tr>
+<tr class="row-odd"><td><p>query</p></td>
+<td><p>Yes, unless dbtable is specified.</p></td>
+<td><p>None</p></td>
+<td><p>The query to read from in Redshift.</p></td>
+</tr>
+<tr class="row-even"><td><p>user</p></td>
+<td><p>No</p></td>
+<td><p>None</p></td>
+<td><p>The Redshift username. Must be used in tandem with password option. Can be used only if
+the user and password are not passed in the URL, passing both will result in an error. Use
+this parameter when the username contains special characters that need to be escaped.</p></td>
+</tr>
+<tr class="row-odd"><td><p>password</p></td>
+<td><p>No</p></td>
+<td><p>None</p></td>
+<td><p>The Redshift password. Must be used in tandem with <code class="docutils literal notranslate"><span class="pre">user</span></code> option. Can be used only if
+the user and password are not passed in the URL; passing both will result in an error. Use
+this parameter when the password contains special characters that need to be escaped.</p></td>
+</tr>
+<tr class="row-even"><td><p>url</p></td>
+<td><p>Yes</p></td>
+<td><p>None</p></td>
+<td><p>A JDBC URL, of the format</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>jdbc:subprotocol://&lt;host&gt;:&lt;port&gt;/database?user=&lt;username&gt;&amp;password=&lt;password&gt;
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">subprotocol</span></code> can be <code class="docutils literal notranslate"><span class="pre">postgresql</span></code> or <code class="docutils literal notranslate"><span class="pre">redshift</span></code>, depending on which JDBC driver you
+have loaded. One Redshift-compatible driver must be on the classpath and
+match this URL.  <code class="docutils literal notranslate"><span class="pre">host</span></code> and <code class="docutils literal notranslate"><span class="pre">port</span></code> should point to the Redshift master node, so security
+groups and/or VPC must be configured to allow access from your driver application.
+<code class="docutils literal notranslate"><span class="pre">database</span></code> identifies a Redshift database name <code class="docutils literal notranslate"><span class="pre">user</span></code> and <code class="docutils literal notranslate"><span class="pre">password</span></code> are credentials to
+access the database, which must be embedded in this URL for JDBC, and your user account
+should have necessary privileges for the table being referenced.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>search_path</p></td>
+<td><p>No</p></td>
+<td><p>None</p></td>
+<td><p>Set schema search path in Redshift. Will be set using the <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">search_path</span> <span class="pre">to</span></code> command.
+Should be a comma separated list of schema names to search for tables in.
+See <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/r_search_path.html">Redshift documentation of search_path</a>.</p></td>
+</tr>
+<tr class="row-even"><td><p>aws_iam_role</p></td>
+<td><p>Only if using IAM roles to authorize.</p></td>
+<td><p>None</p></td>
+<td><p>Fully specified ARN of the <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/mgmt/copy-unload-iam-role.html">IAM Redshift COPY/UNLOAD operations
+Role</a>
+attached to the Redshift cluster, For example, <code class="docutils literal notranslate"><span class="pre">arn:aws:iam::123456789000:role/&lt;redshift-iam-role&gt;</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>forward_spark_s3_credentials</p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">false</span></code></p></td>
+<td><p>If <code class="docutils literal notranslate"><span class="pre">true</span></code>, the data source automatically discovers the credentials that Spark is using
+to connect to S3 and forwards those credentials to Redshift over JDBC. These credentials
+are sent as part of the JDBC query, so therefore it is strongly recommended to enable SSL
+encryption of the JDBC connection when using this option.</p></td>
+</tr>
+<tr class="row-even"><td><p>temporary_aws_access_key_id</p></td>
+<td><p>No</p></td>
+<td><p>None</p></td>
+<td><p>AWS access key, must have write permissions to the S3 bucket.</p></td>
+</tr>
+<tr class="row-odd"><td><p>temporary_aws_secret_access_key</p></td>
+<td><p>No</p></td>
+<td><p>None</p></td>
+<td><p>AWS secret access key corresponding to provided access key.</p></td>
+</tr>
+<tr class="row-even"><td><p>temporary_aws_session_token</p></td>
+<td><p>No</p></td>
+<td><p>None</p></td>
+<td><p>AWS session token corresponding to provided access key.</p></td>
+</tr>
+<tr class="row-odd"><td><p>tempdir</p></td>
+<td><p>Yes</p></td>
+<td><p>None</p></td>
+<td><p>A writable location in Amazon S3, to be used for unloaded data when reading and Avro data to
+be loaded into Redshift when writing. If you’re using Redshift data source for Spark as part
+of a regular ETL pipeline, it can be useful to set a <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html">Lifecycle Policy</a> on a bucket and use that as a temp location for this data.</p>
+<p>You cannot use <a class="reference internal" href="../unity-catalog/external-locations.html"><span class="doc">External locations defined in Unity Catalog</span></a> as <code class="docutils literal notranslate"><span class="pre">tempdir</span></code> locations.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>jdbcdriver</p></td>
+<td><p>No</p></td>
+<td><p>Determined by the JDBC URL’s subprotocol.</p></td>
+<td><p>The class name of the JDBC driver to use. This class must be on the classpath. In most cases,
+it should not be necessary to specify this option, as the appropriate driver class name should
+automatically be determined by the JDBC URL’s subprotocol.</p></td>
+</tr>
+<tr class="row-odd"><td><p>diststyle</p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">EVEN</span></code></p></td>
+<td><p>The Redshift <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/c_choosing_dist_sort.html">Distribution Style</a>
+to be used when creating a table. Can be one of <code class="docutils literal notranslate"><span class="pre">EVEN</span></code>, <code class="docutils literal notranslate"><span class="pre">KEY</span></code> or <code class="docutils literal notranslate"><span class="pre">ALL</span></code> (see Redshift
+docs). When using <code class="docutils literal notranslate"><span class="pre">KEY</span></code>, you must also set a distribution key with the distkey option.</p></td>
+</tr>
+<tr class="row-even"><td><p>distkey</p></td>
+<td><p>No, unless using <code class="docutils literal notranslate"><span class="pre">DISTSTYLE</span> <span class="pre">KEY</span></code></p></td>
+<td><p>None</p></td>
+<td><p>The name of a column in the table to use as the distribution key when creating a table.</p></td>
+</tr>
+<tr class="row-odd"><td><p>sortkeyspec</p></td>
+<td><p>No</p></td>
+<td><p>None</p></td>
+<td><p>A full Redshift <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/t_Sorting_data.html">Sort Key</a>
+definition. Examples include:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SORTKEY(my_sort_column)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">COMPOUND</span> <span class="pre">SORTKEY(sort_col_1,</span> <span class="pre">sort_col_2)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">INTERLEAVED</span> <span class="pre">SORTKEY(sort_col_1,</span> <span class="pre">sort_col_2)</span></code></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>usestagingtable (Deprecated)</p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">true</span></code></p></td>
+<td><p>Setting this deprecated option to <code class="docutils literal notranslate"><span class="pre">false</span></code> causes an overwrite operation’s destination
+table to be dropped immediately at the beginning of the write, making the overwrite operation
+non-atomic and reducing the availability of the destination table.
+This may reduce the temporary disk space requirements for overwrites.</p>
+<p>Since setting <code class="docutils literal notranslate"><span class="pre">usestagingtable=false</span></code> operation risks data loss or unavailability, it is deprecated
+in favor of requiring you to manually drop the destination table.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>description</p></td>
+<td><p>No</p></td>
+<td><p>None</p></td>
+<td><p>A description for the table. Will be set using the SQL COMMENT command, and should show up in
+most query tools. See also the <code class="docutils literal notranslate"><span class="pre">description</span></code> metadata to set descriptions on individual
+columns.</p></td>
+</tr>
+<tr class="row-even"><td><p>preactions</p></td>
+<td><p>No</p></td>
+<td><p>None</p></td>
+<td><p>A <code class="docutils literal notranslate"><span class="pre">;</span></code> separated list of SQL commands to be executed before loading <code class="docutils literal notranslate"><span class="pre">COPY</span></code>
+command. It may be useful to have some <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> commands or similar run here before loading
+new data. If the command contains <code class="docutils literal notranslate"><span class="pre">%s</span></code>, the table name is formatted in before
+execution (in case you’re using a staging table).</p>
+<p>Be warned that if these commands fail, it is treated as an error and an exception is thrown.
+If using a staging table, the changes are reverted and the backup table restored if pre
+actions fail.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>postactions</p></td>
+<td><p>No</p></td>
+<td><p>None</p></td>
+<td><p>A <code class="docutils literal notranslate"><span class="pre">;</span></code> separated list of SQL commands to be executed after a successful <code class="docutils literal notranslate"><span class="pre">COPY</span></code>
+when loading data.  It may be useful to have some <code class="docutils literal notranslate"><span class="pre">GRANT</span></code> commands or similar run here when
+loading new data. If the command contains <code class="docutils literal notranslate"><span class="pre">%s</span></code>, the table name is formatted in before
+execution (in case you’re using a staging table).</p>
+<p>Be warned that if these commands fail, it is treated as an error and an exception is thrown.
+If using a staging table, the changes are reverted and the backup table restored if post
+actions fail.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>extracopyoptions</p></td>
+<td><p>No</p></td>
+<td><p>None</p></td>
+<td><p>A list of extra options to append to the Redshift <code class="docutils literal notranslate"><span class="pre">COPY</span></code> command when loading data, for example,
+<code class="docutils literal notranslate"><span class="pre">TRUNCATECOLUMNS</span></code> or <code class="docutils literal notranslate"><span class="pre">MAXERROR</span> <span class="pre">n</span></code> (see the <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/r_COPY.html#r_COPY-syntax-overview-optional-parameters">Redshift docs</a>
+for other options).</p>
+<p>Since these options are appended to the end of the <code class="docutils literal notranslate"><span class="pre">COPY</span></code> command, only options
+that make sense at the end of the command can be used, but that should cover most possible
+use cases.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>tempformat</p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">AVRO</span></code></p></td>
+<td><p>The format in which to save temporary files in S3 when writing to Redshift.  Defaults to
+<code class="docutils literal notranslate"><span class="pre">AVRO</span></code>; the other allowed values are <code class="docutils literal notranslate"><span class="pre">CSV</span></code> and <code class="docutils literal notranslate"><span class="pre">CSV</span> <span class="pre">GZIP</span></code> for CSV and gzipped CSV,
+respectively.</p>
+<p>Redshift is significantly faster when loading CSV than when loading Avro files, so using that
+tempformat may provide a large performance boost when writing to Redshift.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>csvnullstring</p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&#64;NULL&#64;</span></code></p></td>
+<td><p>The String value to write for nulls when using the CSV tempformat. This should be a value
+that does not appear in your actual data.</p></td>
+</tr>
+<tr class="row-odd"><td><p>csvseparator</p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">,</span></code></p></td>
+<td><p>Separator to use when writing temporary files with tempformat set to <code class="docutils literal notranslate"><span class="pre">CSV</span></code> or
+<code class="docutils literal notranslate"><span class="pre">CSV</span> <span class="pre">GZIP</span></code>. This must be a valid ASCII character, for example, “<code class="docutils literal notranslate"><span class="pre">,</span></code>” or “<code class="docutils literal notranslate"><span class="pre">|</span></code>”.</p></td>
+</tr>
+<tr class="row-even"><td><p>csvignoreleadingwhitespace</p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">true</span></code></p></td>
+<td><p>When set to true, removes leading whitespace from values during writes when
+<code class="docutils literal notranslate"><span class="pre">tempformat</span></code> is set to <code class="docutils literal notranslate"><span class="pre">CSV</span></code> or <code class="docutils literal notranslate"><span class="pre">CSV</span> <span class="pre">GZIP</span></code>. Otherwise, whitespace is retained.</p></td>
+</tr>
+<tr class="row-odd"><td><p>csvignoretrailingwhitespace</p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">true</span></code></p></td>
+<td><p>When set to true, removes trailing whitespace from values during writes when
+<code class="docutils literal notranslate"><span class="pre">tempformat</span></code> is set to <code class="docutils literal notranslate"><span class="pre">CSV</span></code> or <code class="docutils literal notranslate"><span class="pre">CSV</span> <span class="pre">GZIP</span></code>. Otherwise, the whitespace is retained.</p></td>
+</tr>
+<tr class="row-even"><td><p>infer_timestamp_ntz_type</p></td>
+<td><p>No</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">false</span></code></p></td>
+<td><p>If <code class="docutils literal notranslate"><span class="pre">true</span></code>, values of type Redshift <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span></code> are interpreted as <code class="docutils literal notranslate"><span class="pre">TimestampNTZType</span></code> (timestamp without time zone) during reads. Otherwise, all timestamps are interpreted as <code class="docutils literal notranslate"><span class="pre">TimestampType</span></code> regardless of the type in the underlying Redshift table.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="additional-configuration-options">
+<h2>Additional configuration options<a class="headerlink" href="#additional-configuration-options" title="Permalink to this headline"> </a></h2>
+<div class="section" id="configuring-the-maximum-size-of-string-columns">
+<h3>Configuring the maximum size of string columns<a class="headerlink" href="#configuring-the-maximum-size-of-string-columns" title="Permalink to this headline"> </a></h3>
+<p>When creating Redshift tables, the default behavior is to create <code class="docutils literal notranslate"><span class="pre">TEXT</span></code> columns for string columns. Redshift stores <code class="docutils literal notranslate"><span class="pre">TEXT</span></code> columns as <code class="docutils literal notranslate"><span class="pre">VARCHAR(256)</span></code>, so these columns have a maximum size of 256 characters (<a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/r_Character_types.html">source</a>).</p>
+<p>To support larger columns, you can use the <code class="docutils literal notranslate"><span class="pre">maxlength</span></code> column metadata field to specify the maximum length of individual string columns. This is also useful for implementing space-saving performance optimizations by declaring columns with a smaller maximum length than the default.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Due to limitations in Spark, the SQL and R language APIs do not support column metadata modification.</p>
+</div>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="python">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># the dataframe you&#39;ll want to write to Redshift</span>
+
+<span class="c1"># Specify the custom width of each column</span>
+<span class="n">columnLengthMap</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;language_code&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="s2">&quot;country_code&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="mi">2083</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1"># Apply each column metadata customization</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">colName</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span> <span class="ow">in</span> <span class="n">columnLengthMap</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+  <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;maxlength&#39;</span><span class="p">:</span> <span class="n">length</span><span class="p">}</span>
+  <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="n">colName</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="n">colName</span><span class="p">]</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="n">colName</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">))</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">write</span> \
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;com.databricks.spark.redshift&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="n">jdbcURL</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;tempdir&quot;</span><span class="p">,</span> <span class="n">s3TempDirectory</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;dbtable&quot;</span><span class="p">,</span> <span class="n">sessionTable</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="scala">
+<p class="compound-first">Here is an example of updating multiple columns’ metadata fields using Spark’s Scala API:</p>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">types</span><span class="p">.</span><span class="nc">MetadataBuilder</span>
+
+<span class="c1">// Specify the custom width of each column</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">columnLengthMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">  </span><span class="s">&quot;language_code&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="s">&quot;country_code&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="s">&quot;url&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">2083</span>
+<span class="p">)</span>
+
+<span class="kd">var</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="c1">// the dataframe you&#39;ll want to write to Redshift</span>
+
+<span class="c1">// Apply each column metadata customization</span>
+<span class="n">columnLengthMap</span><span class="p">.</span><span class="n">foreach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">colName</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">MetadataBuilder</span><span class="p">().</span><span class="n">putLong</span><span class="p">(</span><span class="s">&quot;maxlength&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="p">).</span><span class="n">build</span><span class="p">()</span>
+<span class="w">  </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">.</span><span class="n">withColumn</span><span class="p">(</span><span class="n">colName</span><span class="p">,</span><span class="w"> </span><span class="n">df</span><span class="p">(</span><span class="n">colName</span><span class="p">).</span><span class="n">as</span><span class="p">(</span><span class="n">colName</span><span class="p">,</span><span class="w"> </span><span class="n">metadata</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="n">df</span><span class="p">.</span><span class="n">write</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;com.databricks.spark.redshift&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;url&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">jdbcURL</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;tempdir&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s3TempDirectory</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;dbtable&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sessionTable</span><span class="p">)</span>
+<span class="p">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="set-a-custom-column-type">
+<h3>Set a custom column type<a class="headerlink" href="#set-a-custom-column-type" title="Permalink to this headline"> </a></h3>
+<p>If you need to manually set a column type, you can use the <code class="docutils literal notranslate"><span class="pre">redshift_type</span></code> column metadata. For example, if you desire to override the <code class="docutils literal notranslate"><span class="pre">Spark</span> <span class="pre">SQL</span> <span class="pre">Schema</span> <span class="pre">-&gt;</span> <span class="pre">Redshift</span> <span class="pre">SQL</span></code> type matcher to assign a user-defined column type, you can do the following:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Specify the custom type of each column</span>
+<span class="n">columnTypeMap</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;language_code&quot;</span><span class="p">:</span> <span class="s2">&quot;CHAR(2)&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;country_code&quot;</span><span class="p">:</span> <span class="s2">&quot;CHAR(2)&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;BPCHAR(111)&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># the dataframe you&#39;ll want to write to Redshift</span>
+
+<span class="c1"># Apply each column metadata customization</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">colName</span><span class="p">,</span> <span class="n">colType</span><span class="p">)</span> <span class="ow">in</span> <span class="n">columnTypeMap</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+  <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;redshift_type&#39;</span><span class="p">:</span> <span class="n">colType</span><span class="p">}</span>
+  <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="n">colName</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="n">colName</span><span class="p">]</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="n">colName</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">types</span><span class="p">.</span><span class="nc">MetadataBuilder</span>
+
+<span class="c1">// Specify the custom type of each column</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">columnTypeMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">  </span><span class="s">&quot;language_code&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;CHAR(2)&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s">&quot;country_code&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;CHAR(2)&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s">&quot;url&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;BPCHAR(111)&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">var</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="c1">// the dataframe you&#39;ll want to write to Redshift</span>
+
+<span class="c1">// Apply each column metadata customization</span>
+<span class="n">columnTypeMap</span><span class="p">.</span><span class="n">foreach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">colName</span><span class="p">,</span><span class="w"> </span><span class="n">colType</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">MetadataBuilder</span><span class="p">().</span><span class="n">putString</span><span class="p">(</span><span class="s">&quot;redshift_type&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">colType</span><span class="p">).</span><span class="n">build</span><span class="p">()</span>
+<span class="w">  </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">.</span><span class="n">withColumn</span><span class="p">(</span><span class="n">colName</span><span class="p">,</span><span class="w"> </span><span class="n">df</span><span class="p">(</span><span class="n">colName</span><span class="p">).</span><span class="n">as</span><span class="p">(</span><span class="n">colName</span><span class="p">,</span><span class="w"> </span><span class="n">metadata</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="configure-column-encoding">
+<h3>Configure column encoding<a class="headerlink" href="#configure-column-encoding" title="Permalink to this headline"> </a></h3>
+<p>When creating a table, use the <code class="docutils literal notranslate"><span class="pre">encoding</span></code> column metadata field to specify a compression encoding for each column (see <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/c_Compression_encodings.html">Amazon docs</a> for available encodings).</p>
+</div>
+<div class="section" id="setting-descriptions-on-columns">
+<h3>Setting descriptions on columns<a class="headerlink" href="#setting-descriptions-on-columns" title="Permalink to this headline"> </a></h3>
+<p>Redshift allows columns to have descriptions attached that should show up in most query tools (using the <code class="docutils literal notranslate"><span class="pre">COMMENT</span></code> command). You can set the <code class="docutils literal notranslate"><span class="pre">description</span></code> column metadata field to specify a description for
+individual columns.</p>
+</div>
+<div class="section" id="query-pushdown-into-redshift">
+<span id="redshift-query-pushdown"></span><h3>Query pushdown into Redshift<a class="headerlink" href="#query-pushdown-into-redshift" title="Permalink to this headline"> </a></h3>
+<p>The Spark optimizer pushes the following operators down into Redshift:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Filter</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Project</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Sort</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Limit</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Aggregation</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Join</span></code></p></li>
+</ul>
+<p>Within <code class="docutils literal notranslate"><span class="pre">Project</span></code> and <code class="docutils literal notranslate"><span class="pre">Filter</span></code>, it supports the following expressions:</p>
+<ul class="simple">
+<li><p>Most Boolean logic operators</p></li>
+<li><p>Comparisons</p></li>
+<li><p>Basic arithmetic operations</p></li>
+<li><p>Numeric and string casts</p></li>
+<li><p>Most string functions</p></li>
+<li><p>Scalar subqueries, if they can be pushed down entirely into Redshift.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This pushdown does not support expressions operating on dates and timestamps.</p>
+</div>
+<p>Within <code class="docutils literal notranslate"><span class="pre">Aggregation</span></code>, it supports the following aggregation functions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">AVG</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">COUNT</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MAX</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MIN</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SUM</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">STDDEV_SAMP</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">STDDEV_POP</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VAR_SAMP</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VAR_POP</span></code></p></li>
+</ul>
+<p>combined with the <code class="docutils literal notranslate"><span class="pre">DISTINCT</span></code> clause, where applicable.</p>
+<p>Within <code class="docutils literal notranslate"><span class="pre">Join</span></code>, it supports the following types of joins:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">INNER</span> <span class="pre">JOIN</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LEFT</span> <span class="pre">OUTER</span> <span class="pre">JOIN</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RIGHT</span> <span class="pre">OUTER</span> <span class="pre">JOIN</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LEFT</span> <span class="pre">SEMI</span> <span class="pre">JOIN</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LEFT</span> <span class="pre">ANTI</span> <span class="pre">JOIN</span></code></p></li>
+<li><p>Subqueries that are rewritten into <code class="docutils literal notranslate"><span class="pre">Join</span></code> by the optimizer e.g. <code class="docutils literal notranslate"><span class="pre">WHERE</span> <span class="pre">EXISTS</span></code>, <code class="docutils literal notranslate"><span class="pre">WHERE</span> <span class="pre">NOT</span> <span class="pre">EXISTS</span></code></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Join pushdown does not support <code class="docutils literal notranslate"><span class="pre">FULL</span> <span class="pre">OUTER</span> <span class="pre">JOIN</span></code>.</p>
+</div>
+<p>The pushdown might be most beneficial in queries with <code class="docutils literal notranslate"><span class="pre">LIMIT</span></code>. A query such as <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">*</span> <span class="pre">FROM</span> <span class="pre">large_redshift_table</span> <span class="pre">LIMIT</span> <span class="pre">10</span></code> could take very long, as the whole table would first be UNLOADed to S3 as an intermediate result. With pushdown, the <code class="docutils literal notranslate"><span class="pre">LIMIT</span></code> is executed in Redshift. In queries with aggregations, pushing the aggregation down into Redshift also helps to reduce the amount of data that needs to be transferred.</p>
+<p>Query pushdown into Redshift is enabled by default. It can be disabled by setting <code class="docutils literal notranslate"><span class="pre">spark.databricks.redshift.pushdown</span></code> to <code class="docutils literal notranslate"><span class="pre">false</span></code>. Even when disabled, Spark still pushes down filters and performs column elimination into Redshift.</p>
+</div>
+</div>
+<div class="section" id="redshift-driver-installation">
+<span id="installation"></span><h2>Redshift driver installation<a class="headerlink" href="#redshift-driver-installation" title="Permalink to this headline"> </a></h2>
+<p>The Redshift data source also requires a Redshift-compatible JDBC driver. Because Redshift is based on the PostgreSQL database system, you can use the PostgreSQL JDBC driver included with Databricks Runtime or the Amazon recommended Redshift JDBC driver. No installation is required to use the PostgreSQL JDBC driver. The version of the PostgreSQL JDBC driver included in each Databricks Runtime release is listed in the Databricks Runtime <a class="reference external" href="/release-notes/runtime/index.html">release notes</a>.</p>
+<p>To manually install the Redshift JDBC driver:</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/mgmt/configure-jdbc-connection.html">Download</a> the driver from Amazon.</p></li>
+<li><p><a class="reference internal" href="../../libraries/workspace-libraries.html#uploading-libraries"><span class="std std-ref">Upload</span></a> the driver to your Databricks workspace.</p></li>
+<li><p><a class="reference internal" href="../../libraries/cluster-libraries.html"><span class="doc">Install</span></a> the library on your cluster.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Databricks recommends using the latest version of the Redshift JDBC driver. Versions of the Redshift JDBC driver below 1.2.41 have the following limitations:</p>
+<ul class="simple">
+<li><p>Version 1.2.16 of the driver returns empty data when using a <code class="docutils literal notranslate"><span class="pre">where</span></code> clause in an SQL query.</p></li>
+<li><p>Versions of the driver below 1.2.41 may return invalid results because a column’s nullability is incorrectly reported as “Not Nullable” instead of “Unknown”.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="transactional-guarantees">
+<h2>Transactional guarantees<a class="headerlink" href="#transactional-guarantees" title="Permalink to this headline"> </a></h2>
+<p>This section describes the transactional guarantees of the Redshift data source for Spark.</p>
+<div class="section" id="general-background-on-redshift-and-s3-properties">
+<h3>General background on Redshift and S3 properties<a class="headerlink" href="#general-background-on-redshift-and-s3-properties" title="Permalink to this headline"> </a></h3>
+<p>For general information on Redshift transactional guarantees, see the <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/c_Concurrent_writes.html">Managing Concurrent Write Operations</a>
+chapter in the Redshift documentation. In a nutshell, Redshift provides <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/c_serial_isolation.html">serializable isolation</a> according to the documentation for the Redshift <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/r_BEGIN.html">BEGIN</a> command:</p>
+<blockquote>
+<div><p>[although] you can use any of the four transaction isolation levels, Amazon Redshift processes all isolation levels as serializable.</p>
+</div></blockquote>
+<p>According to the <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/c_serial_isolation.html">Redshift documentation</a>:</p>
+<blockquote>
+<div><p>Amazon Redshift supports a default <em>automatic commit</em> behavior in which each separately-executed SQL command commits individually.</p>
+</div></blockquote>
+<p>Thus, individual commands like <code class="docutils literal notranslate"><span class="pre">COPY</span></code> and <code class="docutils literal notranslate"><span class="pre">UNLOAD</span></code> are atomic and transactional, while explicit <code class="docutils literal notranslate"><span class="pre">BEGIN</span></code> and <code class="docutils literal notranslate"><span class="pre">END</span></code> should only be necessary to enforce the atomicity of multiple commands or queries.</p>
+<p>When reading from and writing to Redshift, the data source reads and writes data in S3. Both Spark and Redshift produce partitioned output and store it in multiple files in S3. According to the <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/dev/Introduction.html#ConsistencyModel">Amazon S3 Data Consistency Model</a> documentation, S3 bucket listing operations are eventually-consistent, so the files must to go to special lengths to avoid missing or incomplete data due to this source of eventual-consistency.</p>
+</div>
+<div class="section" id="guarantees-of-the-redshift-data-source-for-spark">
+<h3>Guarantees of the Redshift data source for Spark<a class="headerlink" href="#guarantees-of-the-redshift-data-source-for-spark" title="Permalink to this headline"> </a></h3>
+<div class="section" id="append-to-an-existing-table">
+<h4>Append to an existing table<a class="headerlink" href="#append-to-an-existing-table" title="Permalink to this headline"> </a></h4>
+<p>When inserting rows into Redshift, the data source uses the <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/r_COPY.html">COPY</a>
+command and specifies <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/loading-data-files-using-manifest.html">manifests</a> to guard against certain eventually-consistent S3 operations. As a result, <code class="docutils literal notranslate"><span class="pre">spark-redshift</span></code> appends to existing tables have the same atomic and transactional properties as regular Redshift <code class="docutils literal notranslate"><span class="pre">COPY</span></code> commands.</p>
+</div>
+<div class="section" id="create-a-new-table-savemodecreateifnotexists">
+<h4>Create a new table (<code class="docutils literal notranslate"><span class="pre">SaveMode.CreateIfNotExists</span></code>)<a class="headerlink" href="#create-a-new-table-savemodecreateifnotexists" title="Permalink to this headline"> </a></h4>
+<p>Creating a new table is a two-step process, consisting of a <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> command followed by a <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/r_COPY.html">COPY</a> command to append the initial set of rows. Both operations are performed in the same transaction.</p>
+</div>
+<div class="section" id="overwrite-an-existing-table">
+<h4>Overwrite an existing table<a class="headerlink" href="#overwrite-an-existing-table" title="Permalink to this headline"> </a></h4>
+<p>By default, the data source uses transactions to perform overwrites, which are implemented by deleting the destination table, creating a new empty table, and appending rows to it.</p>
+<p>If the deprecated <code class="docutils literal notranslate"><span class="pre">usestagingtable</span></code> setting is set to <code class="docutils literal notranslate"><span class="pre">false</span></code>, the data source commits the <code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">TABLE</span></code> command before appending rows to the new table, sacrificing the atomicity of the overwrite operation but reducing the amount of staging space that Redshift needs during the overwrite.</p>
+</div>
+<div class="section" id="query-redshift-table">
+<h4>Query Redshift table<a class="headerlink" href="#query-redshift-table" title="Permalink to this headline"> </a></h4>
+<p>Queries use the Redshift <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/r_UNLOAD.html">UNLOAD</a> command to execute a query and save its results to S3 and use <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/loading-data-files-using-manifest.html">manifests</a> to guard against certain eventually-consistent S3 operations. As a result, queries from Redshift data source for Spark should have the same consistency properties as regular Redshift queries.</p>
+</div>
+</div>
+</div>
+<div class="section" id="common-problems-and-solutions">
+<h2>Common problems and solutions<a class="headerlink" href="#common-problems-and-solutions" title="Permalink to this headline"> </a></h2>
+<div class="section" id="s3-bucket-and-redshift-cluster-are-in-different-aws-regions">
+<h3>S3 bucket and Redshift cluster are in different AWS regions<a class="headerlink" href="#s3-bucket-and-redshift-cluster-are-in-different-aws-regions" title="Permalink to this headline"> </a></h3>
+<p>By default, S3 &lt;-&gt; Redshift copies do not work if the S3 bucket and Redshift cluster are in different AWS regions.</p>
+<p>If you attempt to read a Redshift table when the S3 bucket is in a different region, you may see an error such as:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ERROR: S3ServiceException:The S3 bucket addressed by the query is in a different region from this cluster.,Status 301,Error PermanentRedirect.</span>
+</pre></div>
+</div>
+<p>Similarly, attempting to write to Redshift using a S3 bucket in a different region may cause the following error:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">error:  Problem reading manifest file - S3ServiceException:The S3 bucket addressed by the query is in a different region from this cluster.,Status 301,Error PermanentRedirect</span>
+</pre></div>
+</div>
+<ul>
+<li><p><strong>Writes:</strong> The Redshift <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/r_COPY.html">COPY</a> command supports explicit specification of the S3 bucket region, so you can make writes to Redshift work properly in these cases by adding <code class="docutils literal notranslate"><span class="pre">region</span> <span class="pre">'the-region-name'</span></code> to the <code class="docutils literal notranslate"><span class="pre">extracopyoptions</span></code> setting. For example, with a bucket in the US East (Virginia) region and the Scala API, use:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;extracopyoptions&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;region &#39;us-east-1&#39;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can alternatively use the <code class="docutils literal notranslate"><span class="pre">awsregion</span></code> setting:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;awsregion&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Reads:</strong> The Redshift <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/dg/r_UNLOAD.html">UNLOAD</a> command also supports explicit specification of the S3 bucket region. You can make reads work properly by adding the region to the <code class="docutils literal notranslate"><span class="pre">awsregion</span></code> setting:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;awsregion&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="unexpected-s3serviceexception-credentials-error-when-you-use-instance-profiles-to-authenticate-to-s3">
+<span id="s3-bucket-and-redshift-cluster-are-in-different-aws-regions"></span><h3>Unexpected S3ServiceException credentials error when you use instance profiles to authenticate to S3<a class="headerlink" href="#unexpected-s3serviceexception-credentials-error-when-you-use-instance-profiles-to-authenticate-to-s3" title="Permalink to this headline"> </a></h3>
+<p>If you are using <a class="reference internal" href="../storage/tutorial-s3-instance-profile.html"><span class="doc">instance profiles</span></a> to authenticate to S3 and receive an unexpected <code class="docutils literal notranslate"><span class="pre">S3ServiceException</span></code> error, check whether AWS access keys are specified in the <code class="docutils literal notranslate"><span class="pre">tempdir</span></code> S3 URI, in Hadoop configurations, or in any of the sources checked by the <a class="reference external" href="https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html">DefaultAWSCredentialsProviderChain</a>: those sources take precedence over instance profile credentials.</p>
+<p>Here is a sample error message that can be a symptom of keys accidentally taking precedence over instance profiles:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">com.amazonaws.services.s3.model.AmazonS3Exception: The AWS Access Key Id you provided does not exist in our records. (Service: Amazon S3; Status Code: 403; Error Code: InvalidAccessKeyId;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="authentication-error-when-using-a-password-with-special-characters-in-the-jdbc-url">
+<h3>Authentication error when using a password with special characters in the JDBC url<a class="headerlink" href="#authentication-error-when-using-a-password-with-special-characters-in-the-jdbc-url" title="Permalink to this headline"> </a></h3>
+<p>If you are providing the username and password as part of the JDBC url and the password contains special characters such as <code class="docutils literal notranslate"><span class="pre">;</span></code>, <code class="docutils literal notranslate"><span class="pre">?</span></code>, or <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>, you might see the following exception:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">java.sql.SQLException: [Amazon](500310) Invalid operation: password authentication failed for user &#39;xyz&#39;</span>
+</pre></div>
+</div>
+<p>This is caused by special characters in the username or password not being escaped correctly by the JDBC driver. Make sure to specify the username and password using the corresponding DataFrame options <code class="docutils literal notranslate"><span class="pre">user</span></code> and <code class="docutils literal notranslate"><span class="pre">password</span></code>. For more information, see <a class="reference internal" href="#parameters"><span class="std std-ref">Parameters</span></a>.</p>
+</div>
+<div class="section" id="long-running-spark-query-hangs-indefinitely-even-though-the-corresponding-redshift-operation-is-done">
+<h3>Long-running Spark query hangs indefinitely even though the corresponding Redshift operation is done<a class="headerlink" href="#long-running-spark-query-hangs-indefinitely-even-though-the-corresponding-redshift-operation-is-done" title="Permalink to this headline"> </a></h3>
+<p>If you are reading or writing large amounts of data from and to Redshift, your Spark query may hang indefinitely, even though the AWS Redshift Monitoring page shows that the corresponding <code class="docutils literal notranslate"><span class="pre">LOAD</span></code> or <code class="docutils literal notranslate"><span class="pre">UNLOAD</span></code> operation has completed and that the cluster is idle. This is caused by the connection between Redshift and Spark timing out. To avoid this, make sure the <code class="docutils literal notranslate"><span class="pre">tcpKeepAlive</span></code> JDBC flag is enabled and <code class="docutils literal notranslate"><span class="pre">TCPKeepAliveMinutes</span></code> is set to a low value (for example, 1).</p>
+<p>For additional information, see <a class="reference external" href="https://docs.aws.amazon.com/redshift/latest/mgmt/configure-jdbc-options.html">Amazon Redshift JDBC Driver Configuration</a>.</p>
+</div>
+<div class="section" id="timestamp-with-timezone-semantics">
+<h3>Timestamp with timezone semantics<a class="headerlink" href="#timestamp-with-timezone-semantics" title="Permalink to this headline"> </a></h3>
+<p>When reading data, both Redshift <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span></code> and <code class="docutils literal notranslate"><span class="pre">TIMESTAMPTZ</span></code> data types are mapped to Spark <code class="docutils literal notranslate"><span class="pre">TimestampType</span></code>, and a value is converted to Coordinated Universal Time (UTC) and is stored as the UTC timestamp. For a Redshift <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span></code>, the local timezone is assumed as the value does not have any timezone information. When writing data to a Redshift table, a Spark <code class="docutils literal notranslate"><span class="pre">TimestampType</span></code> is mapped to the Redshift <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span></code> data type.</p>
+</div>
+</div>
+<div class="section" id="migration-guide">
+<h2>Migration guide<a class="headerlink" href="#migration-guide" title="Permalink to this headline"> </a></h2>
+<p>The data source now requires you to explicitly set <code class="docutils literal notranslate"><span class="pre">forward_spark_s3_credentials</span></code> before Spark S3 credentials are forwarded to Redshift. This change has no impact if you use the <code class="docutils literal notranslate"><span class="pre">aws_iam_role</span></code> or <code class="docutils literal notranslate"><span class="pre">temporary_aws_*</span></code> authentication mechanisms. However, if you relied on the old default behavior you must now explicitly set <code class="docutils literal notranslate"><span class="pre">forward_spark_s3_credentials</span></code> to <code class="docutils literal notranslate"><span class="pre">true</span></code> to continue using your previous Redshift to S3 authentication mechanism. For a discussion of the three authentication mechanisms and their security trade-offs, see the <a class="reference internal" href="#redshift-aws-credentials"><span class="std std-ref">Authenticating to S3 and Redshift</span></a> section of this document.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

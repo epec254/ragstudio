@@ -1,0 +1,741 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn about using the DNASeq pipeline contained in Databricks Runtime for Genomics." name="description" />
+<meta content="noindex" name="robots" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="DNASeq pipeline">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>DNASeq pipeline &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/archive/genomics/secondary/dnaseq-pipeline.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/archive/genomics/secondary/dnaseq-pipeline.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/archive/genomics/secondary/dnaseq-pipeline.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../../en/archive/genomics/secondary/dnaseq-pipeline.html" class="notranslate">English</option>
+    <option value="../../../../ja/archive/genomics/secondary/dnaseq-pipeline.html" class="notranslate">日本語</option>
+    <option value="../../../../pt/archive/genomics/secondary/dnaseq-pipeline.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>DNASeq pipeline</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <p></p>
+<div class="section" id="dnaseq-pipeline">
+<h1>DNASeq pipeline<a class="headerlink" href="#dnaseq-pipeline" title="Permalink to this headline"> </a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This documentation has been retired and might not be updated. The products, services, or technologies mentioned in this content are no longer supported.</p>
+<p>The Databricks Genomics runtime has been deprecated. For open source equivalents, see repos for <a class="reference external" href="https://github.com/databricks/genomics-pipelines">genomics-pipelines</a> and <a class="reference external" href="https://github.com/projectglow/glow">Glow</a>. Bioinformatics libraries that were part of the runtime have been released as a Docker container, which can be pulled from the <a class="reference external" href="https://hub.docker.com/r/projectglow">ProjectGlow Dockerhub</a> page.</p>
+<p>For more information about the Databricks Runtime deprecation policy and schedule, see <a class="reference internal" href="../../../release-notes/runtime/index.html#supported-list"><span class="std std-ref">All supported Databricks Runtime releases</span></a>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The following library versions are packaged in Databricks Runtime 7.0 for Genomics. For libraries included in lower versions of
+Databricks Runtime for Genomics, see the <a class="reference internal" href="../../../release-notes/runtime/index.html"><span class="doc">release notes</span></a>.</p>
+</div>
+<p>The Databricks DNASeq pipeline is a GATK best practices compliant pipeline for short read
+alignment, variant calling, and variant annotation. It uses the following software packages, parallelized using Spark.</p>
+<ul class="simple">
+<li><p>BWA v0.7.17</p></li>
+<li><p>ADAM v0.32.0</p></li>
+<li><p>GATK HaplotypeCaller v4.1.4.1</p></li>
+<li><p>SnpEff v4.3</p></li>
+</ul>
+<p>For more information about the pipeline implementation and expected runtimes and costs for various
+option combinations, see <a class="reference external" href="https://databricks.com/blog/2018/09/10/building-the-fastest-dnaseq-pipeline-at-scale.html">Building the Fastest DNASeq Pipeline at Scala</a>.</p>
+<div class="section" id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline"> </a></h2>
+<p>The pipeline is run as a Databricks job. You can set up a <a class="reference internal" href="../../../administration-guide/clusters/policies.html"><span class="doc">cluster policy</span></a> to save the configuration:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;num_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;unlimited&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;defaultValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;node_type_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;unlimited&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;defaultValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;c5.9xlarge&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;spark_env_vars.refGenomeId&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;unlimited&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;defaultValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;grch38&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;spark_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;regex&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.*-hls.*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;defaultValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;7.4.x-hls-scala2.12&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;aws_attributes.ebs_volume_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;unlimited&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;defaultValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;aws_attributes.ebs_volume_size&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;unlimited&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;defaultValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>The cluster configuration should use Databricks Runtime for Genomics.</p></li>
+<li><p>The task should be the DNASeq notebook found at the bottom of this page.</p></li>
+<li><p>For best performance, use compute optimized instances with at least 60GB of memory. We
+recommend <strong>c5.9xlarge</strong>.</p></li>
+<li><p>If you’re running base quality score recalibration, use general purpose (<strong>m5.4xlarge</strong>)
+instances instead since this operation requires more memory.</p></li>
+<li><p>To reduce costs, use all spot workers with the <strong>Spot fall back to On-demand</strong> option selected.</p></li>
+<li><p>Attach 3 200GB SSD EBS volumes</p></li>
+</ul>
+</div>
+<div class="section" id="reference-genomes">
+<h2>Reference genomes<a class="headerlink" href="#reference-genomes" title="Permalink to this headline"> </a></h2>
+<p>You must configure the reference genome using an <a class="reference internal" href="../../../compute/configure.html#env-var"><span class="std std-ref">environment variable</span></a>.
+To use GRCh37, set the environment variable:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">refGenomeId</span><span class="o">=</span><span class="s">grch37</span>
+</pre></div>
+</div>
+<p>To use GRCh38 instead, replace <code class="docutils literal notranslate"><span class="pre">grch37</span></code> with <code class="docutils literal notranslate"><span class="pre">grch38</span></code>.</p>
+<div class="section" id="custom-reference-genomes">
+<h3>Custom reference genomes<a class="headerlink" href="#custom-reference-genomes" title="Permalink to this headline"> </a></h3>
+<p>To use a reference build other than GRCh37 or GRCh38, follow these steps:</p>
+<ol class="arabic">
+<li><p>Prepare the reference for use with BWA and GATK.</p>
+<p>The reference genome directory contents should include these files:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;reference-name&gt;.dict
+&lt;reference-name&gt;.fa
+&lt;reference-name&gt;.fa.amb
+&lt;reference-name&gt;.fa.ann
+&lt;reference-name&gt;.fa.bwt
+&lt;reference-name&gt;.fa.fai
+&lt;reference-name&gt;.fa.pac
+&lt;reference-name&gt;.fa.sa
+</pre></div>
+</div>
+</li>
+<li><p>Upload the reference genome files to a directory in cloud storage or DBFS. If you upload the
+files to cloud storage, you must <a class="reference internal" href="../../../dbfs/mounts.html"><span class="doc">mount the directory to a location in DBFS</span></a>.</p></li>
+<li><p>In your cluster configuration, set an <a class="reference internal" href="../../../compute/configure.html#env-var"><span class="std std-ref">environment variable</span></a> <code class="docutils literal notranslate"><span class="pre">REF_GENOME_PATH</span></code> that points to the path of the fasta file in DBFS. For example,</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">REF_GENOME_PATH</span><span class="o">=</span><span class="s">/mnt/reference-genome/reference.fa</span>
+</pre></div>
+</div>
+<p>The path must not include a <code class="docutils literal notranslate"><span class="pre">dbfs:</span></code> prefix.</p>
+<p>When you use a custom reference genome, the SnpEff annotation stage is skipped.</p>
+</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>During cluster initialization, the Databricks DNASeq pipeline uses the provided BWA index files
+to generate an index image file. If you plan to use the same reference genome many times, you can
+accelerate cluster startup by building the index image file ahead of time. This process will
+reduce cluster startup time by about 30 seconds.</p>
+<ol class="arabic">
+<li><p>Copy the reference genome directory to the driver node of a Databricks Runtime for Genomics cluster.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>%sh<span class="w"> </span>cp<span class="w"> </span>-r<span class="w"> </span>/dbfs/&lt;reference-dir-path&gt;<span class="w"> </span>/local_disk0/reference-genome
+</pre></div>
+</div>
+</li>
+<li><p>Generate the index image file from the BWA index files.</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">broadinstitute</span><span class="p">.</span><span class="nn">hellbender</span><span class="p">.</span><span class="nn">utils</span><span class="p">.</span><span class="nn">bwa</span><span class="p">.</span><span class="n">_</span>
+<span class="nc">BwaMemIndex</span><span class="p">.</span><span class="n">createIndexImageFromIndexFiles</span><span class="p">(</span><span class="s">&quot;/local_disk0/reference-genome/&lt;reference-name&gt;.fa&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/local_disk0/reference-genome/&lt;reference-name&gt;.fa.img&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Copy to the index image file to the same directory as the reference fasta files.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>%sh<span class="w"> </span>cp<span class="w"> </span>/local_disk0/reference-genome/&lt;reference-name&gt;.fa.img<span class="w"> </span>/dbfs/&lt;reference-dir-path&gt;
+</pre></div>
+</div>
+</li>
+<li><p>Delete the unneeded BWA index files (<code class="docutils literal notranslate"><span class="pre">.amb</span></code>, <code class="docutils literal notranslate"><span class="pre">.ann</span></code>, <code class="docutils literal notranslate"><span class="pre">.bwt</span></code>, <code class="docutils literal notranslate"><span class="pre">.pac</span></code>, <code class="docutils literal notranslate"><span class="pre">.sa</span></code>) from
+DBFS.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>%fs<span class="w"> </span>rm<span class="w"> </span>&lt;file&gt;
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline"> </a></h2>
+<p>The pipeline accepts parameters that control its behavior. The most important and
+commonly changed parameters are documented here; the rest can be found in the DNASeq notebook.
+After importing the notebook and setting it as a job task, you can set these parameters for
+<a class="reference internal" href="../../../workflows/jobs/create-run-jobs.html#create-a-job"><span class="std std-ref">all runs</span></a> or <a class="reference internal" href="../../../workflows/jobs/create-run-jobs.html#job-run-with-different-params"><span class="std std-ref">per-run</span></a>.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>manifest</p></td>
+<td><p>n/a</p></td>
+<td><p>The manifest describing the input.</p></td>
+</tr>
+<tr class="row-odd"><td><p>output</p></td>
+<td><p>n/a</p></td>
+<td><p>The path where pipeline output should be written.</p></td>
+</tr>
+<tr class="row-even"><td><p>replayMode</p></td>
+<td><p>skip</p></td>
+<td><p>One of:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">skip</span></code>: stages are skipped if output already exists.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">overwrite</span></code>: existing output is deleted.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>exportVCF</p></td>
+<td><p>false</p></td>
+<td><p>If true, the pipeline writes results in VCF as well as Delta Lake.</p></td>
+</tr>
+<tr class="row-even"><td><p>referenceConfidenceMode</p></td>
+<td><p>NONE</p></td>
+<td><p>One of:</p>
+<ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">NONE</span></code>, only variant sites are included in the output</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">GVCF</span></code>, all sites are included, with adjacent reference sites banded.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">BP_RESOLUTION</span></code>, all sites are included.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>perSampleTimeout</p></td>
+<td><p>12h</p></td>
+<td><p>A timeout applied per sample. After reaching this timeout, the pipeline continues on to
+the next sample. The value of this parameter must include a timeout unit: ‘s’ for seconds,
+‘m’ for minutes, or ‘h’ for hours. For example, ‘60m’ results in a timeout of 60
+minutes.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>To optimize run time, set the <code class="docutils literal notranslate"><span class="pre">spark.sql.shuffle.partitions</span></code>
+<a class="reference internal" href="../../../compute/configure.html#spark-configuration"><span class="std std-ref">Spark configuration</span></a> to three times the number of cores of the cluster.</p>
+</div>
+</div>
+<div class="section" id="customization">
+<h2>Customization<a class="headerlink" href="#customization" title="Permalink to this headline"> </a></h2>
+<p>You can customize the DNASeq pipeline by disabling read alignment, variant calling, and variant annotation. By default,
+all three stages are enabled.</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="n">pipeline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">DNASeqPipeline</span><span class="p">(</span><span class="n">align</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="n">callVariants</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="n">annotate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To disable variant annotation, set the pipeline as follows:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="n">pipeline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">DNASeqPipeline</span><span class="p">(</span><span class="n">align</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="n">callVariants</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="n">annotate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The permitted stage combinations are:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 32%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Read alignment</p></th>
+<th class="head"><p>Variant calling</p></th>
+<th class="head"><p>Variant annotation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> true</p></td>
+<td><p> true</p></td>
+<td><p> true</p></td>
+</tr>
+<tr class="row-odd"><td><p> true</p></td>
+<td><p> true</p></td>
+<td><p> false</p></td>
+</tr>
+<tr class="row-even"><td><p> true</p></td>
+<td><p> false</p></td>
+<td><p> false</p></td>
+</tr>
+<tr class="row-odd"><td><p> false</p></td>
+<td><p> true</p></td>
+<td><p> true</p></td>
+</tr>
+<tr class="row-even"><td><p> false</p></td>
+<td><p> true</p></td>
+<td><p> false</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="manifest-format">
+<h2>Manifest format<a class="headerlink" href="#manifest-format" title="Permalink to this headline"> </a></h2>
+<p>The manifest is a CSV file or blob describing where to find the input FASTQ or BAM files. For example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>file_path,sample_id,paired_end,read_group_id
+*_R1_*.fastq.bgz,HG001,1,read_group
+*_R2_*.fastq.bgz,HG001,2,read_group
+</pre></div>
+</div>
+<p>If your input consists of unaligned BAM files, you should omit the <code class="docutils literal notranslate"><span class="pre">paired_end</span></code> field:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>file_path,sample_id,paired_end,read_group_id
+*.bam,HG001,,read_group
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If the provided manifest is a file, the <code class="docutils literal notranslate"><span class="pre">file_path</span></code> field in each row can be an absolute path or a path relative to
+the manifest file. If the provided manifest is a blob, the <code class="docutils literal notranslate"><span class="pre">file_path</span></code> field must be an absolute path. You can
+include globs <code class="docutils literal notranslate"><span class="pre">(*)</span></code> to match many files.</p>
+</div>
+</div>
+<div class="section" id="supported-input-formats">
+<h2>Supported input formats<a class="headerlink" href="#supported-input-formats" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>SAM</p></li>
+<li><p>BAM</p></li>
+<li><p>CRAM</p></li>
+<li><p>Parquet</p></li>
+<li><p>FASTQ</p>
+<ul>
+<li><p>bgzip <code class="docutils literal notranslate"><span class="pre">*.fastq.bgz</span></code> (recommended) bgzipped files with the <code class="docutils literal notranslate"><span class="pre">*.fastq.gz</span></code> extension are recognized as <code class="docutils literal notranslate"><span class="pre">bgz</span></code>.</p></li>
+<li><p>uncompressed <code class="docutils literal notranslate"><span class="pre">*.fastq</span></code></p></li>
+<li><p>gzip <code class="docutils literal notranslate"><span class="pre">*.fastq.gz</span></code></p></li>
+</ul>
+</li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Gzipped files are not splittable. Choose autoscaling clusters to minimize cost for these files.</p>
+</div>
+<p>To block compress a FASTQ, install <a class="reference external" href="https://www.htslib.org/download/">htslib</a>, which includes the <code class="docutils literal notranslate"><span class="pre">bgzip</span></code> executable.</p>
+<p><strong>Locally</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gunzip<span class="w"> </span>-c<span class="w"> </span>&lt;my-file&gt;.gz<span class="w"> </span><span class="p">|</span><span class="w"> </span>bgzip<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>-<span class="w"> </span>s3://&lt;my-s3-file-path&gt;.bgz
+</pre></div>
+</div>
+<p><strong>From S3</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>s3://&lt;my-s3-file-path&gt;.gz<span class="w"> </span>-<span class="w"> </span><span class="p">|</span><span class="w"> </span>gunzip<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>bgzip<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>-<span class="w"> </span>s3://&lt;my-s3-file-path&gt;.bgz
+</pre></div>
+</div>
+<p></p>
+</div>
+<div class="section" id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline"> </a></h2>
+<p>The aligned reads, called variants, and annotated variants are all written out to Delta tables inside the provided
+output directory if the corresponding stages are enabled. Each table is partitioned by sample ID. In addition, if
+you configured the pipeline to export BAMs or VCFs, they’ll appear under the output directory as well.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>|---alignments
+    |---sampleId=HG001
+        |---Parquet files
+|---alignments.bam
+    |---HG001.bam
+|---annotations
+    |---Delta files
+|---annotations.vcf
+    |---HG001.vcf
+|---genotypes
+    |---Delta files
+|---genotypes.vcf
+    |---HG001.vcf
+</pre></div>
+</div>
+<p>When you run the pipeline on a new sample, it’ll appear as a new partition. If you run the pipeline
+for a sample that already appears in the output directory, that partition will be overwritten.</p>
+<p>Since all the information is available in Delta Lake, you can easily analyze it with Spark in Python, R, Scala, or SQL. For example:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the data</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;/genomics/output_dir/genotypes&quot;</span><span class="p">)</span>
+<span class="c1"># Show all variants from chromosome 12</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s2">&quot;contigName == &#39;12&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">orderBy</span><span class="p">(</span><span class="s2">&quot;sampleId&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Register the table in the catalog</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">genotypes</span>
+<span class="k">USING</span><span class="w"> </span><span class="n">delta</span>
+<span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;/genomics/output_dir/genotypes&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline"> </a></h2>
+<p><strong>Job is slow and few tasks are running</strong></p>
+<p>Usually indicates that the input FASTQ files are compressed with <code class="docutils literal notranslate"><span class="pre">gzip</span></code> instead of <code class="docutils literal notranslate"><span class="pre">bgzip</span></code>. Gzipped files are not splittable, so the input cannot be processed in parallel.  </p>
+</div>
+<div class="section" id="run-programmatically">
+<h2>Run programmatically<a class="headerlink" href="#run-programmatically" title="Permalink to this headline"> </a></h2>
+<p>In addition to using the UI, you can start runs of the pipeline programmatically using the <a class="reference internal" href="../../dev-tools/cli/index.html"><span class="doc">Databricks CLI (legacy)</span></a>.</p>
+<div class="figure align-default">
+<img alt="Find the job id" src="../../../_images/job-id.png" />
+</div>
+<p>After setting up the pipeline job in the UI, copy the <strong>Job ID</strong> as you pass it to the <code class="docutils literal notranslate"><span class="pre">jobs</span> <span class="pre">run-now</span></code> CLI command.</p>
+<p>Here’s an example bash script that you can adapt for your workflow:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate a manifest file</span>
+cat<span class="w"> </span><span class="s">&lt;&lt;HERE &gt;manifest.csv</span>
+<span class="s">file_path,sample_id,paired_end,read_group_id</span>
+<span class="s">dbfs:/genomics/my_new_sample/*_R1_*.fastq.bgz,my_new_sample,1,read_group</span>
+<span class="s">dbfs:/genomics/my_new_sample/*_R2_*.fastq.bgz,my_new_sample,2,read_group</span>
+<span class="s">HERE</span>
+
+<span class="c1"># Upload the file to DBFS</span>
+<span class="nv">DBFS_PATH</span><span class="o">=</span>dbfs:/genomics/manifests/<span class="k">$(</span>date<span class="w"> </span>+<span class="s2">&quot;%Y-%m-%dT%H-%M-%S&quot;</span><span class="k">)</span>-manifest.csv
+databricks<span class="w"> </span>fs<span class="w"> </span>cp<span class="w"> </span>manifest.csv<span class="w"> </span><span class="nv">$DBFS_PATH</span>
+
+<span class="c1"># Start a new run</span>
+databricks<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>run-now<span class="w"> </span>--job-id<span class="w"> </span>&lt;job-id&gt;<span class="w"> </span>--notebook-params<span class="w"> </span><span class="s2">&quot;{\&quot;manifest\&quot;: \&quot;</span><span class="nv">$DBFS_PATH</span><span class="s2">\&quot;}&quot;</span>
+</pre></div>
+</div>
+<p>In addition to starting runs from the command line, you can use this pattern to invoke the pipeline
+from automated systems like Jenkins.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

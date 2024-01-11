@@ -1,0 +1,517 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to do model inference with Spark for Hugging Face Transformers for NLP." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Model inference using Hugging Face Transformers for natural language processing (NLP)">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Model inference using Hugging Face Transformers for natural language processing (NLP) &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/machine-learning/train-model/huggingface/model-inference-nlp.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/machine-learning/train-model/huggingface/model-inference-nlp.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/machine-learning/train-model/huggingface/model-inference-nlp.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../../en/machine-learning/train-model/huggingface/model-inference-nlp.html" class="notranslate">English</option>
+    <option value="../../../../ja/machine-learning/train-model/huggingface/model-inference-nlp.html" class="notranslate">日本語</option>
+    <option value="../../../../pt/machine-learning/train-model/huggingface/model-inference-nlp.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Model inference using Hugging Face Transformers for natural language processing (NLP)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="model-inference-using-hugging-face-transformers-for-natural-language-processing-nlp">
+<h1>Model inference using Hugging Face Transformers for natural language processing (NLP)<a class="headerlink" href="#model-inference-using-hugging-face-transformers-for-natural-language-processing-nlp" title="Permalink to this headline"> </a></h1>
+<p>This article shows you how to use Hugging Face Transformers for natural language processing (NLP) model inference.</p>
+<p>Hugging Face transformers provides the <a class="reference external" href="https://huggingface.co/docs/transformers/main/en/main_classes/pipelines">pipelines</a> class to use the pre-trained model for inference. 🤗 Transformers pipelines support a <a class="reference external" href="https://huggingface.co/docs/transformers/main_classes/pipelines#natural-language-processing">wide range of NLP tasks</a> that you can easily use on Databricks.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>MLflow 2.3</p></li>
+<li><p>Any cluster with the Hugging Face <code class="docutils literal notranslate"><span class="pre">transformers</span></code> library installed can be used for batch inference. The <code class="docutils literal notranslate"><span class="pre">transformers</span></code> library comes preinstalled on Databricks Runtime 10.4 LTS ML and above. Many of the popular NLP models work best on GPU hardware, so you may get the best performance using recent GPU hardware unless you use a model specifically optimized for use on CPUs.</p></li>
+</ul>
+</div>
+<div class="section" id="use-pandas-udfs-to-distribute-model-computation-on-a-spark-cluster">
+<h2>Use Pandas UDFs to distribute model computation on a Spark cluster<a class="headerlink" href="#use-pandas-udfs-to-distribute-model-computation-on-a-spark-cluster" title="Permalink to this headline"> </a></h2>
+<p>When experimenting with pre-trained models you can use <a class="reference internal" href="../../../udf/pandas.html"><span class="doc">Pandas UDFs</span></a> to wrap the model and perform computation on worker CPUs or GPUs. Pandas UDFs distribute the model to each worker.</p>
+<p>You can also create a Hugging Face Transformers pipeline for machine translation and use a Pandas UDF to run the pipeline on the workers of a Spark cluster:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">pandas_udf</span>
+
+<span class="n">device</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">translation_pipeline</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="s2">&quot;translation_en_to_fr&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;t5-base&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+<span class="nd">@pandas_udf</span><span class="p">(</span><span class="s1">&#39;string&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">translation_udf</span><span class="p">(</span><span class="n">texts</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+  <span class="n">translations</span> <span class="o">=</span> <span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;translation_text&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">translation_pipeline</span><span class="p">(</span><span class="n">texts</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+  <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">translations</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Setting the <code class="docutils literal notranslate"><span class="pre">device</span></code> in this manner ensures that GPUs are used if they are available on
+the cluster.</p>
+<p>The Hugging Face pipelines for translation return a list of Python <code class="docutils literal notranslate"><span class="pre">dict</span></code> objects, each with a single key <code class="docutils literal notranslate"><span class="pre">translation_text</span></code> and a value containing the translated text. This UDF extracts the translation from the results to return a Pandas series with just the translated text. If your pipeline was constructed to use GPUs by setting <code class="docutils literal notranslate"><span class="pre">device=0</span></code>, then Spark automatically reassigns GPUs on the worker nodes if your cluster has instances with multiple GPUs.</p>
+<p>To use the UDF to translate a text column, you can call the UDF in a <code class="docutils literal notranslate"><span class="pre">select</span></code> statement:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">texts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Hugging Face is a French company based in New York City.&quot;</span><span class="p">,</span> <span class="s2">&quot;Databricks is based in San Francisco.&quot;</span><span class="p">]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;texts&quot;</span><span class="p">]))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">texts</span><span class="p">,</span> <span class="n">translation_udf</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">texts</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;translation&#39;</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="return-complex-result-types">
+<h2>Return complex result types<a class="headerlink" href="#return-complex-result-types" title="Permalink to this headline"> </a></h2>
+<p>Using Pandas UDFs you can also return more structured output. For example, in named-entity recognition, pipelines return a list of <code class="docutils literal notranslate"><span class="pre">dict</span></code> objects containing the entity, its span, type, and an associated score. While similar to the example for translation, the return type for the <code class="docutils literal notranslate"><span class="pre">&#64;pandas_udf</span></code> annotation is more complex in the case of named-entity recognition.</p>
+<p>You can get a sense of the return types to use through inspection of pipeline results, for example by running the pipeline on the driver.</p>
+<p>In this example, use the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="n">device</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">ner_pipeline</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="s2">&quot;ner&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;Davlan/bert-base-multilingual-cased-ner-hrl&quot;</span><span class="p">,</span> <span class="n">aggregation_strategy</span><span class="o">=</span><span class="s2">&quot;simple&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="n">ner_pipeline</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To yield the annotations:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[[{</span><span class="s1">&#39;entity_group&#39;</span><span class="p">:</span> <span class="s1">&#39;ORG&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="mf">0.99933606</span><span class="p">,</span>
+   <span class="s1">&#39;word&#39;</span><span class="p">:</span> <span class="s1">&#39;Hugging Face&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+   <span class="s1">&#39;end&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">},</span>
+  <span class="p">{</span><span class="s1">&#39;entity_group&#39;</span><span class="p">:</span> <span class="s1">&#39;LOC&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="mf">0.99967843</span><span class="p">,</span>
+   <span class="s1">&#39;word&#39;</span><span class="p">:</span> <span class="s1">&#39;New York City&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
+   <span class="s1">&#39;end&#39;</span><span class="p">:</span> <span class="mi">55</span><span class="p">}],</span>
+ <span class="p">[{</span><span class="s1">&#39;entity_group&#39;</span><span class="p">:</span> <span class="s1">&#39;ORG&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="mf">0.9996372</span><span class="p">,</span>
+   <span class="s1">&#39;word&#39;</span><span class="p">:</span> <span class="s1">&#39;Databricks&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+   <span class="s1">&#39;end&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">},</span>
+  <span class="p">{</span><span class="s1">&#39;entity_group&#39;</span><span class="p">:</span> <span class="s1">&#39;LOC&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="mf">0.999588</span><span class="p">,</span>
+   <span class="s1">&#39;word&#39;</span><span class="p">:</span> <span class="s1">&#39;San Francisco&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="mi">23</span><span class="p">,</span>
+   <span class="s1">&#39;end&#39;</span><span class="p">:</span> <span class="mi">36</span><span class="p">}]]</span>
+</pre></div>
+</div>
+<p>To represent this as a return type, you can use an <code class="docutils literal notranslate"><span class="pre">array</span></code> of <code class="docutils literal notranslate"><span class="pre">struct</span></code> fields, listing the <code class="docutils literal notranslate"><span class="pre">dict</span></code> entries as the fields of the <code class="docutils literal notranslate"><span class="pre">struct</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">pandas_udf</span>
+
+<span class="nd">@pandas_udf</span><span class="p">(</span><span class="s1">&#39;array&lt;struct&lt;word string, entity_group string, score float, start integer, end integer&gt;&gt;&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">ner_udf</span><span class="p">(</span><span class="n">texts</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+  <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">ner_pipeline</span><span class="p">(</span><span class="n">texts</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">texts</span><span class="p">,</span> <span class="n">ner_udf</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">texts</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;entities&#39;</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tune-performance">
+<h2>Tune performance<a class="headerlink" href="#tune-performance" title="Permalink to this headline"> </a></h2>
+<p>There are several key aspects to tuning performance of the UDF. The first is to use each GPU effectively, which you can adjust by changing the size of batches sent to the GPU by the Transformers pipeline. The second is to make sure the DataFrame is well-partitioned to utilize the entire cluster.</p>
+<p>Finally, you may wish to cache the Hugging Face model to save model load time or ingress costs.</p>
+<div class="section" id="choose-a-batch-size">
+<h3>Choose a batch size<a class="headerlink" href="#choose-a-batch-size" title="Permalink to this headline"> </a></h3>
+<p>While the UDFs described above should work out-of-the box with a <code class="docutils literal notranslate"><span class="pre">batch_size</span></code> of 1, this may not use the resources available to the workers efficiently. To improve performance, tune the batch size to the model and hardware in the cluster. Databricks recommends trying various batch sizes for the pipeline on your cluster to find the best performance. Read more about <a class="reference external" href="https://huggingface.co/docs/transformers/main_classes/pipelines#pipeline-batching">pipeline batching</a> and other <a class="reference external" href="https://huggingface.co/docs/transformers/performance">performance options</a> in Hugging Face documentation.</p>
+<p>Try finding a batch size that is large enough so that it drives the full GPU utilization but does not result in <code class="docutils literal notranslate"><span class="pre">CUDA</span> <span class="pre">out</span> <span class="pre">of</span> <span class="pre">memory</span></code> errors. When you receive <code class="docutils literal notranslate"><span class="pre">CUDA</span> <span class="pre">out</span> <span class="pre">of</span> <span class="pre">memory</span></code> errors during tuning, you need to detach and reattach the notebook to release the memory used by the model and data in the GPU.</p>
+<p>Monitor GPU performance by viewing the live <a class="reference internal" href="../../../compute/clusters-manage.html#metrics"><span class="std std-ref">cluster metrics</span></a> for a cluster, and choosing a metric, such as <code class="docutils literal notranslate"><span class="pre">gpu0-util</span></code> for GPU processor utilization or <code class="docutils literal notranslate"><span class="pre">gpu0_mem_util</span></code> for GPU memory utilization.</p>
+</div>
+<div class="section" id="tune-parallelism-with-stage-level-scheduling">
+<h3>Tune parallelism with stage-level scheduling<a class="headerlink" href="#tune-parallelism-with-stage-level-scheduling" title="Permalink to this headline"> </a></h3>
+<p>By default, Spark schedules one task per GPU on each machine. To increase parallelism, you can use stage-level scheduling to tell Spark how many tasks to run per GPU. For example, if you would like Spark to run two tasks per GPU, you can specify this in the following way:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.resource</span> <span class="kn">import</span> <span class="n">TaskResourceRequests</span><span class="p">,</span> <span class="n">ResourceProfileBuilder</span>
+
+<span class="n">task_requests</span> <span class="o">=</span> <span class="n">TaskResourceRequests</span><span class="p">()</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s2">&quot;gpu&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">builder</span> <span class="o">=</span> <span class="n">ResourceProfileBuilder</span><span class="p">()</span>
+<span class="n">resource_profile</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="n">task_requests</span><span class="p">)</span><span class="o">.</span><span class="n">build</span>
+
+<span class="n">rdd</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">&#39;predictions&#39;</span><span class="p">,</span> <span class="n">loaded_model</span><span class="p">(</span><span class="n">struct</span><span class="p">(</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">))))</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">withResources</span><span class="p">(</span><span class="n">resource_profile</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="repartition-data-to-use-all-available-hardware">
+<h3>Repartition data to use all available hardware<a class="headerlink" href="#repartition-data-to-use-all-available-hardware" title="Permalink to this headline"> </a></h3>
+<p>The second consideration for performance is making full use of the hardware in your cluster. Generally, a small multiple of the number of GPUs on your workers (for GPU clusters) or number of cores across the workers in your cluster (for CPU clusters) works well. Your input DataFrame may already have enough partitions to take advantage of the cluster’s parallelism. To see how many partitions the DataFrame contains, use <code class="docutils literal notranslate"><span class="pre">df.rdd.getNumPartitions()</span></code>. You can repartition a DataFrame using <code class="docutils literal notranslate"><span class="pre">repartitioned_df</span> <span class="pre">=</span> <span class="pre">df.repartition(desired_partition_count)</span></code>.</p>
+</div>
+<div class="section" id="cache-the-model-in-dbfs-or-on-mount-points">
+<h3>Cache the model in DBFS or on mount points<a class="headerlink" href="#cache-the-model-in-dbfs-or-on-mount-points" title="Permalink to this headline"> </a></h3>
+<p>If you are frequently loading a model from different or restarted clusters, you may also wish to cache the Hugging Face model in the <a class="reference internal" href="../../../dbfs/index.html"><span class="doc">DBFS root volume</span></a> or on <a class="reference internal" href="../../../dbfs/mounts.html"><span class="doc">a mount point</span></a>. This can decrease ingress costs and reduce the time to load the model on a new or restarted cluster. To do this, set the <code class="docutils literal notranslate"><span class="pre">TRANSFORMERS_CACHE</span></code> environment variable in your code before loading the pipeline.</p>
+<p>For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;TRANSFORMERS_CACHE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/dbfs/hugging_face_transformers_cache/&#39;</span>
+</pre></div>
+</div>
+<p>Alternatively, you can achieve similar results by logging the model to MLflow with the <a class="reference external" href="https://mlflow.org/docs/latest/models.html#transformers-transformers-experimental">MLflow `transformers`  flavor</a>.</p>
+</div>
+</div>
+<div class="section" id="notebook-hugging-face-transformers-inference-and-mlflow-logging">
+<h2>Notebook: Hugging Face Transformers inference and MLflow logging<a class="headerlink" href="#notebook-hugging-face-transformers-inference-and-mlflow-logging" title="Permalink to this headline"> </a></h2>
+<p>To get started quickly with example code, this notebook is an end-to-end example for text summarization by using Hugging Face Transformers pipelines inference and MLflow logging.</p>
+<div class="embedded-notebook-section section" id="hugging-face-transformers-pipelines-inference-notebook">
+<span id="hugging-face-transformers-batch-nlp"></span><h3>Hugging Face Transformers pipelines inference notebook<a class="headerlink" href="#hugging-face-transformers-pipelines-inference-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/deep-learning/hugging-face-transformers-batch-nlp.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/deep-learning/hugging-face-transformers-batch-nlp.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/deep-learning/hugging-face-transformers-batch-nlp.html"            id="be665a194f7b0b6ca0c8f226e2204d36ad32f1b428f560c31964869a4a5ceb94" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline"> </a></h2>
+<p>You can fine-tune your Hugging Face model with the following guides:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="load-data.html"><span class="doc">Prepare data for fine tuning Hugging Face models</span></a></p></li>
+<li><p><a class="reference internal" href="fine-tune-model.html"><span class="doc">Fine-tune Hugging Face models for a single GPU</span></a></p></li>
+</ul>
+<p>Learn more about <a class="reference internal" href="index.html"><span class="doc">What are Hugging Face Transformers?</span></a></p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

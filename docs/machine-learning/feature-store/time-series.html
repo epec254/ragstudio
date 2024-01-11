@@ -1,0 +1,692 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use the time series feature tables and point-in-time lookups provided by Databricks Feature Store for ML model development." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Use time series feature tables with point-in-time support">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Use time series feature tables with point-in-time support &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/machine-learning/feature-store/time-series.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/machine-learning/feature-store/time-series.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/machine-learning/feature-store/time-series.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/machine-learning/feature-store/time-series.html" class="notranslate">English</option>
+    <option value="../../../ja/machine-learning/feature-store/time-series.html" class="notranslate">日本語</option>
+    <option value="../../../pt/machine-learning/feature-store/time-series.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Use time series feature tables with point-in-time support</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="use-time-series-feature-tables-with-point-in-time-support">
+<h1>Use time series feature tables with point-in-time support<a class="headerlink" href="#use-time-series-feature-tables-with-point-in-time-support" title="Permalink to this headline"> </a></h1>
+<p>The data used to train a model often has time dependencies built into it. For example, if you are training a model to predict which machines on a factory floor need maintenance, you might have historical datasets that contain sensor measurements and usage data for many machines, along with target labels that indicate if the machine needed service or not. The dataset might contain data for machines both before and after a maintenance service was performed.</p>
+<p>When you build the model, you must consider only feature values up until the time of the observed target value (needs service or does not need service). If you do not explicitly take into account the timestamp of each observation, you might inadvertently use feature values measured after the timestamp of the target value for training. This is called “data leakage” and can negatively affect the model’s performance.</p>
+<p>Time series feature tables include a timestamp key column that ensures that each row in the training dataset represents the latest known feature values as of the row’s timestamp. You should use time series feature tables whenever feature values change over time, for example with time series data, event-based data, or time-aggregated data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>With Databricks Runtime 13.2 and above, any Delta table in Unity Catalog with primary keys and timestamp keys can be used as a time series feature table. We recommend applying <a class="reference internal" href="../../delta/data-skipping.html"><span class="doc">Z-Ordering</span></a> on time series tables for better performance in point-in-time lookups.</p></li>
+<li><p>Point-in-time lookup functionality is sometimes referred to as “time travel”. The point-in-time functionality in Databricks Feature Store is not related to <a class="reference internal" href="../../delta/history.html"><span class="doc">Delta Lake time travel</span></a>.</p></li>
+<li><p>To use point-in-time functionality, you must specify time-related keys using  the <code class="docutils literal notranslate"><span class="pre">timeseries_columns</span></code> argument (for Feature Engineering in Unity Catalog) or the <code class="docutils literal notranslate"><span class="pre">timestamp_keys</span></code> argument (for Workspace Feature Store). This indicates that feature table rows should be joined by matching the most recent value for a particular primary key that is not later than the value of the <code class="docutils literal notranslate"><span class="pre">timestamps_keys</span></code> column, instead of joining based on an exact time match. If you only designate a timeseries column as a primary key column, feature store does not apply point-in-time logic to the timeseries column during joins. Instead, it matches only rows with an exact time match instead of matching all rows prior to the timestamp.</p></li>
+</ul>
+</div>
+<div class="section" id="how-time-series-feature-tables-work">
+<h2>How time series feature tables work<a class="headerlink" href="#how-time-series-feature-tables-work" title="Permalink to this headline"> </a></h2>
+<p>Suppose you have the following feature tables. This data is taken from the <a class="reference internal" href="#example"><span class="std std-ref">example notebook</span></a>.</p>
+<p>The tables contain sensor data measuring the temperature, relative humidity, ambient light, and carbon dioxide in a room. The ground truth table indicates if a person was present in the room. Each of the tables has a primary key (‘room’) and a timestamp key (‘ts’). For simplicity, only data for a single value of the primary key (‘0’)  is shown.</p>
+<div class="figure align-default">
+<img alt="example feature table data" src="../../_images/feature-tables.png" />
+</div>
+<p>The following figure illustrates how the timestamp key is used to ensure point-in-time correctness in a training dataset. Feature values are matched based on the primary key (not shown in the diagram) and the timestamp key, using an AS OF join. The AS OF join ensures that the most recent value of the feature at the time of the timestamp is used in the training set.</p>
+<div class="figure align-default">
+<img alt="how point in time works" src="../../_images/point-in-time-diagram.png" />
+</div>
+<p>As shown in the figure, the training dataset includes the latest feature values for each sensor prior to the timestamp on the observed ground truth.</p>
+<p>If you created a training dataset without taking into account the timestamp key, you might have a row with these feature values and observed ground truth:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 19%" />
+<col style="width: 12%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>temp</p></th>
+<th class="head"><p>rh</p></th>
+<th class="head"><p>light</p></th>
+<th class="head"><p>co2</p></th>
+<th class="head"><p>ground truth</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> 15.8</p></td>
+<td><p> 32</p></td>
+<td><p> 212</p></td>
+<td><p> 630</p></td>
+<td><p> 0</p></td>
+</tr>
+</tbody>
+</table>
+<p>However, this is not a valid observation for training, because the co2 reading of 630 was taken at 8:52, after the observation of the ground truth at 8:50. The future data is “leaking” into the training set, which will impair the model’s performance.</p>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>For Feature Engineering in Unity Catalog: Feature Engineering in Unity Catalog client (any version)</p></li>
+<li><p>For Workspace Feature Store: Feature Store client v0.3.7 and above</p></li>
+</ul>
+</div>
+<div class="section" id="create-a-time-series-feature-table-in-unity-catalog">
+<span id="create-a-time-series-feature-table-in-uc"></span><h2>Create a time series feature table in Unity Catalog<a class="headerlink" href="#create-a-time-series-feature-table-in-unity-catalog" title="Permalink to this headline"> </a></h2>
+<p>In Unity Catalog, any table with a <a class="reference internal" href="../../sql/language-manual/sql-ref-syntax-ddl-create-table-constraint.html"><span class="doc">TIMESERIES</span></a> primary key is a time series feature table. See <a class="reference internal" href="uc/feature-tables-uc.html#create-feature-table"><span class="std std-ref">Create a feature table in Unity Catalog</span></a> for how to create one.</p>
+</div>
+<div class="section" id="create-a-time-series-feature-table-in-local-workspace">
+<h2>Create a time series feature table in local workspace<a class="headerlink" href="#create-a-time-series-feature-table-in-local-workspace" title="Permalink to this headline"> </a></h2>
+<p>To create a time series feature table in the local Workspace Feature Store, the DataFrame or schema must contain a column that you designate as the timestamp key.</p>
+<p>Starting with Feature Store client v0.13.4, timestamp key columns must be specified in the <code class="docutils literal notranslate"><span class="pre">primary_keys</span></code> argument. Timestamp keys are part of the “primary keys” that uniquely identify each row in the feature table. Like other primary key columns, timestamp key columns cannot contain <code class="docutils literal notranslate"><span class="pre">NULL</span></code> values.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Feature&amp;nbsp;Engineering&amp;nbsp;in&amp;nbsp;Unity&amp;nbsp;Catalog">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fe</span> <span class="o">=</span> <span class="n">FeatureEngineeringClient</span><span class="p">()</span>
+<span class="c1"># user_features_df DataFrame contains the following columns:</span>
+<span class="c1"># - user_id</span>
+<span class="c1"># - ts</span>
+<span class="c1"># - purchases_30d</span>
+<span class="c1"># - is_free_trial_active</span>
+<span class="n">fe</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;ml.ads_team.user_features&quot;</span><span class="p">,</span>
+  <span class="n">primary_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">,</span> <span class="s2">&quot;ts&quot;</span><span class="p">],</span>
+  <span class="n">timeseries_columns</span><span class="o">=</span><span class="s2">&quot;ts&quot;</span><span class="p">,</span>
+  <span class="n">features_df</span><span class="o">=</span><span class="n">user_features_df</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-middle compound" lang="Workspace&amp;nbsp;Feature&amp;nbsp;Store&amp;nbsp;client&amp;nbsp;v0.13.4&amp;nbsp;and&amp;nbsp;above">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">()</span>
+<span class="c1"># user_features_df DataFrame contains the following columns:</span>
+<span class="c1"># - user_id</span>
+<span class="c1"># - ts</span>
+<span class="c1"># - purchases_30d</span>
+<span class="c1"># - is_free_trial_active</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;ads_team.user_features&quot;</span><span class="p">,</span>
+  <span class="n">primary_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">,</span> <span class="s2">&quot;ts&quot;</span><span class="p">],</span>
+  <span class="n">timestamp_keys</span><span class="o">=</span><span class="s2">&quot;ts&quot;</span><span class="p">,</span>
+  <span class="n">features_df</span><span class="o">=</span><span class="n">user_features_df</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="Workspace&amp;nbsp;Feature&amp;nbsp;Store&amp;nbsp;client&amp;nbsp;v0.13.3&amp;nbsp;and&amp;nbsp;below">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">()</span>
+<span class="c1"># user_features_df DataFrame contains the following columns:</span>
+<span class="c1"># - user_id</span>
+<span class="c1"># - ts</span>
+<span class="c1"># - purchases_30d</span>
+<span class="c1"># - is_free_trial_active</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;ads_team.user_features&quot;</span><span class="p">,</span>
+  <span class="n">primary_keys</span><span class="o">=</span><span class="s2">&quot;user_id&quot;</span><span class="p">,</span>
+  <span class="n">timestamp_keys</span><span class="o">=</span><span class="s2">&quot;ts&quot;</span><span class="p">,</span>
+  <span class="n">features_df</span><span class="o">=</span><span class="n">user_features_df</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>A time series feature table must have one timestamp key and cannot have any partition columns. The timestamp key column must be of <code class="docutils literal notranslate"><span class="pre">TimestampType</span></code> or <code class="docutils literal notranslate"><span class="pre">DateType</span></code>.</p>
+<p>Databricks recommends that time series feature tables have no more than two primary key columns to ensure performant writes and lookups.</p>
+</div>
+<div class="section" id="update-a-time-series-feature-table">
+<h2>Update a time series feature table<a class="headerlink" href="#update-a-time-series-feature-table" title="Permalink to this headline"> </a></h2>
+<p>When writing features to the time series feature tables, your DataFrame must supply values for all features of the feature table, unlike regular feature tables. This constraint reduces the sparsity of feature values across timestamps in the time series feature table.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Feature&amp;nbsp;Engineering&amp;nbsp;in&amp;nbsp;Unity&amp;nbsp;Catalog">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fe</span> <span class="o">=</span> <span class="n">FeatureEngineeringClient</span><span class="p">()</span>
+<span class="c1"># daily_users_batch_df DataFrame contains the following columns:</span>
+<span class="c1"># - user_id</span>
+<span class="c1"># - ts</span>
+<span class="c1"># - purchases_30d</span>
+<span class="c1"># - is_free_trial_active</span>
+<span class="n">fe</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span>
+  <span class="s2">&quot;ml.ads_team.user_features&quot;</span><span class="p">,</span>
+  <span class="n">daily_users_batch_df</span><span class="p">,</span>
+  <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;merge&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="Workspace&amp;nbsp;Feature&amp;nbsp;Store&amp;nbsp;client&amp;nbsp;v0.13.4&amp;nbsp;and&amp;nbsp;above">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">()</span>
+<span class="c1"># daily_users_batch_df DataFrame contains the following columns:</span>
+<span class="c1"># - user_id</span>
+<span class="c1"># - ts</span>
+<span class="c1"># - purchases_30d</span>
+<span class="c1"># - is_free_trial_active</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span>
+  <span class="s2">&quot;ads_team.user_features&quot;</span><span class="p">,</span>
+  <span class="n">daily_users_batch_df</span><span class="p">,</span>
+  <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;merge&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Streaming writes to time series feature tables is supported.</p>
+</div>
+<div class="section" id="create-a-training-set-with-a-time-series-feature-table">
+<h2>Create a training set with a time series feature table<a class="headerlink" href="#create-a-training-set-with-a-time-series-feature-table" title="Permalink to this headline"> </a></h2>
+<p>To perform a point-in-time lookup for feature values from a time series feature table, you must specify a <code class="docutils literal notranslate"><span class="pre">timestamp_lookup_key</span></code> in the feature’s <code class="docutils literal notranslate"><span class="pre">FeatureLookup</span></code>, which indicates the name of the DataFrame column that contains timestamps against which to lookup time series features. Databricks Feature Store retrieves the latest feature values prior to the timestamps specified in the DataFrame’s <code class="docutils literal notranslate"><span class="pre">timestamp_lookup_key</span></code> column and whose primary keys (excluding timestamp keys) match the values in the DataFrame’s <code class="docutils literal notranslate"><span class="pre">lookup_key</span></code> columns, or <code class="docutils literal notranslate"><span class="pre">null</span></code> if no such feature value exists.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Feature&amp;nbsp;Engineering&amp;nbsp;in&amp;nbsp;Unity&amp;nbsp;Catalog">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">feature_lookups</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="n">FeatureLookup</span><span class="p">(</span>
+    <span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;ml.ads_team.user_features&quot;</span><span class="p">,</span>
+    <span class="n">feature_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;purchases_30d&quot;</span><span class="p">,</span> <span class="s2">&quot;is_free_trial_active&quot;</span><span class="p">],</span>
+    <span class="n">lookup_key</span><span class="o">=</span><span class="s2">&quot;u_id&quot;</span><span class="p">,</span>
+    <span class="n">timestamp_lookup_key</span><span class="o">=</span><span class="s2">&quot;ad_impression_ts&quot;</span>
+  <span class="p">),</span>
+  <span class="n">FeatureLookup</span><span class="p">(</span>
+    <span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;ml.ads_team.ad_features&quot;</span><span class="p">,</span>
+    <span class="n">feature_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sports_relevance&quot;</span><span class="p">,</span> <span class="s2">&quot;food_relevance&quot;</span><span class="p">],</span>
+    <span class="n">lookup_key</span><span class="o">=</span><span class="s2">&quot;ad_id&quot;</span><span class="p">,</span>
+  <span class="p">)</span>
+<span class="p">]</span>
+
+<span class="c1"># raw_clickstream DataFrame contains the following columns:</span>
+<span class="c1"># - u_id</span>
+<span class="c1"># - ad_id</span>
+<span class="c1"># - ad_impression_ts</span>
+<span class="n">training_set</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">create_training_set</span><span class="p">(</span>
+  <span class="n">df</span><span class="o">=</span><span class="n">raw_clickstream</span><span class="p">,</span>
+  <span class="n">feature_lookups</span><span class="o">=</span><span class="n">feature_lookups</span><span class="p">,</span>
+  <span class="n">exclude_columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;u_id&quot;</span><span class="p">,</span> <span class="s2">&quot;ad_id&quot;</span><span class="p">,</span> <span class="s2">&quot;ad_impression_ts&quot;</span><span class="p">],</span>
+  <span class="n">label</span><span class="o">=</span><span class="s2">&quot;did_click&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">training_df</span> <span class="o">=</span> <span class="n">training_set</span><span class="o">.</span><span class="n">load_df</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="Workspace&amp;nbsp;Feature&amp;nbsp;Store">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">feature_lookups</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="n">FeatureLookup</span><span class="p">(</span>
+    <span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;ads_team.user_features&quot;</span><span class="p">,</span>
+    <span class="n">feature_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;purchases_30d&quot;</span><span class="p">,</span> <span class="s2">&quot;is_free_trial_active&quot;</span><span class="p">],</span>
+    <span class="n">lookup_key</span><span class="o">=</span><span class="s2">&quot;u_id&quot;</span><span class="p">,</span>
+    <span class="n">timestamp_lookup_key</span><span class="o">=</span><span class="s2">&quot;ad_impression_ts&quot;</span>
+  <span class="p">),</span>
+  <span class="n">FeatureLookup</span><span class="p">(</span>
+    <span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;ads_team.ad_features&quot;</span><span class="p">,</span>
+    <span class="n">feature_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sports_relevance&quot;</span><span class="p">,</span> <span class="s2">&quot;food_relevance&quot;</span><span class="p">],</span>
+    <span class="n">lookup_key</span><span class="o">=</span><span class="s2">&quot;ad_id&quot;</span><span class="p">,</span>
+  <span class="p">)</span>
+<span class="p">]</span>
+
+<span class="c1"># raw_clickstream DataFrame contains the following columns:</span>
+<span class="c1"># - u_id</span>
+<span class="c1"># - ad_id</span>
+<span class="c1"># - ad_impression_ts</span>
+<span class="n">training_set</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">create_training_set</span><span class="p">(</span>
+  <span class="n">df</span><span class="o">=</span><span class="n">raw_clickstream</span><span class="p">,</span>
+  <span class="n">feature_lookups</span><span class="o">=</span><span class="n">feature_lookups</span><span class="p">,</span>
+  <span class="n">exclude_columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;u_id&quot;</span><span class="p">,</span> <span class="s2">&quot;ad_id&quot;</span><span class="p">,</span> <span class="s2">&quot;ad_impression_ts&quot;</span><span class="p">],</span>
+  <span class="n">label</span><span class="o">=</span><span class="s2">&quot;did_click&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">training_df</span> <span class="o">=</span> <span class="n">training_set</span><span class="o">.</span><span class="n">load_df</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Any <code class="docutils literal notranslate"><span class="pre">FeatureLookup</span></code> on a time series feature table must be a point-in-time lookup, so it must specify a <code class="docutils literal notranslate"><span class="pre">timestamp_lookup_key</span></code> column to use in your DataFrame. Point-in-time lookup does not skip rows with <code class="docutils literal notranslate"><span class="pre">null</span></code> feature values stored in the time series feature table.</p>
+</div>
+<div class="section" id="set-a-time-limit-for-historical-feature-values">
+<span id="lookback-window"></span><h2>Set a time limit for historical feature values<a class="headerlink" href="#set-a-time-limit-for-historical-feature-values" title="Permalink to this headline"> </a></h2>
+<p>With Feature Store client v0.13.0 or above, or any version of Feature Engineering in Unity Catalog client, you can exclude feature values with older timestamps from the training set. To do so, use the parameter <code class="docutils literal notranslate"><span class="pre">lookback_window</span></code> in the <code class="docutils literal notranslate"><span class="pre">FeatureLookup</span></code>.</p>
+<p>The data type of <code class="docutils literal notranslate"><span class="pre">lookback_window</span></code> must be <code class="docutils literal notranslate"><span class="pre">datetime.timedelta</span></code>, and the default value is <code class="docutils literal notranslate"><span class="pre">None</span></code> (all feature values are used, regardless of age).</p>
+<p>For example, the following code excludes any feature values that are more than 7 days old:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Feature&amp;nbsp;Engineering&amp;nbsp;in&amp;nbsp;Unity&amp;nbsp;Catalog">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+
+<span class="n">feature_lookups</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="n">FeatureLookup</span><span class="p">(</span>
+    <span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;ml.ads_team.user_features&quot;</span><span class="p">,</span>
+    <span class="n">feature_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;purchases_30d&quot;</span><span class="p">,</span> <span class="s2">&quot;is_free_trial_active&quot;</span><span class="p">],</span>
+    <span class="n">lookup_key</span><span class="o">=</span><span class="s2">&quot;u_id&quot;</span><span class="p">,</span>
+    <span class="n">timestamp_lookup_key</span><span class="o">=</span><span class="s2">&quot;ad_impression_ts&quot;</span><span class="p">,</span>
+    <span class="n">lookback_window</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+  <span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="Workspace&amp;nbsp;Feature&amp;nbsp;Store">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+
+<span class="n">feature_lookups</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="n">FeatureLookup</span><span class="p">(</span>
+    <span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;ads_team.user_features&quot;</span><span class="p">,</span>
+    <span class="n">feature_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;purchases_30d&quot;</span><span class="p">,</span> <span class="s2">&quot;is_free_trial_active&quot;</span><span class="p">],</span>
+    <span class="n">lookup_key</span><span class="o">=</span><span class="s2">&quot;u_id&quot;</span><span class="p">,</span>
+    <span class="n">timestamp_lookup_key</span><span class="o">=</span><span class="s2">&quot;ad_impression_ts&quot;</span><span class="p">,</span>
+    <span class="n">lookback_window</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+  <span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>When you call <code class="docutils literal notranslate"><span class="pre">create_training_set</span></code> with the above <code class="docutils literal notranslate"><span class="pre">FeatureLookup</span></code>, it automatically performs the point-in-time join and excludes feature values older than 7 days.</p>
+<p>The lookback window is applied during training and batch inference. During online inference, the latest feature value is always used, regardless of the lookback window.</p>
+</div>
+<div class="section" id="score-models-with-time-series-feature-tables">
+<h2>Score models with time series feature tables<a class="headerlink" href="#score-models-with-time-series-feature-tables" title="Permalink to this headline"> </a></h2>
+<p>When you score a model trained with features from time series feature tables, Databricks Feature Store retrieves the appropriate features using point-in-time lookups with metadata packaged with the model during training. The DataFrame you provide to <code class="docutils literal notranslate"><span class="pre">FeatureEngineeringClient.score_batch</span></code> (for Feature Engineering in Unity Catalog) or <code class="docutils literal notranslate"><span class="pre">FeatureStoreClient.score_batch</span></code> (for Workspace Feature Store) must contain a timestamp column with the same name and <code class="docutils literal notranslate"><span class="pre">DataType</span></code> as the <code class="docutils literal notranslate"><span class="pre">timestamp_lookup_key</span></code> of the <code class="docutils literal notranslate"><span class="pre">FeatureLookup</span></code> provided to <code class="docutils literal notranslate"><span class="pre">FeatureEngineeringClient.create_training_set</span></code> or <code class="docutils literal notranslate"><span class="pre">FeatureStoreClient.create_training_set</span></code>.</p>
+</div>
+<div class="section" id="publish-time-series-features-to-an-online-store">
+<span id="score-models-with-time-series-feature-tables"></span><span id="publish-ts-to-online-feature-store"></span><h2>Publish time series features to an online store<a class="headerlink" href="#publish-time-series-features-to-an-online-store" title="Permalink to this headline"> </a></h2>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">FeatureEngineeringClient.publish_table</span></code> (for Feature Engineering in Unity Catalog) or <code class="docutils literal notranslate"><span class="pre">FeatureStoreClient.publish_table</span></code> (for Workspace Feature Store) to publish time series feature tables to online stores. Databricks Feature Store provides the functionality to publish either a snapshot or a window of time series data to the online store, depending on the <code class="docutils literal notranslate"><span class="pre">OnlineStoreSpec</span></code> that created the online store. The table shows details for each publish mode.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 46%" />
+<col style="width: 28%" />
+<col style="width: 26%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Online store provider</p></th>
+<th class="head"><p>Snapshot publish mode</p></th>
+<th class="head"><p>Window publish mode</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> Amazon DynamoDB (v0.3.8 and above)</p></td>
+<td><p> X</p></td>
+<td><p> X</p></td>
+</tr>
+<tr class="row-odd"><td><p> Amazon Aurora (MySQL-compatible)</p></td>
+<td><p> X</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p> Amazon RDS MySQL</p></td>
+<td><p> X</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="publish-a-time-series-snapshot">
+<h3>Publish a time series snapshot<a class="headerlink" href="#publish-a-time-series-snapshot" title="Permalink to this headline"> </a></h3>
+<p>This publishes the latest feature values for each primary key in the feature table. The online store supports primary key lookup but does not support point-in-time lookup.</p>
+<p>For online stores that do not support time to live, Databricks Feature Store supports only snapshot publish mode. For online stores that do support time to live, the default publish mode is snapshot unless time to live (<code class="docutils literal notranslate"><span class="pre">ttl</span></code>) is specified in the <code class="docutils literal notranslate"><span class="pre">OnlineStoreSpec</span></code> at the time of creation.</p>
+</div>
+<div class="section" id="publish-a-time-series-window">
+<h3>Publish a time series window<a class="headerlink" href="#publish-a-time-series-window" title="Permalink to this headline"> </a></h3>
+<p>This publishes all feature values for each primary key in the feature table to the online store and automatically removes expired records. A record is considered expired if the record’s timestamp (in UTC) is more than the specified time to live duration in the past. Refer to cloud-specific documentation for details on time-to-live.</p>
+<p>The online store supports primary key lookup and automatically retrieves the feature value with the latest timestamp.</p>
+<p>To use this publish mode, you must provide a value for time to live (<code class="docutils literal notranslate"><span class="pre">ttl</span></code>) in the <code class="docutils literal notranslate"><span class="pre">OnlineStoreSpec</span></code> when you create the online store. The <code class="docutils literal notranslate"><span class="pre">ttl</span></code> cannot be changed once set. All subsequent publish calls inherit the <code class="docutils literal notranslate"><span class="pre">ttl</span></code> and are not required to explicitly define it in the <code class="docutils literal notranslate"><span class="pre">OnlineStoreSpec</span></code>.</p>
+</div>
+</div>
+<div class="section" id="notebook-example-time-series-feature-table">
+<span id="example"></span><h2>Notebook example: Time series feature table<a class="headerlink" href="#notebook-example-time-series-feature-table" title="Permalink to this headline"> </a></h2>
+<p>The following notebook illustrates point-in-time lookups on time series feature tables in the Workspace Feature Store.</p>
+<div class="embedded-notebook-section section" id="time-series-feature-table-example-notebook">
+<span id="feature-store-time-series-example"></span><h3>Time series feature table example notebook<a class="headerlink" href="#time-series-feature-table-example-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/machine-learning/feature-store-time-series-example.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/machine-learning/feature-store-time-series-example.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/machine-learning/feature-store-time-series-example.html"            id="80f1208473682d3be246f9f665403195dc39cb24d29f85eee62e0cbf0a097b0e" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

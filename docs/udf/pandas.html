@@ -1,0 +1,638 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to create and use pandas user-defined functions in Python code in Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="pandas user-defined functions">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>pandas user-defined functions &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/udf/pandas.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/udf/pandas.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/udf/pandas.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/udf/pandas.html" class="notranslate">English</option>
+    <option value="../../ja/udf/pandas.html" class="notranslate">日本語</option>
+    <option value="../../pt/udf/pandas.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>pandas user-defined functions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="pandas-user-defined-functions">
+<h1>pandas user-defined functions<a class="headerlink" href="#pandas-user-defined-functions" title="Permalink to this headline"> </a></h1>
+<p>A pandas user-defined function (UDF)—also known as vectorized UDF—is a user-defined function that uses
+<a class="reference external" href="https://arrow.apache.org/">Apache Arrow</a> to transfer data and pandas to work with the data. pandas UDFs allow
+vectorized operations that can increase performance up to 100x compared to row-at-a-time <a class="reference internal" href="python.html"><span class="doc">Python UDFs</span></a>.</p>
+<p>For background information, see the blog post
+<a class="reference external" href="https://databricks.com/blog/2020/05/20/new-pandas-udfs-and-python-type-hints-in-the-upcoming-release-of-apache-spark-3-0.html">New Pandas UDFs and Python Type Hints in the Upcoming Release of Apache Spark 3.0</a>.</p>
+<p>You define a pandas UDF using the keyword <code class="docutils literal notranslate"><span class="pre">pandas_udf</span></code> as a decorator and wrap the function with a <a class="reference external" href="https://www.python.org/dev/peps/pep-0484/">Python type hint</a>.
+This article describes the different types of pandas UDFs and shows how to use pandas UDFs with type hints.</p>
+<div class="section" id="series-to-series-udf">
+<h2>Series to Series UDF<a class="headerlink" href="#series-to-series-udf" title="Permalink to this headline"> </a></h2>
+<p>You use a Series to Series pandas UDF to vectorize scalar operations.
+You can use them with APIs such as <code class="docutils literal notranslate"><span class="pre">select</span></code> and <code class="docutils literal notranslate"><span class="pre">withColumn</span></code>.</p>
+<p>The Python function should take a pandas Series as an input and return a
+pandas Series of the same length, and you should specify these in the Python
+type hints. Spark runs a pandas UDF by splitting columns into batches, calling the function
+for each batch as a subset of the data, then concatenating the results.</p>
+<p>The following example shows how to create a pandas UDF that computes the product of 2 columns.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">col</span><span class="p">,</span> <span class="n">pandas_udf</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">LongType</span>
+
+<span class="c1"># Declare the function and create the UDF</span>
+<span class="k">def</span> <span class="nf">multiply_func</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span>
+
+<span class="n">multiply</span> <span class="o">=</span> <span class="n">pandas_udf</span><span class="p">(</span><span class="n">multiply_func</span><span class="p">,</span> <span class="n">returnType</span><span class="o">=</span><span class="n">LongType</span><span class="p">())</span>
+
+<span class="c1"># The function for a pandas_udf should be able to execute with local pandas data</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">multiply_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+<span class="c1"># 0    1</span>
+<span class="c1"># 1    4</span>
+<span class="c1"># 2    9</span>
+<span class="c1"># dtype: int64</span>
+
+<span class="c1"># Create a Spark DataFrame, &#39;spark&#39; is an existing SparkSession</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]))</span>
+
+<span class="c1"># Execute function as a Spark vectorized UDF</span>
+<span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">multiply</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">),</span> <span class="n">col</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +-------------------+</span>
+<span class="c1"># |multiply_func(x, x)|</span>
+<span class="c1"># +-------------------+</span>
+<span class="c1"># |                  1|</span>
+<span class="c1"># |                  4|</span>
+<span class="c1"># |                  9|</span>
+<span class="c1"># +-------------------+</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="iterator-of-series-to-iterator-of-series-udf">
+<span id="scalar-iterator-udfs"></span><h2>Iterator of Series to Iterator of Series UDF<a class="headerlink" href="#iterator-of-series-to-iterator-of-series-udf" title="Permalink to this headline"> </a></h2>
+<p>An iterator UDF is the same as a scalar pandas UDF except:</p>
+<ul class="simple">
+<li><p>The Python function</p>
+<ul>
+<li><p>Takes an iterator of batches instead of a single input batch as input.</p></li>
+<li><p>Returns an iterator of output batches instead of a single output batch.</p></li>
+</ul>
+</li>
+<li><p>The length of the entire output in the iterator should be the same as the length of the entire input.</p></li>
+<li><p>The wrapped pandas UDF takes a single Spark column as an input.</p></li>
+</ul>
+<p>You should specify the Python type hint as
+<code class="docutils literal notranslate"><span class="pre">Iterator[pandas.Series]</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Iterator[pandas.Series]</span></code>.</p>
+<p>This pandas UDF is useful when the UDF execution requires initializing some state, for example,
+loading a machine learning model file to apply inference to every input batch.</p>
+<p>The following example shows how to create a pandas UDF with iterator support.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">col</span><span class="p">,</span> <span class="n">pandas_udf</span><span class="p">,</span> <span class="n">struct</span>
+
+<span class="n">pdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">pdf</span><span class="p">)</span>
+
+<span class="c1"># When the UDF is called with the column,</span>
+<span class="c1"># the input to the underlying function is an iterator of pd.Series.</span>
+<span class="nd">@pandas_udf</span><span class="p">(</span><span class="s2">&quot;long&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">plus_one</span><span class="p">(</span><span class="n">batch_iter</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">batch_iter</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">plus_one</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +-----------+</span>
+<span class="c1"># |plus_one(x)|</span>
+<span class="c1"># +-----------+</span>
+<span class="c1"># |          2|</span>
+<span class="c1"># |          3|</span>
+<span class="c1"># |          4|</span>
+<span class="c1"># +-----------+</span>
+
+<span class="c1"># In the UDF, you can initialize some state before processing batches.</span>
+<span class="c1"># Wrap your code with try/finally or use context managers to ensure</span>
+<span class="c1"># the release of resources at the end.</span>
+<span class="n">y_bc</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nd">@pandas_udf</span><span class="p">(</span><span class="s2">&quot;long&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">plus_y</span><span class="p">(</span><span class="n">batch_iter</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">]:</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y_bc</span><span class="o">.</span><span class="n">value</span>  <span class="c1"># initialize states</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">batch_iter</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">pass</span>  <span class="c1"># release resources here, if any</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">plus_y</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---------+</span>
+<span class="c1"># |plus_y(x)|</span>
+<span class="c1"># +---------+</span>
+<span class="c1"># |        2|</span>
+<span class="c1"># |        3|</span>
+<span class="c1"># |        4|</span>
+<span class="c1"># +---------+</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="iterator-of-multiple-series-to-iterator-of-series-udf">
+<h2>Iterator of multiple Series to Iterator of Series UDF<a class="headerlink" href="#iterator-of-multiple-series-to-iterator-of-series-udf" title="Permalink to this headline"> </a></h2>
+<p>An Iterator of multiple Series to Iterator of Series UDF has similar characteristics and
+restrictions as <a class="reference internal" href="#scalar-iterator-udfs"><span class="std std-ref">Iterator of Series to Iterator of Series UDF</span></a>. The specified function takes an iterator of batches and
+outputs an iterator of batches. It is also useful when the UDF execution requires initializing some
+state.</p>
+<p>The differences are:</p>
+<ul class="simple">
+<li><p>The underlying Python function takes an iterator of a <em>tuple</em> of pandas Series.</p></li>
+<li><p>The wrapped pandas UDF takes <em>multiple</em> Spark columns as an input.</p></li>
+</ul>
+<p>You specify the type hints as <code class="docutils literal notranslate"><span class="pre">Iterator[Tuple[pandas.Series,</span> <span class="pre">...]]</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Iterator[pandas.Series]</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">col</span><span class="p">,</span> <span class="n">pandas_udf</span><span class="p">,</span> <span class="n">struct</span>
+
+<span class="n">pdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">pdf</span><span class="p">)</span>
+
+<span class="nd">@pandas_udf</span><span class="p">(</span><span class="s2">&quot;long&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">multiply_two_cols</span><span class="p">(</span>
+        <span class="n">iterator</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">multiply_two_cols</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +-----------------------+</span>
+<span class="c1"># |multiply_two_cols(x, x)|</span>
+<span class="c1"># +-----------------------+</span>
+<span class="c1"># |                      1|</span>
+<span class="c1"># |                      4|</span>
+<span class="c1"># |                      9|</span>
+<span class="c1"># +-----------------------+</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="series-to-scalar-udf">
+<h2>Series to scalar UDF<a class="headerlink" href="#series-to-scalar-udf" title="Permalink to this headline"> </a></h2>
+<p>Series to scalar pandas UDFs are similar to Spark aggregate functions.
+A Series to scalar pandas UDF defines an aggregation from one or more
+pandas Series to a scalar value, where each pandas Series represents a Spark column.
+You use a Series to scalar pandas UDF with APIs such as <code class="docutils literal notranslate"><span class="pre">select</span></code>, <code class="docutils literal notranslate"><span class="pre">withColumn</span></code>,  <code class="docutils literal notranslate"><span class="pre">groupBy.agg</span></code>, and
+<a class="reference external" href="https://api-docs.databricks.com/python/pyspark/latest/pyspark.sql/api/pyspark.sql.Window.html">pyspark.sql.Window</a>.</p>
+<p>You express the type hint as <code class="docutils literal notranslate"><span class="pre">pandas.Series,</span> <span class="pre">...</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Any</span></code>. The return type should be a
+primitive data type, and the returned scalar can be either a Python primitive type, for example,
+<code class="docutils literal notranslate"><span class="pre">int</span></code> or <code class="docutils literal notranslate"><span class="pre">float</span></code> or a NumPy data type such as <code class="docutils literal notranslate"><span class="pre">numpy.int64</span></code> or <code class="docutils literal notranslate"><span class="pre">numpy.float64</span></code>. <code class="docutils literal notranslate"><span class="pre">Any</span></code> should ideally
+be a specific scalar type.</p>
+<p>This type of UDF <em>does not</em> support partial aggregation and all data for each group is loaded into memory.</p>
+<p>The following example shows how to use this type of UDF to compute mean with <code class="docutils literal notranslate"><span class="pre">select</span></code>, <code class="docutils literal notranslate"><span class="pre">groupBy</span></code>, and <code class="docutils literal notranslate"><span class="pre">window</span></code> operations:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">pandas_udf</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">Window</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span>
+    <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)],</span>
+    <span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">))</span>
+
+<span class="c1"># Declare the function and create the UDF</span>
+<span class="nd">@pandas_udf</span><span class="p">(</span><span class="s2">&quot;double&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">mean_udf</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">v</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">mean_udf</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +-----------+</span>
+<span class="c1"># |mean_udf(v)|</span>
+<span class="c1"># +-----------+</span>
+<span class="c1"># |        4.2|</span>
+<span class="c1"># +-----------+</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">mean_udf</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---+-----------+</span>
+<span class="c1"># | id|mean_udf(v)|</span>
+<span class="c1"># +---+-----------+</span>
+<span class="c1"># |  1|        1.5|</span>
+<span class="c1"># |  2|        6.0|</span>
+<span class="c1"># +---+-----------+</span>
+
+<span class="n">w</span> <span class="o">=</span> <span class="n">Window</span> \
+    <span class="o">.</span><span class="n">partitionBy</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">rowsBetween</span><span class="p">(</span><span class="n">Window</span><span class="o">.</span><span class="n">unboundedPreceding</span><span class="p">,</span> <span class="n">Window</span><span class="o">.</span><span class="n">unboundedFollowing</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">&#39;mean_v&#39;</span><span class="p">,</span> <span class="n">mean_udf</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">over</span><span class="p">(</span><span class="n">w</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---+----+------+</span>
+<span class="c1"># | id|   v|mean_v|</span>
+<span class="c1"># +---+----+------+</span>
+<span class="c1"># |  1| 1.0|   1.5|</span>
+<span class="c1"># |  1| 2.0|   1.5|</span>
+<span class="c1"># |  2| 3.0|   6.0|</span>
+<span class="c1"># |  2| 5.0|   6.0|</span>
+<span class="c1"># |  2|10.0|   6.0|</span>
+<span class="c1"># +---+----+------+</span>
+</pre></div>
+</div>
+<p>For detailed usage, see <a class="reference external" href="https://api-docs.databricks.com/python/pyspark/latest/pyspark.sql/api/pyspark.sql.functions.pandas_udf.html?highlight=pandas%20udf#pyspark-sql-functions-pandas-udf">pyspark.sql.functions.pandas_udf</a>.</p>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"> </a></h2>
+<div class="section" id="setting-arrow-batch-size">
+<h3>Setting Arrow batch size<a class="headerlink" href="#setting-arrow-batch-size" title="Permalink to this headline"> </a></h3>
+<p>Data partitions in Spark are converted into Arrow record batches, which
+can temporarily lead to high memory usage in the JVM. To avoid possible
+out of memory exceptions, you can adjust the size of the Arrow record batches
+by setting the <code class="docutils literal notranslate"><span class="pre">spark.sql.execution.arrow.maxRecordsPerBatch</span></code> configuration to an integer that
+determines the maximum number of rows for each batch. The default value
+is 10,000 records per batch. If the number of columns is large, the
+value should be adjusted accordingly. Using this limit, each data
+partition is divided into 1 or more record batches for processing.</p>
+</div>
+<div class="section" id="timestamp-with-time-zone-semantics">
+<h3>Timestamp with time zone semantics<a class="headerlink" href="#timestamp-with-time-zone-semantics" title="Permalink to this headline"> </a></h3>
+<p>Spark internally stores timestamps as UTC values, and timestamp data
+brought in without a specified time zone is converted as local
+time to UTC with microsecond resolution.</p>
+<p>When timestamp data is exported or displayed in Spark,
+the session time zone is used to localize the
+timestamp values. The session time zone is set with the
+<code class="docutils literal notranslate"><span class="pre">spark.sql.session.timeZone</span></code> configuration and defaults to the JVM system local
+time zone. pandas uses a <code class="docutils literal notranslate"><span class="pre">datetime64</span></code> type with nanosecond
+resolution, <code class="docutils literal notranslate"><span class="pre">datetime64[ns]</span></code>, with optional time zone on a per-column
+basis.</p>
+<p>When timestamp data is transferred from Spark to pandas it is
+converted to nanoseconds and each column is converted to the Spark
+session time zone then localized to that time zone, which removes the
+time zone and displays values as local time. This occurs when
+calling <code class="docutils literal notranslate"><span class="pre">toPandas()</span></code> or <code class="docutils literal notranslate"><span class="pre">pandas_udf</span></code> with timestamp columns.</p>
+<p>When timestamp data is transferred from pandas to Spark, it is
+converted to UTC microseconds. This occurs when calling
+<code class="docutils literal notranslate"><span class="pre">createDataFrame</span></code> with a pandas DataFrame or when returning a
+timestamp from a pandas UDF. These conversions are done
+automatically to ensure Spark has data in the expected format, so
+it is not necessary to do any of these conversions yourself. Any
+nanosecond values are truncated.</p>
+<p>A standard UDF loads timestamp data as Python
+datetime objects, which is different than a pandas timestamp. To get the best performance, we
+recommend that you use pandas time series functionality when working with
+timestamps in a pandas UDF. For details, see <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html">Time Series / Date functionality</a>.</p>
+</div>
+</div>
+<div class="section" id="example-notebook">
+<h2>Example notebook<a class="headerlink" href="#example-notebook" title="Permalink to this headline"> </a></h2>
+<p>The following notebook illustrates the performance improvements you can achieve with pandas UDFs:</p>
+<div class="embedded-notebook-section section" id="pandas-udfs-benchmark-notebook">
+<span id="pandas-udfs-benchmark"></span><h3>pandas UDFs benchmark notebook<a class="headerlink" href="#pandas-udfs-benchmark-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/pandas-udfs-benchmark.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/pandas-udfs-benchmark.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/pandas-udfs-benchmark.html"            id="229da2a93c1d7b4dc27122a0088e565d029412ded3563681ac8f2b99e5234cbc" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

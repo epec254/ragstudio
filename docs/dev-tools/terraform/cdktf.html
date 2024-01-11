@@ -1,0 +1,845 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use the Cloud Development Kit for Terraform (CDKTF) to build, deploy, and manage Databricks resources." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Terraform CDK Databricks Provider">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Terraform CDK Databricks Provider &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/dev-tools/terraform/cdktf.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/dev-tools/terraform/cdktf.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/dev-tools/terraform/cdktf.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/dev-tools/terraform/cdktf.html" class="notranslate">English</option>
+    <option value="../../../ja/dev-tools/terraform/cdktf.html" class="notranslate">日本語</option>
+    <option value="../../../pt/dev-tools/terraform/cdktf.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Terraform CDK Databricks Provider</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="terraform-cdk-databricks-provider">
+<h1>Terraform CDK Databricks Provider<a class="headerlink" href="#terraform-cdk-databricks-provider" title="Permalink to this headline"> </a></h1>
+<p></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This article covers the Cloud Development Kit for Terraform (CDKTF), which is neither provided nor supported by Databricks. To contact the provider, see the <a class="reference external" href="https://www.terraform.io/community">Terraform Community</a>.</p>
+</div>
+<p>This article shows you how to use Python or TypeScript along with the <a class="reference external" href="https://github.com/hashicorp/cdktf-provider-databricks">Terraform CDK Databricks Provider</a> and the <a class="reference external" href="https://www.terraform.io/cdktf">Cloud Development Kit for Terraform (CDKTF)</a>. The CDKTF is a third-party, infrastructure as code (IaC) platform that enables you to create, deploy, and manage Databricks resources by using familiar programming languages, tools, and engineering practices. Although this article shows you how to use Python and TypeScript, the CDKTF supports additional languages such as Java, C#, and Go.</p>
+<p>The Terraform CDK Databricks provider is based on the <a class="reference internal" href="index.html"><span class="doc">Databricks Terraform provider</span></a>. For more information, see <a class="reference external" href="https://cloud.hashicorp.com/products/terraform">Terraform Cloud</a>. The CDKTF is based on the <a class="reference external" href="https://aws.amazon.com/cdk/">AWS Cloud Development Kit (AWS CDK)</a>.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<p>You must have a Databricks workspace, as this article deploys resources into an existing workspace.</p>
+<p>On your local development machine, you must have the following installed:</p>
+<ul>
+<li><p><a class="reference external" href="https://www.terraform.io/">Terraform</a>, version 1.1 or higher. To check whether you have Terraform installed, and to check the installed version, run the command <code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">-v</span></code> from your terminal or with PowerShell. <a class="reference external" href="https://www.terraform.io/downloads">Install Terraform</a>, if you do not have it already installed.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>terraform<span class="w"> </span>-v
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference external" href="https://nodejs.org/">Node.js</a>, version 16.13 or higher, and <a class="reference external" href="https://github.com/npm/cli">npm</a>. To check whether you have Node.js and <code class="docutils literal notranslate"><span class="pre">npm</span></code> installed, and to check the installed versions, run the commands <code class="docutils literal notranslate"><span class="pre">node</span> <span class="pre">-v</span></code> and <code class="docutils literal notranslate"><span class="pre">npm</span> <span class="pre">-v</span></code>. The latest versions of Node.js already include <code class="docutils literal notranslate"><span class="pre">npm</span></code>. <a class="reference external" href="https://github.com/nvm-sh/nvm">Install Node.js and npm by using Node Version Manager (nvm)</a>, if you do not have Node.js and <code class="docutils literal notranslate"><span class="pre">npm</span></code> already installed.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>node<span class="w"> </span>-v
+npm<span class="w"> </span>-v
+</pre></div>
+</div>
+</li>
+<li><p>The <a class="reference external" href="https://www.terraform.io/cdktf/cli-reference/cli-configuration">CDKTF CLI</a>. To check whether you have the CDKTF CLI installed, and to check the installed version, run the command <code class="docutils literal notranslate"><span class="pre">cdktf</span> <span class="pre">--version</span></code>. <a class="reference external" href="https://www.terraform.io/cdktf/cli-reference/cli-configuration">Install the CDKTF CLI by using npm</a>, if you do not have it already installed.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cdktf<span class="w"> </span>--version
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can also install the CDKTF CLI on macOS with Homebrew. See <a class="reference external" href="https://learn.hashicorp.com/tutorials/terraform/cdktf-install#install-cdktf">Install CDKTF</a>.</p>
+</div>
+</li>
+<li><p>The appropriate language runtime tools, as follows:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Python">
+<p class="compound-first"><a class="reference external" href="https://www.python.org/">Python</a> version 3.7 or higher and <a class="reference external" href="https://pipenv.pypa.io/en/latest/">pipenv</a> version 2021.5.29 or higher. To check whether you have Python and <code class="docutils literal notranslate"><span class="pre">pipenv</span></code> installed, and to check the installed versions, run the commands <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">--version</span></code> and <code class="docutils literal notranslate"><span class="pre">pipenv</span> <span class="pre">--version</span></code>. <a class="reference external" href="https://www.python.org/downloads/">Install Python</a> and <a class="reference external" href="https://pipenv.pypa.io/en/latest/install/#make-sure-you-ve-got-python-pip">install pipenv</a>, if you do not have them already installed.</p>
+<div class="compound-last highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>--version
+pipenv<span class="w"> </span>--version
+</pre></div>
+</div>
+</div>
+<div class="compound-middle compound" lang="TypeScript">
+<p class="compound-first"><a class="reference external" href="https://www.typescriptlang.org/">TypeScript</a> version 4.4 or higher. To check whether you have TypeScript installed, and to check the installed version, run the command <code class="docutils literal notranslate"><span class="pre">tsc</span> <span class="pre">-v</span></code>. <a class="reference external" href="https://www.typescriptlang.org/download">Install TypeScript</a>, if you do not have it already installed.</p>
+<div class="compound-last highlight-bash notranslate"><div class="highlight"><pre><span></span>tsc<span class="w"> </span>-v
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="Java,&amp;nbsp;C#,&amp;nbsp;Go">
+<p>Install the language <a class="reference external" href="https://learn.hashicorp.com/tutorials/terraform/cdktf-install#prerequisites">Prerequisites</a>.</p>
+</div>
+</div>
+</li>
+</ul>
+<ul>
+<li><p>One of the following:</p>
+<ul>
+<li><p>Databricks CLI version 0.205 or above, configured with your Databricks <a class="reference internal" href="../auth/pat.html"><span class="doc">personal access token</span></a> by running <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">configure</span> <span class="pre">--host</span> <span class="pre">&lt;workspace-url&gt;</span> <span class="pre">--profile</span> <span class="pre">&lt;some-unique-profile-name&gt;</span></code>. See <a class="reference internal" href="../cli/install.html"><span class="doc">Install or update the Databricks CLI</span></a> and <a class="reference internal" href="../cli/authentication.html#token-auth"><span class="std std-ref">Databricks personal access token authentication</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As a security best practice when you authenticate with automated tools, systems, scripts, and apps, Databricks recommends that you use OAuth tokens.</p>
+<p>If you use personal access token authentication, Databricks recommends using personal access tokens belonging to <a class="reference internal" href="../../administration-guide/users-groups/service-principals.html"><span class="doc">service principals</span></a> instead of workspace users. To create tokens for service principals, see <a class="reference internal" href="../../administration-guide/users-groups/service-principals.html#personal-access-tokens"><span class="std std-ref">Manage tokens for a service principal</span></a>.</p>
+</div>
+</li>
+<li><p>The following Databricks environment variables:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_HOST</span></code>, set to the value of your <a class="reference internal" href="../../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace instance URL</span></a>, for example <code class="docutils literal notranslate"><span class="pre">https://dbc-1234567890123456.cloud.databricks.com</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_CLIENT_ID</span></code>, set to the value of the client ID, also known as the application ID, of the service principal. See <a class="reference internal" href="../authentication-oauth.html"><span class="doc">Authentication using OAuth for service principals</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_CLIENT_SECRET</span></code>, set to the value of the client secret of the service principal. See <a class="reference internal" href="../authentication-oauth.html"><span class="doc">Authentication using OAuth for service principals</span></a>.</p></li>
+</ul>
+<p>Alternatively, you can use a personal access token instead of a service principal’s client ID and client secret:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_TOKEN</span></code>, set to the value of your Databricks <a class="reference internal" href="../auth/pat.html"><span class="doc">personal access token</span></a>. See also <a class="reference internal" href="../../administration-guide/access-control/tokens.html"><span class="doc">Manage personal access tokens</span></a>.</p></li>
+</ul>
+<p>To set these environment variables, see your operating system’s documentation.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As a security best practice when you authenticate with automated tools, systems, scripts, and apps, Databricks recommends that you use OAuth tokens.</p>
+<p>If you use personal access token authentication, Databricks recommends using personal access tokens belonging to <a class="reference internal" href="../../administration-guide/users-groups/service-principals.html"><span class="doc">service principals</span></a> instead of workspace users. To create tokens for service principals, see <a class="reference internal" href="../../administration-guide/users-groups/service-principals.html#personal-access-tokens"><span class="std std-ref">Manage tokens for a service principal</span></a>.</p>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="step-1-create-a-cdktf-project">
+<h2>Step 1: Create a CDKTF project<a class="headerlink" href="#step-1-create-a-cdktf-project" title="Permalink to this headline"> </a></h2>
+<p>In this step, on your local development machine you set up the necessary directory structure for a CDKTF project. You then create your CDKTF project within this directory structure.</p>
+<ol class="arabic">
+<li><p>Create an empty directory for your CDKTF project, and then switch to it. Run the following commands in your terminal or with PowerShell:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Unix,&amp;nbsp;Linux,&amp;nbsp;and&amp;nbsp;macOS">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>cdktf-demo
+<span class="nb">cd</span><span class="w"> </span>cdktf-demo
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="Windows">
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="nb">md </span><span class="n">cdktf-demo</span>
+<span class="nb">cd </span><span class="n">cdktf-demo</span>
+</pre></div>
+</div>
+</div>
+</div>
+</li>
+<li><p>Create a CDKTF project by running the following command:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Python">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cdktf<span class="w"> </span>init<span class="w"> </span>--template<span class="o">=</span>python<span class="w"> </span>--local
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="TypeScript">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cdktf<span class="w"> </span>init<span class="w"> </span>--template<span class="o">=</span>typescript<span class="w"> </span>--local
+</pre></div>
+</div>
+</div>
+</div>
+</li>
+<li><p>When prompted for a <strong>Project Name</strong>, accept the default project name of <code class="docutils literal notranslate"><span class="pre">cdktf-demo</span></code> by pressing <strong>Enter</strong>.</p></li>
+<li><p>When prompted for a <strong>Project Description</strong>, accept the default project description by pressing <strong>Enter</strong>.</p></li>
+<li><p>If prompted <strong>Do you want to start from an existing Terraform project</strong>, enter <code class="docutils literal notranslate"><span class="pre">N</span></code> and press <strong>Enter</strong>.</p></li>
+<li><p>If prompted <strong>Do you want to send crash reports to the CDKTF team</strong>, enter <code class="docutils literal notranslate"><span class="pre">n</span></code> and press <strong>Enter</strong>.</p></li>
+</ol>
+<p>The CDKTF creates the following files and subdirectories in your <code class="docutils literal notranslate"><span class="pre">cdktf-demo</span></code> directory:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Python">
+<p class="compound-first"></p>
+<ul class="compound-last simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">.gitignore</span></code>, which is a list of files and directories that Git ignores if you want to push this project into a remote Git repository.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cdktf.json</span></code>, which contains configuration settings for your CDKTF project. See <a class="reference external" href="https://www.terraform.io/cdktf/create-and-deploy/configuration-file">Configuration File</a> for more information on configuration settings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">help</span></code>, which contains information about some next steps you can take to work with your CDKTF project.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">main-test.py</span></code>, which contains supporting unit tests that you can write for your CDKTF project. See <a class="reference external" href="https://cdk.tf/testing">Unit Tests</a> for more information on unit testing.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">main.py</span></code>, which contains the Python code that you write for your CDKTF project.</p></li>
+<li><p> <code class="docutils literal notranslate"><span class="pre">Pipfile</span></code> and <code class="docutils literal notranslate"><span class="pre">Pipfile.lock</span></code>, which manage code dependencies for your CDKTF project.</p></li>
+</ul>
+</div>
+<div class="compound-last compound" lang="TypeScript">
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">jest.config.js</span></code> and a <code class="docutils literal notranslate"><span class="pre">__tests__</span></code> subdirectory, which manage supporting unit tests that you can write for your CDKTF project. See <a class="reference external" href="https://cdk.tf/testing">Unit Tests</a> for more information on unit testing.</p></li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">node_modules</span></code> subdirectory, which contains code dependencies for your CDKTF project.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.gitignore</span></code>, which is a list of files and directories that Git ignores if you want to push this project into a remote Git repository.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cdktf.json</span></code>, which contains configuration settings for your CDKTF project. See <a class="reference external" href="https://www.terraform.io/cdktf/create-and-deploy/configuration-file">Configuration File</a> for more information on configuration settings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">help</span></code>, which contains information about some next steps you can take to work with your CDKTF project.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">main.ts</span></code>, which contains the TypeScript code that you write for your CDKTF project.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.npmrc</span></code>, <code class="docutils literal notranslate"><span class="pre">package.json</span></code>, <code class="docutils literal notranslate"><span class="pre">package-lock.json</span></code>, <code class="docutils literal notranslate"><span class="pre">setup.js</span></code>, and <code class="docutils literal notranslate"><span class="pre">tsconfig.json</span></code>, which manage code dependencies and other settings for your CDKTF project.</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="step-2-define-resources">
+<h2>Step 2: Define resources<a class="headerlink" href="#step-2-define-resources" title="Permalink to this headline"> </a></h2>
+<p>In this step, you use the Terraform CDK Databricks provider to define a notebook and a job to run that notebook.</p>
+<ol class="arabic">
+<li><p>Install the project dependencies as follows:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Python">
+<p class="compound-first">Using <code class="docutils literal notranslate"><span class="pre">pipenv</span></code>, install into your CDKTF project the <a class="reference external" href="https://www.npmjs.com/package/&#64;cdktf/provider-databricks">Terraform CDK Databricks Provider</a> to generate Databricks resources. To do this, run the following:</p>
+<div class="compound-last highlight-bash notranslate"><div class="highlight"><pre><span></span>pipenv<span class="w"> </span>install<span class="w"> </span>cdktf-cdktf-provider-databricks
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="TypeScript">
+<p class="compound-first">Using <code class="docutils literal notranslate"><span class="pre">npm</span></code> (for TypeScript), install into your CDKTF project the <a class="reference external" href="https://www.npmjs.com/package/&#64;cdktf/provider-databricks">Terraform CDK Databricks Provider</a> to generate Databricks resources. Also install the <a class="reference external" href="https://www.npmjs.com/package/&#64;types/node">TypeScript definitions for Node.js</a> package to use the <code class="docutils literal notranslate"><span class="pre">Buffer</span></code> class to write code into the notebook. To do this, run the following:</p>
+<div class="compound-last highlight-bash notranslate"><div class="highlight"><pre><span></span>npm<span class="w"> </span>install<span class="w"> </span>@cdktf/provider-databricks<span class="w"> </span>--force
+npm<span class="w"> </span>install<span class="w"> </span>--save-dev<span class="w"> </span>@types/node
+</pre></div>
+</div>
+</div>
+</div>
+</li>
+<li><p>Replace the contents of the <code class="docutils literal notranslate"><span class="pre">main.py</span></code> file (for Python) or the <code class="docutils literal notranslate"><span class="pre">main.ts</span></code> file (for TypeScript) with the following code. This code authenticates the CDKTF with your Databricks workspace and then generates a notebook along with a job to run the notebook. To view syntax documentation for this code, see the <a class="reference external" href="https://constructs.dev/packages/&#64;cdktf/provider-databricks">Terraform CDK Databricks provider construct reference</a> for <a class="reference external" href="https://constructs.dev/packages/&#64;cdktf/provider-databricks?lang=python">Python</a> or <a class="reference external" href="https://constructs.dev/packages/&#64;cdktf/provider-databricks?lang=typescript">TypeScript</a>.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Python">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="kn">from</span> <span class="nn">unicodedata</span> <span class="kn">import</span> <span class="n">name</span>
+<span class="kn">from</span> <span class="nn">constructs</span> <span class="kn">import</span> <span class="n">Construct</span>
+<span class="kn">from</span> <span class="nn">cdktf</span> <span class="kn">import</span> <span class="n">App</span><span class="p">,</span> <span class="n">TerraformStack</span><span class="p">,</span> <span class="n">TerraformOutput</span>
+<span class="kn">from</span> <span class="nn">cdktf_cdktf_provider_databricks</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">vars</span>
+<span class="kn">from</span> <span class="nn">base64</span> <span class="kn">import</span> <span class="n">b64encode</span>
+
+<span class="k">class</span> <span class="nc">MyStack</span><span class="p">(</span><span class="n">TerraformStack</span><span class="p">):</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">Construct</span><span class="p">,</span> <span class="n">ns</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">ns</span><span class="p">)</span>
+
+    <span class="n">DatabricksProvider</span><span class="p">(</span>
+      <span class="n">scope</span> <span class="o">=</span> <span class="bp">self</span><span class="p">,</span>
+      <span class="nb">id</span>    <span class="o">=</span> <span class="s2">&quot;databricksAuth&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">current_user</span> <span class="o">=</span> <span class="n">DataDatabricksCurrentUser</span><span class="p">(</span>
+      <span class="n">scope</span>     <span class="o">=</span> <span class="bp">self</span><span class="p">,</span>
+      <span class="n">id_</span>       <span class="o">=</span> <span class="s2">&quot;currentUser&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Define the notebook.</span>
+    <span class="n">notebook</span> <span class="o">=</span> <span class="n">Notebook</span><span class="p">(</span>
+      <span class="n">scope</span>          <span class="o">=</span> <span class="bp">self</span><span class="p">,</span>
+      <span class="n">id_</span>            <span class="o">=</span> <span class="s2">&quot;notebook&quot;</span><span class="p">,</span>
+      <span class="n">path</span>           <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">current_user</span><span class="o">.</span><span class="n">home</span><span class="si">}</span><span class="s2">/CDKTF/</span><span class="si">{</span><span class="nb">vars</span><span class="o">.</span><span class="n">resource_prefix</span><span class="si">}</span><span class="s2">-notebook.py&quot;</span><span class="p">,</span>
+      <span class="n">language</span>       <span class="o">=</span> <span class="s2">&quot;PYTHON&quot;</span><span class="p">,</span>
+      <span class="n">content_base64</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;display(spark.range(10))&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Define the job to run the notebook.</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="n">Job</span><span class="p">(</span>
+      <span class="n">scope</span> <span class="o">=</span> <span class="bp">self</span><span class="p">,</span>
+      <span class="n">id_</span>   <span class="o">=</span> <span class="s2">&quot;job&quot;</span><span class="p">,</span>
+      <span class="n">name</span>  <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">vars</span><span class="o">.</span><span class="n">resource_prefix</span><span class="si">}</span><span class="s2">-job&quot;</span><span class="p">,</span>
+      <span class="n">new_cluster</span> <span class="o">=</span> <span class="n">JobNewCluster</span><span class="p">(</span>
+        <span class="n">num_workers</span>   <span class="o">=</span> <span class="nb">vars</span><span class="o">.</span><span class="n">num_workers</span><span class="p">,</span>
+        <span class="n">spark_version</span> <span class="o">=</span> <span class="nb">vars</span><span class="o">.</span><span class="n">spark_version</span><span class="p">,</span>
+        <span class="n">node_type_id</span>  <span class="o">=</span> <span class="nb">vars</span><span class="o">.</span><span class="n">node_type_id</span>
+      <span class="p">),</span>
+      <span class="n">notebook_task</span> <span class="o">=</span> <span class="n">JobNotebookTask</span><span class="p">(</span>
+        <span class="n">notebook_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">current_user</span><span class="o">.</span><span class="n">home</span><span class="si">}</span><span class="s2">/CDKTF/</span><span class="si">{</span><span class="nb">vars</span><span class="o">.</span><span class="n">resource_prefix</span><span class="si">}</span><span class="s2">-notebook.py&quot;</span>
+      <span class="p">),</span>
+      <span class="n">email_notifications</span> <span class="o">=</span> <span class="n">JobEmailNotifications</span><span class="p">(</span>
+        <span class="n">on_success</span> <span class="o">=</span> <span class="p">[</span> <span class="n">current_user</span><span class="o">.</span><span class="n">user_name</span> <span class="p">],</span>
+        <span class="n">on_failure</span> <span class="o">=</span> <span class="p">[</span> <span class="n">current_user</span><span class="o">.</span><span class="n">user_name</span> <span class="p">]</span>
+      <span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Output the notebook and job URLs.</span>
+    <span class="n">TerraformOutput</span><span class="p">(</span>
+      <span class="n">scope</span> <span class="o">=</span> <span class="bp">self</span><span class="p">,</span>
+      <span class="nb">id</span>    <span class="o">=</span> <span class="s2">&quot;Notebook URL&quot;</span><span class="p">,</span>
+      <span class="n">value</span> <span class="o">=</span> <span class="n">notebook</span><span class="o">.</span><span class="n">url</span>
+    <span class="p">)</span>
+
+    <span class="n">TerraformOutput</span><span class="p">(</span>
+      <span class="n">scope</span> <span class="o">=</span> <span class="bp">self</span><span class="p">,</span>
+      <span class="nb">id</span>    <span class="o">=</span> <span class="s2">&quot;Job URL&quot;</span><span class="p">,</span>
+      <span class="n">value</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">url</span>
+    <span class="p">)</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">()</span>
+<span class="n">MyStack</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s2">&quot;cdktf-python&quot;</span><span class="p">)</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">synth</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="TypeScript">
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Construct</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;constructs&quot;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">App</span><span class="p">,</span><span class="w"> </span><span class="nx">TerraformOutput</span><span class="p">,</span><span class="w"> </span><span class="nx">TerraformStack</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;cdktf&quot;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">DatabricksProvider</span><span class="p">,</span><span class="w"> </span><span class="nx">DataDatabricksCurrentUser</span><span class="p">,</span><span class="w"> </span><span class="nx">Notebook</span><span class="p">,</span><span class="w"> </span><span class="nx">Job</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@cdktf/provider-databricks&quot;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">vars</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./vars&quot;</span><span class="p">;</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nx">MyStack</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">TerraformStack</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">scope</span><span class="o">:</span><span class="w"> </span><span class="kt">Construct</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="p">);</span>
+
+<span class="w">    </span><span class="ow">new</span><span class="w"> </span><span class="nx">DatabricksProvider</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;databricksAuth&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{})</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">currentUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">DataDatabricksCurrentUser</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;currentUser&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{});</span>
+
+<span class="w">    </span><span class="c1">// Define the notebook.</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">notebook</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Notebook</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;notebook&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">currentUser</span><span class="p">.</span><span class="nx">home</span><span class="si">}</span><span class="sb">/CDKTF/</span><span class="si">${</span><span class="nx">vars</span><span class="p">.</span><span class="nx">resourcePrefix</span><span class="si">}</span><span class="sb">-notebook.py`</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">language</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;PYTHON&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">contentBase64</span><span class="o">:</span><span class="w"> </span><span class="kt">Buffer.from</span><span class="p">(</span><span class="s2">&quot;display(spark.range(10))&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;utf8&quot;</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="s2">&quot;base64&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="c1">// Define the job to run the notebook.</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">job</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Job</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;job&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">vars</span><span class="p">.</span><span class="nx">resourcePrefix</span><span class="si">}</span><span class="sb">-job`</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">newCluster</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">numWorkers</span><span class="o">:</span><span class="w"> </span><span class="kt">vars.numWorkers</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">sparkVersion</span><span class="o">:</span><span class="w"> </span><span class="kt">vars.sparkVersion</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">nodeTypeId</span><span class="o">:</span><span class="w"> </span><span class="kt">vars.nodeTypeId</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">notebookTask</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">notebookPath</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">currentUser</span><span class="p">.</span><span class="nx">home</span><span class="si">}</span><span class="sb">/CDKTF/</span><span class="si">${</span><span class="nx">vars</span><span class="p">.</span><span class="nx">resourcePrefix</span><span class="si">}</span><span class="sb">-notebook.py`</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">emailNotifications</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">onSuccess</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="nx">currentUser</span><span class="p">.</span><span class="nx">userName</span><span class="w"> </span><span class="p">],</span>
+<span class="w">        </span><span class="nx">onFailure</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="nx">currentUser</span><span class="p">.</span><span class="nx">userName</span><span class="w"> </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="c1">// Output the notebook and job URLs.</span>
+<span class="w">    </span><span class="ow">new</span><span class="w"> </span><span class="nx">TerraformOutput</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Notebook URL&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">notebook.url</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="ow">new</span><span class="w"> </span><span class="nx">TerraformOutput</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Job URL&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">job.url</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">App</span><span class="p">();</span>
+<span class="ow">new</span><span class="w"> </span><span class="nx">MyStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;cdktf-demo&quot;</span><span class="p">);</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">synth</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</div>
+</li>
+<li><p>Create a file named <code class="docutils literal notranslate"><span class="pre">vars.py</span></code> (for Python) or <code class="docutils literal notranslate"><span class="pre">vars.ts</span></code> (for TypeScript) in the same directory as <code class="docutils literal notranslate"><span class="pre">main.py</span></code> (for Python) or <code class="docutils literal notranslate"><span class="pre">main.ts</span></code> (for TypeScript). Replace the following values with your own values to specify a resource prefix and cluster settings such as the <a class="reference internal" href="../../compute/configure.html#node-types"><span class="std std-ref">number of workers</span></a>, <a class="reference external" href="https://docs.databricks.com/api/workspace/introduction">Spark runtime version string</a>, and <a class="reference internal" href="../../compute/configure.html#node-types"><span class="std std-ref">node type</span></a>.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Python">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="n">resource_prefix</span> <span class="o">=</span> <span class="s2">&quot;cdktf-demo&quot;</span>
+<span class="n">num_workers</span>     <span class="o">=</span> <span class="mi">1</span>
+<span class="n">spark_version</span>   <span class="o">=</span> <span class="s2">&quot;10.4.x-scala2.12&quot;</span>
+<span class="n">node_type_id</span>    <span class="o">=</span> <span class="s2">&quot;i3.xlarge&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="TypeScript">
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">resourcePrefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cdktf-demo&quot;</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">numWorkers</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">sparkVersion</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.4.x-scala2.12&quot;</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">nodeTypeId</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;i3.xlarge&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="step-3-deploy-the-resources">
+<h2>Step 3: Deploy the resources<a class="headerlink" href="#step-3-deploy-the-resources" title="Permalink to this headline"> </a></h2>
+<p>In this step, you use the CDKTF CLI to deploy, into your existing Databricks workspace, the defined notebook and the job to run that notebook.</p>
+<ol class="arabic">
+<li><p>Generate the Terraform code equivalent for your CDKTF project. To do this, run the <code class="docutils literal notranslate"><span class="pre">cdktf</span> <span class="pre">synth</span></code> command.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cdktf<span class="w"> </span>synth
+</pre></div>
+</div>
+</li>
+<li><p>Before making changes, you can review the pending resource changes. Run the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cdktf<span class="w"> </span>diff
+</pre></div>
+</div>
+</li>
+<li><p>Deploy the notebook and job by running the <code class="docutils literal notranslate"><span class="pre">cdktf</span> <span class="pre">deploy</span></code> command.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cdktf<span class="w"> </span>deploy
+</pre></div>
+</div>
+</li>
+<li><p>When prompted to <strong>Approve</strong>, press <strong>Enter</strong>. Terraform creates and deploys the notebook and job into your workspace.</p></li>
+</ol>
+</div>
+<div class="section" id="step-4-interact-with-the-resources">
+<h2>Step 4: Interact with the resources<a class="headerlink" href="#step-4-interact-with-the-resources" title="Permalink to this headline"> </a></h2>
+<p>In this step, you run the job in your Databricks workspace, which runs the specified notebook.</p>
+<ol class="arabic simple">
+<li><p>To view the notebook that the job will run in your workspace, copy the <strong>Notebook URL</strong> link that appears in the output of the <code class="docutils literal notranslate"><span class="pre">cdk</span> <span class="pre">deploy</span></code> command and paste it into your web browser’s address bar.</p></li>
+<li><p>To view the job that runs the notebook in your workspace, copy the <strong>Job URL</strong> link that appears in the output of the <code class="docutils literal notranslate"><span class="pre">cdk</span> <span class="pre">deploy</span></code> command and paste it into your web browser’s address bar.</p></li>
+<li><p>To run the job, click the <strong>Run now</strong> button on the job page.</p></li>
+</ol>
+</div>
+<div class="section" id="optional-step-5-make-changes-to-a-resource">
+<h2>(Optional) Step 5: Make changes to a resource<a class="headerlink" href="#optional-step-5-make-changes-to-a-resource" title="Permalink to this headline"> </a></h2>
+<p>In this optional step, you change the notebook’s code, redeploy the changed notebook, and then use the job to rerun the changed notebook.</p>
+<p>If you do not want to make any changes to the notebook, skip ahead to <a class="reference internal" href="#clean-up"><span class="std std-ref">Step 6: Clean up</span></a>.</p>
+<ol class="arabic">
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">main.py</span></code> file (for Python) or the <code class="docutils literal notranslate"><span class="pre">main.ts</span></code> file (for TypeScript), change the <code class="docutils literal notranslate"><span class="pre">notebook</span></code> variable declaration from the following:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Python">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="n">notebook</span> <span class="o">=</span> <span class="n">Notebook</span><span class="p">(</span>
+      <span class="n">scope</span>          <span class="o">=</span> <span class="bp">self</span><span class="p">,</span>
+      <span class="n">id_</span>            <span class="o">=</span> <span class="s2">&quot;notebook&quot;</span><span class="p">,</span>
+      <span class="n">path</span>           <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">current_user</span><span class="o">.</span><span class="n">home</span><span class="si">}</span><span class="s2">/CDKTF/</span><span class="si">{</span><span class="nb">vars</span><span class="o">.</span><span class="n">resource_prefix</span><span class="si">}</span><span class="s2">-notebook.py&quot;</span><span class="p">,</span>
+      <span class="n">language</span>       <span class="o">=</span> <span class="s2">&quot;PYTHON&quot;</span><span class="p">,</span>
+      <span class="n">content_base64</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;display(spark.range(10))&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="TypeScript">
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="kd">const</span><span class="w"> </span><span class="nx">notebook</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Notebook</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;notebook&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="kt">currentUser.home</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">&quot;/CDKTF/&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">vars</span><span class="p">.</span><span class="nx">resourcePrefix</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">&quot;-notebook.py&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">language</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;PYTHON&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">contentBase64</span><span class="o">:</span><span class="w"> </span><span class="kt">Buffer.from</span><span class="p">(</span><span class="s2">&quot;display(spark.range(10))&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;utf8&quot;</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="s2">&quot;base64&quot;</span><span class="p">)</span>
+<span class="w">   </span><span class="p">});</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>To the following:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Python">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="n">notebook</span> <span class="o">=</span> <span class="n">Notebook</span><span class="p">(</span>
+      <span class="n">scope</span>          <span class="o">=</span> <span class="bp">self</span><span class="p">,</span>
+      <span class="n">id_</span>            <span class="o">=</span> <span class="s2">&quot;notebook&quot;</span><span class="p">,</span>
+      <span class="n">path</span>           <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">current_user</span><span class="o">.</span><span class="n">home</span><span class="si">}</span><span class="s2">/CDKTF/</span><span class="si">{</span><span class="nb">vars</span><span class="o">.</span><span class="n">resource_prefix</span><span class="si">}</span><span class="s2">-notebook.py&quot;</span><span class="p">,</span>
+      <span class="n">language</span>       <span class="o">=</span> <span class="s2">&quot;PYTHON&quot;</span><span class="p">,</span>
+      <span class="n">content_base64</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">data = [</span>
+<span class="s1">  { &quot;Category&quot;: &#39;A&#39;, &quot;ID&quot;: 1, &quot;Value&quot;: 121.44 },</span>
+<span class="s1">  { &quot;Category&quot;: &#39;B&#39;, &quot;ID&quot;: 2, &quot;Value&quot;: 300.01 },</span>
+<span class="s1">  { &quot;Category&quot;: &#39;C&#39;, &quot;ID&quot;: 3, &quot;Value&quot;: 10.99 },</span>
+<span class="s1">  { &quot;Category&quot;: &#39;E&#39;, &quot;ID&quot;: 4, &quot;Value&quot;: 33.87}</span>
+<span class="s1">]</span>
+
+<span class="s1">df = spark.createDataFrame(data)</span>
+
+<span class="s1">display(df)</span>
+<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="TypeScript">
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="kd">const</span><span class="w"> </span><span class="nx">notebook</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Notebook</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;notebook&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="kt">currentUser.home</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">&quot;/CDKTF/&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">vars</span><span class="p">.</span><span class="nx">resourcePrefix</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">&quot;-notebook.py&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">language</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;PYTHON&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">contentBase64</span><span class="o">:</span><span class="w"> </span><span class="kt">Buffer.from</span><span class="p">(</span><span class="sb">`</span>
+<span class="sb">data = [</span>
+<span class="sb">{ &quot;Category&quot;: &#39;A&#39;, &quot;ID&quot;: 1, &quot;Value&quot;: 121.44 },</span>
+<span class="sb">{ &quot;Category&quot;: &#39;B&#39;, &quot;ID&quot;: 2, &quot;Value&quot;: 300.01 },</span>
+<span class="sb">{ &quot;Category&quot;: &#39;C&#39;, &quot;ID&quot;: 3, &quot;Value&quot;: 10.99 },</span>
+<span class="sb">{ &quot;Category&quot;: &#39;E&#39;, &quot;ID&quot;: 4, &quot;Value&quot;: 33.87}</span>
+<span class="sb">]</span>
+
+<span class="sb">df = spark.createDataFrame(data)</span>
+
+<span class="sb">display(df)`</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;utf8&quot;</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="s2">&quot;base64&quot;</span><span class="p">)</span>
+<span class="w">   </span><span class="p">});</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Make sure that the lines of code beginning and ending with backticks (`) are flush with the edge of your code editor. Otherwise, Terraform will insert whitespace into the notebook that may cause the new Python code to fail to run.</p>
+</div>
+</li>
+<li><p>Regenerate the Terraform code equivalent for your CDKTF project. To do this, run the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cdktf<span class="w"> </span>synth
+</pre></div>
+</div>
+</li>
+<li><p>Before making changes, you can review the pending resource changes. Run the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cdktf<span class="w"> </span>diff
+</pre></div>
+</div>
+</li>
+<li><p>Deploy the notebook changes by running the <code class="docutils literal notranslate"><span class="pre">cdktf</span> <span class="pre">deploy</span></code> command.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cdktf<span class="w"> </span>deploy
+</pre></div>
+</div>
+</li>
+<li><p>When prompted to <strong>Approve</strong>, press <strong>Enter</strong>. Terraform changes the notebook’s contents.</p></li>
+<li><p>To view the changed notebook that the job will run in your workspace, refresh the notebook that you opened earlier, or copy the <strong>Notebook URL</strong> link that appears in the output of the <code class="docutils literal notranslate"><span class="pre">cdk</span> <span class="pre">deploy</span></code> command and paste it into your web browser’s address bar.</p></li>
+<li><p>To view the job that runs the changed notebook in your workspace, refresh the job that you opened earlier, or copy the <strong>Job URL</strong> link that appears in the output of the <code class="docutils literal notranslate"><span class="pre">cdk</span> <span class="pre">deploy</span></code> command and paste it into your web browser’s address bar.</p></li>
+<li><p>To run the job, click the <strong>Run now</strong> button on the job page.</p></li>
+</ol>
+</div>
+<div class="section" id="step-6-clean-up">
+<span id="clean-up"></span><h2>Step 6: Clean up<a class="headerlink" href="#step-6-clean-up" title="Permalink to this headline"> </a></h2>
+<p>In this step, you use the CDKTF CLI to remove the notebook and job from your Databricks workspace.</p>
+<ol class="arabic">
+<li><p>Remove the resources from your workspace by running the <code class="docutils literal notranslate"><span class="pre">cdktf</span> <span class="pre">destroy</span></code> command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cdktf<span class="w"> </span>destroy
+</pre></div>
+</div>
+</li>
+<li><p>When prompted to <strong>Approve</strong>, press <strong>Enter</strong>. Terraform removes the resources from your workspace.</p></li>
+</ol>
+</div>
+<div class="section" id="more-resources">
+<h2>More resources<a class="headerlink" href="#more-resources" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://constructs.dev/packages/&#64;cdktf/provider-databricks">Terraform CDK Databricks provider construct reference</a> for <a class="reference external" href="https://constructs.dev/packages/&#64;cdktf/provider-databricks?lang=typescript">TypeScript</a>, <a class="reference external" href="https://constructs.dev/packages/&#64;cdktf/provider-databricks?lang=python">Python</a>, <a class="reference external" href="https://constructs.dev/packages/&#64;cdktf/provider-databricks?lang=java">Java</a>, <a class="reference external" href="https://constructs.dev/packages/&#64;cdktf/provider-databricks?lang=dotnet">C#</a>, and <a class="reference external" href="https://constructs.dev/packages/&#64;cdktf/provider-databricks?lang=go">Go</a></p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

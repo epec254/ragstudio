@@ -1,0 +1,477 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="This article describes patterns you can use to develop and test Delta Live Tables pipelines." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="How to develop and test Delta Live Tables pipelines">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>How to develop and test Delta Live Tables pipelines &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/delta-live-tables/testing.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/delta-live-tables/testing.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/delta-live-tables/testing.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/delta-live-tables/testing.html" class="notranslate">English</option>
+    <option value="../../ja/delta-live-tables/testing.html" class="notranslate">日本語</option>
+    <option value="../../pt/delta-live-tables/testing.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>How to develop and test Delta Live Tables pipelines</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="how-to-develop-and-test-delta-live-tables-pipelines">
+<span id="how-to-develop-and-test-dlt-pipelines"></span><h1>How to develop and test Delta Live Tables pipelines<a class="headerlink" href="#how-to-develop-and-test-delta-live-tables-pipelines" title="Permalink to this headline"> </a></h1>
+<p>This article describes patterns you can use to develop and test Delta Live Tables pipelines. Through the pipeline settings, Delta Live Tables allows you to specify configurations to isolate pipelines in developing, testing, and production environments. The recommendations in this article are applicable for both SQL and Python code development.</p>
+<div class="section" id="use-development-mode-to-run-pipeline-updates">
+<h2>Use development mode to run pipeline updates<a class="headerlink" href="#use-development-mode-to-run-pipeline-updates" title="Permalink to this headline"> </a></h2>
+<p>Delta Live Tables provides a UI toggle to control whether your pipeline updates run in development or production mode. This mode controls how pipeline updates are processed, including:</p>
+<ul class="simple">
+<li><p>Development mode does not immediately terminate compute resources after an update succeeds or fails. You can reuse the same compute resources to run multiple updates of the pipeline without waiting for a cluster to start.</p></li>
+<li><p>Development mode does not automatically retry on task failure, allowing you to immediately detect and fix logical or syntactic errors in your pipeline.</p></li>
+</ul>
+<p>Databricks recommends using development mode during development and testing and always switching to production mode when deploying to a production environment.</p>
+<p>See <a class="reference internal" href="updates.html#optimize-execution"><span class="std std-ref">Development and production modes</span></a>.</p>
+</div>
+<div class="section" id="test-pipeline-source-code-without-waiting-for-tables-to-update">
+<h2>Test pipeline source code without waiting for tables to update<a class="headerlink" href="#test-pipeline-source-code-without-waiting-for-tables-to-update" title="Permalink to this headline"> </a></h2>
+<p>To check for problems with your pipeline source code, such as syntax and analysis errors, during development and testing, you can run a <a class="reference internal" href="updates.html#validate-update"><span class="std std-ref">Validate update</span></a>. Because a <code class="docutils literal notranslate"><span class="pre">Validate</span></code> update only verifies the correctness of pipeline source code without running an actual update on any tables, you can more quickly identify and fix issues before running an actual pipeline update.</p>
+</div>
+<div class="section" id="specify-a-target-schema-during-all-development-lifecycle-phases">
+<h2>Specify a target schema during all development lifecycle phases<a class="headerlink" href="#specify-a-target-schema-during-all-development-lifecycle-phases" title="Permalink to this headline"> </a></h2>
+<p>All datasets in a Delta Live Tables pipeline reference the <code class="docutils literal notranslate"><span class="pre">LIVE</span></code> virtual schema, which is not accessible outside the pipeline. If a target schema is specified, the <code class="docutils literal notranslate"><span class="pre">LIVE</span></code> virtual schema points to the target schema. To review the results written out to each table during an update, you must specify a target schema.</p>
+<p>You must specify a target schema that is unique to your environment. Each table in a given schema can only be updated by a single pipeline.</p>
+<p>By creating separate pipelines for development, testing, and production with different targets, you can keep these environments isolated. Using the target schema parameter allows you to remove logic that uses string interpolation or other widgets or parameters to control data sources and targets.</p>
+<p>See <a class="reference internal" href="publish.html"><span class="doc">Publish data from Delta Live Tables pipelines to the Hive metastore</span></a>.</p>
+</div>
+<div class="section" id="use-databricks-repos-to-manage-delta-live-tables-pipelines">
+<span id="use-databricks-repos-to-manage-dlt-pipelines"></span><h2>Use Databricks Repos to manage Delta Live Tables pipelines<a class="headerlink" href="#use-databricks-repos-to-manage-delta-live-tables-pipelines" title="Permalink to this headline"> </a></h2>
+<p>Databricks recommends using Repos during Delta Live Tables pipeline development, testing, and deployment to production. Repos enables the following:</p>
+<ul class="simple">
+<li><p>Keeping track of how code is changing over time.</p></li>
+<li><p>Merging changes that are being made by multiple developers.</p></li>
+<li><p>Software development practices such as code reviews.</p></li>
+</ul>
+<p>Databricks recommends configuring a single Git repository for all code related to a pipeline.</p>
+<p>Each developer should have their own Databricks Repo configured for development. During development, the user configures their own pipeline from their Databricks Repo and tests new logic using development datasets and isolated schema and locations. As development work is completed, the user commits and pushes changes back to their branch in the central Git repository and opens a pull request against the testing or QA branch.</p>
+<p>The resulting branch should be checked out in a Databricks Repo and a pipeline configured using test datasets and a development schema. Assuming logic runs as expected, a pull request or release branch should be prepared to push the changes to production.</p>
+<p>While Repos can be used to synchronize code across environments, pipeline settings need to be kept up to date either manually or using tools like Terraform.</p>
+<p>This workflow is similar to using Repos for CI/CD in all Databricks jobs. See <a class="reference internal" href="../repos/ci-cd-techniques-with-repos.html"><span class="doc">CI/CD techniques with Git and Databricks Repos</span></a>.</p>
+</div>
+<div class="section" id="segment-libraries-for-ingestion-and-transformation-steps">
+<h2>Segment libraries for ingestion and transformation steps<a class="headerlink" href="#segment-libraries-for-ingestion-and-transformation-steps" title="Permalink to this headline"> </a></h2>
+<p>Databricks recommends isolating queries that ingest data from transformation logic that enriches and validates data. You can then organize libraries used for ingesting data from development or testing data sources in a separate directory from production data ingestion logic, allowing you to easily configure pipelines for various environments. You can then use smaller datasets for testing, accelerating development. See <a class="reference internal" href="#sample-data"><span class="std std-ref">Create sample datasets for development and testing</span></a>.</p>
+<p>You can also use parameters to control data sources for development, testing, and production. See <a class="reference internal" href="#parameters"><span class="std std-ref">Control data sources with parameters</span></a>.</p>
+<p>Because Delta Live Tables pipelines use the <code class="docutils literal notranslate"><span class="pre">LIVE</span></code> virtual schema for managing all dataset relationships, by configuring development and testing pipelines with ingestion libraries that load sample data, you can substitute sample datasets using production table names to test code. The same transformation logic can be used in all environments.</p>
+</div>
+<div class="section" id="create-sample-datasets-for-development-and-testing">
+<span id="sample-data"></span><h2>Create sample datasets for development and testing<a class="headerlink" href="#create-sample-datasets-for-development-and-testing" title="Permalink to this headline"> </a></h2>
+<p>Databricks recommends creating development and test datasets to test pipeline logic with both expected data and potential malformed or corrupt records. There are multiple ways to create datasets that can be useful for development and testing, including the following:</p>
+<ul class="simple">
+<li><p>Select a subset of data from a production dataset.</p></li>
+<li><p>Use anonymized or artificially generated data for sources containing PII.</p></li>
+<li><p>Create test data with well-defined outcomes based on downstream transformation logic.</p></li>
+<li><p>Anticipate potential data corruption, malformed records, and upstream data changes by creating records that break data schema expectations.</p></li>
+</ul>
+<p>For example, if you have a notebook that defines a dataset using the following code:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">REFRESH</span><span class="w"> </span><span class="n">STREAMING</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">input_data</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">cloud_files</span><span class="p">(</span><span class="ss">&quot;/production/data&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;json&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You could create a sample dataset containing specific records using a query like the following:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">REFRESH</span><span class="w"> </span><span class="n">LIVE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">input_data</span><span class="w"> </span><span class="k">AS</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="ss">&quot;2021/09/04&quot;</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span><span class="w"> </span><span class="mi">22</span><span class="p">.</span><span class="mi">4</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">sensor_reading</span><span class="w"> </span><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="ss">&quot;2021/09/05&quot;</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span><span class="w"> </span><span class="mi">21</span><span class="p">.</span><span class="mi">5</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">sensor_reading</span>
+</pre></div>
+</div>
+<p>The following example demonstrates filtering published data to create a subset of the production data for development or testing:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">REFRESH</span><span class="w"> </span><span class="n">LIVE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">input_data</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">prod</span><span class="p">.</span><span class="n">input_data</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="nb">date</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="k">current_date</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">DAY</span>
+</pre></div>
+</div>
+<p>To use these different datasets, create multiple pipelines with the notebooks implementing the transformation logic. Each pipeline can read data from the <code class="docutils literal notranslate"><span class="pre">LIVE.input_data</span></code> dataset but is configured to include the notebook that creates the dataset specific to the environment.</p>
+</div>
+<div class="section" id="control-data-sources-with-parameters">
+<span id="parameters"></span><h2>Control data sources with parameters<a class="headerlink" href="#control-data-sources-with-parameters" title="Permalink to this headline"> </a></h2>
+<p>You can reference parameters set during pipeline configuration from within your libraries. These parameters are set as key-value pairs in the <strong>Compute &gt; Advanced &gt; Configurations</strong> portion of the pipeline settings UI. This pattern allows you to specify different data sources in different configurations of the same pipeline.</p>
+<p>For example, you can specify different paths in development, testing, and production configurations for a pipeline using the variable <code class="docutils literal notranslate"><span class="pre">data_source_path</span></code> and then reference it using the following code:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">STREAMING</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">bronze</span>
+<span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="k">SELECT</span>
+<span class="w">    </span><span class="o">*</span><span class="p">,</span>
+<span class="w">    </span><span class="n">_metadata</span><span class="p">.</span><span class="n">file_path</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">source_file_path</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">cloud_files</span><span class="p">(</span><span class="w"> </span><span class="s1">&#39;${data_source_path}&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;csv&#39;</span><span class="p">,</span>
+<span class="w">            </span><span class="k">map</span><span class="p">(</span><span class="ss">&quot;header&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;true&quot;</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dlt</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">col</span>
+
+<span class="n">data_source_path</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data_source_path&quot;</span><span class="p">)</span>
+
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">table</span>
+<span class="k">def</span> <span class="nf">bronze</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">readStream</span>
+        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;cloudFiles&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;cloudFiles.format&quot;</span><span class="p">,</span> <span class="s2">&quot;csv&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">data_source_path</span> <span class="p">)</span>
+        <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">col</span><span class="p">(</span><span class="s2">&quot;_metadata.file_path&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;source_file_name&quot;</span><span class="p">))</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>This pattern is especially useful if you need to test how ingestion logic might handle changes to schema or malformed data during initial ingestion. You can use the identical code throughout your entire pipeline in all environments while switching out datasets.</p>
+<p></p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

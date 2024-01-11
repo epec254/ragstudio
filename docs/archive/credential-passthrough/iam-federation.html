@@ -1,0 +1,663 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use AWS IAM federation for IAM credential passthrough." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Access S3 with IAM credential passthrough with SAML 2.0 federation (legacy)">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Access S3 with IAM credential passthrough with SAML 2.0 federation (legacy) &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/archive/credential-passthrough/iam-federation.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/archive/credential-passthrough/iam-federation.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/archive/credential-passthrough/iam-federation.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/archive/credential-passthrough/iam-federation.html" class="notranslate">English</option>
+    <option value="../../../ja/archive/credential-passthrough/iam-federation.html" class="notranslate">日本語</option>
+    <option value="../../../pt/archive/credential-passthrough/iam-federation.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Access S3 with IAM credential passthrough with SAML 2.0 federation (legacy)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="access-s3-with-iam-credential-passthrough-with-saml-20-federation-legacy">
+<h1>Access S3 with IAM credential passthrough with SAML 2.0 federation (legacy)<a class="headerlink" href="#access-s3-with-iam-credential-passthrough-with-saml-20-federation-legacy" title="Permalink to this headline"> </a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This documentation has been retired and might not be updated.</p>
+<p>IAM credential passthrough is a legacy data governance model. Databricks recommends that you upgrade to Unity Catalog. Unity Catalog simplifies security and governance of your data by providing a central place to administer and audit data access across multiple workspaces in your account. See <a class="reference internal" href="../../data-governance/unity-catalog/index.html"><span class="doc">What is Unity Catalog?</span></a>.</p>
+</div>
+<p>AWS supports SAML 2.0 <a class="reference external" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_saml.html">identity federation</a> to allow for single-sign on to AWS Management Console and AWS APIs. Databricks workspaces that are configured with <a class="reference internal" href="../../administration-guide/users-groups/single-sign-on/index.html"><span class="doc">single sign-on</span></a> can use AWS IAM federation to maintain the mapping of users to IAM roles within their identity provider (IdP) rather than within Databricks using SCIM. This allows you to centralize data access within your IdP and have those entitlements pass directly to Databricks clusters.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>IAM credential passthrough with SAML 2.0 federation can only be configured when unified login is disabled. Databricks recommends that you upgrade to Unity Catalog, see <a class="reference internal" href="../../data-governance/unity-catalog/index.html"><span class="doc">What is Unity Catalog?</span></a>. If your account was created after June 21, 2023 and you require IAM credential passthrough with SAML 2.0 federation, contact your Databricks account team.</p>
+</div>
+<p>The following diagram illustrates the federation workflow:</p>
+<div class="figure align-default">
+<img alt="Federation workflow" src="../../_images/federation-workflow.png" />
+</div>
+<ol class="arabic simple">
+<li><p>Configure a trust relationship between your IdP and AWS accounts in order for the IdP to control which roles users can assume.</p></li>
+<li><p>Users login to Databricks via SAML SSO, the entitlement to the roles are passed by the IdP.</p></li>
+<li><p>Databricks calls the AWS Security Token Service (STS) and assumes the roles for the user by passing the SAML response and getting temporary tokens.</p></li>
+<li><p>When a user accesses S3 from a Databricks cluster, Databricks runtime uses the temporary tokens for the user to perform the access automatically and securely.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Federation for IAM credential passthrough always maps roles to users in SAML when the <a class="reference internal" href="#sync-role-mappings-scim"><span class="std std-ref">Allow IAM role entitlement auto sync</span></a> is enabled. It will overwrite any previous roles set via the SCIM API.</p>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://databricks.com/product/pricing/platform-addons">Premium plan or above</a>.</p></li>
+<li><p>SAML <a class="reference internal" href="../../administration-guide/users-groups/single-sign-on/index.html"><span class="doc">single sign-on</span></a> configured in your Databricks workspace.</p></li>
+<li><p>AWS administrator access to:</p>
+<ul>
+<li><p>IAM roles and policies in the AWS account of the Databricks deployment.</p></li>
+<li><p>AWS account of the S3 bucket.</p></li>
+</ul>
+</li>
+<li><p>Identity provider (IdP) administrator to configure your IdP to pass AWS roles to Databricks.</p></li>
+<li><p>A Databricks workspace admin to include AWS roles in the SAML assertion.</p></li>
+</ul>
+</div>
+<div class="section" id="step-1-get-the-databricks-saml-url">
+<h2>Step 1: Get the Databricks SAML URL<a class="headerlink" href="#step-1-get-the-databricks-saml-url" title="Permalink to this headline"> </a></h2>
+<ol class="arabic">
+<li><p>Go to the <a class="reference internal" href="../../administration-guide/index.html#admin-settings"><span class="std std-ref">admin settings page</span></a>.</p></li>
+<li><p>Click the <strong>Single Sign-On</strong> tab.</p></li>
+<li><p>Copy the Databricks SAML URL.</p>
+<div class="figure align-default">
+<img alt="SAML URL" src="../../_images/databricks-saml-url.png" />
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="step-2-download-identity-provider-metadata">
+<h2>Step 2: Download identity provider metadata<a class="headerlink" href="#step-2-download-identity-provider-metadata" title="Permalink to this headline"> </a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The steps within the identity provider console vary slightly for each identity provider. See <a class="reference external" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_saml_3rd-party.html">Integrating Third-Party SAML Solution Providers with AWS</a> for examples with your identity provider.</p>
+</div>
+<ol class="arabic">
+<li><p>In your identity provider admin console, find your Databricks application for single sign-on.</p></li>
+<li><p>Download the SAML metadata.</p>
+<div class="figure align-default">
+<img alt="Add attribute" src="../../_images/identity-provider-metadata.png" />
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="step-3-configure-the-identity-provider">
+<h2>Step 3: Configure the identity provider<a class="headerlink" href="#step-3-configure-the-identity-provider" title="Permalink to this headline"> </a></h2>
+<ol class="arabic simple">
+<li><p>In the AWS console, go to the <strong>IAM</strong> service.</p></li>
+<li><p>Click the <strong>Identity Providers</strong> tab in the sidebar.</p></li>
+<li><p>Click <strong>Create Provider</strong>.</p>
+<ol class="loweralpha simple">
+<li><p>In Provider Type, select <strong>SAML</strong>.</p></li>
+<li><p>In Provider Name, enter a name.</p></li>
+<li><p>In <strong>Metadata Document</strong>, click <strong>Choose File</strong> and navigate to the file containing the metadata document you downloaded above.</p></li>
+<li><p>Click <strong>Next Step</strong> and then <strong>Create</strong>.</p></li>
+</ol>
+</li>
+</ol>
+</div>
+<div class="section" id="step-4-configure-the-iam-role-for-federation">
+<span id="configure-iam-role-for-federation"></span><h2>Step 4: Configure the IAM role for federation<a class="headerlink" href="#step-4-configure-the-iam-role-for-federation" title="Permalink to this headline"> </a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only roles used for data access should be used for federation with Databricks. We do not recommend allowing roles normally used for AWS console access as they may have more privileges than necessary.</p>
+</div>
+<ol class="arabic">
+<li><p>In the AWS console, go to the <strong>IAM</strong> service.</p></li>
+<li><p>Click the <strong>Roles</strong> tab in the sidebar.</p></li>
+<li><p>Click <strong>Create role</strong>.</p>
+<ol class="loweralpha simple">
+<li><p>Under <strong>Select type of trusted entity</strong>, select <strong>SAML 2.0 federation</strong>.</p></li>
+<li><p>In SAML provider, select the name created in Step 3.</p></li>
+<li><p>Select <strong>Allow programmatic access only</strong>.</p></li>
+<li><p>In Attribute, select <strong>SAML:aud</strong>.</p></li>
+<li><p>In Value, paste the Databricks SAML URL you copied in Step 1.</p></li>
+<li><p>Click <strong>Next: Permissions</strong>, <strong>Next: Tags</strong>, and <strong>Next: Review</strong>.</p></li>
+<li><p>In the Role Name field, type a role name.</p></li>
+<li><p>Click <strong>Create role</strong>. The list of roles displays.</p></li>
+</ol>
+</li>
+<li><p>Add an inline policy to the role. This policy grants access to the S3 bucket.</p>
+<ol class="loweralpha">
+<li><p>In the Permissions tab, click <img alt="Inline policy" src="../../_images/add-inline-policy.png" />.</p></li>
+<li><p>Click the <strong>JSON</strong> tab.
+Copy this policy and set <code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket-name&gt;</span></code> to the name of your bucket.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;s3:ListBucket&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">     </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;arn:aws:s3:::&lt;s3-bucket-name&gt;&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;s3:PutObject&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;s3:GetObject&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;s3:DeleteObject&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;s3:PutObjectAcl&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">         </span><span class="s2">&quot;arn:aws:s3:::&lt;s3-bucket-name&gt;/*&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Click <strong>Review policy</strong>.</p></li>
+<li><p>In the Name field, type a policy name.</p></li>
+<li><p>Click <strong>Create policy</strong>.</p></li>
+</ol>
+</li>
+<li><p>In the <strong>Trusted Relationships</strong> tab, you should be able to see something similar to:</p>
+<div class="figure align-default">
+<img alt="Trust relationship" src="../../_images/edit-trust-relationship.png" />
+</div>
+</li>
+<li><p>Click the <strong>Edit trust relationship</strong> button. The IAM resulting trust policy document should be similar to the following:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;Federated&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::&lt;accountID&gt;:saml-provider/&lt;IdP-name&gt;&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sts:AssumeRoleWithSAML&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;StringEquals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;SAML:aud&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://xxxxxx.cloud.databricks.com/saml/consume&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="step-5-configure-the-identity-provider-to-pass-attributes-to-databricks">
+<h2>Step 5: Configure the identity provider to pass attributes to Databricks<a class="headerlink" href="#step-5-configure-the-identity-provider-to-pass-attributes-to-databricks" title="Permalink to this headline"> </a></h2>
+<p>The following attributes must be passed to Databricks in the SAML response via SSO in order for Databricks to pass roles to clusters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">https://aws.amazon.com/SAML/Attributes/Role</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">https://aws.amazon.com/SAML/Attributes/RoleSessionName</span></code></p></li>
+</ul>
+<p>These attributes are the list of role ARNs and the username matching the single sign-on login. Role mappings are refreshed when a user logs in to the Databricks workspace.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If user entitlement to the IAM roles is based on AD/LDAP group membership, you must configure that group to role mapping per your IdP.</p>
+</div>
+<p>Each identity provider differs in how you add attributes to pass through SAML. The following section shows one example with Okta. See <a class="reference external" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_saml_3rd-party.html">Integrating Third-Party SAML Solution Providers with AWS</a> for examples with your identity provider.</p>
+<div class="section" id="okta-example">
+<h3>Okta example<a class="headerlink" href="#okta-example" title="Permalink to this headline"> </a></h3>
+<ol class="arabic">
+<li><p>In the Okta Admin Console under Applications, select your Single Sign-On to Databricks application.</p></li>
+<li><p>Click <strong>Edit</strong> under SAML Settings and click <strong>Next</strong> to the <strong>Configure SAML</strong> tab.</p></li>
+<li><p>In Attribute Statements add the following attributes:</p>
+<ol class="loweralpha simple">
+<li><p>Name: <code class="docutils literal notranslate"><span class="pre">https://aws.amazon.com/SAML/Attributes/RoleSessionName</span></code>, Name format: URI Reference, Value: <code class="docutils literal notranslate"><span class="pre">user.login</span></code></p></li>
+</ol>
+</li>
+<li><p>To manage the roles easily using groups, create groups corresponding to your IAM roles, for example <code class="docutils literal notranslate"><span class="pre">GroupA</span></code> and <code class="docutils literal notranslate"><span class="pre">GroupB</span></code>, and add the users to those groups.</p></li>
+<li><p>You can use Okta Expressions to match groups and roles in the following way:</p>
+<ol class="loweralpha">
+<li><p>Name: <code class="docutils literal notranslate"><span class="pre">https://aws.amazon.com/SAML/Attributes/Role</span></code>, Name format: <code class="docutils literal notranslate"><span class="pre">URI</span> <span class="pre">Reference</span></code>, Value:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Arrays.flatten(isMemberOfGroupName(&quot;GroupA&quot;) ? &quot;arn:aws:iam::xxx:role/role-a,arn:aws:iam::xxx:saml-provider/okta-databricks&quot; : {}, isMemberOfGroupName(&quot;GroupB&quot;) ? &quot;arn:aws:iam::xxx:role/role-b,arn:aws:iam::xxx:saml-provider/okta-databricks&quot; : {})
+</pre></div>
+</div>
+<p>It should look like:</p>
+<div class="figure align-default">
+<img alt="Okta expression" src="../../_images/okta-expression.png" />
+</div>
+<p>Only users in a certain group would have permission to use the corresponding IAM role.</p>
+</li>
+</ol>
+</li>
+<li><p>Use <strong>Manage People</strong> to add users to the group.</p></li>
+<li><p>Use <strong>Manage Apps</strong> to assign the group to the SSO application to allow users to log in to Databricks.</p></li>
+</ol>
+<p>To add additional roles follow the steps above, mapping an Okta group to a federated role. To have roles in different AWS accounts, add the SSO application as a new IAM identity provider to each additional AWS account that will have federated roles for Databricks.</p>
+</div>
+</div>
+<div class="section" id="step-6-optionally-configure-databricks-to-synchronize-role-mappings-from-saml-to-scim">
+<span id="sync-role-mappings-scim"></span><h2>Step 6: Optionally configure Databricks to synchronize role mappings from SAML to SCIM<a class="headerlink" href="#step-6-optionally-configure-databricks-to-synchronize-role-mappings-from-saml-to-scim" title="Permalink to this headline"> </a></h2>
+<p>Do this step if you want to use IAM credential passthrough for <a class="reference internal" href="iam-passthrough.html#access-s3-data-in-a-job-using-iam-credential-passthrough"><span class="std std-ref">jobs</span></a> or <a class="reference internal" href="iam-passthrough.html#access-s3-data-from-a-jdbc-or-odbc-client-using-iam-credential-passthrough"><span class="std std-ref">JDBC</span></a>. Otherwise, you must set IAM role mappings using the <a class="reference external" href="https://docs.databricks.com/api/workspace">SCIM API</a>.</p>
+<ol class="arabic">
+<li><p>Go to the <a class="reference internal" href="../../administration-guide/index.html#admin-settings"><span class="std std-ref">admin settings page</span></a>.</p></li>
+<li><p>Click the <strong>Single Sign-On</strong> tab.</p></li>
+<li><p>Select <strong>Allow IAM role entitlement auto sync</strong>.</p>
+<div class="figure align-default">
+<img alt="SSO tab" src="../../_images/iam-role-entitlement-auto-sync.png" />
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="best-practices">
+<h2>Best practices<a class="headerlink" href="#best-practices" title="Permalink to this headline"> </a></h2>
+<p>For the best experience we recommend setting the IAM role maximum session duration between 4 to 8
+hours. This is to avoid users having to repeatedly re-authenticate themselves in order to fetch new
+tokens or long queries failing due to expired tokens. To set the duration:</p>
+<ol class="arabic">
+<li><p>In the AWS console, click the IAM role you configured in <a class="reference internal" href="#configure-iam-role-for-federation"><span class="std std-ref">Step 4: Configure the IAM role for federation</span></a>.</p></li>
+<li><p>In the <strong>Maximum CLI/API session duration</strong> property, click <strong>Edit</strong>.</p>
+<div class="figure align-default">
+<img alt="Set session duration" src="../../_images/set-session-duration.png" />
+</div>
+</li>
+<li><p>Select the duration and click <strong>Save changes</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="use-iam-credential-passthrough-with-federation">
+<h2>Use IAM credential passthrough with federation<a class="headerlink" href="#use-iam-credential-passthrough-with-federation" title="Permalink to this headline"> </a></h2>
+<p>Follow the instructions in <a class="reference internal" href="iam-passthrough.html#launch-an-iam-credential-passthrough-cluster"><span class="std std-ref">Launch an IAM credential passthrough cluster</span></a> and do not add an instance profile.
+To use IAM passthrough with federation for jobs or JDBC connections, follow the instructions in <a class="reference internal" href="iam-passthrough.html#meta-instance-profiles"><span class="std std-ref">Set up a meta instance profile</span></a>.</p>
+</div>
+<div class="section" id="security">
+<h2>Security<a class="headerlink" href="#security" title="Permalink to this headline"> </a></h2>
+<p>It is safe to share high concurrency IAM credential passthrough clusters with other users. You will
+be isolated from each other and will not be able to read or use each other’s credentials.</p>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline"> </a></h2>
+<p>Misconfigurations are a common source of errors when setting up credential passthrough.
+The <strong>X-Databricks-PassThrough-Error</strong> header is returned with the sign-on response headers
+to help identify the source of these errors. The possible values are:</p>
+<ul class="simple">
+<li><p><strong>ValidationError</strong>: The configuration of roles in the identity provider fails to satisfy the constraints specified by the AWS service.
+A common cause of this error is that role name and identity provider name are in the wrong order.</p></li>
+<li><p><strong>InvalidIdentityToken</strong>: The identity provider submitted is invalid. A common cause of this error is that
+the identity provider’s metadata is not set correctly in the AWS IAM service.</p></li>
+<li><p><strong>AccessDenied</strong>: Validation of the role has failed. A common cause of this error is that the
+identity provider has not been added to the role’s <strong>Trusted Relationships</strong> in the AWS IAM service.</p></li>
+<li><p><strong>Malformed role name attribute</strong>: The configuration of the role in the identity provider is in the wrong format.</p></li>
+</ul>
+<p>Consult your web browser documentation for instructions on accessing the response headers.</p>
+</div>
+<div class="section" id="known-limitations">
+<h2>Known limitations<a class="headerlink" href="#known-limitations" title="Permalink to this headline"> </a></h2>
+<p>The following features are not supported with IAM federation:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">%fs</span></code> (use the equivalent <a class="reference internal" href="../../dev-tools/databricks-utils.html#dbutils-fs"><span class="std std-ref">dbutils.fs</span></a> command instead).</p></li>
+<li><p><a class="reference internal" href="../../data-governance/table-acls/index.html"><span class="doc">Table access control</span></a>.</p></li>
+<li><p>The following methods on SparkContext (<code class="docutils literal notranslate"><span class="pre">sc</span></code>) and SparkSession (<code class="docutils literal notranslate"><span class="pre">spark</span></code>) objects:</p>
+<ul>
+<li><p>Deprecated methods.</p></li>
+<li><p>Methods such as <code class="docutils literal notranslate"><span class="pre">addFile()</span></code> and <code class="docutils literal notranslate"><span class="pre">addJar()</span></code> that would allow non-admin users to call Scala code.</p></li>
+<li><p>Any method that accesses a filesystem other than S3.</p></li>
+<li><p>Old Hadoop APIs (<code class="docutils literal notranslate"><span class="pre">hadoopFile()</span></code> and <code class="docutils literal notranslate"><span class="pre">hadoopRDD()</span></code>).</p></li>
+<li><p>Streaming APIs, since the passed-through credentials would expire while the stream was still running.</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="../../dbfs/mounts.html"><span class="doc">DBFS mounts</span></a> (<code class="docutils literal notranslate"><span class="pre">/dbfs</span></code>) are available only in Databricks Runtime 7.3 LTS and above. Mount points with credential passthrough configured are not supported through this path.</p></li>
+<li><p>Cluster-wide libraries that require a cluster instance profile’s permission to download. Only libraries with DBFS paths are supported.</p></li>
+<li><p><a class="reference internal" href="../../dev-tools/databricks-connect/index.html"><span class="doc">Databricks Connect</span></a> on <a class="reference internal" href="../compute/configure.html#high-concurrency"><span class="std std-ref">High Concurrency</span></a> clusters is available only in Databricks Runtime 7.3 LTS and above.</p></li>
+<li><p><a class="reference internal" href="../../mlflow/index.html"><span class="doc">MLflow</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

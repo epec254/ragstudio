@@ -1,0 +1,787 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="This article describes how to use monitoring and observability features, including data lineage, update history, and data quality reporting for pipelines." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Monitor Delta Live Tables pipelines">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Monitor Delta Live Tables pipelines &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/delta-live-tables/observability.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/delta-live-tables/observability.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/delta-live-tables/observability.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/delta-live-tables/observability.html" class="notranslate">English</option>
+    <option value="../../ja/delta-live-tables/observability.html" class="notranslate">日本語</option>
+    <option value="../../pt/delta-live-tables/observability.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Monitor Delta Live Tables pipelines</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="monitor-delta-live-tables-pipelines">
+<span id="monitor-dlt-pipelines"></span><h1>Monitor Delta Live Tables pipelines<a class="headerlink" href="#monitor-delta-live-tables-pipelines" title="Permalink to this headline"> </a></h1>
+<p>This article describes how you can use built-in features in Delta Live Tables for monitoring and observability for pipelines, including data lineage, update history, and data quality reporting.</p>
+<p>You can review most monitoring data manually through the pipeline details UI. Some tasks are easier to accomplish by querying the event log metadata. See <a class="reference internal" href="#event-log"><span class="std std-ref">What is the Delta Live Tables event log?</span></a>.</p>
+<div class="section" id="what-pipeline-details-are-available-in-the-ui">
+<span id="pipeline-details"></span><h2>What pipeline details are available in the UI?<a class="headerlink" href="#what-pipeline-details-are-available-in-the-ui" title="Permalink to this headline"> </a></h2>
+<p>The pipeline graph displays as soon as an update to a pipeline has successfully started. Arrows represent dependencies between datasets in your pipeline. By default, the pipeline details page shows the most recent update for the table, but you can select older updates from a drop-down menu.</p>
+<p>Details displayed include the pipeline ID, source libraries, compute cost, product edition, Databricks Runtime version, and the channel configured for the pipeline.</p>
+<p>To see a tabular view of datasets, click the <strong>List</strong> tab. The <strong>List</strong> view allows you to see all datasets in your pipeline represented as a row in a table and is useful when your pipeline DAG is too large to visualize in the <strong>Graph</strong> view. You can control the datasets displayed in the table using multiple filters such as dataset name, type, and status. To switch back to the DAG visualization, click <strong>Graph</strong>.</p>
+<p>The <strong>Run as</strong> user is the pipeline owner, and pipeline updates run with this user’s permissions. To change the <code class="docutils literal notranslate"><span class="pre">run</span> <span class="pre">as</span></code> user, click <strong>Permissions</strong> and change the pipeline owner.</p>
+</div>
+<div class="section" id="how-can-you-view-dataset-details">
+<span id="dataset-details"></span><h2>How can you view dataset details?<a class="headerlink" href="#how-can-you-view-dataset-details" title="Permalink to this headline"> </a></h2>
+<p>Clicking on a dataset in the pipeline graph or dataset list displays details about the dataset. Details include the dataset schema, data quality metrics, and a link back to the source code that define the dataset.</p>
+</div>
+<div class="section" id="view-update-history">
+<span id="update-history"></span><h2>View update history<a class="headerlink" href="#view-update-history" title="Permalink to this headline"> </a></h2>
+<p>To view the history and status of pipeline updates, click the update history drop-down menu in the top bar.</p>
+<p>To view the graph, details, and events for an update, select the update in the drop-down menu. To return to the latest update, click <strong>Show the latest update</strong>.</p>
+</div>
+<div class="section" id="get-notifications-for-pipeline-events">
+<h2>Get notifications for pipeline events<a class="headerlink" href="#get-notifications-for-pipeline-events" title="Permalink to this headline"> </a></h2>
+<p>To receive real-time notifications for pipeline events such as successful completion of a pipeline update or failure of a pipeline update, add <a class="reference internal" href="settings.html#email-notifications"><span class="std std-ref">Add email notifications for pipeline events</span></a> when you create or edit a pipeline.</p>
+</div>
+<div class="section" id="what-is-the-delta-live-tables-event-log">
+<span id="what-is-the-dlt-event-log"></span><span id="event-log"></span><h2>What is the Delta Live Tables event log?<a class="headerlink" href="#what-is-the-delta-live-tables-event-log" title="Permalink to this headline"> </a></h2>
+<p>The Delta Live Tables event log contains all information related to a pipeline, including audit logs, data quality checks, pipeline progress, and data lineage. You can use the event log to track, understand, and monitor the state of your data pipelines.</p>
+<p>You can view event log entries in the Delta Live Tables user interface, the Delta Live Tables <a class="reference internal" href="api-guide.html#list-events"><span class="std std-ref">API</span></a>, or by directly querying the event log. This article focuses on querying the event log directly.</p>
+<p>You can also define custom actions to run when events are logged, for example, sending alerts, with <a class="reference internal" href="event-hooks.html"><span class="doc">event hooks</span></a>.</p>
+<p></p>
+</div>
+<div class="section" id="event-log-schema">
+<span id="schema"></span><h2>Event log schema<a class="headerlink" href="#event-log-schema" title="Permalink to this headline"> </a></h2>
+<p>The following table describes the event log schema. Some of these fields contain JSON data that require parsing to perform some queries, such as the <code class="docutils literal notranslate"><span class="pre">details</span></code> field. Databricks supports the <code class="docutils literal notranslate"><span class="pre">:</span></code> operator to parse JSON fields. See <a class="reference internal" href="../sql/language-manual/functions/colonsign.html"><span class="doc">: (colon sign) operator</span></a>.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 86%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">id</span></code></p></td>
+<td><p>A unique identifier for the event log record.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sequence</span></code></p></td>
+<td><p>A JSON document containing metadata to identify and order events.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">origin</span></code></p></td>
+<td><p>A JSON document containing metadata for the origin of the event, for example, the cloud provider, the cloud
+provider region, <code class="docutils literal notranslate"><span class="pre">user_id</span></code>, <code class="docutils literal notranslate"><span class="pre">pipeline_id</span></code>, or <code class="docutils literal notranslate"><span class="pre">pipeline_type</span></code> to show where the pipeline was created,
+either <code class="docutils literal notranslate"><span class="pre">DBSQL</span></code> or <code class="docutils literal notranslate"><span class="pre">WORKSPACE</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">timestamp</span></code></p></td>
+<td><p>The time the event was recorded.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">message</span></code></p></td>
+<td><p>A human-readable message describing the event.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">level</span></code></p></td>
+<td><p>The event type, for example, <code class="docutils literal notranslate"><span class="pre">INFO</span></code>, <code class="docutils literal notranslate"><span class="pre">WARN</span></code>, <code class="docutils literal notranslate"><span class="pre">ERROR</span></code>, or <code class="docutils literal notranslate"><span class="pre">METRICS</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">error</span></code></p></td>
+<td><p>If an error occurred, details describing the error.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">details</span></code></p></td>
+<td><p>A JSON document containing structured details of the event. This is the primary field used for analyzing
+events.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">event_type</span></code></p></td>
+<td><p>The event type.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">maturity_level</span></code></p></td>
+<td><p>The stability of the event schema. The possible values are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">STABLE</span></code>: The schema is stable and will not change.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NULL</span></code>: The schema is stable and will not change. The value may be <code class="docutils literal notranslate"><span class="pre">NULL</span></code> if the record was created
+before the <code class="docutils literal notranslate"><span class="pre">maturity_level</span></code> field was added
+(<a class="reference internal" href="../release-notes/delta-live-tables/2022/37/index.html"><span class="doc">release 2022.37</span></a>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EVOLVING</span></code>: The schema is not stable and may change.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DEPRECATED</span></code>: The schema is deprecated and the Delta Live Tables runtime may stop producing this event at any time.</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="querying-the-event-log">
+<span id="query-event-log"></span><h2>Querying the event log<a class="headerlink" href="#querying-the-event-log" title="Permalink to this headline"> </a></h2>
+<p>The location of the event log and the interface to query the event log depend on whether your pipeline is configured to use the Hive metastore or Unity Catalog.</p>
+<div class="section" id="hive-metastore">
+<span id="hms"></span><h3>Hive metastore<a class="headerlink" href="#hive-metastore" title="Permalink to this headline"> </a></h3>
+<p>If your pipeline <a class="reference internal" href="publish.html"><span class="doc">publishes tables to the Hive metastore</span></a>, the event log is stored in <code class="docutils literal notranslate"><span class="pre">/system/events</span></code> under the <code class="docutils literal notranslate"><span class="pre">storage</span></code> location. For example, if you have configured your pipeline <code class="docutils literal notranslate"><span class="pre">storage</span></code> setting as <code class="docutils literal notranslate"><span class="pre">/Users/username/data</span></code>, the event log is stored in the <code class="docutils literal notranslate"><span class="pre">/Users/username/data/system/events</span></code> path in DBFS.</p>
+<p>If you have not configured the <code class="docutils literal notranslate"><span class="pre">storage</span></code> setting, the default event log location is <code class="docutils literal notranslate"><span class="pre">/pipelines/&lt;pipeline-id&gt;/system/events</span></code> in DBFS. For example, if the ID of your pipeline is <code class="docutils literal notranslate"><span class="pre">91de5e48-35ed-11ec-8d3d-0242ac130003</span></code>, the storage location is <code class="docutils literal notranslate"><span class="pre">/pipelines/91de5e48-35ed-11ec-8d3d-0242ac130003/system/events</span></code>.</p>
+<p>You can create a view to simplify querying the event log. The following example creates a temporary view called <code class="docutils literal notranslate"><span class="pre">event_log_raw</span></code>. This view is used in the example event log queries included in this article:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="n">TEMP</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">event_log_raw</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`&lt;</span><span class="n">event</span><span class="o">-</span><span class="n">log</span><span class="o">-</span><span class="n">path</span><span class="o">&gt;`</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;event-log-path&gt;</span></code> with the event log location.</p>
+<p>Each instance of a pipeline run is called an <em>update</em>. You often want to extract information for the most recent update. Run the following query to find the identifier for the most recent update and save it in the <code class="docutils literal notranslate"><span class="pre">latest_update_id</span></code> temporary view. This view is used in the example event log queries included in this article:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="n">TEMP</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">latest_update</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">origin</span><span class="p">.</span><span class="n">update_id</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">event_log_raw</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;create_update&#39;</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>You can query the event log in a Databricks notebook or the <a class="reference internal" href="../sql/user/sql-editor/index.html"><span class="doc">SQL editor</span></a>. Use a notebook or the SQL editor to run the example event log queries.</p>
+</div>
+<div class="section" id="unity-catalog">
+<span id="uc"></span><span id="event-log-with-uc"></span><h3>Unity Catalog<a class="headerlink" href="#unity-catalog" title="Permalink to this headline"> </a></h3>
+<p>If your pipeline <a class="reference internal" href="unity-catalog.html"><span class="doc">publishes tables to Unity Catalog</span></a>, you must use the <code class="docutils literal notranslate"><span class="pre">event_log</span></code> <em>table valued function</em> (TVF) to fetch the event log for the pipeline. You retrieve the event log for a pipeline by passing the pipeline ID or a table name to the TVF. For example, to retrieve the event log records for the pipeline with ID <code class="docutils literal notranslate"><span class="pre">04c78631-3dd7-4856-b2a6-7d84e9b2638b</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">event_log</span><span class="p">(</span><span class="ss">&quot;04c78631-3dd7-4856-b2a6-7d84e9b2638b&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To retrieve the event log records for the pipeline that created or owns the table <code class="docutils literal notranslate"><span class="pre">my_catalog.my_schema.table1</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">event_log</span><span class="p">(</span><span class="k">TABLE</span><span class="p">(</span><span class="n">my_catalog</span><span class="p">.</span><span class="n">my_schema</span><span class="p">.</span><span class="n">table1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>To call the TVF, you must use a shared cluster or a SQL warehouse. For example, you can use a notebook attached to a shared cluster or use the <a class="reference internal" href="../sql/user/sql-editor/index.html"><span class="doc">SQL editor</span></a> connected to a SQL warehouse.</p>
+<p>To simplify querying events for a pipeline, the owner of the pipeline can create a view over the <code class="docutils literal notranslate"><span class="pre">event_log</span></code> TVF. The following example creates a view over the event log for a pipeline. This view is used in the example event log queries included in this article.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">event_log</span></code> TVF can be called only by the pipeline owner and a view created over the <code class="docutils literal notranslate"><span class="pre">event_log</span></code> TVF can be queried only by the pipeline owner. The view cannot be shared with other users.</p>
+</div>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">event_log_raw</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">event_log</span><span class="p">(</span><span class="ss">&quot;&lt;pipeline-ID&gt;&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;pipeline-ID&gt;</span></code> with the unique identifier for the Delta Live Tables pipeline. You can find the ID in the <strong>Pipeline details</strong> panel in the Delta Live Tables UI.</p>
+<p>Each instance of a pipeline run is called an <em>update</em>. You often want to extract information for the most recent update. Run the following query to find the identifier for the most recent update and save it in the <code class="docutils literal notranslate"><span class="pre">latest_update_id</span></code> temporary view. This view is used in the example event log queries included in this article:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="n">TEMP</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">latest_update</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">origin</span><span class="p">.</span><span class="n">update_id</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">event_log_raw</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;create_update&#39;</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="query-lineage-information-from-the-event-log">
+<span id="lineage"></span><h2>Query lineage information from the event log<a class="headerlink" href="#query-lineage-information-from-the-event-log" title="Permalink to this headline"> </a></h2>
+<p>Events containing information about lineage have the event type <code class="docutils literal notranslate"><span class="pre">flow_definition</span></code>. The <code class="docutils literal notranslate"><span class="pre">details:flow_definition</span></code> object contains the <code class="docutils literal notranslate"><span class="pre">output_dataset</span></code> and <code class="docutils literal notranslate"><span class="pre">input_datasets</span></code> defining each relationship in the graph.</p>
+<p>You can use the following query to extract the input and output datasets to see lineage information:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span>
+<span class="w">  </span><span class="n">details</span><span class="p">:</span><span class="n">flow_definition</span><span class="p">.</span><span class="n">output_dataset</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">output_dataset</span><span class="p">,</span>
+<span class="w">  </span><span class="n">details</span><span class="p">:</span><span class="n">flow_definition</span><span class="p">.</span><span class="n">input_datasets</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">input_dataset</span>
+<span class="k">FROM</span>
+<span class="w">  </span><span class="n">event_log_raw</span><span class="p">,</span>
+<span class="w">  </span><span class="n">latest_update</span>
+<span class="k">WHERE</span>
+<span class="w">  </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;flow_definition&#39;</span>
+<span class="w">  </span><span class="k">AND</span>
+<span class="w">  </span><span class="n">origin</span><span class="p">.</span><span class="n">update_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">latest_update</span><span class="p">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 2%" />
+<col style="width: 38%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">output_dataset</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">input_datasets</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> 1</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">customers</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p> 2</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">sales_orders_raw</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p> 3</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">sales_orders_cleaned</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">[&quot;customers&quot;,</span> <span class="pre">&quot;sales_orders_raw&quot;]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p> 4</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">sales_order_in_la</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">[&quot;sales_orders_cleaned&quot;]</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="query-data-quality-from-the-event-log">
+<span id="data-quality-metrics"></span><h2>Query data quality from the event log<a class="headerlink" href="#query-data-quality-from-the-event-log" title="Permalink to this headline"> </a></h2>
+<p>If you define expectations on datasets in your pipeline, the data quality metrics are stored in the <code class="docutils literal notranslate"><span class="pre">details:flow_progress.data_quality.expectations</span></code> object. Events containing information about data quality have the event type <code class="docutils literal notranslate"><span class="pre">flow_progress</span></code>. The following example queries the data quality metrics for the last pipeline update:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span>
+<span class="w">  </span><span class="n">row_expectations</span><span class="p">.</span><span class="n">dataset</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">dataset</span><span class="p">,</span>
+<span class="w">  </span><span class="n">row_expectations</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">expectation</span><span class="p">,</span>
+<span class="w">  </span><span class="k">SUM</span><span class="p">(</span><span class="n">row_expectations</span><span class="p">.</span><span class="n">passed_records</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">passing_records</span><span class="p">,</span>
+<span class="w">  </span><span class="k">SUM</span><span class="p">(</span><span class="n">row_expectations</span><span class="p">.</span><span class="n">failed_records</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">failing_records</span>
+<span class="k">FROM</span>
+<span class="w">  </span><span class="p">(</span>
+<span class="w">    </span><span class="k">SELECT</span>
+<span class="w">      </span><span class="n">explode</span><span class="p">(</span>
+<span class="w">        </span><span class="n">from_json</span><span class="p">(</span>
+<span class="w">          </span><span class="n">details</span><span class="w"> </span><span class="p">:</span><span class="n">flow_progress</span><span class="w"> </span><span class="p">:</span><span class="n">data_quality</span><span class="w"> </span><span class="p">:</span><span class="n">expectations</span><span class="p">,</span>
+<span class="w">          </span><span class="ss">&quot;array&lt;struct&lt;name: string, dataset: string, passed_records: int, failed_records: int&gt;&gt;&quot;</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">      </span><span class="p">)</span><span class="w"> </span><span class="n">row_expectations</span>
+<span class="w">    </span><span class="k">FROM</span>
+<span class="w">      </span><span class="n">event_log_raw</span><span class="p">,</span>
+<span class="w">      </span><span class="n">latest_update</span>
+<span class="w">    </span><span class="k">WHERE</span>
+<span class="w">      </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;flow_progress&#39;</span>
+<span class="w">      </span><span class="k">AND</span><span class="w"> </span><span class="n">origin</span><span class="p">.</span><span class="n">update_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">latest_update</span><span class="p">.</span><span class="n">id</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span>
+<span class="w">  </span><span class="n">row_expectations</span><span class="p">.</span><span class="n">dataset</span><span class="p">,</span>
+<span class="w">  </span><span class="n">row_expectations</span><span class="p">.</span><span class="n">name</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 1%" />
+<col style="width: 29%" />
+<col style="width: 26%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">dataset</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">expectation</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">passing_records</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">failing_records</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> 1</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">sales_orders_cleaned</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">valid_order_number</span></code></p></td>
+<td><p> 4083</p></td>
+<td><p> 0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="monitor-data-backlog-by-querying-the-event-log">
+<span id="backlog-metrics"></span><h2>Monitor data backlog by querying the event log<a class="headerlink" href="#monitor-data-backlog-by-querying-the-event-log" title="Permalink to this headline"> </a></h2>
+<p>Delta Live Tables tracks how much data is present in the backlog in the <code class="docutils literal notranslate"><span class="pre">details:flow_progress.metrics.backlog_bytes</span></code> object. Events containing backlog metrics have the event type <code class="docutils literal notranslate"><span class="pre">flow_progress</span></code>. The following example queries backlog metrics for the last pipeline update:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span>
+<span class="w">  </span><span class="k">timestamp</span><span class="p">,</span>
+<span class="w">  </span><span class="n">Double</span><span class="p">(</span><span class="n">details</span><span class="w"> </span><span class="p">:</span><span class="n">flow_progress</span><span class="p">.</span><span class="n">metrics</span><span class="p">.</span><span class="n">backlog_bytes</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">backlog</span>
+<span class="k">FROM</span>
+<span class="w">  </span><span class="n">event_log_raw</span><span class="p">,</span>
+<span class="w">  </span><span class="n">latest_update</span>
+<span class="k">WHERE</span>
+<span class="w">  </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="s1">&#39;flow_progress&#39;</span>
+<span class="w">  </span><span class="k">AND</span>
+<span class="w">  </span><span class="n">origin</span><span class="p">.</span><span class="n">update_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">latest_update</span><span class="p">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The backlog metrics may not be available depending on the pipeline’s data source type and Databricks Runtime version.</p>
+</div>
+</div>
+<div class="section" id="monitor-enhanced-autoscaling-events-from-the-event-log">
+<span id="monitor-ea-events-from-the-event-log"></span><span id="autoscaling"></span><h2>Monitor Enhanced Autoscaling events from the event log<a class="headerlink" href="#monitor-enhanced-autoscaling-events-from-the-event-log" title="Permalink to this headline"> </a></h2>
+<p>The event log captures cluster resizes when Enhanced Autoscaling is enabled in your pipelines. Events containing information about Enhanced Autoscaling have the event type <code class="docutils literal notranslate"><span class="pre">autoscale</span></code>. The cluster resizing request information is stored in the <code class="docutils literal notranslate"><span class="pre">details:autoscale</span></code> object. The following example queries the Enhanced Autoscaling cluster resize requests for the last pipeline update:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span>
+<span class="w">  </span><span class="k">timestamp</span><span class="p">,</span>
+<span class="w">  </span><span class="n">Double</span><span class="p">(</span>
+<span class="w">    </span><span class="k">case</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="n">details</span><span class="w"> </span><span class="p">:</span><span class="n">autoscale</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;RESIZING&#39;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="n">details</span><span class="w"> </span><span class="p">:</span><span class="n">autoscale</span><span class="p">.</span><span class="n">requested_num_executors</span>
+<span class="w">      </span><span class="k">else</span><span class="w"> </span><span class="k">null</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">starting_num_executors</span><span class="p">,</span>
+<span class="w">  </span><span class="n">Double</span><span class="p">(</span>
+<span class="w">    </span><span class="k">case</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="n">details</span><span class="w"> </span><span class="p">:</span><span class="n">autoscale</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;SUCCEEDED&#39;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="n">details</span><span class="w"> </span><span class="p">:</span><span class="n">autoscale</span><span class="p">.</span><span class="n">requested_num_executors</span>
+<span class="w">      </span><span class="k">else</span><span class="w"> </span><span class="k">null</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">succeeded_num_executors</span><span class="p">,</span>
+<span class="w">  </span><span class="n">Double</span><span class="p">(</span>
+<span class="w">    </span><span class="k">case</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="n">details</span><span class="w"> </span><span class="p">:</span><span class="n">autoscale</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;PARTIALLY_SUCCEEDED&#39;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="n">details</span><span class="w"> </span><span class="p">:</span><span class="n">autoscale</span><span class="p">.</span><span class="n">requested_num_executors</span>
+<span class="w">      </span><span class="k">else</span><span class="w"> </span><span class="k">null</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">partially_succeeded_num_executors</span><span class="p">,</span>
+<span class="w">  </span><span class="n">Double</span><span class="p">(</span>
+<span class="w">    </span><span class="k">case</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="n">details</span><span class="w"> </span><span class="p">:</span><span class="n">autoscale</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;FAILED&#39;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="n">details</span><span class="w"> </span><span class="p">:</span><span class="n">autoscale</span><span class="p">.</span><span class="n">requested_num_executors</span>
+<span class="w">      </span><span class="k">else</span><span class="w"> </span><span class="k">null</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">failed_num_executors</span>
+<span class="k">FROM</span>
+<span class="w">  </span><span class="n">event_log_raw</span><span class="p">,</span>
+<span class="w">  </span><span class="n">latest_update</span>
+<span class="k">WHERE</span>
+<span class="w">  </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;autoscale&#39;</span>
+<span class="w">  </span><span class="k">AND</span>
+<span class="w">  </span><span class="n">origin</span><span class="p">.</span><span class="n">update_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">latest_update</span><span class="p">.</span><span class="n">id</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="monitor-compute-resource-utilization">
+<span id="cluster-resources"></span><h2>Monitor compute resource utilization<a class="headerlink" href="#monitor-compute-resource-utilization" title="Permalink to this headline"> </a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">cluster_resources</span></code> events provide metrics on the number of task slots in the cluster, how much those task slots are utilized, and how many tasks are waiting to be scheduled.</p>
+<p>When Enhanced Autoscaling is enabled, <code class="docutils literal notranslate"><span class="pre">cluster_resources</span></code> events also contain metrics for the autoscaling algorithm, including <code class="docutils literal notranslate"><span class="pre">latest_requested_num_executors</span></code>, and <code class="docutils literal notranslate"><span class="pre">optimal_num_executors</span></code>. The events also show the status of the algorithm as different states such as <code class="docutils literal notranslate"><span class="pre">CLUSTER_AT_DESIRED_SIZE</span></code>, <code class="docutils literal notranslate"><span class="pre">SCALE_UP_IN_PROGRESS_WAITING_FOR_EXECUTORS</span></code>, and <code class="docutils literal notranslate"><span class="pre">BLOCKED_FROM_SCALING_DOWN_BY_CONFIGURATION</span></code>.
+This information can be viewed in conjunction with the autoscaling events to provide an overall picture of Enhanced Autoscaling.</p>
+<p>The following example queries the task queue size history for the last pipeline update:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span>
+<span class="w">  </span><span class="k">timestamp</span><span class="p">,</span>
+<span class="w">  </span><span class="n">Double</span><span class="p">(</span><span class="n">details</span><span class="w"> </span><span class="p">:</span><span class="n">cluster_resources</span><span class="p">.</span><span class="n">avg_num_queued_tasks</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">queue_size</span>
+<span class="k">FROM</span>
+<span class="w">  </span><span class="n">event_log_raw</span><span class="p">,</span>
+<span class="w">  </span><span class="n">latest_update</span>
+<span class="k">WHERE</span>
+<span class="w">  </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;cluster_resources&#39;</span>
+<span class="w">  </span><span class="k">AND</span>
+<span class="w">  </span><span class="n">origin</span><span class="p">.</span><span class="n">update_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">latest_update</span><span class="p">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>The following example queries the utilization history for the last pipeline update:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span>
+<span class="w">  </span><span class="k">timestamp</span><span class="p">,</span>
+<span class="w">  </span><span class="n">Double</span><span class="p">(</span><span class="n">details</span><span class="w"> </span><span class="p">:</span><span class="n">cluster_resources</span><span class="p">.</span><span class="n">avg_task_slot_utilization</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">utilization</span>
+<span class="k">FROM</span>
+<span class="w">  </span><span class="n">event_log_raw</span><span class="p">,</span>
+<span class="w">  </span><span class="n">latest_update</span>
+<span class="k">WHERE</span>
+<span class="w">  </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;cluster_resources&#39;</span>
+<span class="w">  </span><span class="k">AND</span>
+<span class="w">  </span><span class="n">origin</span><span class="p">.</span><span class="n">update_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">latest_update</span><span class="p">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>The following example queries the executor count history, accompanied by metrics available only for Enhanced Autoscaling pipelines, including the number of executors requested by the algorithm in the latest request, the optimal number of executors recommended by the algorithm based on the most recent metrics, and the autoscaling algorithm state:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span>
+<span class="w">  </span><span class="k">timestamp</span><span class="p">,</span>
+<span class="w">  </span><span class="n">Double</span><span class="p">(</span><span class="n">details</span><span class="w"> </span><span class="p">:</span><span class="n">cluster_resources</span><span class="p">.</span><span class="n">num_executors</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">current_executors</span><span class="p">,</span>
+<span class="w">  </span><span class="n">Double</span><span class="p">(</span><span class="n">details</span><span class="w"> </span><span class="p">:</span><span class="n">cluster_resources</span><span class="p">.</span><span class="n">latest_requested_num_executors</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">latest_requested_num_executors</span><span class="p">,</span>
+<span class="w">  </span><span class="n">Double</span><span class="p">(</span><span class="n">details</span><span class="w"> </span><span class="p">:</span><span class="n">cluster_resources</span><span class="p">.</span><span class="n">optimal_num_executors</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">optimal_num_executors</span><span class="p">,</span>
+<span class="w">  </span><span class="n">details</span><span class="w"> </span><span class="p">:</span><span class="n">cluster_resources</span><span class="p">.</span><span class="k">state</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">autoscaling_state</span>
+<span class="k">FROM</span>
+<span class="w">  </span><span class="n">event_log_raw</span><span class="p">,</span>
+<span class="w">  </span><span class="n">latest_update</span>
+<span class="k">WHERE</span>
+<span class="w">  </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;cluster_resources&#39;</span>
+<span class="w">  </span><span class="k">AND</span>
+<span class="w">  </span><span class="n">origin</span><span class="p">.</span><span class="n">update_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">latest_update</span><span class="p">.</span><span class="n">id</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="audit-delta-live-tables-pipelines">
+<span id="audit-dlt-pipelines"></span><span id="audit"></span><h2>Audit Delta Live Tables pipelines<a class="headerlink" href="#audit-delta-live-tables-pipelines" title="Permalink to this headline"> </a></h2>
+<p>You can use Delta Live Tables event log records and other Databricks audit logs to get a complete picture of how data is being updated in Delta Live Tables.</p>
+<p>Delta Live Tables uses the credentials of the pipeline owner to run updates. You can change the credentials used by updating the pipeline owner. Delta Live Tables records the user for actions on the pipeline, including pipeline creation, edits to configuration, and triggering updates.</p>
+<p>See <a class="reference internal" href="../administration-guide/account-settings/audit-logs.html#uc"><span class="std std-ref">Unity Catalog events</span></a> for a reference of Unity Catalog audit events.</p>
+</div>
+<div class="section" id="query-user-actions-in-the-event-log">
+<h2>Query user actions in the event log<a class="headerlink" href="#query-user-actions-in-the-event-log" title="Permalink to this headline"> </a></h2>
+<p>You can use the event log to audit events, for example, user actions. Events containing information about user actions have the event type <code class="docutils literal notranslate"><span class="pre">user_action</span></code>.</p>
+<p>Information about the action is stored in the <code class="docutils literal notranslate"><span class="pre">user_action</span></code> object in the <code class="docutils literal notranslate"><span class="pre">details</span></code> field. Use the following query to construct an audit log of user events. To create the <code class="docutils literal notranslate"><span class="pre">event_log_raw</span></code> view used in this query, see <a class="reference internal" href="#query-event-log"><span class="std std-ref">Querying the event log</span></a>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="k">timestamp</span><span class="p">,</span><span class="w"> </span><span class="n">details</span><span class="p">:</span><span class="n">user_action</span><span class="p">:</span><span class="n">action</span><span class="p">,</span><span class="w"> </span><span class="n">details</span><span class="p">:</span><span class="n">user_action</span><span class="p">:</span><span class="n">user_name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">event_log_raw</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;user_action&#39;</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 2%" />
+<col style="width: 51%" />
+<col style="width: 15%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">timestamp</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">action</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">user_name</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> 1</p></td>
+<td><p> 2021-05-20T19:36:03.517+0000</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">START</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">user&#64;company.com</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p> 2</p></td>
+<td><p> 2021-05-20T19:35:59.913+0000</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">CREATE</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">user&#64;company.com</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p> 3</p></td>
+<td><p> 2021-05-27T00:35:51.971+0000</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">START</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">user&#64;company.com</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="runtime-information">
+<h2>Runtime information<a class="headerlink" href="#runtime-information" title="Permalink to this headline"> </a></h2>
+<p>You can view runtime information for a pipeline update, for example, the Databricks Runtime version for the update:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">details</span><span class="p">:</span><span class="n">create_update</span><span class="p">:</span><span class="n">runtime_version</span><span class="p">:</span><span class="n">dbr_version</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">event_log_raw</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;create_update&#39;</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 93%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">dbr_version</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> 1</p></td>
+<td><p> 11.0</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

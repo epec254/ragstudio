@@ -1,0 +1,808 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Create, read, write, update, display, query, optimize, time travel, and versioning for Delta Lake tables." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Tutorial: Delta Lake">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Tutorial: Delta Lake &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/delta/tutorial.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/delta/tutorial.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/delta/tutorial.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/delta/tutorial.html" class="notranslate">English</option>
+    <option value="../../ja/delta/tutorial.html" class="notranslate">日本語</option>
+    <option value="../../pt/delta/tutorial.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Tutorial: Delta Lake</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="tutorial-delta-lake">
+<span id="tutorial-delta"></span><h1>Tutorial: Delta Lake<a class="headerlink" href="#tutorial-delta-lake" title="Permalink to this headline"> </a></h1>
+<p>This tutorial introduces common Delta Lake operations on Databricks, including the following:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#create"><span class="std std-ref">Create a table.</span></a></p></li>
+<li><p><a class="reference internal" href="#upsert"><span class="std std-ref">Upsert to a table.</span></a></p></li>
+<li><p><a class="reference internal" href="#read"><span class="std std-ref">Read from a table.</span></a></p></li>
+<li><p><a class="reference internal" href="#display-history"><span class="std std-ref">Display table history.</span></a></p></li>
+<li><p><a class="reference internal" href="#time-travel"><span class="std std-ref">Query an earlier version of a table.</span></a></p></li>
+<li><p><a class="reference internal" href="#optimize"><span class="std std-ref">Optimize a table.</span></a></p></li>
+<li><p><a class="reference internal" href="#z-order"><span class="std std-ref">Add a Z-order index.</span></a></p></li>
+<li><p><a class="reference internal" href="#vacuum"><span class="std std-ref">Vacuum unreferenced files.</span></a></p></li>
+</ul>
+<p>You can run the example Python, R, Scala, and SQL code in this article from within a <a class="reference internal" href="../notebooks/notebooks-manage.html"><span class="doc">notebook</span></a> attached to a Databricks <a class="reference internal" href="../compute/index.html"><span class="doc">cluster</span></a>. You can also run the SQL code in this article from within a <a class="reference internal" href="../sql/user/queries/queries.html"><span class="doc">query</span></a> associated with a <a class="reference internal" href="../compute/sql-warehouse/create-sql-warehouse.html"><span class="doc">SQL warehouse</span></a> in <a class="reference internal" href="../sql/index.html"><span class="doc">Databricks SQL</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some of the following code examples use a two-level namespace notation consisting of a schema (also called a database) and a table or view (for example, <code class="docutils literal notranslate"><span class="pre">default.people10m</span></code>). To use these examples with <a class="reference internal" href="../data-governance/unity-catalog/index.html"><span class="doc">Unity Catalog</span></a>, replace the two-level namespace with Unity Catalog three-level namespace notation consisting of a catalog, schema, and table or view (for example, <code class="docutils literal notranslate"><span class="pre">main.default.people10m</span></code>).</p>
+</div>
+<div class="section" id="create-a-table">
+<span id="create"></span><h2>Create a table<a class="headerlink" href="#create-a-table" title="Permalink to this headline"> </a></h2>
+<p>All tables created on Databricks use Delta Lake by default.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Delta Lake is the default for all reads, writes, and table creation commands Databricks.</p>
+</div>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the data from its source.</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;/databricks-datasets/learning-spark-v2/people/people-10m.delta&quot;</span><span class="p">)</span>
+
+<span class="c1"># Write the data to a table.</span>
+<span class="n">table_name</span> <span class="o">=</span> <span class="s2">&quot;people_10m&quot;</span>
+<span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-middle highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">SparkR</span><span class="p">)</span>
+<span class="nf">sparkR.session</span><span class="p">()</span>
+
+<span class="c1"># Load the data from its source.</span>
+<span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">read.df</span><span class="p">(</span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/databricks-datasets/learning-spark-v2/people/people-10m.delta&quot;</span><span class="p">)</span>
+
+<span class="c1"># Write the data to a table.</span>
+<span class="n">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;people_10m&quot;</span>
+
+<span class="nf">saveAsTable</span><span class="p">(</span>
+<span class="w">  </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">,</span>
+<span class="w">  </span><span class="n">tableName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table_name</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-middle highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// Load the data from its source.</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">people</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;/databricks-datasets/learning-spark-v2/people/people-10m.delta&quot;</span><span class="p">)</span>
+
+<span class="c1">// Write the data to a table.</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;people_10m&quot;</span>
+
+<span class="n">people</span><span class="p">.</span><span class="n">write</span><span class="p">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s">&quot;people_10m&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">people_10m</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">people_10m</span>
+<span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`/</span><span class="n">databricks</span><span class="o">-</span><span class="n">datasets</span><span class="o">/</span><span class="n">learning</span><span class="o">-</span><span class="n">spark</span><span class="o">-</span><span class="n">v2</span><span class="o">/</span><span class="n">people</span><span class="o">/</span><span class="n">people</span><span class="o">-</span><span class="mi">10</span><span class="n">m</span><span class="p">.</span><span class="n">delta</span><span class="o">`</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<p>The preceding operations create a new <a class="reference internal" href="../lakehouse/data-objects.html#managed-table"><span class="std std-ref">managed table</span></a> by using the schema that was inferred from the data. For information about available options when you create a Delta table, see <a class="reference internal" href="../sql/language-manual/sql-ref-syntax-ddl-create-table.html"><span class="doc">CREATE TABLE</span></a>.</p>
+<p>For managed tables, Databricks determines the location for the data. To get the location, you can use the <a class="reference internal" href="table-details.html"><span class="doc">DESCRIBE DETAIL</span></a> statement, for example:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s1">&#39;DESCRIBE DETAIL people_10m&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="compound-middle highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">display</span><span class="p">(</span><span class="nf">sql</span><span class="p">(</span><span class="s">&quot;DESCRIBE DETAIL people_10m&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="compound-middle highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">spark</span><span class="p">.</span><span class="n">sql</span><span class="p">(</span><span class="s">&quot;DESCRIBE DETAIL people_10m&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DESCRIBE</span><span class="w"> </span><span class="n">DETAIL</span><span class="w"> </span><span class="n">people_10m</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<p>Sometimes you may want to create a table by specifying the schema before inserting data. You can complete this with the following SQL commands:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">people10m</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
+<span class="w">  </span><span class="n">firstName</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">  </span><span class="n">middleName</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">  </span><span class="n">lastName</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">  </span><span class="n">gender</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">  </span><span class="n">birthDate</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">,</span>
+<span class="w">  </span><span class="n">ssn</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">  </span><span class="n">salary</span><span class="w"> </span><span class="nb">INT</span>
+<span class="p">)</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">people10m</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
+<span class="w">  </span><span class="n">firstName</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">  </span><span class="n">middleName</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">  </span><span class="n">lastName</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">  </span><span class="n">gender</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">  </span><span class="n">birthDate</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">,</span>
+<span class="w">  </span><span class="n">ssn</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">  </span><span class="n">salary</span><span class="w"> </span><span class="nb">INT</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>In Databricks Runtime 13.0 and above, you can use <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span> <span class="pre">LIKE</span></code> to create a new empty Delta table that duplicates the schema and table properties for a source Delta table. This can be especially useful when promoting tables from a development environment into production, such as in the following code example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">prod</span><span class="p">.</span><span class="n">people10m</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="n">dev</span><span class="p">.</span><span class="n">people10m</span>
+</pre></div>
+</div>
+<p>You can also use the <code class="docutils literal notranslate"><span class="pre">DeltaTableBuilder</span></code> API in Delta Lake to create tables. Compared to the DataFrameWriter APIs, this API makes it easier to specify additional information like column comments, table properties, and <a class="reference internal" href="generated-columns.html"><span class="doc">generated columns</span></a>.</p>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create table in the metastore</span>
+<span class="n">DeltaTable</span><span class="o">.</span><span class="n">createIfNotExists</span><span class="p">(</span><span class="n">spark</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">tableName</span><span class="p">(</span><span class="s2">&quot;default.people10m&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;INT&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s2">&quot;firstName&quot;</span><span class="p">,</span> <span class="s2">&quot;STRING&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s2">&quot;middleName&quot;</span><span class="p">,</span> <span class="s2">&quot;STRING&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s2">&quot;lastName&quot;</span><span class="p">,</span> <span class="s2">&quot;STRING&quot;</span><span class="p">,</span> <span class="n">comment</span> <span class="o">=</span> <span class="s2">&quot;surname&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="s2">&quot;STRING&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s2">&quot;birthDate&quot;</span><span class="p">,</span> <span class="s2">&quot;TIMESTAMP&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s2">&quot;ssn&quot;</span><span class="p">,</span> <span class="s2">&quot;STRING&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s2">&quot;salary&quot;</span><span class="p">,</span> <span class="s2">&quot;INT&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+
+<span class="c1"># Create or replace table with path and add properties</span>
+<span class="n">DeltaTable</span><span class="o">.</span><span class="n">createOrReplace</span><span class="p">(</span><span class="n">spark</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;INT&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s2">&quot;firstName&quot;</span><span class="p">,</span> <span class="s2">&quot;STRING&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s2">&quot;middleName&quot;</span><span class="p">,</span> <span class="s2">&quot;STRING&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s2">&quot;lastName&quot;</span><span class="p">,</span> <span class="s2">&quot;STRING&quot;</span><span class="p">,</span> <span class="n">comment</span> <span class="o">=</span> <span class="s2">&quot;surname&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="s2">&quot;STRING&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s2">&quot;birthDate&quot;</span><span class="p">,</span> <span class="s2">&quot;TIMESTAMP&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s2">&quot;ssn&quot;</span><span class="p">,</span> <span class="s2">&quot;STRING&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s2">&quot;salary&quot;</span><span class="p">,</span> <span class="s2">&quot;INT&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">property</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;table with people data&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">location</span><span class="p">(</span><span class="s2">&quot;/tmp/delta/people10m&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// Create table in the metastore</span>
+<span class="nc">DeltaTable</span><span class="p">.</span><span class="n">createOrReplace</span><span class="p">(</span><span class="n">spark</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">tableName</span><span class="p">(</span><span class="s">&quot;default.people10m&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;INT&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s">&quot;firstName&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;STRING&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s">&quot;middleName&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;STRING&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span>
+<span class="w">    </span><span class="nc">DeltaTable</span><span class="p">.</span><span class="n">columnBuilder</span><span class="p">(</span><span class="s">&quot;lastName&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">dataType</span><span class="p">(</span><span class="s">&quot;STRING&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">comment</span><span class="p">(</span><span class="s">&quot;surname&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">build</span><span class="p">())</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s">&quot;lastName&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;STRING&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">comment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;surname&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s">&quot;gender&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;STRING&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s">&quot;birthDate&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;TIMESTAMP&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s">&quot;ssn&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;STRING&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s">&quot;salary&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;INT&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">execute</span><span class="p">()</span>
+
+<span class="c1">// Create or replace table with path and add properties</span>
+<span class="nc">DeltaTable</span><span class="p">.</span><span class="n">createOrReplace</span><span class="p">(</span><span class="n">spark</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;INT&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s">&quot;firstName&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;STRING&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s">&quot;middleName&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;STRING&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span>
+<span class="w">    </span><span class="nc">DeltaTable</span><span class="p">.</span><span class="n">columnBuilder</span><span class="p">(</span><span class="s">&quot;lastName&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">dataType</span><span class="p">(</span><span class="s">&quot;STRING&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">comment</span><span class="p">(</span><span class="s">&quot;surname&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="n">build</span><span class="p">())</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s">&quot;lastName&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;STRING&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">comment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;surname&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s">&quot;gender&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;STRING&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s">&quot;birthDate&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;TIMESTAMP&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s">&quot;ssn&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;STRING&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">addColumn</span><span class="p">(</span><span class="s">&quot;salary&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;INT&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">property</span><span class="p">(</span><span class="s">&quot;description&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;table with people data&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">location</span><span class="p">(</span><span class="s">&quot;/tmp/delta/people10m&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">execute</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="upsert-to-a-table">
+<span id="upsert"></span><h2>Upsert to a table<a class="headerlink" href="#upsert-to-a-table" title="Permalink to this headline"> </a></h2>
+<p>To merge a set of updates and insertions into an existing Delta table, you use the <a class="reference internal" href="../sql/language-manual/delta-merge-into.html"><span class="doc">MERGE INTO</span></a> statement. For example, the following statement takes data from the source table and merges it into the target Delta table. When there is a matching row in both tables, Delta Lake updates the data column using the given expression. When there is no matching row, Delta Lake adds a new row. This operation is known as an <em>upsert</em>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="n">TEMP</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">people_updates</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">firstName</span><span class="p">,</span><span class="w"> </span><span class="n">middleName</span><span class="p">,</span><span class="w"> </span><span class="n">lastName</span><span class="p">,</span><span class="w"> </span><span class="n">gender</span><span class="p">,</span><span class="w"> </span><span class="n">birthDate</span><span class="p">,</span><span class="w"> </span><span class="n">ssn</span><span class="p">,</span><span class="w"> </span><span class="n">salary</span>
+<span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">VALUES</span>
+<span class="w">  </span><span class="p">(</span><span class="mi">9999998</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Billy&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Tommie&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Luppitt&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;1992-09-17T04:00:00.000+0000&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;953-38-9452&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">55250</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="mi">9999999</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Elias&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Cyril&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Leadbetter&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;1984-05-22T04:00:00.000+0000&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;906-51-2137&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">48500</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="mi">10000000</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Joshua&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Chas&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Broggio&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;1968-07-22T04:00:00.000+0000&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;988-61-6247&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">90000</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="mi">20000001</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;John&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Doe&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;1978-01-14T04:00:00.000+000&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;345-67-8901&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">55500</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="mi">20000002</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Mary&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Smith&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;1982-10-29T01:00:00.000+000&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;456-78-9012&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">98250</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="mi">20000003</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Jane&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Doe&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;1981-06-25T04:00:00.000+000&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;567-89-0123&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">89900</span><span class="p">);</span>
+
+<span class="n">MERGE</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">people_10m</span>
+<span class="k">USING</span><span class="w"> </span><span class="n">people_updates</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">people_10m</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">people_updates</span><span class="p">.</span><span class="n">id</span>
+<span class="k">WHEN</span><span class="w"> </span><span class="n">MATCHED</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="o">*</span>
+<span class="k">WHEN</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="n">MATCHED</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="k">INSERT</span><span class="w"> </span><span class="o">*</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>If you specify <code class="docutils literal notranslate"><span class="pre">*</span></code>, this updates or inserts all columns in the target table. This assumes that the source table has the same columns as those in the target table, otherwise the query will throw an analysis error.</p>
+<p>You must specify a value for every column in your table when you perform an <code class="docutils literal notranslate"><span class="pre">INSERT</span></code> operation (for example, when there is no matching row in the existing dataset). However, you do not need to update all values.</p>
+<p>To see the results, query the table.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">people_10m</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">9999998</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="read-a-table">
+<span id="read"></span><h2>Read a table<a class="headerlink" href="#read-a-table" title="Permalink to this headline"> </a></h2>
+<p>You access data in Delta tables by the table name or the table path, as shown in the following examples:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">people_df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">people_df</span><span class="p">)</span>
+
+<span class="c1">## or</span>
+
+<span class="n">people_df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">table_path</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">people_df</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-middle highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">people_df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">tableToDF</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+
+<span class="nf">display</span><span class="p">(</span><span class="n">people_df</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-middle highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="n">people_df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="n">table</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">people_df</span><span class="p">)</span>
+
+<span class="o">\\</span><span class="w"> </span><span class="n">or</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">people_df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">table_path</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">people_df</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">people_10m</span><span class="p">;</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`&lt;</span><span class="n">path</span><span class="o">-</span><span class="k">to</span><span class="o">-</span><span class="k">table</span><span class="o">`</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="write-to-a-table">
+<span id="write"></span><h2>Write to a table<a class="headerlink" href="#write-to-a-table" title="Permalink to this headline"> </a></h2>
+<p>Delta Lake uses standard syntax for writing data to tables.</p>
+<p>To atomically add new data to an existing Delta table, use <code class="docutils literal notranslate"><span class="pre">append</span></code> mode as in the following examples:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">people10m</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">more_people</span>
+</pre></div>
+</div>
+<div class="compound-middle highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">&quot;people10m&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">.</span><span class="n">write</span><span class="p">.</span><span class="n">mode</span><span class="p">(</span><span class="s">&quot;append&quot;</span><span class="p">).</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s">&quot;people10m&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>To atomically replace all the data in a table, use <code class="docutils literal notranslate"><span class="pre">overwrite</span></code> mode as in the following examples:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">INSERT</span><span class="w"> </span><span class="n">OVERWRITE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">people10m</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">more_people</span>
+</pre></div>
+</div>
+<div class="compound-middle highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;overwrite&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">&quot;people10m&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">.</span><span class="n">write</span><span class="p">.</span><span class="n">mode</span><span class="p">(</span><span class="s">&quot;overwrite&quot;</span><span class="p">).</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s">&quot;people10m&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="update-a-table">
+<span id="update"></span><h2>Update a table<a class="headerlink" href="#update-a-table" title="Permalink to this headline"> </a></h2>
+<p>You can update data that matches a predicate in a Delta table. For example, in a table named <code class="docutils literal notranslate"><span class="pre">people10m</span></code> or a path at <code class="docutils literal notranslate"><span class="pre">/tmp/delta/people-10m</span></code>, to change an abbreviation in the <code class="docutils literal notranslate"><span class="pre">gender</span></code> column from <code class="docutils literal notranslate"><span class="pre">M</span></code> or <code class="docutils literal notranslate"><span class="pre">F</span></code> to <code class="docutils literal notranslate"><span class="pre">Male</span></code> or <code class="docutils literal notranslate"><span class="pre">Female</span></code>, you can run the following:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="sql">
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">UPDATE</span><span class="w"> </span><span class="n">people10m</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">gender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Female&#39;</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">gender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;F&#39;</span><span class="p">;</span>
+<span class="k">UPDATE</span><span class="w"> </span><span class="n">people10m</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">gender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Male&#39;</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">gender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;M&#39;</span><span class="p">;</span>
+
+<span class="k">UPDATE</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`/</span><span class="n">tmp</span><span class="o">/</span><span class="n">delta</span><span class="o">/</span><span class="n">people</span><span class="o">-</span><span class="mi">10</span><span class="n">m</span><span class="o">`</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">gender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Female&#39;</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">gender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;F&#39;</span><span class="p">;</span>
+<span class="k">UPDATE</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`/</span><span class="n">tmp</span><span class="o">/</span><span class="n">delta</span><span class="o">/</span><span class="n">people</span><span class="o">-</span><span class="mi">10</span><span class="n">m</span><span class="o">`</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">gender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Male&#39;</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">gender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;M&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-middle compound" lang="python">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">delta.tables</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">deltaTable</span> <span class="o">=</span> <span class="n">DeltaTable</span><span class="o">.</span><span class="n">forPath</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="s1">&#39;/tmp/delta/people-10m&#39;</span><span class="p">)</span>
+
+<span class="c1"># Declare the predicate by using a SQL-formatted string.</span>
+<span class="n">deltaTable</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+  <span class="n">condition</span> <span class="o">=</span> <span class="s2">&quot;gender = &#39;F&#39;&quot;</span><span class="p">,</span>
+  <span class="nb">set</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="s2">&quot;&#39;Female&#39;&quot;</span> <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Declare the predicate by using Spark SQL functions.</span>
+<span class="n">deltaTable</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+  <span class="n">condition</span> <span class="o">=</span> <span class="n">col</span><span class="p">(</span><span class="s1">&#39;gender&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;M&#39;</span><span class="p">,</span>
+  <span class="nb">set</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;gender&#39;</span><span class="p">:</span> <span class="n">lit</span><span class="p">(</span><span class="s1">&#39;Male&#39;</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="scala">
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">io</span><span class="p">.</span><span class="nn">delta</span><span class="p">.</span><span class="nn">tables</span><span class="p">.</span><span class="n">_</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">deltaTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">DeltaTable</span><span class="p">.</span><span class="n">forPath</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/tmp/delta/people-10m&quot;</span><span class="p">)</span>
+
+<span class="c1">// Declare the predicate by using a SQL-formatted string.</span>
+<span class="n">deltaTable</span><span class="p">.</span><span class="n">updateExpr</span><span class="p">(</span>
+<span class="w">  </span><span class="s">&quot;gender = &#39;F&#39;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nc">Map</span><span class="p">(</span><span class="s">&quot;gender&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;&#39;Female&#39;&quot;</span><span class="p">)</span>
+
+<span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">functions</span><span class="p">.</span><span class="n">_</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">spark</span><span class="p">.</span><span class="nn">implicits</span><span class="p">.</span><span class="n">_</span>
+
+<span class="c1">// Declare the predicate by using Spark SQL functions and implicits.</span>
+<span class="n">deltaTable</span><span class="p">.</span><span class="n">update</span><span class="p">(</span>
+<span class="w">  </span><span class="n">col</span><span class="p">(</span><span class="s">&quot;gender&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s">&quot;M&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nc">Map</span><span class="p">(</span><span class="s">&quot;gender&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">lit</span><span class="p">(</span><span class="s">&quot;Male&quot;</span><span class="p">)));</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="delete-from-a-table">
+<span id="delete"></span><h2>Delete from a table<a class="headerlink" href="#delete-from-a-table" title="Permalink to this headline"> </a></h2>
+<p>You can remove data that matches a predicate from a Delta table. For instance, in a table named <code class="docutils literal notranslate"><span class="pre">people10m</span></code> or a path at <code class="docutils literal notranslate"><span class="pre">/tmp/delta/people-10m</span></code>, to delete all rows corresponding to people with a value in the <code class="docutils literal notranslate"><span class="pre">birthDate</span></code> column from before <code class="docutils literal notranslate"><span class="pre">1955</span></code>, you can run the following:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="sql">
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">people10m</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">birthDate</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="s1">&#39;1955-01-01&#39;</span>
+
+<span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`/</span><span class="n">tmp</span><span class="o">/</span><span class="n">delta</span><span class="o">/</span><span class="n">people</span><span class="o">-</span><span class="mi">10</span><span class="n">m</span><span class="o">`</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">birthDate</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="s1">&#39;1955-01-01&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-middle compound" lang="python">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">delta.tables</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">deltaTable</span> <span class="o">=</span> <span class="n">DeltaTable</span><span class="o">.</span><span class="n">forPath</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="s1">&#39;/tmp/delta/people-10m&#39;</span><span class="p">)</span>
+
+<span class="c1"># Declare the predicate by using a SQL-formatted string.</span>
+<span class="n">deltaTable</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;birthDate &lt; &#39;1955-01-01&#39;&quot;</span><span class="p">)</span>
+
+<span class="c1"># Declare the predicate by using Spark SQL functions.</span>
+<span class="n">deltaTable</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;birthDate&#39;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="s1">&#39;1960-01-01&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="scala">
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">io</span><span class="p">.</span><span class="nn">delta</span><span class="p">.</span><span class="nn">tables</span><span class="p">.</span><span class="n">_</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">deltaTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">DeltaTable</span><span class="p">.</span><span class="n">forPath</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/tmp/delta/people-10m&quot;</span><span class="p">)</span>
+
+<span class="c1">// Declare the predicate by using a SQL-formatted string.</span>
+<span class="n">deltaTable</span><span class="p">.</span><span class="n">delete</span><span class="p">(</span><span class="s">&quot;birthDate &lt; &#39;1955-01-01&#39;&quot;</span><span class="p">)</span>
+
+<span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">functions</span><span class="p">.</span><span class="n">_</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">spark</span><span class="p">.</span><span class="nn">implicits</span><span class="p">.</span><span class="n">_</span>
+
+<span class="c1">// Declare the predicate by using Spark SQL functions and implicits.</span>
+<span class="n">deltaTable</span><span class="p">.</span><span class="n">delete</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s">&quot;birthDate&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="s">&quot;1955-01-01&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><code class="docutils literal notranslate"><span class="pre">delete</span></code> removes the data from the latest version of the Delta table but does not remove it from the physical storage until the old versions are explicitly vacuumed. See <a class="reference internal" href="vacuum.html"><span class="doc">vacuum</span></a> for details.</p>
+</div>
+</div>
+<div class="section" id="display-table-history">
+<span id="display-history"></span><h2>Display table history<a class="headerlink" href="#display-table-history" title="Permalink to this headline"> </a></h2>
+<p>To view the history of a table, use the <a class="reference internal" href="history.html"><span class="doc">DESCRIBE HISTORY</span></a> statement, which provides provenance information, including the table version, operation, user, and so on, for each write to a table.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DESCRIBE</span><span class="w"> </span><span class="n">HISTORY</span><span class="w"> </span><span class="n">people_10m</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="query-an-earlier-version-of-the-table-time-travel">
+<span id="time-travel"></span><h2>Query an earlier version of the table (time travel)<a class="headerlink" href="#query-an-earlier-version-of-the-table-time-travel" title="Permalink to this headline"> </a></h2>
+<p>Delta Lake time travel allows you to query an older snapshot of a Delta table.</p>
+<p>To query an older version of a table, specify a version or timestamp in a <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> statement. For example, to query version 0 from the history above, use:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">people_10m</span><span class="w"> </span><span class="k">VERSION</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="mi">0</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">people_10m</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="s1">&#39;2019-01-29 00:37:58&#39;</span>
+</pre></div>
+</div>
+<p>For timestamps, only date or timestamp strings are accepted, for example, <code class="docutils literal notranslate"><span class="pre">&quot;2019-01-01&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;2019-01-01'T'00:00:00.000Z&quot;</span></code>.</p>
+<p>DataFrameReader options allow you to create a DataFrame from a Delta table that is fixed to a specific version of the table, for example in Python:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;delta&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;timestampAsOf&#39;</span><span class="p">,</span> <span class="s1">&#39;2019-01-01&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;people_10m&quot;</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or, alternately:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df2</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;delta&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;versionAsOf&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;people_10m&quot;</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For details, see <a class="reference internal" href="history.html"><span class="doc">Work with Delta Lake table history</span></a>.</p>
+</div>
+<div class="section" id="optimize-a-table">
+<span id="optimize"></span><h2>Optimize a table<a class="headerlink" href="#optimize-a-table" title="Permalink to this headline"> </a></h2>
+<p>Once you have performed multiple changes to a table, you might have a lot of small files. To improve the speed of read queries, you can use <code class="docutils literal notranslate"><span class="pre">OPTIMIZE</span></code> to collapse small files into larger ones:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIMIZE</span><span class="w"> </span><span class="n">people_10m</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="z-order-by-columns">
+<span id="z-order"></span><h2>Z-order by columns<a class="headerlink" href="#z-order-by-columns" title="Permalink to this headline"> </a></h2>
+<p>To improve read performance further, you can co-locate related information in the same set of files by Z-Ordering. This co-locality is automatically used by Delta Lake data-skipping algorithms to dramatically reduce the amount of data that needs to be read. To Z-Order data, you specify the columns to order on in the <code class="docutils literal notranslate"><span class="pre">ZORDER</span> <span class="pre">BY</span></code> clause. For example, to co-locate by <code class="docutils literal notranslate"><span class="pre">gender</span></code>, run:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIMIZE</span><span class="w"> </span><span class="n">people_10m</span>
+<span class="n">ZORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="p">(</span><span class="n">gender</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For the full set of options available when running <code class="docutils literal notranslate"><span class="pre">OPTIMIZE</span></code>, see <a class="reference internal" href="optimize.html"><span class="doc">Compact data files with optimize on Delta Lake</span></a>.</p>
+</div>
+<div class="section" id="clean-up-snapshots-with-vacuum">
+<span id="vacuum"></span><h2>Clean up snapshots with <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code><a class="headerlink" href="#clean-up-snapshots-with-vacuum" title="Permalink to this headline"> </a></h2>
+<p>Delta Lake provides snapshot isolation for reads, which means that it is safe to run <code class="docutils literal notranslate"><span class="pre">OPTIMIZE</span></code> even while other users or jobs are querying the table. Eventually however, you should clean up old snapshots. You can do this by running the <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> command:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">VACUUM</span><span class="w"> </span><span class="n">people_10m</span>
+</pre></div>
+</div>
+<p>For details on using <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> effectively, see <a class="reference internal" href="vacuum.html"><span class="doc">Remove unused data files with vacuum</span></a>.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

@@ -1,0 +1,622 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to create and manage serving endpoints for custom models and foundation models using MLflow." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Create and manage serving endpoints using MLflow">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Create and manage serving endpoints using MLflow &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/machine-learning/model-serving/create-serving-endpoints-mlflow.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/machine-learning/model-serving/create-serving-endpoints-mlflow.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/machine-learning/model-serving/create-serving-endpoints-mlflow.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/machine-learning/model-serving/create-serving-endpoints-mlflow.html" class="notranslate">English</option>
+    <option value="../../../ja/machine-learning/model-serving/create-serving-endpoints-mlflow.html" class="notranslate">日本語</option>
+    <option value="../../../pt/machine-learning/model-serving/create-serving-endpoints-mlflow.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Create and manage serving endpoints using MLflow</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="create-and-manage-serving-endpoints-using-mlflow">
+<h1>Create and manage serving endpoints using MLflow<a class="headerlink" href="#create-and-manage-serving-endpoints-using-mlflow" title="Permalink to this headline"> </a></h1>
+<p>This article describes how to create and manage <a class="reference internal" href="index.html"><span class="doc">model serving</span></a> endpoints using the MLflow Deployments API.</p>
+<p>This article includes examples for creating endpoints that serve,</p>
+<ul class="simple">
+<li><p>Foundation models, which include:</p>
+<ul>
+<li><p>Third-party foundation models, referred to as <a class="reference internal" href="../../generative-ai/external-models/index.html"><span class="doc">external models</span></a>.</p></li>
+<li><p>State-of-the-art open models made available by <a class="reference internal" href="../foundation-models/index.html"><span class="doc">Foundation Model APIs</span></a>.</p></li>
+<li><p>Curated foundation models on <a class="reference external" href="https://marketplace.databricks.com/">Databricks Marketplace</a>, an open marketplace for sharing third-party data and AI assets.</p></li>
+</ul>
+</li>
+<li><p>Custom models. MLflow models that are installed in Unity Catalog or registered in the workspace model registry.</p></li>
+</ul>
+<p><a class="reference external" href="https://mlflow.org/docs/latest/python_api/mlflow.deployments.html?highlight=deployments#mlflow.deployments.DatabricksDeploymentClient">MLflow Deployments</a> provides an API for create, update and deletion tasks. The APIs for these tasks accept the same parameters as the REST API for serving endpoints. See <a class="reference external" href="https://docs.databricks.com/api/workspace/servingendpoints/create">POST /api/2.0/serving-endpoints</a> for endpoint configuration parameters.</p>
+<div class="section" id="requirements">
+<span id="requirement"></span><h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul>
+<li><p>Databricks Runtime 13.0 ML or above.</p></li>
+<li><p>MLflow 2.9 or above, <code class="docutils literal notranslate"><span class="pre">%pip</span> <span class="pre">install</span> <span class="pre">mlflow[genai]&gt;=2.9.0</span></code>.</p></li>
+<li><p>Your workspace must be in a <a class="reference internal" href="index.html#regions"><span class="std std-ref">supported region</span></a>.</p></li>
+<li><p>The MLflow Deployment client. To install it, run:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mlflow.deployments</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">deployments</span><span class="o">.</span><span class="n">get_deploy_client</span><span class="p">(</span><span class="s2">&quot;databricks&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="access-control">
+<h2>Access control<a class="headerlink" href="#access-control" title="Permalink to this headline"> </a></h2>
+<p>To understand access control options for model serving endpoints and best practice guidance for endpoint management, see <a class="reference internal" href="../../security/auth-authz/access-control/serving-endpoint-acl.html"><span class="doc">Serving endpoints access control</span></a>.</p>
+</div>
+<div class="section" id="create-a-custom-model-endpoint">
+<span id="create-custom"></span><h2>Create a custom model endpoint<a class="headerlink" href="#create-a-custom-model-endpoint" title="Permalink to this headline"> </a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="kn">from</span> <span class="nn">mlflow.deployments</span> <span class="kn">import</span> <span class="n">get_deploy_client</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">get_deploy_client</span><span class="p">(</span><span class="s2">&quot;databricks&quot;</span><span class="p">)</span>
+<span class="n">endpoint</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_endpoint</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;workspace-model-endpoint&quot;</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;served_entities&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;entity_name&quot;</span><span class="p">:</span> <span class="s2">&quot;my-ads-model&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;entity_version&quot;</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;workload_size&quot;</span><span class="p">:</span> <span class="s2">&quot;Small&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;scale_to_zero_enabled&quot;</span><span class="p">:</span> <span class="n">true</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;traffic_config&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;routes&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;served_model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;my-ads-model-3&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;traffic_percentage&quot;</span><span class="p">:</span> <span class="mi">100</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="gpu-workload-types">
+<span id="gpu"></span><h3>GPU workload types<a class="headerlink" href="#gpu-workload-types" title="Permalink to this headline"> </a></h3>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<p>Model serving on Databricks supports GPU deployment of PyTorch and TensorFlow models, as well as models logged with <code class="docutils literal notranslate"><span class="pre">mlflow.pyfunc</span></code>, <code class="docutils literal notranslate"><span class="pre">mlflow.pytorch</span></code>, <code class="docutils literal notranslate"><span class="pre">mlflow.tensorflow</span></code>, and <code class="docutils literal notranslate"><span class="pre">mlflow.transformers</span></code> flavors.</p>
+<p>GPU deployment also automatically supports optimized model serving for large language models. See <a class="reference internal" href="llm-optimized-model-serving.html"><span class="doc">Optimized large language model (LLM) serving</span></a>.  </p>
+<p>This preview capability is compatible with the following package versions:</p>
+<ul class="simple">
+<li><p>Pytorch 1.13.0 - 2.0.1</p></li>
+<li><p>TensorFlow 2.5.0 - 2.13.0</p></li>
+<li><p>MLflow 2.4.0 and above</p></li>
+</ul>
+<p>To deploy your models using GPUs include the <code class="docutils literal notranslate"><span class="pre">workload_type</span></code> field in your endpoint configuration during <a class="reference internal" href="#create-custom"><span class="std std-ref">endpoint creation</span></a> or as an <a class="reference internal" href="#update-custom"><span class="std std-ref">endpoint configuration update</span></a>.</p>
+<p>See (/machine-learning/model-serving/create-manage-serving-endpoints.md#gpu) for supported GPU sizes.</p>
+</div>
+</div>
+<div class="section" id="create-an-foundation-model-endpoint">
+<h2>Create an foundation model endpoint<a class="headerlink" href="#create-an-foundation-model-endpoint" title="Permalink to this headline"> </a></h2>
+<p>The following creates an endpoint for embeddings with OpenAI <code class="docutils literal notranslate"><span class="pre">text-embedding-ada-002</span></code>.</p>
+<p>For foundation model endpoints, you must provide API keys for the model provider you want to use. See See <a class="reference external" href="https://docs.databricks.com/api/workspace/servingendpoints/create">POST /api/2.0/serving-endpoints</a> in the REST API for request and response schema details.</p>
+<p>You can also create endpoints for completions and chat tasks, as specified by the <code class="docutils literal notranslate"><span class="pre">task</span></code> field in the <code class="docutils literal notranslate"><span class="pre">external_model</span></code> section of the configuration. See <a class="reference internal" href="../../generative-ai/external-models/index.html"><span class="doc">External models in Databricks Model Serving</span></a> for supported models and providers for each task.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="kn">from</span> <span class="nn">mlflow.deployments</span> <span class="kn">import</span> <span class="n">get_deploy_client</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">get_deploy_client</span><span class="p">(</span><span class="s2">&quot;databricks&quot;</span><span class="p">)</span>
+<span class="n">endpoint</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_endpoint</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;served_entities&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;external_model&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;llm/v1/chat&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;openai_config&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;openai_api_key&quot;</span><span class="p">:</span> <span class="s2">&quot;{{secrets/scope/key}}&quot;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                <span class="p">},</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="n">endpoint</span> <span class="o">==</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;alice@company.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;creation_timestamp&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;last_updated_timestamp&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+    <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+    <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;88fd3f75a0d24b0380ddc40484d7a31b&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="update-a-custom-model-endpoint">
+<span id="update-custom"></span><h2>Update a custom model endpoint<a class="headerlink" href="#update-a-custom-model-endpoint" title="Permalink to this headline"> </a></h2>
+<p>To update your custom model endpoint use the following. See <a class="reference external" href="https://docs.databricks.com/api/workspace/servingendpoints/updateconfig">PUT /api/2.0/serving-endpoints/{name}/config</a> for request and response schema details.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlflow.deployments</span> <span class="kn">import</span> <span class="n">get_deploy_client</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">get_deploy_client</span><span class="p">(</span><span class="s2">&quot;databricks&quot;</span><span class="p">)</span>
+<span class="n">endpoint</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">update_endpoint</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;workspace-model-endpoint&quot;</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;served_entities&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;entity_name&quot;</span><span class="p">:</span> <span class="s2">&quot;my-ads-model&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;entity_version&quot;</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;workload_size&quot;</span><span class="p">:</span> <span class="s2">&quot;Small&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;scale_to_zero_enabled&quot;</span><span class="p">:</span> <span class="n">true</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="n">endpoint</span> <span class="o">==</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;alice@company.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;creation_timestamp&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;last_updated_timestamp&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+    <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+    <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;88fd3f75a0d24b0380ddc40484d7a31b&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="update-an-foundation-model-endpoint">
+<h2>Update an foundation model endpoint<a class="headerlink" href="#update-an-foundation-model-endpoint" title="Permalink to this headline"> </a></h2>
+<p>To update your foundation model endpoint, use the following. See the REST API <a class="reference external" href="https://docs.databricks.com/api/workspace/servingendpoints/updateconfig">update configuration documentation</a> for request and response schema details.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlflow.deployments</span> <span class="kn">import</span> <span class="n">get_deploy_client</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">get_deploy_client</span><span class="p">(</span><span class="s2">&quot;databricks&quot;</span><span class="p">)</span>
+<span class="n">endpoint</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">update_endpoint</span><span class="p">(</span>
+    <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;served_entities&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;external_model&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;llm/v1/chat&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;openai_config&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;openai_api_key&quot;</span><span class="p">:</span> <span class="s2">&quot;{{secrets/scope/key}}&quot;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                <span class="p">},</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="n">endpoint</span> <span class="o">==</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;alice@company.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;creation_timestamp&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;last_updated_timestamp&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+    <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+    <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;88fd3f75a0d24b0380ddc40484d7a31b&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">rate_limits</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">update_endpoint</span><span class="p">(</span>
+    <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;rate_limits&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;renewal_period&quot;</span><span class="p">:</span> <span class="s2">&quot;minute&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;calls&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="n">rate_limits</span> <span class="o">==</span> <span class="p">{</span>
+    <span class="s2">&quot;rate_limits&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;renewal_period&quot;</span><span class="p">:</span> <span class="s2">&quot;minute&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;calls&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-the-status-of-the-model-endpoint">
+<h2>Get the status of the model endpoint<a class="headerlink" href="#get-the-status-of-the-model-endpoint" title="Permalink to this headline"> </a></h2>
+<p>You can get the status and the details of a specified endpoint using the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlflow.deployments</span> <span class="kn">import</span> <span class="n">get_deploy_client</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">get_deploy_client</span><span class="p">(</span><span class="s2">&quot;databricks&quot;</span><span class="p">)</span>
+<span class="n">endpoint</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_endpoint</span><span class="p">(</span><span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;chat&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">endpoint</span> <span class="o">==</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;alice@company.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;creation_timestamp&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;last_updated_timestamp&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+    <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+    <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;88fd3f75a0d24b0380ddc40484d7a31b&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="delete-a-model-serving-endpoint">
+<h2>Delete a model serving endpoint<a class="headerlink" href="#delete-a-model-serving-endpoint" title="Permalink to this headline"> </a></h2>
+<p>You can delete a serving endpoint for a model using the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlflow.deployments</span> <span class="kn">import</span> <span class="n">get_deploy_client</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">get_deploy_client</span><span class="p">(</span><span class="s2">&quot;databricks&quot;</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">delete_endpoint</span><span class="p">(</span><span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;chat&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../generative-ai/external-models/index.html"><span class="doc">External models in Databricks Model Serving</span></a></p></li>
+</ul>
+<p></p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

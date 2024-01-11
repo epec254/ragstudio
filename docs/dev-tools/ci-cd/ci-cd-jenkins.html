@@ -1,0 +1,1003 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to set up a CI/CD pipeline on Databricks using Jenkins, an open source automation server." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="CI/CD with Jenkins on Databricks">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>CI/CD with Jenkins on Databricks &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/dev-tools/ci-cd/ci-cd-jenkins.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/dev-tools/ci-cd/ci-cd-jenkins.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/dev-tools/ci-cd/ci-cd-jenkins.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/dev-tools/ci-cd/ci-cd-jenkins.html" class="notranslate">English</option>
+    <option value="../../../ja/dev-tools/ci-cd/ci-cd-jenkins.html" class="notranslate">日本語</option>
+    <option value="../../../pt/dev-tools/ci-cd/ci-cd-jenkins.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>CI/CD with Jenkins on Databricks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="cicd-with-jenkins-on-databricks">
+<h1>CI/CD with Jenkins on Databricks<a class="headerlink" href="#cicd-with-jenkins-on-databricks" title="Permalink to this headline"> </a></h1>
+<p></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This article covers Jenkins, which is neither provided nor supported by Databricks. To contact the provider, see <a class="reference external" href="https://www.jenkins.io/participate/help">Jenkins Help</a>.</p>
+</div>
+<p>There are numerous CI/CD tools you can use to manage and run your CI/CD pipelines. This article illustrates how to use the <a class="reference external" href="https://jenkins.io/">Jenkins</a> automation server. CI/CD is a design pattern, so the steps and stages outlined in this article should transfer with a few changes to the pipeline definition language in each tool. Furthermore, much of the code in this example pipeline runs standard Python code, which you can invoke in other tools. For an overview of CI/CD on Databricks, see <a class="reference internal" href="../index-ci-cd.html"><span class="doc">What is CI/CD on Databricks?</span></a>.</p>
+<div class="section" id="cicd-development-workflow">
+<h2>CI/CD development workflow<a class="headerlink" href="#cicd-development-workflow" title="Permalink to this headline"> </a></h2>
+<p>Databricks suggests the following workflow for CI/CD development with Jenkins:</p>
+<ol class="arabic simple">
+<li><p>Create a repository, or use an existing repository, with your third-party Git provider.</p></li>
+<li><p>Connect your local development machine to the same third-party repository. For instructions, see your third-party Git provider’s documentation.</p></li>
+<li><p>Pull any existing updated artifacts (such as notebooks, code files, and build scripts) from the third-party repository down onto your local development machine.</p></li>
+<li><p>As desired, create, update, and test artifacts on your local development machine. Then push any new and changed artifacts from your local development machine up into the third-party repository. For instructions, see your third-party Git provider’s documenation.</p></li>
+<li><p>Repeat steps 3 and 4 as needed.</p></li>
+<li><p>Use Jenkins periodically as an integrated approach to automatically pulling artifacts from your third-party repository down onto your local development machine or Databricks workspace; building, testing, and running code on your local development machine or Databricks workspace; and reporting test and run results. While you can run Jenkins manually, in real-world implementations you would instruct your third-party Git provider to run Jenkins every time a specific event happens, such as a repository pull request.</p></li>
+</ol>
+<p>The rest of this article uses an example project to describe one way to use Jenkins to implement the preceding CI/CD development workflow.</p>
+</div>
+<div class="section" id="local-development-machine-setup">
+<h2>Local development machine setup<a class="headerlink" href="#local-development-machine-setup" title="Permalink to this headline"> </a></h2>
+<p>This article’s example uses Jenkins to instruct the <a class="reference internal" href="../cli/index.html"><span class="doc">Databricks CLI</span></a> and <a class="reference internal" href="../bundles/index.html"><span class="doc">Databricks Asset Bundles</span></a> to do the following:</p>
+<ol class="arabic simple">
+<li><p>Build a Python wheel on your local development machine.</p></li>
+<li><p>Deploy the built Python wheel along with additional Python files and Python notebooks from your local development machine to a Databricks workspace.</p></li>
+<li><p>Test and run the uploaded Python wheel and notebooks in that workspace.</p></li>
+</ol>
+<p>To set up your local development machine to instruct your Databricks workspace to perform the build and upload stages for this example, do the following on your local development machine:</p>
+<div class="section" id="step-1-install-required-tools">
+<h3>Step 1: Install required tools<a class="headerlink" href="#step-1-install-required-tools" title="Permalink to this headline"> </a></h3>
+<p>In this step, you install the Databricks CLI, Jenkins, <code class="docutils literal notranslate"><span class="pre">jq</span></code>, and Python wheel build tools on your local development machine. These tools are required to run this example.</p>
+<ol class="arabic">
+<li><p>Install Databricks CLI version 0.205 or above, if you have not done so already. Jenkins uses the Databricks CLI to pass this example’s test and run instructions on to your workspace. See <a class="reference internal" href="../cli/install.html"><span class="doc">Install or update the Databricks CLI</span></a>.</p></li>
+<li><p>Install and start Jenkins, if you have not done so already. See <a class="reference external" href="https://www.jenkins.io/doc/book/installing/">Installing Jenkins</a> for <a class="reference external" href="https://www.jenkins.io/doc/book/installing/linux/">Linux</a>, <a class="reference external" href="https://www.jenkins.io/doc/book/installing/macos/">macOS</a>, or <a class="reference external" href="https://www.jenkins.io/doc/book/installing/windows/">Windows</a>.</p></li>
+<li><p><a class="reference external" href="https://jqlang.github.io/jq/download/">Install jq</a>. This example uses <code class="docutils literal notranslate"><span class="pre">jq</span></code> to parse some JSON-formatted command output.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">pip</span></code> to install the <a class="reference external" href="https://wheel.readthedocs.io/en/stable/">Python wheel build tools</a> with the following command (some systems might require you to use <code class="docutils literal notranslate"><span class="pre">pip3</span></code> instead of <code class="docutils literal notranslate"><span class="pre">pip</span></code>):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>wheel
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="step-2-create-a-jenkins-pipeline">
+<h3>Step 2: Create a Jenkins Pipeline<a class="headerlink" href="#step-2-create-a-jenkins-pipeline" title="Permalink to this headline"> </a></h3>
+<p>In this step, you use Jenkins to create a Jenkins Pipeline for this article’s example. Jenkins provides a few different project types to create CI/CD pipelines. Jenkins Pipelines provide an interface to define stages in a Jenkins Pipeline by using <a class="reference external" href="http://groovy-lang.org/">Groovy</a> code to call and configure Jenkins plugins.</p>
+<div class="figure align-default">
+<img alt="Jenkins project types" src="../../_images/jenkins-project-types.png" />
+</div>
+<p>To create the Jenkins Pipeline in Jenkins:</p>
+<ol class="arabic simple">
+<li><p>After you start Jenkins, from your Jenkins <strong>Dashboard</strong>, click <strong>New Item</strong>.</p></li>
+<li><p>For <strong>Enter an item name</strong>, type a name for the Jenkins Pipeline, for example <code class="docutils literal notranslate"><span class="pre">jenkins-demo</span></code>.</p></li>
+<li><p>Click the <strong>Pipeline</strong> project type icon.</p></li>
+<li><p>Click <strong>OK</strong>. The Jenkins Pipeline’s <strong>Configure</strong> page appears.</p></li>
+<li><p>In the <strong>Pipeline</strong> area, in the <strong>Defintion</strong> drop-down list, select <strong>Pipeline script from SCM</strong>.</p></li>
+<li><p>In the <strong>SCM</strong> drop-down list, select <strong>Git</strong>.</p></li>
+<li><p>For <strong>Repository URL</strong>, type the URL to the repository that is hosted by your third-part Git provider.</p></li>
+<li><p>For <strong>Branch Specifier</strong>, type <code class="docutils literal notranslate"><span class="pre">*/&lt;branch-name&gt;</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;branch-name&gt;</span></code> is the name of the branch in your repository that you want to use, for example <code class="docutils literal notranslate"><span class="pre">*/main</span></code>.</p></li>
+<li><p>For <strong>Script path</strong>, type <code class="docutils literal notranslate"><span class="pre">Jenkinsfile</span></code>, if it is not already set. You create the <code class="docutils literal notranslate"><span class="pre">Jenkinsfile</span></code> later in this article.</p></li>
+<li><p>Uncheck the box titled <strong>Lightweight checkout</strong>, if it is already checked.</p></li>
+<li><p>Click <strong>Save</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="step-3-add-global-environment-variables-to-jenkins">
+<h3>Step 3: Add global environment variables to Jenkins<a class="headerlink" href="#step-3-add-global-environment-variables-to-jenkins" title="Permalink to this headline"> </a></h3>
+<p>In this step, you add two global environment variables to Jenkins. Jenkins passes these environment variables on to the Databricks CLI. The Databricks CLI needs to get the values for these environment variables to authenticate with your Databricks workspace. This example uses Databricks personal access token authentication (although other authentication types are also available). See <a class="reference internal" href="../auth/pat.html"><span class="doc">Databricks personal access token authentication</span></a>.</p>
+<p>The two global environment variables for this example are:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_TOKEN</span></code>, set to the value of your Databricks personal access token for your Databricks workspace. To create a Databricks personal access token, do the following:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As a security best practice when you authenticate with automated tools, systems, scripts, and apps, Databricks recommends that you use OAuth tokens.</p>
+<p>If you use personal access token authentication, Databricks recommends using personal access tokens belonging to <a class="reference internal" href="../../administration-guide/users-groups/service-principals.html"><span class="doc">service principals</span></a> instead of workspace users. To create tokens for service principals, see <a class="reference internal" href="../../administration-guide/users-groups/service-principals.html#personal-access-tokens"><span class="std std-ref">Manage tokens for a service principal</span></a>.</p>
+</div>
+<ol class="arabic simple">
+<li><p>In your Databricks workspace, click your Databricks username in the top bar, and then select <strong>User Settings</strong> from the drop down.</p></li>
+<li><p>Click <strong>Developer</strong>.</p></li>
+<li><p>Next to <strong>Access tokens</strong>, click <strong>Manage</strong>.</p></li>
+<li><p>Click <strong>Generate new token</strong>.</p></li>
+<li><p>(Optional) Enter a comment that helps you to identify this token in the future, and change the token’s default lifetime of 90 days. To create a token with no lifetime (not recommended), leave the <strong>Lifetime (days)</strong> box empty (blank).</p></li>
+<li><p>Click <strong>Generate</strong>.</p></li>
+<li><p>Copy the displayed token to a secure location, and then click <strong>Done</strong>.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Be sure to save the copied token in a secure location. Do not share your copied token with others. If you lose the copied token, you cannot regenerate that exact same token. Instead, you must repeat this procedure to create a new token. If you lose the copied token, or you believe that the token has been compromised, Databricks strongly recommends that you immediately delete that token from your workspace by clicking the trash can (<strong>Revoke</strong>) icon next to the token on the <strong>Access tokens</strong> page.</p>
+<p>If you are not able to create or use tokens in your workspace, this might be because your workspace administrator has disabled tokens or has not given you permission to create or use tokens. See your workspace administrator or the following:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../administration-guide/access-control/tokens.html#enable-tokens"><span class="std std-ref">Enable or disable personal access token authentication for the workspace</span></a></p></li>
+<li><p><a class="reference internal" href="../../security/auth-authz/api-access-permissions.html#pat"><span class="std std-ref">Personal access token permissions</span></a></p></li>
+</ul>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_HOST</span></code>, set to your Databricks workspace URL, starting with <code class="docutils literal notranslate"><span class="pre">https://</span></code>. See <a class="reference internal" href="../../workspace/workspace-details.html#workspace-url"><span class="std std-ref">Workspace instance names, URLs, and IDs</span></a>.</p></li>
+</ul>
+<p>To set global environment variables in Jenkins, from your Jenkins <strong>Dashboard</strong>:</p>
+<ol class="arabic simple">
+<li><p>In the sidebar, click <strong>Manage Jenkins</strong>.</p></li>
+<li><p>In the <strong>System Configuration</strong> section, click <strong>System</strong>.</p></li>
+<li><p>In the <strong>Global properties</strong> section, check the box tiled <strong>Environment variables</strong>.</p></li>
+<li><p>Click <strong>Add</strong> and then enter the environment variable’s <strong>Name</strong> and <strong>Value</strong>. Repeat this for each additional environment variable.</p></li>
+<li><p>When you are finished adding environment variables, click <strong>Save</strong> to return to your Jenkins <strong>Dashboard</strong>.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="design-the-jenkins-pipeline">
+<h2>Design the Jenkins Pipeline<a class="headerlink" href="#design-the-jenkins-pipeline" title="Permalink to this headline"> </a></h2>
+<p>Jenkins provides a few different project types to create CI/CD pipelines. This example implements a Jenkins Pipeline. Jenkins Pipelines provide an interface to define stages in a Jenkins Pipeline by using <a class="reference external" href="http://groovy-lang.org/">Groovy</a> code to call and configure Jenkins plugins.</p>
+<p>You write a Jenkins Pipeline definition in a text file called a <em>Jenkinsfile</em>, which in turn is checked into a project’s source control repository. For more information, see <a class="reference external" href="https://jenkins.io/doc/book/pipeline/">Jenkins Pipeline</a>. Here is the Jenkins Pipeline for this article’s example. In this example <code class="docutils literal notranslate"><span class="pre">Jenkinsfile</span></code>, replace the following placeholders:</p>
+<ul class="simple">
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;user-name&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;repo-name&gt;</span></code> with the username and repository name for your hosted by your third-part Git provider. This article uses a GitHub URL as an example.</p></li>
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;release-branch-name&gt;</span></code> with the name of the release branch in your repository. For example, this could be <code class="docutils literal notranslate"><span class="pre">main</span></code>.</p></li>
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;databricks-cli-installation-path&gt;</span></code> with the path on your local development machine where the Databricks CLI is installed. For example, on macOS this could be <code class="docutils literal notranslate"><span class="pre">/usr/local/bin</span></code>.</p></li>
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;jq-installation-path&gt;</span></code> with the path on your local development machine where <code class="docutils literal notranslate"><span class="pre">jq</span></code> is installed. For example, on macOS this could be <code class="docutils literal notranslate"><span class="pre">/usr/local/bin</span></code>.</p></li>
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;job-prefix-name&gt;</span></code> with some string to help uniquely identify the Databricks jobs that are created in your workspace for this example. For example, this could be <code class="docutils literal notranslate"><span class="pre">jenkins-demo</span></code>.</p></li>
+<li><p>Notice that <code class="docutils literal notranslate"><span class="pre">BUNDLETARGET</span></code> is set to <code class="docutils literal notranslate"><span class="pre">dev</span></code>, which is the name of the Databricks Asset Bundle target that is defined later in this article. In real-world implementations you would change this to the name of your own bundle target. More details about bundle targets are provided later in this article.</p></li>
+</ul>
+<p>Here is the <code class="docutils literal notranslate"><span class="pre">Jenkinsfile</span></code>, which must be added to the root of your repository:</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="c1">// Filename: Jenkinsfile</span>
+<span class="n">node</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="kt">def</span><span class="w"> </span><span class="n">GITREPOREMOTE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://github.com/&lt;user-name&gt;/&lt;repo-name&gt;.git&quot;</span>
+<span class="w">  </span><span class="kt">def</span><span class="w"> </span><span class="n">GITBRANCH</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;release-branch-name&gt;&quot;</span>
+<span class="w">  </span><span class="kt">def</span><span class="w"> </span><span class="n">DBCLIPATH</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;databricks-cli-installation-path&gt;&quot;</span>
+<span class="w">  </span><span class="kt">def</span><span class="w"> </span><span class="n">JQPATH</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;jq-installation-path&gt;&quot;</span>
+<span class="w">  </span><span class="kt">def</span><span class="w"> </span><span class="n">JOBPREFIX</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;job-prefix-name&gt;&quot;</span>
+<span class="w">  </span><span class="kt">def</span><span class="w"> </span><span class="n">BUNDLETARGET</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
+
+<span class="w">  </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Checkout&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="nl">branch:</span><span class="w"> </span><span class="n">GITBRANCH</span><span class="o">,</span><span class="w"> </span><span class="nl">url:</span><span class="w"> </span><span class="n">GITREPOREMOTE</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="w">  </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Validate Bundle&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;#!/bin/bash</span>
+<span class="s2">          ${DBCLIPATH}/databricks bundle validate -t ${BUNDLETARGET}</span>
+<span class="s2">       &quot;&quot;&quot;</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="w">  </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Deploy Bundle&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;#!/bin/bash</span>
+<span class="s2">          ${DBCLIPATH}/databricks bundle deploy -t ${BUNDLETARGET}</span>
+<span class="s2">       &quot;&quot;&quot;</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="w">  </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Run Unit Tests&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;#!/bin/bash</span>
+<span class="s2">          ${DBCLIPATH}/databricks bundle run -t ${BUNDLETARGET} run-unit-tests</span>
+<span class="s2">       &quot;&quot;&quot;</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="w">  </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Run Notebook&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;#!/bin/bash</span>
+<span class="s2">          ${DBCLIPATH}/databricks bundle run -t ${BUNDLETARGET} run-dabdemo-notebook</span>
+<span class="s2">       &quot;&quot;&quot;</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="w">  </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Evaluate Notebook Runs&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;#!/bin/bash</span>
+<span class="s2">          ${DBCLIPATH}/databricks bundle run -t ${BUNDLETARGET} evaluate-notebook-runs</span>
+<span class="s2">       &quot;&quot;&quot;</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="w">  </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Import Test Results&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">DATABRICKS_BUNDLE_WORKSPACE_ROOT_PATH</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">getPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${DBCLIPATH}/databricks bundle validate -t ${BUNDLETARGET} | ${JQPATH}/jq -r .workspace.file_path&quot;</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sh</span><span class="o">(</span><span class="nl">script:</span><span class="w"> </span><span class="n">getPath</span><span class="o">,</span><span class="w"> </span><span class="nl">returnStdout:</span><span class="w"> </span><span class="kc">true</span><span class="o">).</span><span class="na">trim</span><span class="o">()</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">(</span><span class="n">output</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">      </span><span class="n">DATABRICKS_BUNDLE_WORKSPACE_ROOT_PATH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${output}&quot;</span>
+<span class="w">    </span><span class="o">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="o">{</span>
+<span class="w">      </span><span class="n">error</span><span class="w"> </span><span class="s2">&quot;Failed to capture output or command execution failed: ${getPath}&quot;</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;#!/bin/bash</span>
+<span class="s2">          ${DBCLIPATH}/databricks workspace export-dir \</span>
+<span class="s2">          ${DATABRICKS_BUNDLE_WORKSPACE_ROOT_PATH}/Validation/Output/test-results \</span>
+<span class="s2">          ${WORKSPACE}/Validation/Output/test-results \</span>
+<span class="s2">          -t ${BUNDLETARGET} \</span>
+<span class="s2">          --overwrite</span>
+<span class="s2">       &quot;&quot;&quot;</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="w">  </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Publish Test Results&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">junit</span><span class="w"> </span><span class="nl">allowEmptyResults:</span><span class="w"> </span><span class="kc">true</span><span class="o">,</span><span class="w"> </span><span class="nl">testResults:</span><span class="w"> </span><span class="s1">&#39;**/test-results/*.xml&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">skipPublishingChecks:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The remainder of this article describes each stage in this Jenkins Pipeline and how to set up the artifacts and commands for Jenkins to run at that stage.</p>
+</div>
+<div class="section" id="pull-the-latest-artifacts-from-the-third-party-repository">
+<h2>Pull the latest artifacts from the third-party repository<a class="headerlink" href="#pull-the-latest-artifacts-from-the-third-party-repository" title="Permalink to this headline"> </a></h2>
+<p>The first stage in this Jenkins Pipeline, the <code class="docutils literal notranslate"><span class="pre">Checkout</span></code> stage, is defined as follows:</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Checkout&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">git</span><span class="w"> </span><span class="nl">branch:</span><span class="w"> </span><span class="n">GITBRANCH</span><span class="o">,</span><span class="w"> </span><span class="nl">url:</span><span class="w"> </span><span class="n">GITREPOREMOTE</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>This stage makes sure that the working directory that Jenkins uses on your local development machine has the latest artifacts from your third-party Git repository. Typically, Jenkins sets this working directory to <code class="docutils literal notranslate"><span class="pre">&lt;your-user-home-directory&gt;/.jenkins/workspace/&lt;pipeline-name&gt;</span></code>. This enables you on the same local development machine to keep your own copy of artifacts in development separate from the artifacts that Jenkins uses from your third-party Git repository.</p>
+</div>
+<div class="section" id="validate-the-databricks-asset-bundle">
+<h2>Validate the Databricks Asset Bundle<a class="headerlink" href="#validate-the-databricks-asset-bundle" title="Permalink to this headline"> </a></h2>
+<p>The second stage in this Jenkins Pipeline, the <code class="docutils literal notranslate"><span class="pre">Validate</span> <span class="pre">Bundle</span></code> stage, is defined as follows:</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Validate Bundle&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;#!/bin/bash</span>
+<span class="s2">        ${DBCLIPATH}/databricks bundle validate -t ${BUNDLETARGET}</span>
+<span class="s2">     &quot;&quot;&quot;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>This stage makes sure that the Databricks Asset Bundle, which defines the workflows for testing and running your artifacts, is syntactically correct. <em>Databricks Asset Bundles</em>, known simply as <em>bundles</em>, make it possible to express complete data, analytics, and ML projects as a collection of source files. See <a class="reference internal" href="../bundles/index.html"><span class="doc">What are Databricks Asset Bundles?</span></a>.</p>
+<p>To define the bundle for this article, create a file named <code class="docutils literal notranslate"><span class="pre">databricks.yml</span></code> in the root of the cloned repository on your local machine. In this example <code class="docutils literal notranslate"><span class="pre">databricks.yml</span></code> file, replace the following placeholders:</p>
+<ul class="simple">
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;bundle-name&gt;</span></code> with a unique programmatic name for the bundle. For example, this could be <code class="docutils literal notranslate"><span class="pre">jenkins-demo</span></code>.</p></li>
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;job-prefix-name&gt;</span></code> with some string to help uniquely identify the Databricks jobs that are created in your workspace for this example. For example, this could be <code class="docutils literal notranslate"><span class="pre">jenkins-demo</span></code>. It should match the <code class="docutils literal notranslate"><span class="pre">JOBPREFIX</span></code> value in your Jenkinsfile.</p></li>
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;spark-version-id&gt;</span></code> with the Databricks Runtime version ID for your job clusters, for example <code class="docutils literal notranslate"><span class="pre">13.3.x-scala2.12</span></code>.</p></li>
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;cluster-node-type-id&gt;</span></code> with the node type ID for your job clusters, for example <code class="docutils literal notranslate"><span class="pre">i3.xlarge</span></code>.</p></li>
+<li><p>Notice that <code class="docutils literal notranslate"><span class="pre">dev</span></code> in the <code class="docutils literal notranslate"><span class="pre">targets</span></code> mapping is the same as the <code class="docutils literal notranslate"><span class="pre">BUNDLETARGET</span></code> in your Jenkinsfile. A bundle target specifies the host and the related deployment behaviors.</p></li>
+</ul>
+<p>Here is the <code class="docutils literal notranslate"><span class="pre">databricks.yml</span></code> file, which must be added to the root of your repository for this example to operate correctly:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filename: databricks.yml</span>
+<span class="nt">bundle</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;bundle-name&gt;</span>
+
+<span class="nt">variables</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">job_prefix</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A unifying prefix for this bundle&#39;s job and task names.</span>
+<span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;job-prefix-name&gt;</span>
+<span class="w">  </span><span class="nt">spark_version</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The cluster&#39;s Spark version ID.</span>
+<span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;spark-version-id&gt;</span>
+<span class="w">  </span><span class="nt">node_type_id</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The cluster&#39;s node type ID.</span>
+<span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;cluster-node-type-id&gt;</span>
+
+<span class="nt">artifacts</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">dabdemo-wheel</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">whl</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./Libraries/python/dabdemo</span>
+
+<span class="nt">resources</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">jobs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">run-unit-tests</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${var.job_prefix}-run-unit-tests</span>
+<span class="w">      </span><span class="nt">tasks</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${var.job_prefix}-run-unit-tests-task</span>
+<span class="w">          </span><span class="nt">new_cluster</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">spark_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${var.spark_version}</span>
+<span class="w">            </span><span class="nt">node_type_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${var.node_type_id}</span>
+<span class="w">            </span><span class="nt">num_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">spark_env_vars</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">WORKSPACEBUNDLEPATH</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${workspace.root_path}</span>
+<span class="w">          </span><span class="nt">notebook_task</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">notebook_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./run_unit_tests.py</span>
+<span class="w">            </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WORKSPACE</span>
+<span class="w">          </span><span class="nt">libraries</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pypi</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">package</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest</span>
+<span class="w">    </span><span class="nt">run-dabdemo-notebook</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${var.job_prefix}-run-dabdemo-notebook</span>
+<span class="w">      </span><span class="nt">tasks</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${var.job_prefix}-run-dabdemo-notebook-task</span>
+<span class="w">          </span><span class="nt">new_cluster</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">spark_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${var.spark_version}</span>
+<span class="w">            </span><span class="nt">node_type_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${var.node_type_id}</span>
+<span class="w">            </span><span class="nt">num_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">spark_env_vars</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">WORKSPACEBUNDLEPATH</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${workspace.root_path}</span>
+<span class="w">          </span><span class="nt">notebook_task</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">notebook_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./dabdemo_notebook.py</span>
+<span class="w">            </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WORKSPACE</span>
+<span class="w">          </span><span class="nt">libraries</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">whl</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/Workspace${workspace.root_path}/files/Libraries/python/dabdemo/dist/dabdemo-0.0.1-py3-none-any.whl&quot;</span>
+<span class="w">    </span><span class="nt">evaluate-notebook-runs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${var.job_prefix}-evaluate-notebook-runs</span>
+<span class="w">      </span><span class="nt">tasks</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${var.job_prefix}-evaluate-notebook-runs-task</span>
+<span class="w">          </span><span class="nt">new_cluster</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">spark_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${var.spark_version}</span>
+<span class="w">            </span><span class="nt">node_type_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${var.node_type_id}</span>
+<span class="w">            </span><span class="nt">num_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">spark_env_vars</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">WORKSPACEBUNDLEPATH</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${workspace.root_path}</span>
+<span class="w">          </span><span class="nt">spark_python_task</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">python_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./evaluate_notebook_runs.py</span>
+<span class="w">            </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WORKSPACE</span>
+<span class="w">          </span><span class="nt">libraries</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pypi</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">package</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unittest-xml-reporting</span>
+
+<span class="nt">targets</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">dev</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">development</span>
+<span class="w">    </span><span class="nt">workspace</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;databricks-host&gt;</span>
+</pre></div>
+</div>
+<p>For more information about the <code class="docutils literal notranslate"><span class="pre">databricks.yml</span></code> file, see <a class="reference internal" href="../bundles/settings.html"><span class="doc">Databricks Asset Bundle configurations</span></a>.</p>
+</div>
+<div class="section" id="deploy-the-bundle-to-your-workspace">
+<h2>Deploy the bundle to your workspace<a class="headerlink" href="#deploy-the-bundle-to-your-workspace" title="Permalink to this headline"> </a></h2>
+<p>The Jenkins Pipeline’s third stage, titled <code class="docutils literal notranslate"><span class="pre">Deploy</span> <span class="pre">Bundle</span></code>, is defined as follows:</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Deploy Bundle&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;#!/bin/bash</span>
+<span class="s2">        ${DBCLIPATH}/databricks bundle deploy -t ${BUNDLETARGET}</span>
+<span class="s2">     &quot;&quot;&quot;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>This stage does two things:</p>
+<ol class="arabic simple">
+<li><p>Because the <code class="docutils literal notranslate"><span class="pre">artifact</span></code> mapping in the <code class="docutils literal notranslate"><span class="pre">databricks.yml</span></code> file is set to <code class="docutils literal notranslate"><span class="pre">whl</span></code>, this instructs the Databricks CLI to build the Python wheel by using the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file in the specified location.</p></li>
+<li><p>After the Python wheel is built on your local development machine, the Databricks CLI deploys the built Python wheel along with the specified Python files and notebooks to your Databricks workspace. By default, Databricks Asset Bundles deploys the Python wheel and other files to <code class="docutils literal notranslate"><span class="pre">/Workspace/Users/&lt;your-username&gt;/.bundle/&lt;bundle-name&gt;/&lt;target-name&gt;</span></code>.</p></li>
+</ol>
+<p>To enable the Python wheel to be built as specified in the <code class="docutils literal notranslate"><span class="pre">databricks.yml</span></code> file, create the following folders and files in the root of your cloned repository on your local machine.</p>
+<p>To define the logic and the unit tests for the Python wheel that the notebook will run against, create two files named <code class="docutils literal notranslate"><span class="pre">addcol.py</span></code> and <code class="docutils literal notranslate"><span class="pre">test_addcol.py</span></code>, and add them to a folder structure named <code class="docutils literal notranslate"><span class="pre">python/dabdemo/dabdemo</span></code> within your repository’s <code class="docutils literal notranslate"><span class="pre">Libraries</span></code> folder, visualized as follows (ellipses indicate omitted folders in the repo, for brevity):</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>|-- ...
+|-- Libraries
+|     `-- python
+|           `-- dabdemo
+|                 `-- dabdemo
+|                       |-- addcol.py
+|                       `-- test_addcol.py
+|-- ...
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">addcol.py</span></code> file contains a library function that is built later into a Python wheel and then installed on a Databricks cluster. It is
+a simple function that adds a new column, populated by a literal, to an Apache Spark DataFrame:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filename: addcol.py</span>
+<span class="kn">import</span> <span class="nn">pyspark.sql.functions</span> <span class="k">as</span> <span class="nn">F</span>
+
+<span class="k">def</span> <span class="nf">with_status</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">lit</span><span class="p">(</span><span class="s2">&quot;checked&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">test_addcol.py</span></code> file contains tests to pass a mock DataFrame object to the <code class="docutils literal notranslate"><span class="pre">with_status</span></code> function, defined in <code class="docutils literal notranslate"><span class="pre">addcol.py</span></code>. The
+result is then compared to a DataFrame object containing the expected values. If the values match, which in this case they do, the test passes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filename: test_addcol.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="kn">from</span> <span class="nn">dabdemo.addcol</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span> <span class="nc">TestAppendCol</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+  <span class="k">def</span> <span class="nf">test_with_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+
+    <span class="n">source_data</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="p">(</span><span class="s2">&quot;paula&quot;</span><span class="p">,</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="s2">&quot;paula.white@example.com&quot;</span><span class="p">),</span>
+      <span class="p">(</span><span class="s2">&quot;john&quot;</span><span class="p">,</span> <span class="s2">&quot;baer&quot;</span><span class="p">,</span> <span class="s2">&quot;john.baer@example.com&quot;</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="n">source_df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span>
+      <span class="n">source_data</span><span class="p">,</span>
+      <span class="p">[</span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">actual_df</span> <span class="o">=</span> <span class="n">with_status</span><span class="p">(</span><span class="n">source_df</span><span class="p">)</span>
+
+    <span class="n">expected_data</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="p">(</span><span class="s2">&quot;paula&quot;</span><span class="p">,</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="s2">&quot;paula.white@example.com&quot;</span><span class="p">,</span> <span class="s2">&quot;checked&quot;</span><span class="p">),</span>
+      <span class="p">(</span><span class="s2">&quot;john&quot;</span><span class="p">,</span> <span class="s2">&quot;baer&quot;</span><span class="p">,</span> <span class="s2">&quot;john.baer@example.com&quot;</span><span class="p">,</span> <span class="s2">&quot;checked&quot;</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">expected_df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span>
+      <span class="n">expected_data</span><span class="p">,</span>
+      <span class="p">[</span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span><span class="p">(</span><span class="n">expected_df</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span> <span class="o">==</span> <span class="n">actual_df</span><span class="o">.</span><span class="n">collect</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>To enable the Databricks CLI to correctly package this library code into a Python wheel, create two files named <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> and <code class="docutils literal notranslate"><span class="pre">__main__.py</span></code> in the same folder as the preceding two files. Also, create a file named <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> in the <code class="docutils literal notranslate"><span class="pre">python/dabdemo</span></code> folder, visualized as follows (ellipses indicate omitted folders, for brevity):</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>|-- ...
+|-- Libraries
+|     `-- python
+|           `-- dabdemo
+|                 |-- dabdemo
+|                 |     |-- __init__.py
+|                 |     |-- __main__.py
+|                 |     |-- addcol.py
+|                 |     `-- test_addcol.py
+|                 `-- setup.py
+|-- ...
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file contains the library’s version number and author. Replace <code class="docutils literal notranslate"><span class="pre">&lt;my-author-name&gt;</span></code> with your name:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filename: __init__.py</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.0.1&#39;</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;&lt;my-author-name&gt;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">__main__.py</span></code> file contains the library’s entry point:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filename: __main__.py</span>
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">))</span>
+
+<span class="kn">from</span> <span class="nn">addcol</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+  <span class="k">pass</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+  <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file contains additional settings for building the library into a Python wheel. Replace <code class="docutils literal notranslate"><span class="pre">&lt;my-url&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;my-author-name&gt;&#64;&lt;my-organization&gt;</span></code>, and <code class="docutils literal notranslate"><span class="pre">&lt;my-package-description&gt;</span></code> with meaningful values:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filename: setup.py</span>
+<span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span><span class="p">,</span> <span class="n">find_packages</span>
+
+<span class="kn">import</span> <span class="nn">dabdemo</span>
+
+<span class="n">setup</span><span class="p">(</span>
+  <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;dabdemo&quot;</span><span class="p">,</span>
+  <span class="n">version</span> <span class="o">=</span> <span class="n">dabdemo</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
+  <span class="n">author</span> <span class="o">=</span> <span class="n">dabdemo</span><span class="o">.</span><span class="n">__author__</span><span class="p">,</span>
+  <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://&lt;my-url&gt;&quot;</span><span class="p">,</span>
+  <span class="n">author_email</span> <span class="o">=</span> <span class="s2">&quot;&lt;my-author-name&gt;@&lt;my-organization&gt;&quot;</span><span class="p">,</span>
+  <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&lt;my-package-description&gt;&quot;</span><span class="p">,</span>
+  <span class="n">packages</span> <span class="o">=</span> <span class="n">find_packages</span><span class="p">(</span><span class="n">include</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;dabdemo&quot;</span><span class="p">]),</span>
+  <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;group_1&quot;</span><span class="p">:</span> <span class="s2">&quot;run=dabdemo.__main__:main&quot;</span><span class="p">},</span>
+  <span class="n">install_requires</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;setuptools&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="test-the-python-wheels-component-logic">
+<h2>Test the Python wheel’s component logic<a class="headerlink" href="#test-the-python-wheels-component-logic" title="Permalink to this headline"> </a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Run</span> <span class="pre">Unit</span> <span class="pre">Tests</span></code> stage, the fourth stage of this Jenkins Pipeline, uses <code class="docutils literal notranslate"><span class="pre">pytest</span></code> to test a library’s logic to make sure it works as built. This stage is defined as follows:</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Run Unit Tests&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;#!/bin/bash</span>
+<span class="s2">        ${DBCLIPATH}/databricks bundle run -t ${BUNDLETARGET} run-unit-tests</span>
+<span class="s2">     &quot;&quot;&quot;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>This stage uses the Databricks CLI to run a notebook job. This job runs the Python notebook with the filename of <code class="docutils literal notranslate"><span class="pre">run-unit-test.py</span></code>. This notebook runs <code class="docutils literal notranslate"><span class="pre">pytest</span></code> against the library’s logic.</p>
+<p>To run the unit tests for this example, add a Python notebook file named <code class="docutils literal notranslate"><span class="pre">run_unit_tests.py</span></code> with the following contents to the root of your cloned repository on your local machine:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Databricks notebook source</span>
+
+<span class="c1"># COMMAND ----------</span>
+
+<span class="c1"># MAGIC %sh</span>
+<span class="c1"># MAGIC</span>
+<span class="c1"># MAGIC mkdir -p &quot;/Workspace${WORKSPACEBUNDLEPATH}/Validation/reports/junit/test-reports&quot;</span>
+
+<span class="c1"># COMMAND ----------</span>
+
+<span class="c1"># Prepare to run pytest.</span>
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">pytest</span><span class="o">,</span> <span class="nn">os</span>
+
+<span class="c1"># Skip writing pyc files on a readonly filesystem.</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">dont_write_bytecode</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># Run pytest.</span>
+<span class="n">retcode</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">main</span><span class="p">([</span><span class="s2">&quot;--junit-xml&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;/Workspace</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;WORKSPACEBUNDLEPATH&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">/Validation/reports/junit/test-reports/TEST-libout.xml&quot;</span><span class="p">,</span>
+                      <span class="sa">f</span><span class="s2">&quot;/Workspace</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;WORKSPACEBUNDLEPATH&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">/files/Libraries/python/dabdemo/dabdemo/&quot;</span><span class="p">])</span>
+
+<span class="c1"># Fail the cell execution if there are any test failures.</span>
+<span class="k">assert</span> <span class="n">retcode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;The pytest invocation failed. See the log for details.&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-the-built-python-wheel">
+<h2>Use the built Python wheel<a class="headerlink" href="#use-the-built-python-wheel" title="Permalink to this headline"> </a></h2>
+<p>The fifth stage of this Jenkins Pipeline, titled <code class="docutils literal notranslate"><span class="pre">Run</span> <span class="pre">Notebook</span></code>, runs a Python notebook that calls the logic in the built Python wheel, as follows:</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Run Notebook&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;#!/bin/bash</span>
+<span class="s2">        ${DBCLIPATH}/databricks bundle run -t ${BUNDLETARGET} run-dabdemo-notebook</span>
+<span class="s2">     &quot;&quot;&quot;</span>
+<span class="w">  </span><span class="o">}</span>
+</pre></div>
+</div>
+<p>This stage runs the Databricks CLI, which in turn instructs your workspace to run a notebook job. This notebook creates a DataFrame object, passes it to the library’s <code class="docutils literal notranslate"><span class="pre">with_status</span></code> function, prints the result, and report the job’s run results. Create the notebook by adding a Python notebook file named <code class="docutils literal notranslate"><span class="pre">dabdaddemo_notebook.py</span></code> with the following contents in the root of your cloned repository on your local development machine:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Databricks notebook source</span>
+
+<span class="c1"># COMMAND ----------</span>
+
+<span class="c1"># Restart Python after installing the wheel.</span>
+<span class="n">dbutils</span><span class="o">.</span><span class="n">library</span><span class="o">.</span><span class="n">restartPython</span><span class="p">()</span>
+
+<span class="c1"># COMMAND ----------</span>
+
+<span class="kn">from</span> <span class="nn">dabdemo.addcol</span> <span class="kn">import</span> <span class="n">with_status</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span>
+  <span class="n">schema</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">],</span>
+  <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;paula&quot;</span><span class="p">,</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="s2">&quot;paula.white@example.com&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;john&quot;</span><span class="p">,</span> <span class="s2">&quot;baer&quot;</span><span class="p">,</span> <span class="s2">&quot;john.baer@example.com&quot;</span><span class="p">)</span>
+  <span class="p">]</span>
+<span class="p">))</span>
+
+<span class="n">new_df</span> <span class="o">=</span> <span class="n">with_status</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">new_df</span><span class="p">)</span>
+
+<span class="c1"># Expected output:</span>
+<span class="c1">#</span>
+<span class="c1"># +------------+-----------+-------------------------+---------+</span>
+<span class="c1"># | first_name | last_name | email                   | status  |</span>
+<span class="c1"># +============+===========+=========================+=========+</span>
+<span class="c1"># | paula      | white     | paula.white@example.com | checked |</span>
+<span class="c1"># +------------+-----------+-------------------------+---------+</span>
+<span class="c1"># | john       | baer      | john.baer@example.com   | checked |</span>
+<span class="c1"># +------------+-----------+-------------------------+---------+</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="evaluate-notebook-job-run-results">
+<h2>Evaluate notebook job run results<a class="headerlink" href="#evaluate-notebook-job-run-results" title="Permalink to this headline"> </a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Evaluate</span> <span class="pre">Notebook</span> <span class="pre">Runs</span></code> stage, the sixth stage of this Jenkins Pipeline, evaluates the results of the preceding notebook job run. This stage is defined as follows:</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Evaluate Notebook Runs&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;#!/bin/bash</span>
+<span class="s2">        ${DBCLIPATH}/databricks bundle run -t ${BUNDLETARGET} evaluate-notebook-runs</span>
+<span class="s2">     &quot;&quot;&quot;</span>
+<span class="w">  </span><span class="o">}</span>
+</pre></div>
+</div>
+<p>This stage runs the Databricks CLI, which in turn instructs your workspace to run a Python file job. This Python file determines the failure and success criteria for the notebook job run and reports this failure or success result. Create a file named <code class="docutils literal notranslate"><span class="pre">evaluate_notebook_runs.py</span></code> with the following contents in the root of your cloned repository in your local development machine:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">import</span> <span class="nn">xmlrunner</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="k">class</span> <span class="nc">TestJobOutput</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+  <span class="n">test_output_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/Workspace$</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;WORKSPACEBUNDLEPATH&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">/Validation/Output&quot;</span>
+
+  <span class="k">def</span> <span class="nf">test_performance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_output_path</span>
+    <span class="n">statuses</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;*.json&#39;</span><span class="p">)):</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Evaluating: &#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">)</span>
+
+      <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="n">duration</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;tasks&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;execution_duration&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">duration</span> <span class="o">&gt;</span> <span class="mi">100000</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;FAILED&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;SUCCESS&#39;</span>
+
+        <span class="n">statuses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="s1">&#39;FAILED&#39;</span> <span class="ow">in</span> <span class="n">statuses</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">test_job_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_output_path</span>
+    <span class="n">statuses</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;*.json&#39;</span><span class="p">)):</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Evaluating: &#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">)</span>
+
+      <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">][</span><span class="s1">&#39;result_state&#39;</span><span class="p">]</span>
+        <span class="n">statuses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="s1">&#39;FAILED&#39;</span> <span class="ow">in</span> <span class="n">statuses</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+  <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">(</span>
+    <span class="n">testRunner</span> <span class="o">=</span> <span class="n">xmlrunner</span><span class="o">.</span><span class="n">XMLTestRunner</span><span class="p">(</span>
+      <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/Workspace$</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;WORKSPACEBUNDLEPATH&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">/Validation/Output/test-results&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">failfast</span>   <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">buffer</span>     <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">catchbreak</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">exit</span>       <span class="o">=</span> <span class="kc">False</span>
+  <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="import-and-report-test-results">
+<h2>Import and report test results<a class="headerlink" href="#import-and-report-test-results" title="Permalink to this headline"> </a></h2>
+<p>The seventh stage in this Jenkins Pipeline, titled <code class="docutils literal notranslate"><span class="pre">Import</span> <span class="pre">Test</span> <span class="pre">Results</span></code>, uses the Databricks CLI to send the test results from your workspace over to your local development machine. The eighth and final stage, titled <code class="docutils literal notranslate"><span class="pre">Publish</span> <span class="pre">Test</span> <span class="pre">Results</span></code>, publishes the test results to Jenkins by using the <code class="docutils literal notranslate"><span class="pre">junit</span></code> Jenkins plugin. This enables you to visualize reports and dashboards related to the status of the test results. These stages are defined as follows:</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Import Test Results&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="kt">def</span><span class="w"> </span><span class="n">DATABRICKS_BUNDLE_WORKSPACE_FILE_PATH</span>
+<span class="w">  </span><span class="kt">def</span><span class="w"> </span><span class="n">getPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${DBCLIPATH}/databricks bundle validate -t ${BUNDLETARGET} | ${JQPATH}/jq -r .workspace.file_path&quot;</span>
+<span class="w">  </span><span class="kt">def</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sh</span><span class="o">(</span><span class="nl">script:</span><span class="w"> </span><span class="n">getPath</span><span class="o">,</span><span class="w"> </span><span class="nl">returnStdout:</span><span class="w"> </span><span class="kc">true</span><span class="o">).</span><span class="na">trim</span><span class="o">()</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">(</span><span class="n">output</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">DATABRICKS_BUNDLE_WORKSPACE_FILE_PATH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${output}&quot;</span>
+<span class="w">  </span><span class="o">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">error</span><span class="w"> </span><span class="s2">&quot;Failed to capture output or command execution failed: ${getPath}&quot;</span>
+<span class="w">  </span><span class="o">}</span>
+
+<span class="w">  </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;#!/bin/bash</span>
+<span class="s2">        ${DBCLIPATH}/databricks workspace export-dir \</span>
+<span class="s2">        ${DATABRICKS_BUNDLE_WORKSPACE_FILE_PATH}/Validation/Output/test-results \</span>
+<span class="s2">        ${WORKSPACE}/Validation/Output/test-results \</span>
+<span class="s2">        --overwrite</span>
+<span class="s2">     &quot;&quot;&quot;</span>
+<span class="o">}</span>
+<span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Publish Test Results&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">junit</span><span class="w"> </span><span class="nl">allowEmptyResults:</span><span class="w"> </span><span class="kc">true</span><span class="o">,</span><span class="w"> </span><span class="nl">testResults:</span><span class="w"> </span><span class="s1">&#39;**/test-results/*.xml&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">skipPublishingChecks:</span><span class="w"> </span><span class="kc">true</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="figure align-default">
+<img alt="Jenkins test results" src="../../_images/jenkins-test.png" />
+</div>
+</div>
+<div class="section" id="push-all-code-changes-to-your-third-party-repository">
+<h2>Push all code changes to your third-party repository<a class="headerlink" href="#push-all-code-changes-to-your-third-party-repository" title="Permalink to this headline"> </a></h2>
+<p>You should now push the contents of your cloned repository on your local development machine to your third-party repository. Before you push, you should first add the following entries to the <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> file in your cloned repository, as you should probably not push internal Databricks Asset Bundle working files, validation reports, Python build files, and Python caches into your third-party repository. Typically, you will want to regenerate new validation reports and the lastest Python wheel builds in your Databricks workspace, instead of using potentially out-of-date validation reports and Python wheel builds:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>.databricks/
+.vscode/
+Libraries/python/dabdemo/build/
+Libraries/python/dabdemo/__pycache__/
+Libraries/python/dabdemo/dabdemo.egg-info/
+Validation/
+</pre></div>
+</div>
+</div>
+<div class="section" id="run-your-jenkins-pipeline">
+<h2>Run your Jenkins Pipeline<a class="headerlink" href="#run-your-jenkins-pipeline" title="Permalink to this headline"> </a></h2>
+<p>You are now be ready to run your Jenkins Pipeline manually. To do this, from your Jenkins <strong>Dashboard</strong>:</p>
+<ol class="arabic simple">
+<li><p>Click the name of your Jenkins Pipeline.</p></li>
+<li><p>On the sidebar, click <strong>Build Now</strong>.</p></li>
+<li><p>To see the results, click the latest Pipeline run (for example, <code class="docutils literal notranslate"><span class="pre">#1</span></code>) and then click <strong>Console Output</strong>.</p></li>
+</ol>
+<p>At this point, the CI/CD pipeline has completed an integration and deployment cycle. By automating this process, you can ensure that your code has been tested and deployed by an efficient, consistent, and repeatable process. To instruct your third-party Git provider to run Jenkins every time a specific event happens, such as a repository pull request, see your third-party Git provider’s documentation.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

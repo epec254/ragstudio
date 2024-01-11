@@ -1,0 +1,1057 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use the SQL Statement Execution API in Databricks SQL with this hands-on tutorial." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Run SQL statements on a warehouses with the Statement Execution API">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Run SQL statements on a warehouses with the Statement Execution API &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/sql/admin/sql-execution-tutorial.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/sql/admin/sql-execution-tutorial.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/sql/admin/sql-execution-tutorial.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/sql/admin/sql-execution-tutorial.html" class="notranslate">English</option>
+    <option value="../../../ja/sql/admin/sql-execution-tutorial.html" class="notranslate">日本語</option>
+    <option value="../../../pt/sql/admin/sql-execution-tutorial.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Run SQL statements on a warehouses with the Statement Execution API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <p></p>
+<p></p>
+<p></p>
+<div class="section" id="run-sql-statements-on-a-warehouses-with-the-statement-execution-api">
+<h1>Run SQL statements on a warehouses with the Statement Execution API<a class="headerlink" href="#run-sql-statements-on-a-warehouses-with-the-statement-execution-api" title="Permalink to this headline"> </a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>To access Databricks REST APIs, you must <a class="reference internal" href="../../dev-tools/auth/index.html"><span class="doc">authenticate</span></a>.</p>
+</div>
+<p>This tutorial shows how to use the Databricks SQL Statement Execution API 2.0 to run SQL statements from Databricks SQL <a class="reference internal" href="../../compute/sql-warehouse/create-sql-warehouse.html"><span class="doc">warehouses</span></a>.</p>
+<p>To view the Databricks SQL Statement Execution API 2.0 reference, see <a class="reference external" href="https://docs.databricks.com/api/workspace/statementexecution">Statement Execution</a>.</p>
+<div class="section" id="before-you-begin">
+<h2>Before you begin<a class="headerlink" href="#before-you-begin" title="Permalink to this headline"> </a></h2>
+<p>Before you start this tutorial, be sure that you have:</p>
+<ul>
+<li><p>Either Databricks CLI version 0.205 or above or <code class="docutils literal notranslate"><span class="pre">curl</span></code>, as follows:</p>
+<ul>
+<li><p>The Databricks CLI is a command-line tool for sending and receiving Databricks REST API requests and responses. If you choose to use Databricks CLI version 0.205 or above, it must be configured for authenticating with your Databricks workspace. See <a class="reference internal" href="../../dev-tools/cli/install.html"><span class="doc">Install or update the Databricks CLI</span></a> and <a class="reference internal" href="../../dev-tools/cli/authentication.html"><span class="doc">Authentication for the Databricks CLI</span></a>.</p>
+<p>For example, to authenticate with Databricks personal access token authentication, create a personal access token as follows:</p>
+<ol class="arabic simple">
+<li><p>In your Databricks workspace, click your Databricks username in the top bar, and then select <strong>User Settings</strong> from the drop down.</p></li>
+<li><p>Click <strong>Developer</strong>.</p></li>
+<li><p>Next to <strong>Access tokens</strong>, click <strong>Manage</strong>.</p></li>
+<li><p>Click <strong>Generate new token</strong>.</p></li>
+<li><p>(Optional) Enter a comment that helps you to identify this token in the future, and change the token’s default lifetime of 90 days. To create a token with no lifetime (not recommended), leave the <strong>Lifetime (days)</strong> box empty (blank).</p></li>
+<li><p>Click <strong>Generate</strong>.</p></li>
+<li><p>Copy the displayed token to a secure location, and then click <strong>Done</strong>.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Be sure to save the copied token in a secure location. Do not share your copied token with others. If you lose the copied token, you cannot regenerate that exact same token. Instead, you must repeat this procedure to create a new token. If you lose the copied token, or you believe that the token has been compromised, Databricks strongly recommends that you immediately delete that token from your workspace by clicking the trash can (<strong>Revoke</strong>) icon next to the token on the <strong>Access tokens</strong> page.</p>
+<p>If you are not able to create or use tokens in your workspace, this might be because your workspace administrator has disabled tokens or has not given you permission to create or use tokens. See your workspace administrator or the following:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../administration-guide/access-control/tokens.html#enable-tokens"><span class="std std-ref">Enable or disable personal access token authentication for the workspace</span></a></p></li>
+<li><p><a class="reference internal" href="../../security/auth-authz/api-access-permissions.html#pat"><span class="std std-ref">Personal access token permissions</span></a></p></li>
+</ul>
+</div>
+<p>And then to use the Databricks CLI to create a Databricks configuration profile for your personal access token, do the following:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The following procedure uses the <a class="reference internal" href="../../dev-tools/cli/install.html"><span class="doc">Databricks CLI</span></a> to create a Databricks <a class="reference internal" href="../../dev-tools/auth/index.html#config-profiles"><span class="std std-ref">configuration profile</span></a> with the name <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code>. If you already have a <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> configuration profile, this procedure overwrites your existing <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> configuration profile.</p>
+<p>To check whether you already have a <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> configuration profile, and to view this profile’s settings if it exists, use the Databricks CLI to run the command <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">auth</span> <span class="pre">env</span> <span class="pre">--profile</span> <span class="pre">DEFAULT</span></code>.</p>
+<p>To create a configuration profile with a name other than <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code>, replace the <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> part of <code class="docutils literal notranslate"><span class="pre">--profile</span> <span class="pre">DEFAULT</span></code> in the following <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">configure</span></code> command with a different name for the configuration profile.</p>
+</div>
+<ol class="arabic">
+<li><p>Use the <a class="reference internal" href="../../dev-tools/cli/install.html"><span class="doc">Databricks CLI</span></a> to create a Databricks <a class="reference internal" href="../../dev-tools/auth/index.html#config-profiles"><span class="std std-ref">configuration profile</span></a> named <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> that uses Databricks personal access token authentication. To do this, run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>configure<span class="w"> </span>--profile<span class="w"> </span>DEFAULT
+</pre></div>
+</div>
+</li>
+<li><p>For the prompt <strong>Databricks Host</strong>, enter your Databricks <a class="reference internal" href="../../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace instance URL</span></a>, for example <code class="docutils literal notranslate"><span class="pre">https://dbc-a1b2345c-d6e7.cloud.databricks.com</span></code>.</p></li>
+<li><p>For the prompt <strong>Personal Access Token</strong>, enter the Databricks personal access token for your workspace.</p></li>
+</ol>
+<p>In this tutorial’s Databricks CLI examples, note the following:</p>
+<ul class="simple">
+<li><p>This tutorial assumes that you have an environment variable <code class="docutils literal notranslate"><span class="pre">DATABRICKS_SQL_WAREHOUSE_ID</span></code> on your local development machine. This environment variable represents the ID of your Databricks SQL warehouse. This ID is the string of letters and numbers following <code class="docutils literal notranslate"><span class="pre">/sql/1.0/warehouses/</span></code> in the <strong>HTTP path</strong> field for your warehouse. To learn how to get your warehouse’s <strong>HTTP path</strong> value, see <a class="reference internal" href="../../integrations/jdbc-odbc-bi.html#sql"><span class="std std-ref">Get connection details for a SQL warehouse</span></a>.</p></li>
+<li><p>If you use the Windows Command shell instead of a command shell for Unix, Linux, or macOS, replace <code class="docutils literal notranslate"><span class="pre">\</span></code> with <code class="docutils literal notranslate"><span class="pre">^</span></code>, and replace <code class="docutils literal notranslate"><span class="pre">${...}</span></code> with <code class="docutils literal notranslate"><span class="pre">%...%</span></code>.</p></li>
+<li><p>If you use the Windows Command shell instead of a command shell for Unix, Linux, or macOS, in JSON document declarations, replace the opening and closing <code class="docutils literal notranslate"><span class="pre">'</span></code> with <code class="docutils literal notranslate"><span class="pre">&quot;</span></code>, and replace inner <code class="docutils literal notranslate"><span class="pre">&quot;</span></code> with <code class="docutils literal notranslate"><span class="pre">\&quot;</span></code>.</p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://curl.se/">curl</a> is a command-line tool for sending and receiving REST API requests and responses. See also <a class="reference external" href="https://everything.curl.dev/get">Install curl</a>. Alternatively, you can adapt this tutorial’s <code class="docutils literal notranslate"><span class="pre">curl</span></code> examples for use with similar tools such as <a class="reference external" href="https://learning.postman.com/docs/getting-started/installation-and-updates/">Postman</a> or <a class="reference external" href="https://httpie.io/cli">HTTPie</a>.</p>
+<p>In this tutorial’s <code class="docutils literal notranslate"><span class="pre">curl</span></code> examples, note the following:</p>
+<ul class="simple">
+<li><p>Instead of <code class="docutils literal notranslate"><span class="pre">--header</span> <span class="pre">&quot;Authorization:</span> <span class="pre">Bearer</span> <span class="pre">${DATABRICKS_TOKEN}&quot;</span></code>, you can use a <a class="reference external" href="https://docs.databricks.com/api/workspace/tokenmanagement">.netrc</a> file. If you use a <code class="docutils literal notranslate"><span class="pre">.netrc</span></code> file, replace <code class="docutils literal notranslate"><span class="pre">--header</span> <span class="pre">&quot;Authorization:</span> <span class="pre">Bearer</span> <span class="pre">${DATABRICKS_TOKEN}&quot;</span></code> with <code class="docutils literal notranslate"><span class="pre">--netrc</span></code>.</p></li>
+<li><p>If you use the Windows Command shell instead of a command shell for Unix, Linux, or macOS, replace <code class="docutils literal notranslate"><span class="pre">\</span></code> with <code class="docutils literal notranslate"><span class="pre">^</span></code>, and replace <code class="docutils literal notranslate"><span class="pre">${...}</span></code> with <code class="docutils literal notranslate"><span class="pre">%...%</span></code>.</p></li>
+<li><p>If you use the Windows Command shell instead of a command shell for Unix, Linux, or macOS, in JSON document declarations, replace the opening and closing <code class="docutils literal notranslate"><span class="pre">'</span></code> with <code class="docutils literal notranslate"><span class="pre">&quot;</span></code>, and replace inner <code class="docutils literal notranslate"><span class="pre">&quot;</span></code> with <code class="docutils literal notranslate"><span class="pre">\&quot;</span></code>.</p></li>
+</ul>
+<p>Also, for this tutorial’s <code class="docutils literal notranslate"><span class="pre">curl</span></code> examples, this tutorial assumes you have the following environment variables on your local development machine:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_HOST</span></code>, representing the <a class="reference internal" href="../../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace instance name</span></a>, for example <code class="docutils literal notranslate"><span class="pre">dbc-a1b2345c-d6e7.cloud.databricks.com</span></code>, for your Databricks workspace.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_TOKEN</span></code>, representing a Databricks <a class="reference internal" href="../../dev-tools/auth/pat.html"><span class="doc">personal access token</span></a> for your Databricks workspace user.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_SQL_WAREHOUSE_ID</span></code>, representing the ID of your Databricks SQL warehouse. This ID is the string of letters and numbers following <code class="docutils literal notranslate"><span class="pre">/sql/1.0/warehouses/</span></code> in the <strong>HTTP path</strong> field for your warehouse. To learn how to get your warehouse’s <strong>HTTP path</strong> value, see <a class="reference internal" href="../../integrations/jdbc-odbc-bi.html#sql"><span class="std std-ref">Get connection details for a SQL warehouse</span></a>.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As a security best practice when you authenticate with automated tools, systems, scripts, and apps, Databricks recommends that you use OAuth tokens.</p>
+<p>If you use personal access token authentication, Databricks recommends using personal access tokens belonging to <a class="reference internal" href="../../administration-guide/users-groups/service-principals.html"><span class="doc">service principals</span></a> instead of workspace users. To create tokens for service principals, see <a class="reference internal" href="../../administration-guide/users-groups/service-principals.html#personal-access-tokens"><span class="std std-ref">Manage tokens for a service principal</span></a>.</p>
+</div>
+<p>To create a Databricks personal access token, do the following:</p>
+<ol class="arabic simple">
+<li><p>In your Databricks workspace, click your Databricks username in the top bar, and then select <strong>User Settings</strong> from the drop down.</p></li>
+<li><p>Click <strong>Developer</strong>.</p></li>
+<li><p>Next to <strong>Access tokens</strong>, click <strong>Manage</strong>.</p></li>
+<li><p>Click <strong>Generate new token</strong>.</p></li>
+<li><p>(Optional) Enter a comment that helps you to identify this token in the future, and change the token’s default lifetime of 90 days. To create a token with no lifetime (not recommended), leave the <strong>Lifetime (days)</strong> box empty (blank).</p></li>
+<li><p>Click <strong>Generate</strong>.</p></li>
+<li><p>Copy the displayed token to a secure location, and then click <strong>Done</strong>.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Be sure to save the copied token in a secure location. Do not share your copied token with others. If you lose the copied token, you cannot regenerate that exact same token. Instead, you must repeat this procedure to create a new token. If you lose the copied token, or you believe that the token has been compromised, Databricks strongly recommends that you immediately delete that token from your workspace by clicking the trash can (<strong>Revoke</strong>) icon next to the token on the <strong>Access tokens</strong> page.</p>
+<p>If you are not able to create or use tokens in your workspace, this might be because your workspace administrator has disabled tokens or has not given you permission to create or use tokens. See your workspace administrator or the following:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../administration-guide/access-control/tokens.html#enable-tokens"><span class="std std-ref">Enable or disable personal access token authentication for the workspace</span></a></p></li>
+<li><p><a class="reference internal" href="../../security/auth-authz/api-access-permissions.html#pat"><span class="std std-ref">Personal access token permissions</span></a></p></li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Databricks strongly discourages hard-coding information into your scripts, as this sensitive information can be exposed in plain text through version control systems. Databricks recommends that you use approaches such as environment variables that you set on your development machine instead. Removing such hard-coded information from your scripts helps to make those scripts more portable as well.</p>
+</div>
+</li>
+</ul>
+</li>
+<li><p>This tutorial assumes that you also have <a class="reference external" href="https://stedolan.github.io/jq/">jq</a>, a command-line processor for querying JSON response payloads, which the Databricks SQL Statement Execution API returns to you after each call that you make to the Databricks SQL Statement Execution API. See <a class="reference external" href="https://stedolan.github.io/jq/download/">Download jq</a>.</p></li>
+<li><p>You must have at least one table that you can execute SQL statements against. This tutorial is based on the <code class="docutils literal notranslate"><span class="pre">lineitem</span></code> table in the <code class="docutils literal notranslate"><span class="pre">tpch</span></code> schema (also known as a database) within the <code class="docutils literal notranslate"><span class="pre">samples</span></code> catalog. If you do not have access to this catalog, schema, or table from your workspace, substitute them throughout this tutorial with your own.</p></li>
+</ul>
+</div>
+<div class="section" id="step-1-execute-a-sql-statement-and-save-the-data-result-as-json">
+<h2>Step 1: Execute a SQL statement and save the data result as JSON<a class="headerlink" href="#step-1-execute-a-sql-statement-and-save-the-data-result-as-json" title="Permalink to this headline"> </a></h2>
+<p>Run the following command, which does the following:</p>
+<ol class="arabic simple">
+<li><p>Uses the specified SQL warehouse, along with the specified token if you are using <code class="docutils literal notranslate"><span class="pre">curl</span></code>, to query for three columns from the first two rows of the <code class="docutils literal notranslate"><span class="pre">lineitem</span></code> table in the <code class="docutils literal notranslate"><span class="pre">tcph</span></code> schema within the <code class="docutils literal notranslate"><span class="pre">samples</span></code> catalog.</p></li>
+<li><p>Saves the response payload in JSON format in a file named <code class="docutils literal notranslate"><span class="pre">sql-execution-response.json</span></code> within the current working directory.</p></li>
+<li><p>Prints the contents of the <code class="docutils literal notranslate"><span class="pre">sql-execution-response.json</span></code> file.</p></li>
+<li><p>Sets a local environment variable named <code class="docutils literal notranslate"><span class="pre">SQL_STATEMENT_ID</span></code>. This variable contains the ID of the corresponding SQL statement. You can use this SQL statement ID for getting information about that statement later as needed, which is demonstrated in Step 2. You can also view this SQL statement and get its statement ID from the <a class="reference internal" href="query-history.html"><span class="doc">query history</span></a> section of the Databricks SQL console, or by calling the <a class="reference external" href="https://docs.databricks.com/api/workspace/queryhistory">Query History API</a>.</p></li>
+<li><p>Sets an additional local environment variable named <code class="docutils literal notranslate"><span class="pre">NEXT_CHUNK_EXTERNAL_LINK</span></code> that contains an API URL fragment for getting the next chunk of JSON data. If the response data is too large, the Databricks SQL Statement Execution API provides the response in chunks. You can use this API URL fragment for getting the next chunk of data, which is demonstrated in Step 2. If there is no next chunk, then this environment variable is set to <code class="docutils literal notranslate"><span class="pre">null</span></code>.</p></li>
+<li><p>Prints the values of the <code class="docutils literal notranslate"><span class="pre">SQL_STATEMENT_ID</span></code> and <code class="docutils literal notranslate"><span class="pre">NEXT_CHUNK_INTERNAL_LINK</span></code> environment variables.</p></li>
+</ol>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Databricks&amp;nbsp;CLI">
+<div class="compound-first highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>api<span class="w"> </span>post<span class="w"> </span>/api/2.0/sql/statements<span class="w"> </span><span class="se">\</span>
+--profile<span class="w"> </span>&lt;profile-name&gt;<span class="w"> </span><span class="se">\</span>
+--json<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;warehouse_id&quot;: &quot;&#39;</span><span class="s2">&quot;</span><span class="nv">$DATABRICKS_SQL_WAREHOUSE_ID</span><span class="s2">&quot;</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">  &quot;catalog&quot;: &quot;samples&quot;,</span>
+<span class="s1">  &quot;schema&quot;: &quot;tpch&quot;,</span>
+<span class="s1">  &quot;statement&quot;: &quot;SELECT l_orderkey, l_extendedprice, l_shipdate FROM lineitem WHERE l_extendedprice &gt; :extended_price AND l_shipdate &gt; :ship_date LIMIT :row_limit&quot;,</span>
+<span class="s1">  &quot;parameters&quot;: [</span>
+<span class="s1">    { &quot;name&quot;: &quot;extended_price&quot;, &quot;value&quot;: &quot;60000&quot;, &quot;type&quot;: &quot;DECIMAL(18,2)&quot; },</span>
+<span class="s1">    { &quot;name&quot;: &quot;ship_date&quot;, &quot;value&quot;: &quot;1995-01-01&quot;, &quot;type&quot;: &quot;DATE&quot; },</span>
+<span class="s1">    { &quot;name&quot;: &quot;row_limit&quot;, &quot;value&quot;: &quot;2&quot;, &quot;type&quot;: &quot;INT&quot; }</span>
+<span class="s1">  ]</span>
+<span class="s1">}&#39;</span><span class="w"> </span><span class="se">\</span>
+&gt;<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span>jq<span class="w"> </span>.<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">SQL_STATEMENT_ID</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span>.statement_id<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">NEXT_CHUNK_INTERNAL_LINK</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span>.result.next_chunk_internal_link<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">SQL_STATEMENT_ID</span><span class="o">=</span><span class="nv">$SQL_STATEMENT_ID</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">NEXT_CHUNK_INTERNAL_LINK</span><span class="o">=</span><span class="nv">$NEXT_CHUNK_INTERNAL_LINK</span>
+</pre></div>
+</div>
+<p class="compound-last">Replace <code class="docutils literal notranslate"><span class="pre">&lt;profile-name&gt;</span></code> with the name of your Databricks <a class="reference internal" href="../../dev-tools/auth/index.html#config-profiles"><span class="std std-ref">configuration profile</span></a> for authentication.</p>
+</div>
+<div class="compound-last compound" lang="curl">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--request<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+https://<span class="si">${</span><span class="nv">DATABRICKS_HOST</span><span class="si">}</span>/api/2.0/sql/statements/<span class="w"> </span><span class="se">\</span>
+--header<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">DATABRICKS_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+--header<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+--data<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;warehouse_id&quot;: &quot;&#39;</span><span class="s2">&quot;</span><span class="nv">$DATABRICKS_SQL_WAREHOUSE_ID</span><span class="s2">&quot;</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">  &quot;catalog&quot;: &quot;samples&quot;,</span>
+<span class="s1">  &quot;schema&quot;: &quot;tpch&quot;,</span>
+<span class="s1">  &quot;statement&quot;: &quot;SELECT l_orderkey, l_extendedprice, l_shipdate FROM lineitem WHERE l_extendedprice &gt; :extended_price AND l_shipdate &gt; :ship_date LIMIT :row_limit&quot;,</span>
+<span class="s1">  &quot;parameters&quot;: [</span>
+<span class="s1">    { &quot;name&quot;: &quot;extended_price&quot;, &quot;value&quot;: &quot;60000&quot;, &quot;type&quot;: &quot;DECIMAL(18,2)&quot; },</span>
+<span class="s1">    { &quot;name&quot;: &quot;ship_date&quot;, &quot;value&quot;: &quot;1995-01-01&quot;, &quot;type&quot;: &quot;DATE&quot; },</span>
+<span class="s1">    { &quot;name&quot;: &quot;row_limit&quot;, &quot;value&quot;: &quot;2&quot;, &quot;type&quot;: &quot;INT&quot; }</span>
+<span class="s1">  ]</span>
+<span class="s1">}&#39;</span><span class="w"> </span><span class="se">\</span>
+--output<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span>jq<span class="w"> </span>.<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">SQL_STATEMENT_ID</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span>.statement_id<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">NEXT_CHUNK_INTERNAL_LINK</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span>.result.next_chunk_internal_link<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">SQL_STATEMENT_ID</span><span class="o">=</span><span class="nv">$SQL_STATEMENT_ID</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">NEXT_CHUNK_INTERNAL_LINK</span><span class="o">=</span><span class="nv">$NEXT_CHUNK_INTERNAL_LINK</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In the preceding request:</p>
+<ul>
+<li><p>Parameterized queries consist of each query parameter’s name preceded by a colon (for example, <code class="docutils literal notranslate"><span class="pre">:extended_price</span></code>) with a matching <code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">value</span></code> object in the <code class="docutils literal notranslate"><span class="pre">parameters</span></code> array. An optional <code class="docutils literal notranslate"><span class="pre">type</span></code> can also be specified, with the default value of <code class="docutils literal notranslate"><span class="pre">STRING</span></code> if not specified.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Databricks strongly recommends that you use parameters as a best practice for your SQL statements.</p>
+<p>If you use the Databricks SQL Statement Execution API with an application that generates SQL dynamically, this can result in SQL injection attacks. For example, if you generate SQL code based on a user’s selections in a user interface and do not take appropriate measures, an attacker could inject malicious SQL code to change the logic of your initial query, thereby reading, changing, or deleting sensitive data.</p>
+<p>Parameterized queries help protect against SQL injections attacks by handling input arguments separately from the rest of your SQL code and interpreting these arguments as literal values. Parameters also help with code reusability.</p>
+</div>
+</li>
+<li><p>By default, any returned data is in JSON array format, and the default location for any of the SQL statement’s data results is within the response payload. To make this behavior explicit, add <code class="docutils literal notranslate"><span class="pre">&quot;format&quot;:&quot;JSON_ARRAY&quot;,&quot;disposition&quot;:&quot;INLINE&quot;</span></code> to the request payload. If you attempt to return data results larger than 25 MiB in the response payload, a failure status is returned and the SQL statement is canceled. For data results larger than 25 MiB, you can use external links instead of trying to return it in the response payload, which is demonstrated in Step 3.</p></li>
+<li><p>The command stores the response payload’s contents to a local file. Local data storage is not supported by the Databricks SQL Statement Execution API directly.</p></li>
+<li><p>By default, after 10 seconds, if the SQL statement has not yet finished executing through the warehouse, the Databricks SQL Statement Execution API returns only the SQL statement ID and its current status, instead of the statement’s result. To change this behavior, add <code class="docutils literal notranslate"><span class="pre">&quot;wait_timeout&quot;</span></code> to the request and set it to <code class="docutils literal notranslate"><span class="pre">&quot;&lt;x&gt;s&quot;</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;x&gt;</span></code> can be between <code class="docutils literal notranslate"><span class="pre">5</span></code> and <code class="docutils literal notranslate"><span class="pre">50</span></code> seconds inclusive, for example <code class="docutils literal notranslate"><span class="pre">&quot;50s&quot;</span></code>. To return the SQL statement ID and its current status immediately, set <code class="docutils literal notranslate"><span class="pre">wait_timeout</span></code> to <code class="docutils literal notranslate"><span class="pre">0s</span></code>.</p></li>
+<li><p>By default, the SQL statement continues to run if the timeout period is reached. To cancel a SQL statement if the timeout period is reached instead, add <code class="docutils literal notranslate"><span class="pre">&quot;on_wait_timeout&quot;:&quot;CANCEL&quot;</span></code> to the request payload.</p></li>
+<li><p>To limit the number of bytes returned, add <code class="docutils literal notranslate"><span class="pre">&quot;byte_limit&quot;</span></code> to the request and set it to the number of bytes, for example <code class="docutils literal notranslate"><span class="pre">1000</span></code>.</p></li>
+<li><p>To limit the number of rows returned, instead of adding a <code class="docutils literal notranslate"><span class="pre">LIMIT</span></code> clause to <code class="docutils literal notranslate"><span class="pre">statement</span></code>, you can add <code class="docutils literal notranslate"><span class="pre">&quot;row_limit&quot;</span></code> to the request and set it to the number of rows, for example <code class="docutils literal notranslate"><span class="pre">&quot;statement&quot;:&quot;SELECT</span> <span class="pre">*</span> <span class="pre">FROM</span> <span class="pre">lineitem&quot;,&quot;row_limit&quot;:2</span></code>.</p></li>
+<li><p>If the result is larger than the specified <code class="docutils literal notranslate"><span class="pre">byte_limit</span></code> or <code class="docutils literal notranslate"><span class="pre">row_limit</span></code>, the <code class="docutils literal notranslate"><span class="pre">truncated</span></code> field is set to <code class="docutils literal notranslate"><span class="pre">true</span></code> in the response payload.</p></li>
+</ul>
+<p>If the statement’s result is available before the wait timeout ends, the response is as follows:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;manifest&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;chunks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;chunk_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;JSON_ARRAY&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;column_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;l_orderkey&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LONG&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BIGINT&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;l_extendedprice&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DECIMAL&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type_precision&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type_scale&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DECIMAL(18,2)&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;l_shipdate&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DATE&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DATE&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;total_chunk_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;total_row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;truncated&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;chunk_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data_array&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;2&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;71433.16&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;1997-01-28&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;7&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;86152.02&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;1996-01-15&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;row_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;statement_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SUCCEEDED&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If the wait timeout ends before the statement’s result is available, the response looks like this instead:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;statement_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;PENDING&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If the statement’s result data is too large (for example in this case, by running <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">l_orderkey,</span> <span class="pre">l_extendedprice,</span> <span class="pre">l_shipdate</span> <span class="pre">FROM</span> <span class="pre">lineitem</span> <span class="pre">LIMIT</span> <span class="pre">300000</span></code>), the result data is chunked and looks like this instead. Note that <code class="docutils literal notranslate"><span class="pre">&quot;...&quot;:</span> <span class="pre">&quot;...&quot;</span></code> indicates omitted results here for brevity:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;manifest&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;chunks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;chunk_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">188416</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;chunk_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">111584</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">188416</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;format&quot;</span><span class="p">:</span><span class="s2">&quot;JSON_ARRAY&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;column_count&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;total_chunk_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;total_row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">300000</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;truncated&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;chunk_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data_array&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;2&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;71433.16&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;1997-01-28&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;...&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;next_chunk_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;next_chunk_internal_link&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/api/2.0/sql/statements/00000000-0000-0000-0000-000000000000/result/chunks/1?row_offset=188416&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">188416</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;row_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;statement_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SUCCEEDED&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-2-get-a-statements-current-execution-status-and-data-result-as-json">
+<h2>Step 2: Get a statement’s current execution status and data result as JSON<a class="headerlink" href="#step-2-get-a-statements-current-execution-status-and-data-result-as-json" title="Permalink to this headline"> </a></h2>
+<p>You can use a SQL statement’s ID to get that statement’s current execution status and, if the execution succeeded, that statement’s result. If you forget the statement’s ID, you can get it from the <a class="reference internal" href="query-history.html"><span class="doc">query history</span></a> section of the Databricks SQL console, or by calling the <a class="reference external" href="https://docs.databricks.com/api/workspace/queryhistory">Query History API</a>. For example, you could keep polling this command, checking each time to see if the execution has succeeded.</p>
+<p>To get a SQL statement’s current execution status and, if the execution succeeded, that statement’s result and an API URL fragment for getting any next chunk of JSON data, run the following command. This command assumes that you have an environment variable on your local development machine named <code class="docutils literal notranslate"><span class="pre">SQL_STATEMENT_ID</span></code>, which is set to the value of the ID of the SQL statement from the previous step. Of course, you can substitute <code class="docutils literal notranslate"><span class="pre">${SQL_STATEMENT_ID}</span></code> in the following command with the hard-coded ID of the SQL statement.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Databricks&amp;nbsp;CLI">
+<div class="compound-first highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>api<span class="w"> </span>get<span class="w"> </span>/api/2.0/sql/statements/<span class="si">${</span><span class="nv">SQL_STATEMENT_ID</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+--profile<span class="w"> </span>&lt;profile-name&gt;<span class="w"> </span><span class="se">\</span>
+&gt;<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span>jq<span class="w"> </span>.<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">NEXT_CHUNK_INTERNAL_LINK</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span>.result.next_chunk_internal_link<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">NEXT_CHUNK_INTERNAL_LINK</span><span class="o">=</span><span class="nv">$NEXT_CHUNK_INTERNAL_LINK</span>
+</pre></div>
+</div>
+<p class="compound-last">Replace <code class="docutils literal notranslate"><span class="pre">&lt;profile-name&gt;</span></code> with the name of your Databricks <a class="reference internal" href="../../dev-tools/auth/index.html#config-profiles"><span class="std std-ref">configuration profile</span></a> for authentication.</p>
+</div>
+<div class="compound-last compound" lang="curl">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--request<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+https://<span class="si">${</span><span class="nv">DATABRICKS_HOST</span><span class="si">}</span>/api/2.0/sql/statements/<span class="si">${</span><span class="nv">SQL_STATEMENT_ID</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+--header<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">DATABRICKS_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+--output<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span>jq<span class="w"> </span>.<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">NEXT_CHUNK_INTERNAL_LINK</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span>.result.next_chunk_internal_link<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">NEXT_CHUNK_INTERNAL_LINK</span><span class="o">=</span><span class="nv">$NEXT_CHUNK_INTERNAL_LINK</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>If the <code class="docutils literal notranslate"><span class="pre">NEXT_CHUNK_INTERNAL_LINK</span></code> is set to a non-<code class="docutils literal notranslate"><span class="pre">null</span></code> value, you can use it to get the next chunk of data, and so on, for example with the following command:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Databricks&amp;nbsp;CLI">
+<div class="compound-first highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>api<span class="w"> </span>get<span class="w"> </span>/<span class="si">${</span><span class="nv">NEXT_CHUNK_INTERNAL_LINK</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+--profile<span class="w"> </span>&lt;profile-name&gt;<span class="w"> </span><span class="se">\</span>
+&gt;<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span>jq<span class="w"> </span>.<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">NEXT_CHUNK_INTERNAL_LINK</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span>.next_chunk_internal_link<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">NEXT_CHUNK_INTERNAL_LINK</span><span class="o">=</span><span class="nv">$NEXT_CHUNK_INTERNAL_LINK</span>
+</pre></div>
+</div>
+<p class="compound-last">Replace <code class="docutils literal notranslate"><span class="pre">&lt;profile-name&gt;</span></code> with the name of your Databricks <a class="reference internal" href="../../dev-tools/auth/index.html#config-profiles"><span class="std std-ref">configuration profile</span></a> for authentication.</p>
+</div>
+<div class="compound-last compound" lang="curl">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--request<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+https://<span class="si">${</span><span class="nv">DATABRICKS_HOST</span><span class="si">}${</span><span class="nv">NEXT_CHUNK_INTERNAL_LINK</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+--header<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">DATABRICKS_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+--output<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span>jq<span class="w"> </span>.<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">NEXT_CHUNK_INTERNAL_LINK</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span>.next_chunk_internal_link<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">NEXT_CHUNK_INTERNAL_LINK</span><span class="o">=</span><span class="nv">$NEXT_CHUNK_INTERNAL_LINK</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>You can keep running the preceding command, over and over again, to get the next chunk, and so on. Note that as soon as the last chunk is fetched, the SQL statement is closed. After this closure, you cannot use that statement’s ID to get its current status or to fetch any more chunks.</p>
+</div>
+<div class="section" id="step-3-fetch-large-results-using-external-links">
+<h2>Step 3: Fetch large results using external links<a class="headerlink" href="#step-3-fetch-large-results-using-external-links" title="Permalink to this headline"> </a></h2>
+<p>This section demonstrates an optional configuration that uses the <code class="docutils literal notranslate"><span class="pre">EXTERNAL_LINKS</span></code> disposition to retrieve large data sets. The default location (disposition) for the SQL statement result data is within the response payload, but these results are limited to 25 MiB. By setting the <code class="docutils literal notranslate"><span class="pre">disposition</span></code> to <code class="docutils literal notranslate"><span class="pre">EXTERNAL_LINKS</span></code>, the response contains URLs you can use to fetch the chunks of the results data with standard HTTP. The URLs point to your workspace’s internal DBFS, where the result chunks are temporarily stored.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Databricks strongly recommends that you protect the URLs that are returned by the <code class="docutils literal notranslate"><span class="pre">EXTERNAL_LINKS</span></code> disposition.</strong></p>
+<p>When you use the <code class="docutils literal notranslate"><span class="pre">EXTERNAL_LINKS</span></code> disposition, a short-lived, presigned URL is generated, which can be used to download the results directly from Amazon S3. As a short-lived access credential is embedded in this presigned URL, you should protect the URL.</p>
+<p>Because presigned URLs are already generated with embedded temporary access credentials, you must not set an <code class="docutils literal notranslate"><span class="pre">Authorization</span></code> header in the download requests.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">EXTERNAL_LINKS</span></code> disposition can be disabled upon request by creating a support case. To make this request, create a support case. See <a class="reference internal" href="../../resources/support.html"><span class="doc">Support</span></a>.</p>
+<p>See also <a class="reference internal" href="#security-best-practices"><span class="std std-ref">Security best practices</span></a>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The response payload output format and behavior, once they are set for a particular SQL statement ID, cannot be changed.</p>
+<p>In this mode, the API enables you to store result data in JSON format (<code class="docutils literal notranslate"><span class="pre">JSON</span></code>), CSV format (<code class="docutils literal notranslate"><span class="pre">CSV</span></code>), or Apache Arrow format (<code class="docutils literal notranslate"><span class="pre">ARROW_STREAM</span></code>), that must be queried separately with HTTP. Also, when using this mode, it is not possible to inline the result data within the response payload.</p>
+</div>
+<p>The following command demonstrates using <code class="docutils literal notranslate"><span class="pre">EXTERNAL_LINKS</span></code> and Apache Arrow format. Use this pattern instead of the similar query demonstrated in Step 1:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Databricks&amp;nbsp;CLI">
+<div class="compound-first highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>api<span class="w"> </span>post<span class="w"> </span>/api/2.0/sql/statements/<span class="w"> </span><span class="se">\</span>
+--profile<span class="w"> </span>&lt;profile-name&gt;<span class="w"> </span><span class="se">\</span>
+--json<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;warehouse_id&quot;: &quot;&#39;</span><span class="s2">&quot;</span><span class="nv">$DATABRICKS_SQL_WAREHOUSE_ID</span><span class="s2">&quot;</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">  &quot;catalog&quot;: &quot;samples&quot;,</span>
+<span class="s1">  &quot;schema&quot;: &quot;tpch&quot;,</span>
+<span class="s1">  &quot;format&quot;: &quot;ARROW_STREAM&quot;,</span>
+<span class="s1">  &quot;disposition&quot;: &quot;EXTERNAL_LINKS&quot;,</span>
+<span class="s1">  &quot;statement&quot;: &quot;SELECT l_orderkey, l_extendedprice, l_shipdate FROM lineitem WHERE l_extendedprice &gt; :extended_price AND l_shipdate &gt; :ship_date LIMIT :row_limit&quot;,</span>
+<span class="s1">  &quot;parameters&quot;: [</span>
+<span class="s1">    { &quot;name&quot;: &quot;extended_price&quot;, &quot;value&quot;: &quot;60000&quot;, &quot;type&quot;: &quot;DECIMAL(18,2)&quot; },</span>
+<span class="s1">    { &quot;name&quot;: &quot;ship_date&quot;, &quot;value&quot;: &quot;1995-01-01&quot;, &quot;type&quot;: &quot;DATE&quot; },</span>
+<span class="s1">    { &quot;name&quot;: &quot;row_limit&quot;, &quot;value&quot;: &quot;100000&quot;, &quot;type&quot;: &quot;INT&quot; }</span>
+<span class="s1">  ]</span>
+<span class="s1">}&#39;</span><span class="w"> </span><span class="se">\</span>
+&gt;<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span>jq<span class="w"> </span>.<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">SQL_STATEMENT_ID</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span>.statement_id<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">SQL_STATEMENT_ID</span><span class="o">=</span><span class="nv">$SQL_STATEMENT_ID</span>
+</pre></div>
+</div>
+<p class="compound-last">Replace <code class="docutils literal notranslate"><span class="pre">&lt;profile-name&gt;</span></code> with the name of your Databricks <a class="reference internal" href="../../dev-tools/auth/index.html#config-profiles"><span class="std std-ref">configuration profile</span></a> for authentication.</p>
+</div>
+<div class="compound-last compound" lang="curl">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--request<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+https://<span class="si">${</span><span class="nv">DATABRICKS_HOST</span><span class="si">}</span>/api/2.0/sql/statements/<span class="w"> </span><span class="se">\</span>
+--header<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">DATABRICKS_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+--header<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+--data<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;warehouse_id&quot;: &quot;&#39;</span><span class="s2">&quot;</span><span class="nv">$DATABRICKS_SQL_WAREHOUSE_ID</span><span class="s2">&quot;</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">  &quot;catalog&quot;: &quot;samples&quot;,</span>
+<span class="s1">  &quot;schema&quot;: &quot;tpch&quot;,</span>
+<span class="s1">  &quot;format&quot;: &quot;ARROW_STREAM&quot;,</span>
+<span class="s1">  &quot;disposition&quot;: &quot;EXTERNAL_LINKS&quot;,</span>
+<span class="s1">  &quot;statement&quot;: &quot;SELECT l_orderkey, l_extendedprice, l_shipdate FROM lineitem WHERE l_extendedprice &gt; :extended_price AND l_shipdate &gt; :ship_date LIMIT :row_limit&quot;,</span>
+<span class="s1">  &quot;parameters&quot;: [</span>
+<span class="s1">    { &quot;name&quot;: &quot;extended_price&quot;, &quot;value&quot;: &quot;60000&quot;, &quot;type&quot;: &quot;DECIMAL(18,2)&quot; },</span>
+<span class="s1">    { &quot;name&quot;: &quot;ship_date&quot;, &quot;value&quot;: &quot;1995-01-01&quot;, &quot;type&quot;: &quot;DATE&quot; },</span>
+<span class="s1">    { &quot;name&quot;: &quot;row_limit&quot;, &quot;value&quot;: &quot;100000&quot;, &quot;type&quot;: &quot;INT&quot; }</span>
+<span class="s1">  ]</span>
+<span class="s1">}&#39;</span><span class="w"> </span><span class="se">\</span>
+--output<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span>jq<span class="w"> </span>.<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">SQL_STATEMENT_ID</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span>.statement_id<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">SQL_STATEMENT_ID</span><span class="o">=</span><span class="nv">$SQL_STATEMENT_ID</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The response is as follows:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;manifest&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;chunks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;byte_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2843848</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;chunk_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ARROW_STREAM&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;column_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;l_orderkey&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LONG&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BIGINT&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;l_extendedprice&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DECIMAL&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type_precision&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type_scale&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DECIMAL(18,2)&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;l_shipdate&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DATE&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DATE&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;total_byte_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2843848</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;total_chunk_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;total_row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100000</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;truncated&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;external_links&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;byte_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2843848</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;chunk_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;expiration&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;url-expiration-timestamp&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;external_link&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;url-to-data-stored-externally&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;statement_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SUCCEEDED&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If the request times out, the response looks like this instead:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;statement_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;PENDING&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>To get that statement’s current execution status and, if the execution succeeded, that statement’s result, run the following command:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Databricks&amp;nbsp;CLI">
+<div class="compound-first highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>api<span class="w"> </span>get<span class="w"> </span>/api/2.0/sql/statements/<span class="si">${</span><span class="nv">SQL_STATEMENT_ID</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+--profile<span class="w"> </span>&lt;profile-name&gt;<span class="w"> </span><span class="se">\</span>
+&gt;<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span>jq<span class="w"> </span>.<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span>
+</pre></div>
+</div>
+<p class="compound-last">Replace <code class="docutils literal notranslate"><span class="pre">&lt;profile-name&gt;</span></code> with the name of your Databricks <a class="reference internal" href="../../dev-tools/auth/index.html#config-profiles"><span class="std std-ref">configuration profile</span></a> for authentication.</p>
+</div>
+<div class="compound-last compound" lang="curl">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--request<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+https://<span class="si">${</span><span class="nv">DATABRICKS_HOST</span><span class="si">}</span>/api/2.0/sql/statements/<span class="si">${</span><span class="nv">SQL_STATEMENT_ID</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+--header<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">DATABRICKS_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+--output<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span>jq<span class="w"> </span>.<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>If the response is large enough (for example in this case, by running <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">l_orderkey,</span> <span class="pre">l_extendedprice,</span> <span class="pre">l_shipdate</span> <span class="pre">FROM</span> <span class="pre">lineitem</span></code> with no row limit), the response will have multiple chunks, as in the following example below. Note that <code class="docutils literal notranslate"><span class="pre">&quot;...&quot;:</span> <span class="pre">&quot;...&quot;</span></code> indicates omitted results here for brevity:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;manifest&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;chunks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;byte_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">11469280</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;chunk_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">403354</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;byte_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6282464</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;chunk_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">220939</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">403354</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;byte_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6322880</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;chunk_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">222355</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3113156</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;format&quot;</span><span class="p">:</span><span class="s2">&quot;ARROW_STREAM&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;column_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;total_byte_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">94845304</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;total_chunk_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;total_row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3335511</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;truncated&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;external_links&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;byte_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">11469280</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;chunk_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;expiration&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;url-expiration-timestamp&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;external_link&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;url-to-data-stored-externally&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;next_chunk_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;next_chunk_internal_link&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/api/2.0/sql/statements/00000000-0000-0000-0000-000000000000/result/chunks/1?row_offset=403354&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">403354</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;row_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;statement_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SUCCEEDED&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>To download the stored content’s results, you can run the following <code class="docutils literal notranslate"><span class="pre">curl</span></code> command, using the URL in the <code class="docutils literal notranslate"><span class="pre">external_link</span></code> object and specifying where you want to download the file. Do not include your Databricks token in this command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span><span class="s2">&quot;&lt;url-to-result-stored-externally&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+--output<span class="w"> </span><span class="s2">&quot;&lt;path/to/download/the/file/locally&gt;&quot;</span>
+</pre></div>
+</div>
+<p>To download a specific chunk of a streamed content’s results, you can use one of the following:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">next_chunk_index</span></code> value from the response payload for the next chunk (if there is a next chunk).</p></li>
+<li><p>One of the chunk indexes from the response payload’s manifest for any available chunk if there are multiple chunks.</p></li>
+</ul>
+<p>For example, to get the chunk with a <code class="docutils literal notranslate"><span class="pre">chunk_index</span></code> of <code class="docutils literal notranslate"><span class="pre">10</span></code> from the previous response, run the following command:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Databricks&amp;nbsp;CLI">
+<div class="compound-first highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>api<span class="w"> </span>get<span class="w"> </span>/api/2.0/sql/statements/<span class="si">${</span><span class="nv">SQL_STATEMENT_ID</span><span class="si">}</span>/result/chunks/10<span class="w"> </span><span class="se">\</span>
+--profile<span class="w"> </span>&lt;profile-name&gt;<span class="w"> </span><span class="se">\</span>
+&gt;<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span>jq<span class="w"> </span>.<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span>
+</pre></div>
+</div>
+<p class="compound-last">Replace <code class="docutils literal notranslate"><span class="pre">&lt;profile-name&gt;</span></code> with the name of your Databricks <a class="reference internal" href="../../dev-tools/auth/index.html#config-profiles"><span class="std std-ref">configuration profile</span></a> for authentication.</p>
+</div>
+<div class="compound-last compound" lang="curl">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--request<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+https://<span class="si">${</span><span class="nv">DATABRICKS_HOST</span><span class="si">}</span>/api/2.0/sql/statements/<span class="si">${</span><span class="nv">SQL_STATEMENT_ID</span><span class="si">}</span>/result/chunks/10<span class="w"> </span><span class="se">\</span>
+--header<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">DATABRICKS_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+--output<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="o">&amp;&amp;</span><span class="w"> </span>jq<span class="w"> </span>.<span class="w"> </span><span class="s1">&#39;sql-execution-response.json&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Running the preceding command returns a new presigned URL.</p>
+</div>
+<p>To download the stored chunk, use the URL in the <code class="docutils literal notranslate"><span class="pre">external_link</span></code> object.</p>
+<p>For more information about the Apache Arrow format, see:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://arrow.apache.org/docs/format/Columnar.html#ipc-streaming-format">IPC Streaming Format</a></p></li>
+<li><p><a class="reference external" href="https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format">Writing and Reading Streaming Format</a></p></li>
+<li><p><a class="reference external" href="https://arrow.apache.org/docs/python/ipc.html#using-streams">Using streams</a></p></li>
+</ul>
+</div>
+<div class="section" id="step-4-cancel-a-sql-statements-execution">
+<h2>Step 4: Cancel a SQL statement’s execution<a class="headerlink" href="#step-4-cancel-a-sql-statements-execution" title="Permalink to this headline"> </a></h2>
+<p>If you need to cancel a SQL statement that has not yet succeeded, run the following command:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Databricks&amp;nbsp;CLI">
+<div class="compound-first highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>api<span class="w"> </span>post<span class="w"> </span>/api/2.0/sql/statements/<span class="si">${</span><span class="nv">SQL_STATEMENT_ID</span><span class="si">}</span>/cancel<span class="w"> </span><span class="se">\</span>
+--profile<span class="w"> </span>&lt;profile-name&gt;<span class="w"> </span><span class="se">\</span>
+--json<span class="w"> </span><span class="s1">&#39;{}&#39;</span>
+</pre></div>
+</div>
+<p class="compound-last">Replace <code class="docutils literal notranslate"><span class="pre">&lt;profile-name&gt;</span></code> with the name of your Databricks <a class="reference internal" href="../../dev-tools/auth/index.html#config-profiles"><span class="std std-ref">configuration profile</span></a> for authentication.</p>
+</div>
+<div class="compound-last compound" lang="curl">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--request<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+https://<span class="si">${</span><span class="nv">DATABRICKS_HOST</span><span class="si">}</span>/api/2.0/sql/statements/<span class="si">${</span><span class="nv">SQL_STATEMENT_ID</span><span class="si">}</span>/cancel<span class="w"> </span><span class="se">\</span>
+--header<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">DATABRICKS_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p></p>
+</div>
+<div class="section" id="security-best-practices">
+<h2>Security best practices<a class="headerlink" href="#security-best-practices" title="Permalink to this headline"> </a></h2>
+<p>The Databricks SQL Statement Execution API increases the security of data transfers by using end-to-end transport layer security (TLS) encryption and short-lived credentials such as presigned URLs.</p>
+<p>There are several layers in this security model. At the transport layer, it is only possible to communicate with the Databricks SQL Statement Execution API by using TLS 1.2 or above. Also, callers of the Databricks SQL Statement Execution API must be authenticated with a valid Databricks <a class="reference internal" href="../../dev-tools/auth/pat.html"><span class="doc">personal access token</span></a> that maps to a user who has the entitlement to use Databricks SQL. This user must have <a class="reference internal" href="../../security/auth-authz/access-control/sql-endpoint-acl.html"><span class="doc">Can Use</span></a> access for the specific SQL warehouse that is being used, and access can be restricted with <a class="reference internal" href="../../security/network/front-end/ip-access-list-workspace.html"><span class="doc">IP access lists</span></a>. This applies to all requests to the Databricks SQL Statement Execution API. Furthermore, for executing statements, the authenticated user must have permission to the data objects (such as tables, views, and functions) that are used in each statement. This is enforced by existing access control mechanisms in Unity Catalog or by using table ACLs; see the <a class="reference internal" href="../../data-governance/index.html"><span class="doc">Data governance guide</span></a>. This also means that only the user who executes a statement can make fetch requests for the statement’s results.</p>
+<p>Databricks recommends the following security best practices whenever you use the Databricks SQL Statement Execution API along with the <code class="docutils literal notranslate"><span class="pre">EXTERNAL_LINKS</span></code> disposition to retrieve large data sets:</p>
+<ul class="simple">
+<li><p>Remove the Databricks authorization header for Amazon S3 requests</p></li>
+<li><p>Protect presigned URLs</p></li>
+<li><p>Configure network restrictions on storage accounts</p></li>
+<li><p>Configure logging on storage accounts</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">EXTERNAL_LINKS</span></code> disposition can be disabled upon request by creating a support case. To make this request, create a support case. See <a class="reference internal" href="../../resources/support.html"><span class="doc">Support</span></a>.</p>
+<div class="section" id="remove-the-databricks-authorization-header-for-amazon-s3-requests">
+<h3>Remove the Databricks authorization header for Amazon S3 requests<a class="headerlink" href="#remove-the-databricks-authorization-header-for-amazon-s3-requests" title="Permalink to this headline"> </a></h3>
+<p>All calls to the Databricks SQL Statement Execution API that use <code class="docutils literal notranslate"><span class="pre">curl</span></code> must include an <code class="docutils literal notranslate"><span class="pre">Authorization</span></code> header that contains Databricks access credentials. Do not include this <code class="docutils literal notranslate"><span class="pre">Authorization</span></code> header whenever you download data from Amazon S3. This header is not required and might unintentionally expose your Databricks access credentials.</p>
+</div>
+<div class="section" id="protect-presigned-urls">
+<h3>Protect presigned URLs<a class="headerlink" href="#protect-presigned-urls" title="Permalink to this headline"> </a></h3>
+<p>Whenever you use the <code class="docutils literal notranslate"><span class="pre">EXTERNAL_LINKS</span></code> disposition, a short-lived, presigned URL is generated, which the caller can use to download the results directly from Amazon S3 by using TLS. As a short-lived credential is embedded within this presigned URL, you should protect the URL.</p>
+</div>
+<div class="section" id="configure-network-restrictions-on-storage-accounts">
+<h3>Configure network restrictions on storage accounts<a class="headerlink" href="#configure-network-restrictions-on-storage-accounts" title="Permalink to this headline"> </a></h3>
+<p>Whenever you use the <code class="docutils literal notranslate"><span class="pre">EXTERNAL_LINKS</span></code> disposition, the client will obtain presigned URLs to download query results directly from Amazon S3.</p>
+<p>Databricks recommends that you use S3 <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-policies.html">bucket policies</a> to <a class="reference internal" href="../../security/network/classic/customer-managed-vpc.html#s3-restrict-access"><span class="std std-ref">restrict access to your S3 buckets</span></a> to trusted IP addresses and VPCs. Check that you have the correct workspace root bucket <a class="reference internal" href="../../administration-guide/account-settings-e2/storage.html"><span class="doc">storage configurations</span></a>, and review the Databricks recommendations for <a class="reference internal" href="../../security/network/classic/customer-managed-vpc.html"><span class="doc">customer-managed VPC</span></a>.</p>
+</div>
+<div class="section" id="configure-logging-on-storage-accounts">
+<h3>Configure logging on storage accounts<a class="headerlink" href="#configure-logging-on-storage-accounts" title="Permalink to this headline"> </a></h3>
+<p>In addition to enforcing network-level restrictions on the underlying storage account, you can monitor whether anyone tries to bypass these restrictions by setting up <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/ServerLogs.html">S3 server access logging</a> or <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/enable-cloudtrail-logging-for-s3.html">AWS CloudTrail data events</a> as well as the appropriate monitoring and alerting around them.</p>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

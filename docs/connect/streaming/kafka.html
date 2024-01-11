@@ -1,0 +1,868 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="This article describes how you can use Apache Kafka as either a source or a sink when running Structured Streaming workloads on Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Stream processing with Apache Kafka and Databricks">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Stream processing with Apache Kafka and Databricks &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/connect/streaming/kafka.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/connect/streaming/kafka.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/connect/streaming/kafka.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/connect/streaming/kafka.html" class="notranslate">English</option>
+    <option value="../../../ja/connect/streaming/kafka.html" class="notranslate">日本語</option>
+    <option value="../../../pt/connect/streaming/kafka.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Stream processing with Apache Kafka and Databricks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="stream-processing-with-apache-kafka-and-databricks">
+<h1>Stream processing with Apache Kafka and Databricks<a class="headerlink" href="#stream-processing-with-apache-kafka-and-databricks" title="Permalink to this headline"> </a></h1>
+<p>This article describes how you can use Apache Kafka as either a source or a sink when running Structured Streaming workloads on Databricks.</p>
+<p>For more Kafka, see the <a class="reference external" href="https://kafka.apache.org/documentation/">Kafka documentation</a>.</p>
+<div class="section" id="read-data-from-kafka">
+<h2>Read data from Kafka<a class="headerlink" href="#read-data-from-kafka" title="Permalink to this headline"> </a></h2>
+<p>The following is an example for a streaming read from Kafka:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">readStream</span>
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;kafka&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;kafka.bootstrap.servers&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;server:ip&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;subscribe&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;topic&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;startingOffsets&quot;</span><span class="p">,</span> <span class="s2">&quot;latest&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Databricks also supports batch read semantics for Kafka data sources, as shown in the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">spark</span>
+  <span class="o">.</span><span class="n">read</span>
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;kafka&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;kafka.bootstrap.servers&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;server:ip&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;subscribe&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;topic&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;startingOffsets&quot;</span><span class="p">,</span> <span class="s2">&quot;earliest&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;endingOffsets&quot;</span><span class="p">,</span> <span class="s2">&quot;latest&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>For incremental batch loading, Databricks recommends using Kafka with <code class="docutils literal notranslate"><span class="pre">Trigger.AvailableNow</span></code>. See <a class="reference internal" href="../../structured-streaming/triggers.html#available-now"><span class="std std-ref">Configuring incremental batch processing</span></a>.</p>
+<p>In Databricks Runtime 13.1 and above, Databricks provides a SQL function for reading Kafka data. Streaming with SQL is supported only in Delta Live Tables or with streaming tables in Databricks SQL. See <a class="reference internal" href="../../sql/language-manual/functions/read_kafka.html"><span class="doc">read_kafka table-valued function</span></a>.</p>
+</div>
+<div class="section" id="configure-kafka-structured-streaming-reader">
+<span id="configure-kafka-ss-reader"></span><span id="configurations"></span><h2>Configure Kafka Structured Streaming reader<a class="headerlink" href="#configure-kafka-structured-streaming-reader" title="Permalink to this headline"> </a></h2>
+<p>Databricks provides the <code class="docutils literal notranslate"><span class="pre">kafka</span></code> keyword as a data format to configure connections to Kafka 0.10+.</p>
+<p>The following are the most common configurations for Kafka:</p>
+<p>There are multiple ways of specifying which topics to subscribe to. You should provide only one of these parameters:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 44%" />
+<col style="width: 39%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>subscribe</p></td>
+<td><p>A comma-separated list of topics.</p></td>
+<td><p>The topic list to subscribe to.</p></td>
+</tr>
+<tr class="row-odd"><td><p>subscribePattern</p></td>
+<td><p>Java regex string.</p></td>
+<td><p>The pattern used to subscribe to topic(s).</p></td>
+</tr>
+<tr class="row-even"><td><p>assign</p></td>
+<td><p>JSON string <code class="docutils literal notranslate"><span class="pre">{&quot;topicA&quot;:[0,1],&quot;topic&quot;:[2,4]}</span></code>.</p></td>
+<td><p>Specific topicPartitions to consume.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Other notable configurations:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 19%" />
+<col style="width: 9%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>Default Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>kafka.bootstrap.servers</p></td>
+<td><p>Comma-separated list of host:port.</p></td>
+<td><p>empty</p></td>
+<td><p>[Required] The Kafka <code class="docutils literal notranslate"><span class="pre">bootstrap.servers</span></code> configuration. If you find there is no data from Kafka,
+check the broker address list first. If the broker address list is incorrect, there might not be any
+errors. This is because Kafka client assumes the brokers will become available eventually and in the
+event of network errors retry forever.</p></td>
+</tr>
+<tr class="row-odd"><td><p>failOnDataLoss</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">true</span></code></p></td>
+<td><p>[Optional] Whether to fail the query when it’s possible that data was lost. Queries can permanently fail
+to read data from Kafka due to many scenarios such as deleted topics, topic truncation before processing,
+and so on. We try to estimate conservatively whether data was possibly lost or not. Sometimes this can
+cause false alarms. Set this option to <code class="docutils literal notranslate"><span class="pre">false</span></code> if it does not work as expected, or you want the query
+to continue processing despite data loss.</p></td>
+</tr>
+<tr class="row-even"><td><p>minPartitions</p></td>
+<td><p>Integer &gt;= 0, 0 = disabled.</p></td>
+<td><p>0 (disabled)</p></td>
+<td><p>[Optional] Minimum number of partitions to read from Kafka. You can
+configure Spark to use an arbitrary minimum of partitions to read from Kafka using the <code class="docutils literal notranslate"><span class="pre">minPartitions</span></code>
+option. Normally Spark has a 1-1 mapping of Kafka topicPartitions to Spark partitions consuming from
+Kafka. If you set the <code class="docutils literal notranslate"><span class="pre">minPartitions</span></code> option to a value greater than your Kafka topicPartitions,
+Spark will divvy up large Kafka partitions to smaller pieces. This option can be set at times of peak
+loads, data skew, and as your stream is falling behind to increase processing rate. It comes at a cost of
+initializing Kafka consumers at each trigger, which may impact performance if you use SSL when
+connecting to Kafka.</p></td>
+</tr>
+<tr class="row-odd"><td><p>kafka.group.id</p></td>
+<td><p>A Kafka consumer group ID.</p></td>
+<td><p>not set</p></td>
+<td><p>[Optional] Group ID to use while reading from Kafka. Use this with caution.
+By default, each query generates a unique group ID for reading data. This ensures that each query has
+its own consumer group that does not face interference from any other consumer, and therefore can read
+all of the partitions of its subscribed topics. In some scenarios
+(for example, Kafka group-based authorization), you may want to use specific authorized group IDs
+to read data. You can optionally set the group ID. However, do this with extreme caution
+as it can cause unexpected behavior.</p>
+<ul class="simple">
+<li><p>Concurrently running queries (both, batch and streaming) with the same group ID are likely interfere
+with each other causing each query to read only part of the data.</p></li>
+<li><p>This may also occur when queries are started/restarted in quick succession.
+To minimize such issues, set the Kafka consumer configuration <code class="docutils literal notranslate"><span class="pre">session.timeout.ms</span></code> to be very small.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>startingOffsets</p></td>
+<td><p>earliest , latest</p></td>
+<td><p>latest</p></td>
+<td><p>[Optional] The start point when a query is started, either “earliest” which is from the earliest offsets,
+or a json string specifying a starting offset for each TopicPartition. In the json, -2 as an offset
+can be used to refer to earliest, -1 to latest. Note: For batch queries, latest (either implicitly or
+by using -1 in json) is not allowed. For streaming queries, this
+only applies when a new query is started, and that resuming will always pick up from where the
+query left off. Newly discovered partitions during a query will start at earliest.</p></td>
+</tr>
+</tbody>
+</table>
+<p>See <a class="reference external" href="https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html">Structured Streaming Kafka Integration Guide</a> for other optional configurations.</p>
+</div>
+<div class="section" id="schema-for-kafka-records">
+<h2>Schema for Kafka records<a class="headerlink" href="#schema-for-kafka-records" title="Permalink to this headline"> </a></h2>
+<p>The schema of Kafka records is:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 63%" />
+<col style="width: 37%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>key</p></td>
+<td><p>binary</p></td>
+</tr>
+<tr class="row-odd"><td><p>value</p></td>
+<td><p>binary</p></td>
+</tr>
+<tr class="row-even"><td><p>topic</p></td>
+<td><p>string</p></td>
+</tr>
+<tr class="row-odd"><td><p>partition</p></td>
+<td><p>int</p></td>
+</tr>
+<tr class="row-even"><td><p>offset</p></td>
+<td><p>long</p></td>
+</tr>
+<tr class="row-odd"><td><p>timestamp</p></td>
+<td><p>long</p></td>
+</tr>
+<tr class="row-even"><td><p>timestampType</p></td>
+<td><p>int</p></td>
+</tr>
+</tbody>
+</table>
+<p>The <code class="docutils literal notranslate"><span class="pre">key</span></code> and the <code class="docutils literal notranslate"><span class="pre">value</span></code> are always deserialized as byte arrays with the <code class="docutils literal notranslate"><span class="pre">ByteArrayDeserializer</span></code>. Use DataFrame operations (such as <code class="docutils literal notranslate"><span class="pre">cast(&quot;string&quot;)</span></code>) to explicitly deserialize the keys and values.</p>
+</div>
+<div class="section" id="write-data-to-kafka">
+<span id="write"></span><h2>Write data to Kafka<a class="headerlink" href="#write-data-to-kafka" title="Permalink to this headline"> </a></h2>
+<p>The following is an example for a streaming write to Kafka:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">df</span>
+  <span class="o">.</span><span class="n">writeStream</span>
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;kafka&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;kafka.bootstrap.servers&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;server:ip&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;topic&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;topic&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Databricks also supports batch write semantics to Kafka data sinks, as shown in the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">df</span>
+  <span class="o">.</span><span class="n">write</span>
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;kafka&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;kafka.bootstrap.servers&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;server:ip&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;topic&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;topic&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="configure-kafka-structured-streaming-writer">
+<span id="configure-kafka-ss-writer"></span><span id="configure-write"></span><h2>Configure Kafka Structured Streaming writer<a class="headerlink" href="#configure-kafka-structured-streaming-writer" title="Permalink to this headline"> </a></h2>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>In Databricks Runtime 13.1 and above, a newer version of the <code class="docutils literal notranslate"><span class="pre">kafka-clients</span></code> library is used that enables idempotent writes by default. If a Kafka sink uses version 2.8.0 or below with ACLs configured but without <code class="docutils literal notranslate"><span class="pre">IDEMPOTENT_WRITE</span></code> enabled, the write fails with the error message <code class="docutils literal notranslate"><span class="pre">org.apache.kafka.common.KafkaException:</span> <span class="pre">Cannot</span> <span class="pre">execute</span> <span class="pre">transactional</span> <span class="pre">method</span> <span class="pre">because</span> <span class="pre">we</span> <span class="pre">are</span> <span class="pre">in</span> <span class="pre">an</span> <span class="pre">error</span> <span class="pre">state</span></code>.</p>
+<p>You can resolve this error by upgrading to Kafka version 2.8.0 or above or by setting <code class="docutils literal notranslate"><span class="pre">.option(“kafka.enable.idempotence”,</span> <span class="pre">“false”)</span></code> while configuring your Structured Streaming writer.</p>
+</div>
+<p>The schema provided to the DataStreamWriter interacts with the Kafka sink. You can use the following fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 63%" />
+<col style="width: 24%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Column name</p></th>
+<th class="head"><p>Required or optional</p></th>
+<th class="head"><p>Type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">key</span></code></p></td>
+<td><p> optional</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">STRING</span></code> or <code class="docutils literal notranslate"><span class="pre">BINARY</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">value</span></code></p></td>
+<td><p> required</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">STRING</span></code> or <code class="docutils literal notranslate"><span class="pre">BINARY</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">headers</span></code></p></td>
+<td><p> optional</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">ARRAY</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">topic</span></code></p></td>
+<td><p> optional (ignored if <code class="docutils literal notranslate"><span class="pre">topic</span></code> is set as writer option)</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">partition</span></code></p></td>
+<td><p> optional</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">INT</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>The following are common options set while writing to Kafka:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 20%" />
+<col style="width: 7%" />
+<col style="width: 61%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>Default value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">kafka.boostrap.servers</span></code></p></td>
+<td><p> A comma-separated list of <code class="docutils literal notranslate"><span class="pre">&lt;host:port&gt;</span></code></p></td>
+<td><p> none</p></td>
+<td><p> [Required] The Kafka <code class="docutils literal notranslate"><span class="pre">bootstrap.servers</span></code> configuration.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">topic</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p> not set</p></td>
+<td><p> [Optional] Sets the topic for all rows to be written. This option overrides any topic column that exists in the data.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">includeHeaders</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">BOOLEAN</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">false</span></code></p></td>
+<td><p> [Optional] Whether to include the Kafka headers in the row.</p></td>
+</tr>
+</tbody>
+</table>
+<p>See <a class="reference external" href="https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html">Structured Streaming Kafka Integration Guide</a> for other optional configurations.</p>
+</div>
+<div class="section" id="retrieve-kafka-metrics">
+<span id="metrics"></span><h2>Retrieve Kafka metrics<a class="headerlink" href="#retrieve-kafka-metrics" title="Permalink to this headline"> </a></h2>
+<p>You can get the average, min, and max of the number of offsets that the streaming query is behind the latest available offset among all the subscribed topics with the <code class="docutils literal notranslate"><span class="pre">avgOffsetsBehindLatest</span></code>, <code class="docutils literal notranslate"><span class="pre">maxOffsetsBehindLatest</span></code>, and <code class="docutils literal notranslate"><span class="pre">minOffsetsBehindLatest</span></code> metrics. See <a class="reference external" href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#reading-metrics-interactively">Reading Metrics Interactively</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Available in Databricks Runtime 9.1 and above.</p>
+</div>
+<p>Get the estimated total number of bytes that the query process has not consumed from the subscribed topics by examining the value of <code class="docutils literal notranslate"><span class="pre">estimatedTotalBytesBehindLatest</span></code>. This estimate is based on the batches that were processed in the last 300 seconds. The timeframe that the estimate is based on can be changed by setting the option <code class="docutils literal notranslate"><span class="pre">bytesEstimateWindowLength</span></code> to a different value. For example, to set it to 10 minutes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">readStream</span>
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;kafka&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;bytesEstimateWindowLength&quot;</span><span class="p">,</span> <span class="s2">&quot;10m&quot;</span><span class="p">)</span> <span class="c1"># m for minutes, you can also use &quot;600s&quot; for 600 seconds</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>If you are running the stream in a notebook, you can see these metrics under the <strong>Raw Data</strong> tab in the streaming query progress dashboard:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;sources&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KafkaV2[Subscribe[topic]]&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;metrics&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;avgOffsetsBehindLatest&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4.0&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;maxOffsetsBehindLatest&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;minOffsetsBehindLatest&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;estimatedTotalBytesBehindLatest&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;80.0&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-ssl-to-connect-databricks-to-kafka">
+<h2>Use SSL to connect Databricks to Kafka<a class="headerlink" href="#use-ssl-to-connect-databricks-to-kafka" title="Permalink to this headline"> </a></h2>
+<p>To enable SSL connections to Kafka, follow the instructions in the Confluent documentation <a class="reference external" href="https://docs.confluent.io/current/kafka/authentication_ssl.html#clients">Encryption and Authentication with SSL</a>. You can provide the configurations described there, prefixed with <code class="docutils literal notranslate"><span class="pre">kafka.</span></code>, as options. For example, you specify the trust store location in the property <code class="docutils literal notranslate"><span class="pre">kafka.ssl.truststore.location</span></code>.</p>
+<p>Databricks recommends that you:</p>
+<ul class="simple">
+<li><p>Store your certificates in cloud object storage. You can restrict access to the certificates only to clusters that can access Kafka. See <a class="reference internal" href="../../data-governance/index.html"><span class="doc">Data governance guide</span></a>.</p></li>
+<li><p>Store your certificate passwords as <a class="reference internal" href="../../security/secrets/secrets.html"><span class="doc">secrets</span></a> in a <a class="reference internal" href="../../security/secrets/secret-scopes.html"><span class="doc">secret scope</span></a>.</p></li>
+</ul>
+<p>The following example uses object storage locations and Databricks secrets to enable an SSL connection:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">readStream</span>
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;kafka&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;kafka.bootstrap.servers&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;kafka.security.protocol&quot;</span><span class="p">,</span> <span class="s2">&quot;SASL_SSL&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;kafka.ssl.truststore.location&quot;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">truststore</span><span class="o">-</span><span class="n">location</span><span class="o">&gt;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;kafka.ssl.keystore.location&quot;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">keystore</span><span class="o">-</span><span class="n">location</span><span class="o">&gt;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;kafka.ssl.keystore.password&quot;</span><span class="p">,</span> <span class="n">dbutils</span><span class="o">.</span><span class="n">secrets</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scope</span><span class="o">=&lt;</span><span class="n">certificate</span><span class="o">-</span><span class="n">scope</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">,</span><span class="n">key</span><span class="o">=&lt;</span><span class="n">keystore</span><span class="o">-</span><span class="n">password</span><span class="o">-</span><span class="n">key</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">))</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;kafka.ssl.truststore.password&quot;</span><span class="p">,</span> <span class="n">dbutils</span><span class="o">.</span><span class="n">secrets</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scope</span><span class="o">=&lt;</span><span class="n">certificate</span><span class="o">-</span><span class="n">scope</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">,</span><span class="n">key</span><span class="o">=&lt;</span><span class="n">truststore</span><span class="o">-</span><span class="n">password</span><span class="o">-</span><span class="n">key</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-amazon-managed-streaming-for-kafka-with-iam">
+<span id="use-ssl-to-connect-databricks-to-kafka"></span><span id="msk"></span><h2>Use Amazon Managed Streaming for Kafka with IAM<a class="headerlink" href="#use-amazon-managed-streaming-for-kafka-with-iam" title="Permalink to this headline"> </a></h2>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../../release-notes/release-types.html"><span class="doc">Public Preview</span></a> in Databricks Runtime 13.3 LTS and above.</p>
+</div>
+<p>You can use Databricks to connect to Amazon Managed Streaming for Kafka (MSK) using IAM. For configuration instructions for MSK, see <a class="reference external" href="https://docs.aws.amazon.com/msk/latest/developerguide/msk-configuration.html">Amazon MSK configuration</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The following configurations are only required if you are using IAM to connect to MSK. You can also configure connections to MSK using options provided by the Apache Spark Kafka connector.</p>
+</div>
+<p>Databricks recommends managing your connection to MSK using an instance profile. See <a class="reference internal" href="../../compute/configure.html#instance-profiles"><span class="std std-ref">Instance profiles</span></a>.</p>
+<p>You must configure the following options to connect to MSK with an instance profile:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;kafka.sasl.mechanism&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;AWS_MSK_IAM&quot;</span><span class="p">,</span>
+<span class="s">&quot;kafka.sasl.jaas.config&quot;</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">  </span><span class="s">&quot;shadedmskiam.software.amazon.msk.auth.iam.IAMLoginModule required;&quot;</span><span class="p">,</span>
+<span class="s">&quot;kafka.security.protocol&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;SASL_SSL&quot;</span><span class="p">,</span>
+<span class="s">&quot;kafka.sasl.client.callback.handler.class&quot;</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">  </span><span class="s">&quot;shadedmskiam.software.amazon.msk.auth.iam.IAMClientCallbackHandler&quot;</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;kafka.sasl.mechanism&quot;</span><span class="p">:</span> <span class="s2">&quot;AWS_MSK_IAM&quot;</span><span class="p">,</span>
+<span class="s2">&quot;kafka.sasl.jaas.config&quot;</span><span class="p">:</span>
+  <span class="s2">&quot;shadedmskiam.software.amazon.msk.auth.iam.IAMLoginModule required;&quot;</span><span class="p">,</span>
+<span class="s2">&quot;kafka.security.protocol&quot;</span><span class="p">:</span> <span class="s2">&quot;SASL_SSL&quot;</span><span class="p">,</span>
+<span class="s2">&quot;kafka.sasl.client.callback.handler.class&quot;</span><span class="p">:</span>
+  <span class="s2">&quot;shadedmskiam.software.amazon.msk.auth.iam.IAMClientCallbackHandler&quot;</span>
+</pre></div>
+</div>
+</div>
+<p>You can optionally configure your connection to MSK with an IAM user or IAM role instead of an instance profile. You must provide values for your AWS access key and secret key using the environmental variables <code class="docutils literal notranslate"><span class="pre">AWS_ACCESS_KEY_ID</span></code> and <code class="docutils literal notranslate"><span class="pre">AWS_SECRET_ACCESS_KEY</span></code>. See <a class="reference internal" href="../../security/secrets/secrets.html#env-var"><span class="std std-ref">Reference a secret in an environment variable</span></a>.</p>
+<p>In addition, if you choose to configure your connection using an IAM role, you must modify the value provided to <code class="docutils literal notranslate"><span class="pre">kafka.sasl.jaas.config</span></code> to include the role ARN, as in the following example: <code class="docutils literal notranslate"><span class="pre">shadedmskiam.software.amazon.msk.auth.iam.IAMLoginModule</span> <span class="pre">required</span> <span class="pre">awsRoleArn=&quot;arn:aws:iam::123456789012:role/msk_client_role&quot;</span></code>.</p>
+</div>
+<div class="section" id="service-principal-authentication-with-microsoft-entra-id-and-azure-event-hubs">
+<span id="msk-aad"></span><h2>Service Principal authentication with Microsoft Entra ID and Azure Event Hubs<a class="headerlink" href="#service-principal-authentication-with-microsoft-entra-id-and-azure-event-hubs" title="Permalink to this headline"> </a></h2>
+<p>Databricks supports the authentication of Spark jobs with Event Hubs services. This authentication is done via OAuth with Microsoft Entra ID (formerly known as Azure Active Directory or AAD).</p>
+<div class="figure align-default">
+<img alt="AAD Authentication diagram" src="../../_images/aad-auth.png" />
+</div>
+<p>Databricks supports this authentication with a client ID and secret in Databricks Runtime 12.2 LTS and above on assigned clusters and Delta Live Tables, but does not currently support this authentication with a certificate. This authentication does not work on shared clusters or on Unity Catalog Delta Live Tables.</p>
+<div class="section" id="configuring-the-structured-streaming-kafka-connector">
+<h3>Configuring the Structured Streaming Kafka Connector<a class="headerlink" href="#configuring-the-structured-streaming-kafka-connector" title="Permalink to this headline"> </a></h3>
+<p>To perform authentication with Microsoft Entra ID (AAD), you’ll need the following values:</p>
+<ul>
+<li><p>A tenant ID. You can find this in the <strong>Microsoft Entra ID</strong> services tab.</p></li>
+<li><p>A clientID (also known as Application ID).</p></li>
+<li><p>A client secret. Once you have this, you should add it as a secret to your Databricks Workspace. To add this secret, see <a class="reference internal" href="../../security/secrets/index.html"><span class="doc">Secret management</span></a>.</p></li>
+<li><p>An EventHubs topic. You can find a list of topics in the <strong>Event Hubs</strong> section under the <strong>Entities</strong> section on a specific <strong>Event Hubs Namespace</strong> page. To work with multiple topics, you can set the IAM role at the Event Hubs level.</p></li>
+<li><p>An EventHubs server. You can find this on the overview page of your specific <strong>Event Hubs namespace</strong>:</p>
+<div class="figure align-default">
+<img alt="Event Hubs namespace" src="../../_images/event-hub-namespace.png" />
+</div>
+</li>
+</ul>
+<p>Additionally, to use Entra ID, we need to tell Kafka to use the OAuth SASL mechanism (SASL is a generic protocol, and OAuth is a type of SASL “mechanism”):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">kafka.security.protocol</span></code> should be <code class="docutils literal notranslate"><span class="pre">SASL_SSL</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kafka.sasl.mechanism</span></code> should be <code class="docutils literal notranslate"><span class="pre">OAUTHBEARER</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kafka.sasl.login.callback.handler.class</span></code> should be a fully qualified name of the Java class with a value of <code class="docutils literal notranslate"><span class="pre">kafkashaded</span></code> to the login callback handler of our shaded Kafka class. See the following example for the exact class.</p></li>
+</ul>
+</div>
+<div class="section" id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline"> </a></h3>
+<p>Next, let’s look at a running example:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># This is the only section you need to modify for auth purposes!</span>
+<span class="c1"># ------------------------------</span>
+<span class="n">tenant_id</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span>
+<span class="n">client_id</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span>
+<span class="n">client_secret</span> <span class="o">=</span> <span class="n">dbutils</span><span class="o">.</span><span class="n">secrets</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;your-scope&quot;</span><span class="p">,</span> <span class="s2">&quot;your-secret-name&quot;</span><span class="p">)</span>
+
+<span class="n">event_hubs_server</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span>
+<span class="n">event_hubs_topic</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span>
+<span class="c1"># -------------------------------</span>
+
+<span class="n">sasl_config</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;kafkashaded.org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required clientId=&quot;</span><span class="si">{</span><span class="n">client_id</span><span class="si">}</span><span class="s1">&quot; clientSecret=&quot;</span><span class="si">{</span><span class="n">client_secret</span><span class="si">}</span><span class="s1">&quot; scope=&quot;https://</span><span class="si">{</span><span class="n">event_hubs_server</span><span class="si">}</span><span class="s1">/.default&quot; ssl.protocol=&quot;SSL&quot;;&#39;</span>
+
+<span class="n">kafka_options</span> <span class="o">=</span> <span class="p">{</span>
+<span class="c1"># Port 9093 is the EventHubs Kafka port</span>
+<span class="s2">&quot;kafka.bootstrap.servers&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">event_hubs_server</span><span class="si">}</span><span class="s2">:9093&quot;</span><span class="p">,</span>
+<span class="s2">&quot;kafka.sasl.jaas.config&quot;</span><span class="p">:</span> <span class="n">sasl_config</span><span class="p">,</span>
+<span class="s2">&quot;kafka.sasl.oauthbearer.token.endpoint.url&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;https://login.microsoft.com/</span><span class="si">{</span><span class="n">tenant_id</span><span class="si">}</span><span class="s2">/oauth2/v2.0/token&quot;</span><span class="p">,</span>
+<span class="s2">&quot;subscribe&quot;</span><span class="p">:</span> <span class="n">event_hubs_topic</span><span class="p">,</span>
+
+<span class="c1"># You should not need to modify these</span>
+<span class="s2">&quot;kafka.security.protocol&quot;</span><span class="p">:</span> <span class="s2">&quot;SASL_SSL&quot;</span><span class="p">,</span>
+<span class="s2">&quot;kafka.sasl.mechanism&quot;</span><span class="p">:</span> <span class="s2">&quot;OAUTHBEARER&quot;</span><span class="p">,</span>
+<span class="s2">&quot;kafka.sasl.login.callback.handler.class&quot;</span><span class="p">:</span> <span class="s2">&quot;kafkashaded.org.apache.kafka.common.security.oauthbearer.secured.OAuthBearerLoginCallbackHandler&quot;</span>
+<span class="p">}</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">readStream</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;kafka&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="o">**</span><span class="n">kafka_options</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// This is the only section you need to modify for auth purposes!</span>
+<span class="c1">// -------------------------------</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">tenantId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;...&quot;</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">clientId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;...&quot;</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">clientSecret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dbutils</span><span class="p">.</span><span class="n">secrets</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;your-scope&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;your-secret-name&quot;</span><span class="p">)</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">eventHubsServer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;...&quot;</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">eventHubsTopic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;...&quot;</span>
+<span class="c1">// -------------------------------</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">saslConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">s&quot;&quot;&quot;kafkashaded.org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required clientId=&quot;</span><span class="si">$</span><span class="n">clientId</span><span class="s">&quot; clientSecret=&quot;</span><span class="si">$</span><span class="n">clientSecret</span><span class="s">&quot; scope=&quot;https://</span><span class="si">$</span><span class="n">eventHubsServer</span><span class="s">/.default&quot; ssl.protocol=&quot;SSL&quot;;&quot;&quot;&quot;</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">kafkaOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="c1">// Port 9093 is the EventHubs Kafka port</span>
+<span class="s">&quot;kafka.bootstrap.servers&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">s&quot;</span><span class="si">$</span><span class="n">eventHubsServer</span><span class="s">:9093&quot;</span><span class="p">,</span>
+<span class="s">&quot;kafka.sasl.jaas.config&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">saslConfig</span><span class="p">,</span>
+<span class="s">&quot;kafka.sasl.oauthbearer.token.endpoint.url&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">s&quot;https://login.microsoft.com/</span><span class="si">$</span><span class="n">tenantId</span><span class="s">/oauth2/v2.0/token&quot;</span><span class="p">,</span>
+<span class="s">&quot;subscribe&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">eventHubsTopic</span><span class="p">,</span>
+
+<span class="c1">// You should not need to modify these</span>
+<span class="s">&quot;kafka.security.protocol&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;SASL_SSL&quot;</span><span class="p">,</span>
+<span class="s">&quot;kafka.sasl.mechanism&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;OAUTHBEARER&quot;</span><span class="p">,</span>
+<span class="s">&quot;kafka.sasl.login.callback.handler.class&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;kafkashaded.org.apache.kafka.common.security.oauthbearer.secured.OAuthBearerLoginCallbackHandler&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">scalaDF</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">readStream</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;kafka&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">options</span><span class="p">(</span><span class="n">kafkaOptions</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">load</span><span class="p">()</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">scalaDF</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="handling-potential-errors">
+<h3>Handling potential errors<a class="headerlink" href="#handling-potential-errors" title="Permalink to this headline"> </a></h3>
+<ul>
+<li><p>Streaming options are not supported.</p>
+<p>If you try to use this authentication mechanism in a Shared cluster, Serverless, or Unity Catalog Delta Live Tables, you might receive the following error:</p>
+<div class="figure align-default">
+<img alt="Unsupported streaming error" src="../../_images/unsupported-streaming-option.png" />
+</div>
+<p>To resolve this error, create an <strong>Assigned</strong> (also known as <strong>Single user</strong>) cluster and use that cluster. Other cluster types are not currently supported. See <a class="reference internal" href="../../compute/configure.html#access-modes"><span class="std std-ref">Access modes</span></a>.</p>
+</li>
+<li><p>Failed to create a new <code class="docutils literal notranslate"><span class="pre">KafkaAdminClient</span></code>.</p>
+<p>This is an internal error that Kafka throws if any of the following authentication options are incorrect:</p>
+<ul class="simple">
+<li><p>Client ID (also known as Application ID)</p></li>
+<li><p>Tenant ID</p></li>
+<li><p>EventHubs server</p></li>
+</ul>
+<p>To resolve the error, verify that the values are correct for these options.</p>
+<p>Additionally, you might see this error if you modify the configuration options provided by default in the example (that you were asked not to modify), such as <code class="docutils literal notranslate"><span class="pre">kafka.security.protocol</span></code>.</p>
+</li>
+<li><p>There are no records being returned</p>
+<p>If you are trying to display or process your DataFrame but aren’t getting results, you will see the following in the UI.</p>
+<div class="figure align-default">
+<img alt="No results message" src="../../_images/no-results-error.png" />
+</div>
+<p>This message means that authentication was successful, but EventHubs didn’t return any data. Some possible (though by no means exhaustive) reasons are:</p>
+<ul class="simple">
+<li><p>You specified the wrong <strong>EventHubs</strong> topic.</p></li>
+<li><p>The default Kafka configuration option for <code class="docutils literal notranslate"><span class="pre">startingOffsets</span></code> is <code class="docutils literal notranslate"><span class="pre">latest</span></code>, and you’re not currently receiving any data through the topic yet. You can set <code class="docutils literal notranslate"><span class="pre">startingOffsetstoearliest</span></code> to start reading data starting from Kafka’s earliest offsets.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

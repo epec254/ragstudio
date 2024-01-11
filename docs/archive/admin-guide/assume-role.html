@@ -1,0 +1,736 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use Databricks to access S3 buckets from another account using the AssumeRole policy." name="description" />
+<meta content="noindex" name="robots" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Access cross-account S3 buckets with an AssumeRole policy">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Access cross-account S3 buckets with an AssumeRole policy &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/archive/admin-guide/assume-role.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/archive/admin-guide/assume-role.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/archive/admin-guide/assume-role.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/archive/admin-guide/assume-role.html" class="notranslate">English</option>
+    <option value="../../../ja/archive/admin-guide/assume-role.html" class="notranslate">日本語</option>
+    <option value="../../../pt/archive/admin-guide/assume-role.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Access cross-account S3 buckets with an AssumeRole policy</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="access-cross-account-s3-buckets-with-an-assumerole-policy">
+<h1>Access cross-account S3 buckets with an AssumeRole policy<a class="headerlink" href="#access-cross-account-s3-buckets-with-an-assumerole-policy" title="Permalink to this headline"> </a></h1>
+<p>In AWS you can set up cross-account access, so the computing in one account can access a bucket in another account. One way to grant access, described in <a class="reference internal" href="../../connect/storage/tutorial-s3-instance-profile.html"><span class="doc">Tutorial: Configure S3 access with an instance profile</span></a>, is to grant an account direct access to a bucket in another account. Another way to grant access to a bucket is to allow an account to <em>assume a role</em> in another account.</p>
+<p>Consider AWS Account A with account ID <code class="docutils literal notranslate"><span class="pre">&lt;deployment-acct-id&gt;</span></code> and AWS Account B with account ID <code class="docutils literal notranslate"><span class="pre">&lt;bucket-owner-acct-id&gt;</span></code>.  Account A is used when <a class="reference internal" href="../../administration-guide/account-settings-e2/credentials.html"><span class="doc">signing up with Databricks</span></a>: EC2 services and the Databricks Filesystem root bucket are managed by this account. Account B has a bucket <code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket-name&gt;</span></code>.</p>
+<p>This article provides the steps to configure Account A to use the <a class="reference external" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-user.html">AWS AssumeRole</a> action to access S3 files in <code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket-name&gt;</span></code> as a role in Account B. To enable this access you perform configuration in Account A and Account B and in the Databricks admin settings. You also must either configure a Databricks cluster or add a configuration to a notebook that accesses the bucket.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>AWS administrator access to IAM roles and policies in the AWS account of the Databricks deployment and the AWS account of the S3 bucket.</p></li>
+<li><p>Target S3 bucket.</p></li>
+<li><p>If you intend to enable <a class="reference internal" href="../../dbfs/mounts.html#s3-encryption"><span class="std std-ref">encryption</span></a> for the S3 bucket, you must add the instance profile as a <strong>Key User</strong> for the KMS key provided in the configuration. See <a class="reference internal" href="../../security/keys/kms-s3.html"><span class="doc">Configure encryption for S3 with KMS</span></a>.</p></li>
+</ul>
+</div>
+<div class="section" id="step-1-in-account-a-create-role-myrolea-and-attach-policies">
+<h2>Step 1: In Account A, create role <code class="docutils literal notranslate"><span class="pre">MyRoleA</span></code> and attach policies<a class="headerlink" href="#step-1-in-account-a-create-role-myrolea-and-attach-policies" title="Permalink to this headline"> </a></h2>
+<ol class="arabic">
+<li><p>Create a role named <code class="docutils literal notranslate"><span class="pre">MyRoleA</span></code> in Account A. The Instance Profile ARN is <code class="docutils literal notranslate"><span class="pre">arn:aws:iam::&lt;deployment-acct-id&gt;:instance-profile/MyRoleA</span></code>.</p></li>
+<li><p>Create a policy that says that a role in Account A can assume <code class="docutils literal notranslate"><span class="pre">MyRoleB</span></code> in Account B. Attach it to <code class="docutils literal notranslate"><span class="pre">MyRoleA</span></code>. Click <img alt="Inline policy" src="../../_images/add-inline-policy.png" /> and paste in the policy:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Stmt1487884001000&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;sts:AssumeRole&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;arn:aws:iam::&lt;bucket-owner-acct-id&gt;:role/MyRoleB&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Update the policy for the Account A role used to <a class="reference internal" href="../../administration-guide/account-settings-e2/credentials.html"><span class="doc">create clusters</span></a>, adding the <code class="docutils literal notranslate"><span class="pre">iam:PassRole</span></code> action to <code class="docutils literal notranslate"><span class="pre">MyRoleA</span></code>:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Stmt1403287045000&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;ec2:AssociateDhcpOptions&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:AssociateIamInstanceProfile&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:AssociateRouteTable&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:AttachInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:AttachVolume&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:AuthorizeSecurityGroupEgress&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:AuthorizeSecurityGroupIngress&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CancelSpotInstanceRequests&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateDhcpOptions&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateKeyPair&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateRoute&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateSecurityGroup&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateSubnet&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateTags&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateVolume&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateVpc&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateVpcPeeringConnection&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeleteInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeleteKeyPair&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeleteRoute&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeleteRouteTable&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeleteSecurityGroup&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeleteSubnet&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeleteTags&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeleteVolume&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeleteVpc&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeAvailabilityZones&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeIamInstanceProfileAssociations&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeInstanceStatus&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeInstances&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribePrefixLists&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeReservedInstancesOfferings&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeRouteTables&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeSecurityGroups&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeSpotInstanceRequests&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeSpotPriceHistory&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeSubnets&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeVolumes&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeVpcs&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DetachInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DisassociateIamInstanceProfile&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:ModifyVpcAttribute&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:ReplaceIamInstanceProfileAssociation&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:RequestSpotInstances&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:RevokeSecurityGroupEgress&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:RevokeSecurityGroupIngress&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:RunInstances&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:TerminateInstances&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;*&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;iam:PassRole&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;arn:aws:iam::&lt;deployment-acct-id&gt;:role/MyRoleA&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If your account is on the E2 version of the Databricks platform, you can omit <code class="docutils literal notranslate"><span class="pre">ec2:CreateKeyPair</span></code> and <code class="docutils literal notranslate"><span class="pre">ec2:DeleteKeyPair</span></code>.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="step-2-in-account-b-create-role-myroleb-and-attach-policies">
+<h2>Step 2: In Account B, create role <code class="docutils literal notranslate"><span class="pre">MyRoleB</span></code> and attach policies<a class="headerlink" href="#step-2-in-account-b-create-role-myroleb-and-attach-policies" title="Permalink to this headline"> </a></h2>
+<ol class="arabic">
+<li><p>Create a role named <code class="docutils literal notranslate"><span class="pre">MyRoleB</span></code>. The Role ARN is <code class="docutils literal notranslate"><span class="pre">arn:aws:iam::&lt;bucket-owner-acct-id&gt;:role/MyRoleB</span></code>.</p></li>
+<li><p>Edit the trust relationship of role <code class="docutils literal notranslate"><span class="pre">MyRoleB</span></code> to allow a role <code class="docutils literal notranslate"><span class="pre">MyRoleA</span></code> in Account A to assume a role in Account B. Select <strong>IAM &gt; Roles &gt; MyRoleB &gt; Trust relationships &gt; Edit trust relationship</strong> and enter:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;AWS&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;arn:aws:iam::&lt;deployment-acct-id&gt;:role/MyRoleA&quot;</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sts:AssumeRole&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a bucket policy for the bucket <code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket-name&gt;</span></code>. Select <strong>S3 &gt; <code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket-name&gt;</span></code> &gt; Permissions &gt; Bucket Policy</strong>. Include the role (Principal) <code class="docutils literal notranslate"><span class="pre">MyRoleB</span></code> in the bucket policy:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;AWS&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;arn:aws:iam::&lt;bucket-owner-acct-id&gt;:role/MyRoleB&quot;</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;s3:GetBucketLocation&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;s3:ListBucket&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:s3:::&lt;s3-bucket-name&gt;&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;AWS&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">              </span><span class="s2">&quot;arn:aws:iam::&lt;bucket-owner-acct-id&gt;:role/MyRoleB&quot;</span>
+<span class="w">          </span><span class="p">]</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;s3:PutObject&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;s3:PutObjectAcl&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;s3:GetObject&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;s3:DeleteObject&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:s3:::&lt;s3-bucket-name&gt;/*&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you are prompted with a <code class="docutils literal notranslate"><span class="pre">Principal</span> <span class="pre">error</span></code>, make sure that you modified only the <strong>Trust relationship</strong> policy.</p>
+</div>
+</div>
+<div class="section" id="step-3-add-myrolea-to-the-databricks-workspace">
+<h2>Step 3: Add <code class="docutils literal notranslate"><span class="pre">MyRoleA</span></code> to the Databricks workspace<a class="headerlink" href="#step-3-add-myrolea-to-the-databricks-workspace" title="Permalink to this headline"> </a></h2>
+<p>In the Databricks admin settings, <a class="reference internal" href="../../connect/storage/tutorial-s3-instance-profile.html"><span class="doc">add the instance profile</span></a> <code class="docutils literal notranslate"><span class="pre">MyRoleA</span></code> to Databricks using the
+<code class="docutils literal notranslate"><span class="pre">MyRoleA</span></code> instance profile ARN <code class="docutils literal notranslate"><span class="pre">arn:aws:iam::&lt;deployment-acct-id&gt;:instance-profile/MyRoleA</span></code> from step 1.</p>
+</div>
+<div class="section" id="step-4-configure-cluster-with-myrolea">
+<h2>Step 4: Configure cluster with <code class="docutils literal notranslate"><span class="pre">MyRoleA</span></code><a class="headerlink" href="#step-4-configure-cluster-with-myrolea" title="Permalink to this headline"> </a></h2>
+<ol class="arabic">
+<li><p>Select or create a cluster.</p></li>
+<li><p>Open the <strong>Advanced Options</strong> section.</p></li>
+<li><p>On the <strong>Instances</strong> tab, select <a class="reference internal" href="../../connect/storage/tutorial-s3-instance-profile.html#add-instance-profile"><span class="std std-ref">the instance profile</span></a> <code class="docutils literal notranslate"><span class="pre">MyRoleA</span></code>.</p></li>
+<li><p>On the <strong>Spark</strong> tab, set the assume role credential provider and role ARN <code class="docutils literal notranslate"><span class="pre">MyRoleB</span></code>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Databricks Runtime 7.3 LTS and above support configuring the S3A filesystem by using <a class="reference external" href="https://hadoop.apache.org/docs/r3.1.3/hadoop-aws/tools/hadoop-aws">open-source Hadoop options</a>. You can configure global properties and per-bucket properties.</p>
+</div>
+<p>To set it globally for all buckets:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>fs.s3a.aws.credentials.provider<span class="w"> </span>org.apache.hadoop.fs.s3a.auth.AssumedRoleCredentialProvider
+fs.s3a.assumed.role.arn<span class="w"> </span>arn:aws:iam::&lt;bucket-owner-account-id&gt;:role/MyRoleB
+</pre></div>
+</div>
+<p>To set it for a specific bucket:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>fs.s3a.bucket.&lt;s3-bucket-name&gt;.aws.credentials.provider<span class="w"> </span>org.apache.hadoop.fs.s3a.auth.AssumedRoleCredentialProvider
+fs.s3a.bucket.&lt;s3-bucket-name&gt;.assumed.role.arn<span class="w"> </span>arn:aws:iam::&lt;bucket-owner-account-id&gt;:role/MyRoleB
+</pre></div>
+</div>
+</li>
+<li><p>Start the cluster.</p></li>
+<li><p>Attach a notebook to the cluster.</p></li>
+<li><p>Verify that you can access <code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket-name&gt;</span></code> by running the following command:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dbutils</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">ls</span><span class="p">(</span><span class="s2">&quot;s3a://&lt;s3-bucket-name&gt;/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="step-5-mount-cross-account-bucket-with-assumerole">
+<h2>Step 5: Mount cross-account bucket with AssumeRole<a class="headerlink" href="#step-5-mount-cross-account-bucket-with-assumerole" title="Permalink to this headline"> </a></h2>
+<p>You can mount your cross-account bucket to use relative file paths for access to remote data. See <a class="reference internal" href="../../dbfs/mounts.html#mount-a-bucket-using-instance-profiles-with-the-assumerole-policy"><span class="std std-ref">Mount a bucket using instance profiles with the AssumeRole policy</span></a>.</p>
+</div>
+<div class="section" id="automated-configuration-using-terraform">
+<h2>Automated configuration using Terraform<a class="headerlink" href="#automated-configuration-using-terraform" title="Permalink to this headline"> </a></h2>
+<p>You can use <a class="reference internal" href="../../dev-tools/terraform/index.html"><span class="doc">Databricks Terraform provider</span></a> to automatically configure AWS IAM roles and their cluster attachment.</p>
+<p>As shown in this example configuration, first define two variables:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>variable &quot;prefix&quot; {
+  default = &quot;changeme&quot;
+}
+
+variable &quot;databricks_account_id&quot; {
+  description = &quot;Account ID. You can get your account ID in the bottom left corner of the account console. See https://accounts.cloud.databricks.com&quot;
+}
+</pre></div>
+</div>
+<p>Create a bucket using <a class="reference external" href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket">aws_s3_bucket</a>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>resource &quot;aws_s3_bucket&quot; &quot;ds&quot; {
+  bucket = &quot;${var.prefix}-ds&quot;
+  acl    = &quot;private&quot;
+  versioning {
+    enabled = false
+  }
+  force_destroy = true
+  tags = merge(var.tags, {
+    Name = &quot;${var.prefix}-ds&quot;
+  })
+}
+</pre></div>
+</div>
+<p>Create an IAM role for data access using <a class="reference external" href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role">aws_iam_role</a>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>data &quot;aws_iam_policy_document&quot; &quot;assume_role_for_ec2&quot; {
+  statement {
+    effect  = &quot;Allow&quot;
+    actions = [&quot;sts:AssumeRole&quot;]
+    principals {
+      identifiers = [&quot;ec2.amazonaws.com&quot;]
+      type        = &quot;Service&quot;
+    }
+  }
+}
+
+resource &quot;aws_iam_role&quot; &quot;data_role&quot; {
+  name               = &quot;${var.prefix}-first-ec2s3&quot;
+  description        = &quot;(${var.prefix}) EC2 Assume Role role for S3 access&quot;
+  assume_role_policy = data.aws_iam_policy_document.assume_role_for_ec2.json
+  tags               = var.tags
+}
+</pre></div>
+</div>
+<p>Create a bucket policy with a <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/data-sources/aws_bucket_policy">databricks_aws_bucket_policy</a> definition that gives full access to this bucket. Apply an inline S3 bucket policy to the newly-created bucket with <a class="reference external" href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy">aws_s3_bucket_policy</a>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>data &quot;databricks_aws_bucket_policy&quot; &quot;ds&quot; {
+  provider         = databricks.mws
+  full_access_role = aws_iam_role.data_role.arn
+  bucket           = aws_s3_bucket.ds.bucket
+}
+
+resource &quot;aws_s3_bucket_policy&quot; &quot;ds&quot; {
+  bucket = aws_s3_bucket.ds.id
+  policy = data.databricks_aws_bucket_policy.ds.json
+}
+</pre></div>
+</div>
+<p>Create a cross-account policy, which allows Databricks to pass a list of data roles using an <a class="reference external" href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy">aws_iam_policy</a>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>data &quot;databricks_aws_crossaccount_policy&quot; &quot;this&quot; {
+  pass_roles = [aws_iam_role.data_role.arn]
+}
+
+resource &quot;aws_iam_policy&quot; &quot;cross_account_policy&quot; {
+  name   = &quot;${var.prefix}-crossaccount-iam-policy&quot;
+  policy = data.databricks_aws_crossaccount_policy.this.json
+}
+</pre></div>
+</div>
+<p>Allow Databricks to perform actions within your account through configuring a trust relationship using an <a class="reference external" href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment">aws_iam_role_policy_attachment</a>. Grant Databricks full access to VPC resources and attach cross-account policy to cross-account role:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>data &quot;databricks_aws_assume_role_policy&quot; &quot;this&quot; {
+    external_id = var.databricks_account_id
+}
+
+resource &quot;aws_iam_role&quot; &quot;cross_account&quot; {
+  name               = &quot;${var.prefix}-crossaccount-iam-role&quot;
+  assume_role_policy = data.databricks_aws_assume_role_policy.this.json
+  description        = &quot;Grants Databricks full access to VPC resources&quot;
+}
+
+resource &quot;aws_iam_role_policy_attachment&quot; &quot;cross_account&quot; {
+  policy_arn = aws_iam_policy.cross_account_policy.arn
+  role       = aws_iam_role.cross_account.name
+}
+</pre></div>
+</div>
+<p>Register cross-account role in <a class="reference internal" href="../../dev-tools/terraform/e2-workspace.html"><span class="doc">E2 workspace setup</span></a>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>resource &quot;databricks_mws_credentials&quot; &quot;this&quot; {
+  provider         = databricks.mws
+  account_id       = var.databricks_account_id
+  credentials_name = &quot;${var.prefix}-creds&quot;
+  role_arn         = aws_iam_role.cross_account.arn
+}
+</pre></div>
+</div>
+<p>Once the workspace is created, register your data role with <a class="reference external" href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile">aws_iam_instance_profile</a> as <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/instance_profile">databricks_instance_profile</a>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>resource &quot;aws_iam_instance_profile&quot; &quot;this&quot; {
+  name = &quot;${var.prefix}-first-profile&quot;
+  role = aws_iam_role.data_role.name
+}
+
+resource &quot;databricks_instance_profile&quot; &quot;ds&quot; {
+  instance_profile_arn = aws_iam_instance_profile.this.arn
+}
+</pre></div>
+</div>
+<p>For the last step, create a <code class="docutils literal notranslate"><span class="pre">/mnt/experiments</span></code> mount point and a cluster with a specified instance profile:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>resource &quot;databricks_aws_s3_mount&quot; &quot;this&quot; {
+    instance_profile = databricks_instance_profile.ds.id
+    s3_bucket_name = aws_s3_bucket.this.bucket
+    mount_name = &quot;experiments&quot;
+}
+
+data &quot;databricks_node_type&quot; &quot;smallest&quot; {
+  local_disk = true
+}
+
+data &quot;databricks_spark_version&quot; &quot;latest_lts&quot; {
+  long_term_support = true
+}
+
+resource &quot;databricks_cluster&quot; &quot;shared_autoscaling&quot; {
+  cluster_name            = &quot;Shared Autoscaling&quot;
+  spark_version           = data.databricks_spark_version.latest_lts.id
+  node_type_id            = data.databricks_node_type.smallest.id
+  autotermination_minutes = 20
+
+  autoscale {
+    min_workers = 1
+    max_workers = 50
+  }
+
+  aws_attributes {
+    instance_profile_arn = databricks_instance_profile.ds.id
+  }
+}
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

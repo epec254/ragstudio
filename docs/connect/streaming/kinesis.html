@@ -1,0 +1,707 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use Amazon Kinesis as a source and sink for streaming data in Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Connect to Amazon Kinesis">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Connect to Amazon Kinesis &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/connect/streaming/kinesis.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/connect/streaming/kinesis.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/connect/streaming/kinesis.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/connect/streaming/kinesis.html" class="notranslate">English</option>
+    <option value="../../../ja/connect/streaming/kinesis.html" class="notranslate">日本語</option>
+    <option value="../../../pt/connect/streaming/kinesis.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Connect to Amazon Kinesis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="connect-to-amazon-kinesis">
+<h1>Connect to Amazon Kinesis<a class="headerlink" href="#connect-to-amazon-kinesis" title="Permalink to this headline"> </a></h1>
+<p>This article describes how you can use Structured Streaming to read and write data to Amazon Kinesis.</p>
+<p>Databricks recommends that you enable S3 VPC endpoints to ensure that all S3 traffic is routed on the AWS network.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you delete and recreate a Kinesis stream, you cannot reuse any existing checkpoint directories to restart a streaming query. You must delete the checkpoint directories and start those queries from scratch. You can reshard with Structured Streaming by increasing the number of shards without interupting or restarting the stream.</p>
+</div>
+<p>See <a class="reference internal" href="#recommendations"><span class="std std-ref">Recommendations for working with Kinesis</span></a>.</p>
+<div class="section" id="authenticate-with-amazon-kinesis">
+<h2>Authenticate with Amazon Kinesis<a class="headerlink" href="#authenticate-with-amazon-kinesis" title="Permalink to this headline"> </a></h2>
+<p>Databricks recommends managing your connection to Kinesis using an instance profile. See <a class="reference internal" href="../../compute/configure.html#instance-profiles"><span class="std std-ref">Instance profiles</span></a>.</p>
+<p>If you want to use keys for access, you can provide them using the options <code class="docutils literal notranslate"><span class="pre">awsAccessKey</span></code> and <code class="docutils literal notranslate"><span class="pre">awsSecretKey</span></code>.</p>
+<p>You can also <a class="reference internal" href="../../archive/admin-guide/iam-kinesis.html"><span class="doc">assume an IAM role</span></a> using the <code class="docutils literal notranslate"><span class="pre">roleArn</span></code> option. You can optionally specify the external ID with <code class="docutils literal notranslate"><span class="pre">roleExternalId</span></code> and a session name with <code class="docutils literal notranslate"><span class="pre">roleSessionName</span></code>. In order to assume a role, you can either launch your cluster with permissions to assume the role or provide access keys through <code class="docutils literal notranslate"><span class="pre">awsAccessKey</span></code> and <code class="docutils literal notranslate"><span class="pre">awsSecretKey</span></code>. For cross-account authentication, Databricks recommends using <code class="docutils literal notranslate"><span class="pre">roleArn</span></code> to hold the assumed role,  which can then be assumed through your Databricks AWS account. For more information about cross-account authentication, see <a class="reference external" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html">Delegate Access Across AWS Accounts Using IAM Roles</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Kinesis source requires <code class="docutils literal notranslate"><span class="pre">ListShards</span></code>, <code class="docutils literal notranslate"><span class="pre">GetRecords</span></code>, and <code class="docutils literal notranslate"><span class="pre">GetShardIterator</span></code> permissions. If you encounter <code class="docutils literal notranslate"><span class="pre">Amazon:</span> <span class="pre">Access</span> <span class="pre">Denied</span></code> exceptions, check that your user or profile has these permissions. See <a class="reference external" href="https://docs.aws.amazon.com/streams/latest/dev/controlling-access.html">Controlling Access to Amazon Kinesis Data Streams Resources Using IAM</a> for more details.</p>
+</div>
+</div>
+<div class="section" id="schema">
+<h2>Schema<a class="headerlink" href="#schema" title="Permalink to this headline"> </a></h2>
+<p>Kinesis returns records with the following schema:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 69%" />
+<col style="width: 31%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>partitionKey</p></td>
+<td><p>string</p></td>
+</tr>
+<tr class="row-odd"><td><p>data</p></td>
+<td><p>binary</p></td>
+</tr>
+<tr class="row-even"><td><p>stream</p></td>
+<td><p>string</p></td>
+</tr>
+<tr class="row-odd"><td><p>shardId</p></td>
+<td><p>string</p></td>
+</tr>
+<tr class="row-even"><td><p>sequenceNumber</p></td>
+<td><p>string</p></td>
+</tr>
+<tr class="row-odd"><td><p>approximateArrivalTimestamp</p></td>
+<td><p>timestamp</p></td>
+</tr>
+</tbody>
+</table>
+<p>To deserialize the data in the <code class="docutils literal notranslate"><span class="pre">data</span></code> column, you can cast the field to a string.</p>
+</div>
+<div class="section" id="quickstart">
+<h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline"> </a></h2>
+<p>The following notebook demonstrates how to run WordCount using Structured Streaming with Kinesis.</p>
+<div class="embedded-notebook-section section" id="kinesis-wordcount-with-structured-streaming-notebook">
+<span id="structured-streaming-kinesis"></span><h3>Kinesis WordCount with Structured Streaming notebook<a class="headerlink" href="#kinesis-wordcount-with-structured-streaming-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/structured-streaming-kinesis.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/structured-streaming-kinesis.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/structured-streaming-kinesis.html"            id="d2dc0087d0219a6293edb428979d4e9f405597aaa90d8889c9981b30c3460f57" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+<div class="section" id="configure-kinesis-options">
+<h2>Configure Kinesis options<a class="headerlink" href="#configure-kinesis-options" title="Permalink to this headline"> </a></h2>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>In Databricks Runtime 13.1 and above, you can use <code class="docutils literal notranslate"><span class="pre">Trigger.AvailableNow</span></code> with Kinesis. See <a class="reference internal" href="#available-now"><span class="std std-ref">Ingest Kinesis records as an incremental batch</span></a>.</p>
+</div>
+<p>The following are common configurations for Kinesis data sources:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>streamName</p></td>
+<td><p>A comma-separated list of stream names.</p></td>
+<td><p>None (required param)</p></td>
+<td><p>The stream names to subscribe to.</p></td>
+</tr>
+<tr class="row-odd"><td><p>region</p></td>
+<td><p>Region for the streams to be specified.</p></td>
+<td><p>Locally resolved region</p></td>
+<td><p>The region the streams are defined in.</p></td>
+</tr>
+<tr class="row-even"><td><p>endpoint</p></td>
+<td><p>Region for the Kinesis data stream.</p></td>
+<td><p>Locally resolved region</p></td>
+<td><p>The regional endpoint for Kinesis Data Streams.</p></td>
+</tr>
+<tr class="row-odd"><td><p>initialPosition</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">latest</span></code>, <code class="docutils literal notranslate"><span class="pre">trim_horizon</span></code>, <code class="docutils literal notranslate"><span class="pre">earliest</span></code> (alias for trim_horizon), <code class="docutils literal notranslate"><span class="pre">at_timestamp</span></code>.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">latest</span></code></p></td>
+<td><p>Where to start reading from in the stream.</p>
+<p>Specify <code class="docutils literal notranslate"><span class="pre">at_timestamp</span></code> as a JSON string using Java default format for timestamps, such as <code class="docutils literal notranslate"><span class="pre">{&quot;at_timestamp&quot;:</span> <span class="pre">&quot;06/25/2020</span> <span class="pre">10:23:45</span> <span class="pre">PDT&quot;}</span></code>. The streaming query reads all changes at or after the given timestamp (inclusive). You can explicitly specify formats by providing an additional field in the JSON string, such as <code class="docutils literal notranslate"><span class="pre">{&quot;at_timestamp&quot;:</span> <span class="pre">&quot;06/25/2020</span> <span class="pre">10:23:45</span> <span class="pre">PDT&quot;,</span> <span class="pre">&quot;format&quot;:</span> <span class="pre">&quot;MM/dd/yyyy</span> <span class="pre">HH:mm:ss</span> <span class="pre">ZZZ&quot;}</span></code>.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>maxRecordsPerFetch</p></td>
+<td><p>A positive integer.</p></td>
+<td><p>10,000</p></td>
+<td><p>How many records to be read per API request to Kinesis. Number of records returned may actually be higher depending on whether sub-records  were aggregated into a single record using the Kinesis Producer Library.</p></td>
+</tr>
+<tr class="row-odd"><td><p>maxFetchRate</p></td>
+<td><p>A positive decimal representing data rate in MB/s.</p></td>
+<td><p>1.0 (max = 2.0)</p></td>
+<td><p>How fast to prefetch data per shard. This is to rate limit on fetches and avoid Kinesis throttling. 2.0 MB/s is the maximum rate that Kinesis allows.</p></td>
+</tr>
+<tr class="row-even"><td><p>minFetchPeriod</p></td>
+<td><p>A duration string, for example, <code class="docutils literal notranslate"><span class="pre">1s</span></code> for 1 second.</p></td>
+<td><p>400ms (min = 200ms)</p></td>
+<td><p>How long to wait between consecutive prefetch attempts. This is to limit frequency of fetches and avoid Kinesis throttling.  200ms is the minimum as Kinesis allows a maximum of 5 fetches/sec.</p></td>
+</tr>
+<tr class="row-odd"><td><p>maxFetchDuration</p></td>
+<td><p>A duration string, for example, <code class="docutils literal notranslate"><span class="pre">1m</span></code> for 1 minute.</p></td>
+<td><p>10s</p></td>
+<td><p>How long to buffer prefetched new data before making it available for processing.</p></td>
+</tr>
+<tr class="row-even"><td><p>fetchBufferSize</p></td>
+<td><p>A byte string, for example, <code class="docutils literal notranslate"><span class="pre">2gb</span></code> or <code class="docutils literal notranslate"><span class="pre">10mb</span></code>.</p></td>
+<td><p>20gb</p></td>
+<td><p>How much data to buffer for the next trigger. This is used as a stopping condition and not a strict upper bound,therefore more data may be buffered       than what’s specified for this value.</p></td>
+</tr>
+<tr class="row-odd"><td><p>shardsPerTask</p></td>
+<td><p>A positive integer.</p></td>
+<td><p>5</p></td>
+<td><p>How many Kinesis shards to prefetch from in parallel per Spark task. Ideally <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">cores</span> <span class="pre">in</span> <span class="pre">cluster</span></code> &gt;= <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">Kinesis</span> <span class="pre">shards</span></code> / <code class="docutils literal notranslate"><span class="pre">shardsPerTask</span></code>for min query latency &amp; max resource usage.</p></td>
+</tr>
+<tr class="row-even"><td><p>shardFetchInterval</p></td>
+<td><p>A duration string, for example, <code class="docutils literal notranslate"><span class="pre">2m</span></code> for 2 minutes.</p></td>
+<td><p>1s</p></td>
+<td><p>How often to poll Kinesis for resharding.</p></td>
+</tr>
+<tr class="row-odd"><td><p>awsAccessKey</p></td>
+<td><p>String</p></td>
+<td><p>No default.</p></td>
+<td><p>AWS access key.</p></td>
+</tr>
+<tr class="row-even"><td><p>awsSecretKey</p></td>
+<td><p>String</p></td>
+<td><p>No default.</p></td>
+<td><p>AWS secret access key corresponding to the access key.</p></td>
+</tr>
+<tr class="row-odd"><td><p>roleArn</p></td>
+<td><p>String</p></td>
+<td><p>No default.</p></td>
+<td><p>The Amazon Resource Name (ARN) of the role to assume when accessing Kinesis.</p></td>
+</tr>
+<tr class="row-even"><td><p>roleExternalId</p></td>
+<td><p>String</p></td>
+<td><p>No default.</p></td>
+<td><p>An optional value that can be used when delegating access to the AWS account. See <a class="reference external" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-user_externalid.html">How to Use an External ID</a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>roleSessionName</p></td>
+<td><p>String</p></td>
+<td><p>No default.</p></td>
+<td><p>An identifier for the assumed role session that uniquely identifies a session when the same role is assumed by different principals or for different reasons.</p></td>
+</tr>
+<tr class="row-even"><td><p>coalesceThresholdBlockSize</p></td>
+<td><p>A positive integer.</p></td>
+<td><p>10,000,000</p></td>
+<td><p>The threshold at which the automatic coalesce occurs. If the average block size is less than this value, pre-fetched blocks are coalesced toward the <code class="docutils literal notranslate"><span class="pre">coalesceBinSize</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>coalesceBinSize</p></td>
+<td><p>A positive integer.</p></td>
+<td><p>128,000,000</p></td>
+<td><p>The approximate block size after coalescing.</p></td>
+</tr>
+<tr class="row-even"><td><p>consumerMode</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">polling</span></code> or <code class="docutils literal notranslate"><span class="pre">efo</span></code>.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">polling</span></code></p></td>
+<td><p>Consumer type to run the streaming query with. See <a class="reference internal" href="#efo"><span class="std std-ref">Configure Kinesis enhanced fan-out (EFO) for streaming query reads</span></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>requireConsumerDeregistration</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">false</span></code></p></td>
+<td><p>Whether to de-register enhanced fan-out consumer on query termination. Requires <code class="docutils literal notranslate"><span class="pre">efo</span></code> for <code class="docutils literal notranslate"><span class="pre">consumerMode</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The default values of the options have been chosen such that two readers (Spark or otherwise) can simultaneously consume a Kinesis stream without hitting Kinesis rate limits. If you have more consumers, you have to adjust the options accordingly. For example, you may have to reduce <code class="docutils literal notranslate"><span class="pre">maxFetchRate</span></code>, and increase <code class="docutils literal notranslate"><span class="pre">minFetchPeriod</span></code>.</p>
+</div>
+<div class="section" id="low-latency-monitoring-and-alerting">
+<h3>Low latency monitoring and alerting<a class="headerlink" href="#low-latency-monitoring-and-alerting" title="Permalink to this headline"> </a></h3>
+<p>When you have an alerting use case, you would want lower latency. To achieve that:</p>
+<ul class="simple">
+<li><p>Ensure that there is only one consumer (that is, only your streaming query and no one else) of the Kinesis stream, so that we can optimize your only streaming query to fetch as fast as possible without running into Kinesis rate limits.</p></li>
+<li><p>Set the option <code class="docutils literal notranslate"><span class="pre">maxFetchDuration</span></code> to a small value (say, 200ms) to start processing fetched data as fast as possible. If you are using <code class="docutils literal notranslate"><span class="pre">Trigger.AvailableNow</span></code>, this increases the chances of not being able to keep up with the newest records in the Kinesis stream.</p></li>
+<li><p>Set the option <code class="docutils literal notranslate"><span class="pre">minFetchPeriod</span></code> to 210ms to fetch as frequently as possible.</p></li>
+<li><p>Set the option <code class="docutils literal notranslate"><span class="pre">shardsPerTask</span></code> or configure the cluster such that <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">cores</span> <span class="pre">in</span> <span class="pre">cluster</span> <span class="pre">&gt;=</span> <span class="pre">2</span> <span class="pre">*</span> <span class="pre">(#</span> <span class="pre">Kinesis</span> <span class="pre">shards)</span> <span class="pre">/</span> <span class="pre">shardsPerTask</span></code>. This ensures that the background prefetching tasks and the streaming query tasks can execute concurrently.</p></li>
+</ul>
+<p>If you see that your query is receiving data every 5 seconds, then it is likely that you are <a class="reference external" href="https://docs.aws.amazon.com/streams/latest/dev/troubleshooting-consumers.html">hitting Kinesis rate limits</a>.
+Review your configurations.</p>
+</div>
+</div>
+<div class="section" id="what-metrics-does-kinesis-report">
+<span id="metrics"></span><h2>What metrics does Kinesis report?<a class="headerlink" href="#what-metrics-does-kinesis-report" title="Permalink to this headline"> </a></h2>
+<p>Kinesis reports the number of milliseconds a consumer has fallen behind the beginning of a stream for each workspace. You can get the average, minimum, and maximum of the number of milliseconds among all the workspaces in the streaming query process as the <code class="docutils literal notranslate"><span class="pre">avgMsBehindLatest</span></code>, <code class="docutils literal notranslate"><span class="pre">maxMsBehindLatest</span></code>, and <code class="docutils literal notranslate"><span class="pre">minMsBehindLatest</span></code> metrics. See the <a class="reference external" href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#reading-metrics-interactively">Structured Streaming programming guide</a>.</p>
+<p>If you are running the stream in a notebook, you can see metrics under the <strong>Raw Data</strong> tab in the streaming query progress dashboard, such as the following example:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;sources&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KinesisV2[stream]&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;metrics&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;avgMsBehindLatest&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;32000.0&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;maxMsBehindLatest&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;32000&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;minMsBehindLatest&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;32000&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ingest-kinesis-records-as-an-incremental-batch">
+<span id="available-now"></span><h2>Ingest Kinesis records as an incremental batch<a class="headerlink" href="#ingest-kinesis-records-as-an-incremental-batch" title="Permalink to this headline"> </a></h2>
+<p>In Databricks Runtime 13.1 and above, Databricks supports using <code class="docutils literal notranslate"><span class="pre">Trigger.AvailableNow</span></code> with Kinesis data sources for incremental batch semantics. The following describes the basic configuration:</p>
+<ol class="arabic simple">
+<li><p>When a micro-batch read triggers in available now mode, the current time is recorded by the Databricks client.</p></li>
+<li><p>Databricks polls the source system for all records with timestamps between this recorded time and the previous checkpoint.</p></li>
+<li><p>Databricks loads these records using <code class="docutils literal notranslate"><span class="pre">Trigger.AvailableNow</span></code> semantics.</p></li>
+</ol>
+<p>Databricks uses a best-effort mechanism to try and consume all records that exist in Kinesis stream(s) when the streaming query is executed. Because of small potential differences in timestamps and a lack of guarantee in ordering in data sources, some records might not be included in a triggered batch. Omitted records are processed as part of the next triggered micro-batch.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the query continues failing to fetch records from the Kinesis stream even if there are records, try increasing the <code class="docutils literal notranslate"><span class="pre">maxFetchDuration</span></code> value.</p>
+</div>
+<p>See <a class="reference internal" href="../../structured-streaming/triggers.html#available-now"><span class="std std-ref">Configuring incremental batch processing</span></a>.</p>
+</div>
+<div class="section" id="write-to-kinesis">
+<h2>Write to Kinesis<a class="headerlink" href="#write-to-kinesis" title="Permalink to this headline"> </a></h2>
+<p>The following code snippet can be used as a <code class="docutils literal notranslate"><span class="pre">ForeachSink</span></code> to write data to Kinesis. It requires a <code class="docutils literal notranslate"><span class="pre">Dataset[(String,</span> <span class="pre">Array[Byte])]</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The following code snippet provides <em>at least once</em> semantics, not exactly once.</p>
+</div>
+<div class="embedded-notebook-section section" id="kinesis-foreach-sink-notebook">
+<span id="structured-streaming-kinesis-sink"></span><h3>Kinesis Foreach Sink notebook<a class="headerlink" href="#kinesis-foreach-sink-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/structured-streaming-kinesis-sink.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/structured-streaming-kinesis-sink.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/structured-streaming-kinesis-sink.html"            id="59979b64aa817cbbbdd39fb3298dec8f8edc9dad61d7eeecbdd5dc04f0f40441" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+<div class="section" id="recommendations-for-working-with-kinesis">
+<span id="recommendations"></span><h2>Recommendations for working with Kinesis<a class="headerlink" href="#recommendations-for-working-with-kinesis" title="Permalink to this headline"> </a></h2>
+<p>Kinesis queries might experience latency for a number of reasons. This section provides recommendations for troubleshooting latency.</p>
+<p>The Kinesis source runs Spark jobs in a background thread to prefetch Kinesis data periodically and cache it in the memory of the Spark executors. The streaming query processes the cached data after each prefetch step completes and makes the data available for processing. The prefetch step significantly affects the observed end-to-end latency and throughput.</p>
+<div class="section" id="reduce-prefetch-latency">
+<h3>Reduce prefetch latency<a class="headerlink" href="#reduce-prefetch-latency" title="Permalink to this headline"> </a></h3>
+<p>To optimize for minimal query latency and maximum resource usage, use the following calculation:</p>
+<p>  <code class="docutils literal notranslate"><span class="pre">total</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">CPU</span> <span class="pre">cores</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">cluster</span> <span class="pre">(across</span> <span class="pre">all</span> <span class="pre">executors)</span></code> &gt;= <code class="docutils literal notranslate"><span class="pre">total</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">Kinesis</span> <span class="pre">shards</span></code> / <code class="docutils literal notranslate"><span class="pre">shardsPerTask</span></code>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><code class="docutils literal notranslate"><span class="pre">minFetchPeriod</span></code> can create multiple GetRecords API calls to the Kinesis shard until it hits <code class="docutils literal notranslate"><span class="pre">ReadProvisionedThroughputExceeded</span></code>. If an exception occurs, it’s not indicative of an issue as the connector maximizes the utilization of the Kinesis shard.</p>
+</div>
+</div>
+<div class="section" id="avoid-slowdowns-caused-by-too-many-rate-limit-errors">
+<h3>Avoid slowdowns caused by too many rate limit errors<a class="headerlink" href="#avoid-slowdowns-caused-by-too-many-rate-limit-errors" title="Permalink to this headline"> </a></h3>
+<p>The connector reduces the amount of data read from Kinesis by half each time it encounters a rate limiting error and records this event in the log with a message: <code class="docutils literal notranslate"><span class="pre">&quot;Hit</span> <span class="pre">rate</span> <span class="pre">limit.</span> <span class="pre">Sleeping</span> <span class="pre">for</span> <span class="pre">5</span> <span class="pre">seconds.&quot;</span></code></p>
+<p>It is common to see these errors as a stream is being caught up, but after it is, you should no longer see these errors. If you do, you might need to tune either from the Kinesis side (by increasing capacity) or adjust the prefetching options.</p>
+</div>
+<div class="section" id="avoid-spilling-data-to-disk">
+<h3>Avoid spilling data to disk<a class="headerlink" href="#avoid-spilling-data-to-disk" title="Permalink to this headline"> </a></h3>
+<p>If you have a sudden spike in your Kinesis streams, the assigned buffer capacity might fill up and the buffer not be emptied fast enough for new data to be added.</p>
+<p>In such cases, Spark spills blocks from the buffer to disk and slows down processing, which affects stream performance. This event appears in the log with a message like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./log4j.txt:879546:20/03/02<span class="w"> </span><span class="m">17</span>:15:04<span class="w"> </span>INFO<span class="w"> </span>BlockManagerInfo:<span class="w"> </span>Updated<span class="w"> </span>kinesis_49290928_1_ef24cc00-abda-4acd-bb73-cb135aed175c<span class="w"> </span>on<span class="w"> </span>disk<span class="w"> </span>on<span class="w"> </span><span class="m">10</span>.0.208.13:43458<span class="w"> </span><span class="o">(</span>current<span class="w"> </span>size:<span class="w"> </span><span class="m">88</span>.4<span class="w"> </span>MB,<span class="w"> </span>original<span class="w"> </span>size:<span class="w"> </span><span class="m">0</span>.0<span class="w"> </span>B<span class="o">)</span>
+</pre></div>
+</div>
+<p>To address this problem, try increasing the cluster memory capacity (either add more nodes or increase the memory per node), or adjust the configuration parameter <code class="docutils literal notranslate"><span class="pre">fetchBufferSize</span></code>.</p>
+</div>
+<div class="section" id="hanging-s3-write-tasks">
+<h3>Hanging S3 write tasks<a class="headerlink" href="#hanging-s3-write-tasks" title="Permalink to this headline"> </a></h3>
+<p>You can enable Spark speculation to terminate hanging tasks that would prevent stream processing from proceeding. To ensure that tasks are not terminated too aggressively, tune the quantile and multiplier for this setting carefully. A good starting point is to set <code class="docutils literal notranslate"><span class="pre">spark.speculation.multiplier</span></code> to <code class="docutils literal notranslate"><span class="pre">3</span></code> and <code class="docutils literal notranslate"><span class="pre">spark.speculation.quantile</span></code> to <code class="docutils literal notranslate"><span class="pre">0.95</span></code>.</p>
+</div>
+<div class="section" id="reduce-latency-associated-with-checkpointing-in-stateful-streams">
+<h3>Reduce latency associated with checkpointing in stateful streams<a class="headerlink" href="#reduce-latency-associated-with-checkpointing-in-stateful-streams" title="Permalink to this headline"> </a></h3>
+<p>Databricks recommends using RocksDB with changelog checkpointing for stateful streaming queries. See <a class="reference internal" href="../../structured-streaming/rocksdb-state-store.html#changelog-checkpoint"><span class="std std-ref">Enable changelog checkpointing</span></a>.</p>
+</div>
+</div>
+<div class="section" id="configure-kinesis-enhanced-fan-out-efo-for-streaming-query-reads">
+<span id="efo"></span><h2>Configure Kinesis enhanced fan-out (EFO) for streaming query reads<a class="headerlink" href="#configure-kinesis-enhanced-fan-out-efo-for-streaming-query-reads" title="Permalink to this headline"> </a></h2>
+<p>In Databricks Runtime 11.3 and above, the Databricks Runtime Kinesis connector provides support for using the Amazon Kinesis enhanced fan-out (EFO) feature.</p>
+<p><a class="reference external" href="https://docs.aws.amazon.com/streams/latest/dev/enhanced-consumers.html">Kinesis enhanced fan-out</a> is a feature that provides support for enhanced fan-out stream consumers with a dedicated throughput of 2MB/s per shard, per consumer (maximum of 20 consumers per Kinesis stream), and records delivery in push mode instead of pull mode.</p>
+<p>If a Structured Streaming query is running in EFO mode, then it acts as a consumer with dedicated throughput and registers itself with Kinesis Data Streams. In order to register with Kinesis Data Streams, the query needs to provide a unique consumer name so that it can use the generated consumer ARN (Amazon Resource Number) for future operations. You can either provide an explicit consumer name or reuse the streaming query id as the consumer name. All consumers registered by the Databricks source have the “databricks_” prefix. Structured Streaming queries that reference consumers that have previously been registered use the <code class="docutils literal notranslate"><span class="pre">consumerARN</span></code> returned by <code class="docutils literal notranslate"><span class="pre">describeStreamConsumer</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">consumerName</span></code> field allows you to provide a unique name for your streaming query. If you choose not to provide a name, the streaming query ID is used. The <code class="docutils literal notranslate"><span class="pre">consumerName</span></code> must be a string comprising letters, numbers and special characters such as <code class="docutils literal notranslate"><span class="pre">_</span></code> (underscore), <code class="docutils literal notranslate"><span class="pre">.</span></code> (dot) and <code class="docutils literal notranslate"><span class="pre">-</span></code> (hyphen).</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>A registered EFO consumer incurs <a class="reference external" href="https://aws.amazon.com/kinesis/data-streams/pricing/">additional charges on Amazon Kinesis</a>. To deregister the consumer automatically on query teardown, set the <code class="docutils literal notranslate"><span class="pre">requireConsumerDeregistration</span></code> option to <code class="docutils literal notranslate"><span class="pre">true</span></code>. Databricks cannot guarantee de-registration on events such as driver crashes or node failures. In case of job failure, Databricks recommends managing registered consumers directly to prevent excess Kinesis charges.</p>
+</div>
+<div class="section" id="offline-consumer-management-using-a-databricks-notebook">
+<h3>Offline consumer management using a Databricks notebook<a class="headerlink" href="#offline-consumer-management-using-a-databricks-notebook" title="Permalink to this headline"> </a></h3>
+<p>Databricks provides a consumer management utility to register, list or deregister consumers associated with Kinesis data streams. The following code demonstrates using this utility in a Databricks notebook:</p>
+<ol class="arabic">
+<li><p>In a new Databricks notebook attached to an active cluster, create a <code class="docutils literal notranslate"><span class="pre">AWSKinesisConsumerManager</span></code> by providing the necessary authentication information.</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">com</span><span class="p">.</span><span class="nn">databricks</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">kinesis</span><span class="p">.</span><span class="nc">AWSKinesisConsumerManager</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">manager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">AWSKinesisConsumerManager</span><span class="p">.</span><span class="n">newManager</span><span class="p">()</span>
+<span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;awsAccessKey&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">awsAccessKeyId</span><span class="p">)</span>
+<span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;awsSecretKey&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">awsSecretKey</span><span class="p">)</span>
+<span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;region&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">kinesisRegion</span><span class="p">)</span>
+<span class="p">.</span><span class="n">create</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p>List and display consumers.</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="n">consumers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">manager</span><span class="p">.</span><span class="n">listConsumers</span><span class="p">(</span><span class="s">&quot;&lt;stream name&gt;&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">consumers</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Register consumer for given stream.</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="n">consumerARN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">manager</span><span class="p">.</span><span class="n">registerConsumer</span><span class="p">(</span><span class="s">&quot;&lt;stream name&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&lt;consumer name&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Deregister consumer for given stream.</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">manager</span><span class="p">.</span><span class="n">deregisterConsumer</span><span class="p">(</span><span class="s">&quot;&lt;stream name&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&lt;consumer name&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

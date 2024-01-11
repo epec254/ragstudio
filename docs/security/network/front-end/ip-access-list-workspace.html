@@ -1,0 +1,535 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to limit Databricks workspace access to the authorized IP addresses only." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Configure IP access lists for workspaces">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Configure IP access lists for workspaces &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/security/network/front-end/ip-access-list-workspace.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/security/network/front-end/ip-access-list-workspace.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/security/network/front-end/ip-access-list-workspace.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../../en/security/network/front-end/ip-access-list-workspace.html" class="notranslate">English</option>
+    <option value="../../../../ja/security/network/front-end/ip-access-list-workspace.html" class="notranslate">日本語</option>
+    <option value="../../../../pt/security/network/front-end/ip-access-list-workspace.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Configure IP access lists for workspaces</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="configure-ip-access-lists-for-workspaces">
+<h1>Configure IP access lists for workspaces<a class="headerlink" href="#configure-ip-access-lists-for-workspaces" title="Permalink to this headline"> </a></h1>
+<p>This article describes how to configure IP access lists for Databricks workspaces. This article discusses the most common tasks you can perform with the API. For the complete REST API reference, see <a class="reference external" href="https://docs.databricks.com/api/workspace/ipaccesslists">IP Access Lists API</a>.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>This feature is available only for <a class="reference internal" href="../../../getting-started/overview.html#e2-architecture"><span class="std std-ref">accounts on the E2 version of the Databricks platform</span></a>. All new Databricks accounts and most existing accounts are now E2.</p></li>
+<li><p>This feature requires the <a class="reference external" href="https://www.databricks.com/product/aws-pricing">Enterprise pricing tier</a>.</p></li>
+</ul>
+<ul class="simple">
+<li><p>IP access lists support only Internet Protocol version 4 (IPv4) addresses.</p></li>
+</ul>
+</div>
+<div class="section" id="check-if-your-workspace-has-the-ip-access-list-feature-enabled">
+<h2>Check if your workspace has the IP access list feature enabled<a class="headerlink" href="#check-if-your-workspace-has-the-ip-access-list-feature-enabled" title="Permalink to this headline"> </a></h2>
+<p>To check if your workspace has the IP access list feature enabled, call the <a class="reference external" href="https://docs.databricks.com/api/workspace/ipaccesslists">get feature status API</a> (<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/workspace-conf</span></code>). Pass <code class="docutils literal notranslate"><span class="pre">keys=enableIpAccessLists</span></code> as arguments to the request.</p>
+<p>In the response, the <code class="docutils literal notranslate"><span class="pre">enableIpAccessLists</span></code> field specifies either <code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+<p>For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>-n<span class="w"> </span><span class="se">\</span>
+<span class="w"> </span>https://&lt;databricks-instance&gt;/api/2.0/workspace-conf?keys<span class="o">=</span>enableIpAccessLists
+</pre></div>
+</div>
+<p>Example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;enableIpAccessLists&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="enable-or-disable-the-ip-access-list-feature-for-a-workspace">
+<h2>Enable or disable the IP access list feature for a workspace<a class="headerlink" href="#enable-or-disable-the-ip-access-list-feature-for-a-workspace" title="Permalink to this headline"> </a></h2>
+<p>To enable or disable the IP access list feature for a workspace, call the <a class="reference external" href="https://docs.databricks.com/api/workspace/ipaccesslists">enable or disable the IP access list API</a> (<code class="docutils literal notranslate"><span class="pre">PATCH</span> <span class="pre">/workspace-conf</span></code>).</p>
+<p>In a JSON request body, specify <code class="docutils literal notranslate"><span class="pre">enableIpAccessLists</span></code> as <code class="docutils literal notranslate"><span class="pre">true</span></code> (enabled) or <code class="docutils literal notranslate"><span class="pre">false</span></code> (disabled).</p>
+<p>For example, to enable the feature:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>-n<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>https://&lt;databricks-instance&gt;/api/2.0/workspace-conf<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">    &quot;enableIpAccessLists&quot;: &quot;true&quot;</span>
+<span class="s1">    }&#39;</span>
+</pre></div>
+</div>
+<p>Example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;enableIpAccessLists&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-an-ip-access-list">
+<h2>Add an IP access list<a class="headerlink" href="#add-an-ip-access-list" title="Permalink to this headline"> </a></h2>
+<p>To add an IP access list, call the <a class="reference external" href="https://docs.databricks.com/api/workspace/ipaccesslists">add an IP access list API</a> (<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/ip-access-lists</span></code>).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When the IP access lists feature is enabled and there are no allow lists or block lists for the workspace, all IP addresses are allowed. Adding IP addresses to the allow list blocks all IP addresses that are not on the list. Review the changes carefully to avoid unintended access restrictions.</p>
+</div>
+<p>In the JSON request body, specify:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">label</span></code> — Label for this list.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">list_type</span></code> — Either <code class="docutils literal notranslate"><span class="pre">ALLOW</span></code> (allow list) or <code class="docutils literal notranslate"><span class="pre">BLOCK</span></code> (a block list, which means exclude even if in allow list).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ip_addresses</span></code> — A JSON array of IP addresses and CIDR ranges, as String values.</p></li>
+</ul>
+<p>The response is a copy of the object that you passed in, but with some additional fields, most importantly the <code class="docutils literal notranslate"><span class="pre">list_id</span></code> field. You may want to save that value so you can update or delete the list later. If you do not save it, you are still able to get the ID later by querying the full set of IP access lists with a <code class="docutils literal notranslate"><span class="pre">GET</span></code> request to the <code class="docutils literal notranslate"><span class="pre">/ip-access-lists</span></code> endpoint.</p>
+<p>For example, to add an allow list:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-n<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>https://&lt;databricks-instance&gt;/api/2.0/ip-access-lists
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">    &quot;label&quot;: &quot;office&quot;,</span>
+<span class="s1">    &quot;list_type&quot;: &quot;ALLOW&quot;,</span>
+<span class="s1">    &quot;ip_addresses&quot;: [</span>
+<span class="s1">        &quot;1.1.1.1&quot;,</span>
+<span class="s1">        &quot;2.2.2.2/21&quot;</span>
+<span class="s1">      ]</span>
+<span class="s1">    }&#39;</span>
+</pre></div>
+</div>
+<p>Example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;ip_access_list&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;list_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;list-id&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;office&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;ip_addresses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;1.1.1.1&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;2.2.2.2/21&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;address_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;list_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ALLOW&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1578423494457</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;created_by&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6476783916686816</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;updated_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1578423494457</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;updated_by&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6476783916686816</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>To add a block list, do the same thing but with <code class="docutils literal notranslate"><span class="pre">list_type</span></code> set to <code class="docutils literal notranslate"><span class="pre">BLOCK</span></code>.</p>
+</div>
+<div class="section" id="update-an-ip-access-list">
+<span id="ip-access-list-update"></span><h2>Update an IP access list<a class="headerlink" href="#update-an-ip-access-list" title="Permalink to this headline"> </a></h2>
+<p>To update an IP access list:</p>
+<ol class="arabic simple">
+<li><p>Call the <a class="reference external" href="https://docs.databricks.com/api/workspace/ipaccesslists">list all IP access lists API</a> (<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/ip-access-lists</span></code>), and find the ID of the list you want to update.</p></li>
+<li><p>Call the <a class="reference external" href="https://docs.databricks.com/api/workspace/ipaccesslists">update an IP access list API</a> (<code class="docutils literal notranslate"><span class="pre">PATCH</span> <span class="pre">/ip-access-lists/&lt;list-id&gt;</span></code>).</p></li>
+</ol>
+<p>In the JSON request body, specify at least one of the following values to update:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">label</span></code> — Label for this list.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">list_type</span></code> — Either <code class="docutils literal notranslate"><span class="pre">ALLOW</span></code> (allow list) or <code class="docutils literal notranslate"><span class="pre">BLOCK</span></code> (block list, which means exclude even if in allow list).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ip_addresses</span></code> — A JSON array of IP addresses and CIDR ranges, as String values.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">enabled</span></code> — Specifies whether this list is enabled. Pass <code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
+</ul>
+<p>The response is a copy of the object that you passed in with additional fields for the ID and modification dates.</p>
+<p>For example, to disable a list:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>-n<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>https://&lt;databricks-instance&gt;/api/2.0/ip-access-lists/&lt;list-id&gt;
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{ &quot;enabled&quot;: &quot;false&quot; }&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="replace-an-ip-access-list">
+<span id="ip-access-list-replace"></span><h2>Replace an IP access list<a class="headerlink" href="#replace-an-ip-access-list" title="Permalink to this headline"> </a></h2>
+<p>To replace an IP access list:</p>
+<ol class="arabic simple">
+<li><p>Call the <a class="reference external" href="https://docs.databricks.com/api/workspace/ipaccesslists">list all IP access lists API</a> (<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/ip-access-lists</span></code>), and find the ID of the list you want to replace.</p></li>
+<li><p>Call the <a class="reference external" href="https://docs.databricks.com/api/workspace/ipaccesslists">replace an IP access list API</a> (<code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/ip-access-lists/&lt;list-id&gt;</span></code>).</p></li>
+</ol>
+<p>In the JSON request body, specify:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">label</span></code> — Label for this list.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">list_type</span></code> — Either <code class="docutils literal notranslate"><span class="pre">ALLOW</span></code> (allow list) or <code class="docutils literal notranslate"><span class="pre">BLOCK</span></code> (block list, which means exclude even if in allow list).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ip_addresses</span></code> — A JSON array of IP addresses and CIDR ranges, as String values.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">enabled</span></code> — Specifies whether this list is enabled. Pass <code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
+</ul>
+<p>The response is a copy of the object that you passed in with additional fields for the ID and modification dates.</p>
+<p>For example, to replace the contents of the specified list with the following values:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-n<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>https://&lt;databricks-instance&gt;/api/2.0/ip-access-lists/&lt;list-id&gt;
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">    &quot;label&quot;: &quot;office&quot;,</span>
+<span class="s1">    &quot;list_type&quot;: &quot;ALLOW&quot;,</span>
+<span class="s1">    &quot;ip_addresses&quot;: [</span>
+<span class="s1">        &quot;1.1.1.1&quot;,</span>
+<span class="s1">        &quot;2.2.2.2/21&quot;</span>
+<span class="s1">      ],</span>
+<span class="s1">    &quot;enabled&quot;: &quot;false&quot;</span>
+<span class="s1">    }&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="delete-an-ip-access-list">
+<h2>Delete an IP access list<a class="headerlink" href="#delete-an-ip-access-list" title="Permalink to this headline"> </a></h2>
+<p>To delete an IP access list:</p>
+<ol class="arabic simple">
+<li><p>Call the <a class="reference external" href="https://docs.databricks.com/api/workspace/ipaccesslists">list all IP access lists API</a> (<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/ip-access-lists</span></code>), and find the ID of the list you want to delete.</p></li>
+<li><p>Call the <a class="reference external" href="https://docs.databricks.com/api/workspace/ipaccesslists">delete an IP access list API</a> (<code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">/ip-access-lists/&lt;list-id&gt;</span></code>).</p></li>
+</ol>
+<p>For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>-n<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>https://&lt;databricks-instance&gt;/api/2.0/ip-access-lists/&lt;list-id&gt;
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

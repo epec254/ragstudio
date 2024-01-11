@@ -1,0 +1,526 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="This article explains how to use Delta Live Tables to process messages from Azure Event Hubs." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Use Azure Event Hubs as a Delta Live Tables data source">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Use Azure Event Hubs as a Delta Live Tables data source &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/delta-live-tables/event-hubs.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/delta-live-tables/event-hubs.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/delta-live-tables/event-hubs.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/delta-live-tables/event-hubs.html" class="notranslate">English</option>
+    <option value="../../ja/delta-live-tables/event-hubs.html" class="notranslate">日本語</option>
+    <option value="../../pt/delta-live-tables/event-hubs.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Use Azure Event Hubs as a Delta Live Tables data source</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="use-azure-event-hubs-as-a-delta-live-tables-data-source">
+<span id="use-azure-event-hubs-as-a-dlt-data-source"></span><h1>Use Azure Event Hubs as a Delta Live Tables data source<a class="headerlink" href="#use-azure-event-hubs-as-a-delta-live-tables-data-source" title="Permalink to this headline"> </a></h1>
+<p>This article explains how to use Delta Live Tables to process messages from Azure Event Hubs. You cannot use the <a class="reference external" href="https://github.com/Azure/azure-event-hubs-spark">Structured Streaming Event Hubs connector</a> because this library is not available as part of Databricks Runtime, and Delta Live Tables <a class="reference internal" href="external-dependencies.html"><span class="doc">does not allow you to use third-party JVM libraries</span></a>.</p>
+<div class="section" id="how-can-delta-live-tables-connect-to-azure-event-hubs">
+<span id="how-can-dlt-connect-to-azure-event-hubs"></span><h2>How can Delta Live Tables connect to Azure Event Hubs?<a class="headerlink" href="#how-can-delta-live-tables-connect-to-azure-event-hubs" title="Permalink to this headline"> </a></h2>
+<p>Azure Event Hubs provides an endpoint compatible with Apache Kafka that you can use with the <a class="reference external" href="https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html">Structured Streaming Kafka connector</a>, available in Databricks Runtime, to process messages from Azure Event Hubs. For more information about Azure Event Hubs and Apache Kafka compatibility, see <a class="reference external" href="https://learn.microsoft.com/azure/event-hubs/event-hubs-for-kafka-ecosystem-overview">Use Azure Event Hubs from Apache Kafka applications</a>.</p>
+<p>The following steps describe connecting a Delta Live Tables pipeline to an existing Event Hubs instance and consuming events from a topic. To complete these steps, you need the following Event Hubs connection values:</p>
+<ul class="simple">
+<li><p>The name of the Event Hubs namespace.</p></li>
+<li><p>The name of the Event Hub instance in the Event Hubs namespace.</p></li>
+<li><p>A shared access policy name and policy key for Event Hubs. By default, A <code class="docutils literal notranslate"><span class="pre">RootManageSharedAccessKey</span></code> policy is created for each Event Hubs namespace. This policy has <code class="docutils literal notranslate"><span class="pre">manage</span></code>, <code class="docutils literal notranslate"><span class="pre">send</span></code> and <code class="docutils literal notranslate"><span class="pre">listen</span></code> permissions. If your pipeline only reads from Event Hubs, Databricks recommends creating a new policy with listen permission only.</p></li>
+</ul>
+<p>For more information about the Event Hubs connection string, see <a class="reference external" href="https://learn.microsoft.com/azure/event-hubs/event-hubs-get-connection-string">Get an Event Hubs connection string</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Azure Event Hubs provides both OAuth 2.0 and shared access signature (SAS) options to authorize access to your secure resources. These instructions use SAS-based authentication.</p></li>
+<li><p>If you get the Event Hubs connection string from the Azure portal, it may not contain the <code class="docutils literal notranslate"><span class="pre">EntityPath</span></code> value. The <code class="docutils literal notranslate"><span class="pre">EntityPath</span></code> value is required only when using the Structured Streaming Event Hub connector. Using the Structured Streaming Kafka Connector requires providing only the topic name.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="store-the-policy-key-in-a-databricks-secret">
+<h2>Store the policy key in a Databricks secret<a class="headerlink" href="#store-the-policy-key-in-a-databricks-secret" title="Permalink to this headline"> </a></h2>
+<p>Because the policy key is sensitive information, Databricks recommends not hardcoding the value in your pipeline code. Instead, use Databricks secrets to store and manage access to the key.</p>
+<p>The following example uses the Databricks CLI to create a secret scope and store the key in that secret scope. In your pipeline code, use the <code class="docutils literal notranslate"><span class="pre">dbutils.secrets.get()</span></code> function with the <code class="docutils literal notranslate"><span class="pre">scope-name</span></code> and <code class="docutils literal notranslate"><span class="pre">shared-policy-name</span></code> to retrieve the key value.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>--profile<span class="w"> </span>&lt;profile-name&gt;<span class="w"> </span>secrets<span class="w"> </span>create-scope<span class="w"> </span>--scope<span class="w"> </span>&lt;scope-name&gt;
+
+databricks<span class="w"> </span>--profile<span class="w"> </span>&lt;profile-name&gt;<span class="w"> </span>secrets<span class="w"> </span>put<span class="w"> </span>--scope<span class="w"> </span>&lt;scope-name&gt;<span class="w"> </span>--key<span class="w"> </span>&lt;shared-policy-name&gt;<span class="w"> </span>--string-value<span class="w"> </span>&lt;shared-policy-key&gt;
+</pre></div>
+</div>
+<p>For more information on Databricks secrets, see <a class="reference internal" href="../security/secrets/index.html"><span class="doc">Secret management</span></a>. For more information on using the Secrets CLI, see <a class="reference internal" href="../archive/dev-tools/cli/secrets-cli.html"><span class="doc">Secrets CLI (legacy)</span></a>.</p>
+</div>
+<div class="section" id="create-a-notebook-and-add-the-pipeline-code-to-consume-events">
+<h2>Create a notebook and add the pipeline code to consume events<a class="headerlink" href="#create-a-notebook-and-add-the-pipeline-code-to-consume-events" title="Permalink to this headline"> </a></h2>
+<p>The following example reads IoT events from a topic, but you can adapt the example for the requirements of your application. As a best practice, Databricks recommends using the Delta Live Tables pipeline settings to configure application variables. Your pipeline code then uses the <code class="docutils literal notranslate"><span class="pre">spark.conf.get()</span></code> function to retrieve values. For more information on using pipeline settings to parameterize your pipeline, see <a class="reference internal" href="settings.html#parameterize-pipelines"><span class="std std-ref">Parameterize pipelines</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dlt</span>
+<span class="kn">import</span> <span class="nn">pyspark.sql.types</span> <span class="k">as</span> <span class="nn">T</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># Event Hubs configuration</span>
+<span class="n">EH_NAMESPACE</span>                    <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;iot.ingestion.eh.namespace&quot;</span><span class="p">)</span>
+<span class="n">EH_NAME</span>                         <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;iot.ingestion.eh.name&quot;</span><span class="p">)</span>
+
+<span class="n">EH_CONN_SHARED_ACCESS_KEY_NAME</span>  <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;iot.ingestion.eh.accessKeyName&quot;</span><span class="p">)</span>
+<span class="n">SECRET_SCOPE</span>                    <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;io.ingestion.eh.secretsScopeName&quot;</span><span class="p">)</span>
+<span class="n">EH_CONN_SHARED_ACCESS_KEY_VALUE</span> <span class="o">=</span> <span class="n">dbutils</span><span class="o">.</span><span class="n">secrets</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scope</span> <span class="o">=</span> <span class="n">SECRET_SCOPE</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="n">EH_CONN_SHARED_ACCESS_KEY_NAME</span><span class="p">)</span>
+
+<span class="n">EH_CONN_STR</span>                     <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Endpoint=sb://</span><span class="si">{</span><span class="n">EH_NAMESPACE</span><span class="si">}</span><span class="s2">.servicebus.windows.net/;SharedAccessKeyName=</span><span class="si">{</span><span class="n">EH_CONN_SHARED_ACCESS_KEY_NAME</span><span class="si">}</span><span class="s2">;SharedAccessKey=</span><span class="si">{</span><span class="n">EH_CONN_SHARED_ACCESS_KEY_VALUE</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="c1"># Kafka Consumer configuration</span>
+
+<span class="n">KAFKA_OPTIONS</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;kafka.bootstrap.servers&quot;</span>  <span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">EH_NAMESPACE</span><span class="si">}</span><span class="s2">.servicebus.windows.net:9093&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;subscribe&quot;</span>                <span class="p">:</span> <span class="n">EH_NAME</span><span class="p">,</span>
+  <span class="s2">&quot;kafka.sasl.mechanism&quot;</span>     <span class="p">:</span> <span class="s2">&quot;PLAIN&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;kafka.security.protocol&quot;</span>  <span class="p">:</span> <span class="s2">&quot;SASL_SSL&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;kafka.sasl.jaas.config&quot;</span>   <span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;kafkashaded.org.apache.kafka.common.security.plain.PlainLoginModule required username=</span><span class="se">\&quot;</span><span class="s2">$ConnectionString</span><span class="se">\&quot;</span><span class="s2"> password=</span><span class="se">\&quot;</span><span class="si">{</span><span class="n">EH_CONN_STR</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2">;&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;kafka.request.timeout.ms&quot;</span> <span class="p">:</span> <span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;iot.ingestion.kafka.requestTimeout&quot;</span><span class="p">),</span>
+  <span class="s2">&quot;kafka.session.timeout.ms&quot;</span> <span class="p">:</span> <span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;iot.ingestion.kafka.sessionTimeout&quot;</span><span class="p">),</span>
+  <span class="s2">&quot;maxOffsetsPerTrigger&quot;</span>     <span class="p">:</span> <span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;iot.ingestion.spark.maxOffsetsPerTrigger&quot;</span><span class="p">),</span>
+  <span class="s2">&quot;failOnDataLoss&quot;</span>           <span class="p">:</span> <span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;iot.ingestion.spark.failOnDataLoss&quot;</span><span class="p">),</span>
+  <span class="s2">&quot;startingOffsets&quot;</span>          <span class="p">:</span> <span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;iot.ingestion.spark.startingOffsets&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># PAYLOAD SCHEMA</span>
+<span class="n">payload_ddl</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;battery_level BIGINT, c02_level BIGINT, cca2 STRING, cca3 STRING, cn STRING, device_id BIGINT, device_name STRING, humidity BIGINT, ip STRING, latitude DOUBLE, lcd STRING, longitude DOUBLE, scale STRING, temp  BIGINT, timestamp BIGINT&quot;&quot;&quot;</span>
+<span class="n">payload_schema</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">_parse_datatype_string</span><span class="p">(</span><span class="n">payload_ddl</span><span class="p">)</span>
+
+<span class="c1"># Basic record parsing and adding ETL audit columns</span>
+<span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+  <span class="k">return</span> <span class="p">(</span><span class="n">df</span>
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">col</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;parsed_records&quot;</span><span class="p">,</span> <span class="n">from_json</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">),</span> <span class="n">payload_schema</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;iot_event_timestamp&quot;</span><span class="p">,</span> <span class="n">expr</span><span class="p">(</span><span class="s2">&quot;cast(from_unixtime(parsed_records.timestamp / 1000) as timestamp)&quot;</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;eh_enqueued_timestamp&quot;</span><span class="p">,</span> <span class="n">expr</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;eh_enqueued_date&quot;</span><span class="p">,</span> <span class="n">expr</span><span class="p">(</span><span class="s2">&quot;to_date(timestamp)&quot;</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;etl_processed_timestamp&quot;</span><span class="p">,</span> <span class="n">col</span><span class="p">(</span><span class="s2">&quot;current_timestamp&quot;</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;etl_rec_uuid&quot;</span><span class="p">,</span> <span class="n">expr</span><span class="p">(</span><span class="s2">&quot;uuid()&quot;</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;key&quot;</span><span class="p">)</span>
+  <span class="p">)</span>
+
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span>
+  <span class="n">comment</span><span class="o">=</span><span class="s2">&quot;Raw IOT Events&quot;</span><span class="p">,</span>
+  <span class="n">table_properties</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;quality&quot;</span><span class="p">:</span> <span class="s2">&quot;bronze&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pipelines.reset.allowed&quot;</span><span class="p">:</span> <span class="s2">&quot;false&quot;</span> <span class="c1"># preserves the data in the delta table if you do full refresh</span>
+  <span class="p">},</span>
+  <span class="n">partition_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;eh_enqueued_date&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="s2">&quot;valid_topic&quot;</span><span class="p">,</span> <span class="s2">&quot;topic IS NOT NULL&quot;</span><span class="p">)</span>
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="s2">&quot;valid records&quot;</span><span class="p">,</span> <span class="s2">&quot;parsed_records IS NOT NULL&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">iot_raw</span><span class="p">():</span>
+  <span class="k">return</span> <span class="p">(</span>
+   <span class="n">spark</span><span class="o">.</span><span class="n">readStream</span>
+    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;kafka&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="o">**</span><span class="n">KAFKA_OPTIONS</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">load</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">parse</span><span class="p">)</span>
+  <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-the-pipeline">
+<h2>Create the pipeline<a class="headerlink" href="#create-the-pipeline" title="Permalink to this headline"> </a></h2>
+<p>Create a new pipeline with the following settings, replacing the placeholder values with appropriate values for your environment.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;clusters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;spark_conf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;spark.hadoop.fs.azure.account.key.&lt;storage-account-name&gt;.dfs.core.windows.net&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{secrets/&lt;scope-name&gt;/&lt;secret-name&gt;}}&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;num_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;development&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;continuous&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;channel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CURRENT&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;edition&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ADVANCED&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;photon&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;libraries&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;notebook&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;path-to-notebook&gt;&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dlt_eventhub_ingestion_using_kafka&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;storage&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abfss://&lt;container-name&gt;@&lt;storage-account-name&gt;.dfs.core.windows.net/iot/&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;configuration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;iot.ingestion.eh.namespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;eh-namespace&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;iot.ingestion.eh.accessKeyName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;eh-policy-name&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;iot.ingestion.eh.name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;eventhub&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;io.ingestion.eh.secretsScopeName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;secret-scope-name&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;iot.ingestion.spark.maxOffsetsPerTrigger&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;50000&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;iot.ingestion.spark.startingOffsets&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;latest&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;iot.ingestion.spark.failOnDataLoss&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;iot.ingestion.kafka.requestTimeout&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;60000&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;iot.ingestion.kafka.sessionTimeout&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;30000&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;target-database-name&gt;&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Replace</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;container-name&gt;</span></code> with the name of an Azure storage account container.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;storage-account-name&gt;</span></code> with the name of an ADLS Gen2 storage account.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;eh-namespace&gt;</span></code> with the name of your Event Hubs namespace.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;eh-policy-name&gt;</span></code> with the secret scope key for the Event Hubs policy key.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;eventhub&gt;</span></code> with the name of your Event Hubs instance.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;secret-scope-name&gt;</span></code> with the name of the Databricks secret scope that contains the Event Hubs policy key.</p></li>
+</ul>
+<p>As a best practice, this pipeline doesn’t use the default DBFS storage path but instead uses an Azure Data Lake Storage Gen2 (ADLS Gen2) storage account. For more information on configuring authentication for an ADLS Gen2 storage account, see <a class="reference internal" href="load.html#configure-secrets"><span class="std std-ref">Securely access storage credentials with secrets in a pipeline</span></a>.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

@@ -1,0 +1,666 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to manage data quality with Databricks Delta Live Tables" name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Manage data quality with Delta Live Tables">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Manage data quality with Delta Live Tables &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/delta-live-tables/expectations.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/delta-live-tables/expectations.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/delta-live-tables/expectations.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/delta-live-tables/expectations.html" class="notranslate">English</option>
+    <option value="../../ja/delta-live-tables/expectations.html" class="notranslate">日本語</option>
+    <option value="../../pt/delta-live-tables/expectations.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Manage data quality with Delta Live Tables</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="manage-data-quality-with-delta-live-tables">
+<span id="manage-data-quality-with-dlt"></span><h1>Manage data quality with Delta Live Tables<a class="headerlink" href="#manage-data-quality-with-delta-live-tables" title="Permalink to this headline"> </a></h1>
+<p>You use expectations to define data quality constraints on the contents of a dataset. Expectations allow you to guarantee data arriving in tables meets data quality requirements and provide insights into data quality for each pipeline update. You apply expectations to queries using Python decorators or SQL constraint clauses.</p>
+<div class="section" id="what-are-delta-live-tables-expectations">
+<span id="what-are-dlt-expectations"></span><span id="expectations"></span><h2>What are Delta Live Tables expectations?<a class="headerlink" href="#what-are-delta-live-tables-expectations" title="Permalink to this headline"> </a></h2>
+<p>Expectations are optional clauses you add to Delta Live Tables dataset declarations that apply data quality checks on each record passing through a query.</p>
+<p>An expectation consists of three things:</p>
+<ul class="simple">
+<li><p>A description, which acts as a unique identifier and allows you to track metrics for the constraint.</p></li>
+<li><p>A boolean statement that always returns true or false based on some stated condition.</p></li>
+<li><p>An action to take when a record fails the expectation, meaning the boolean returns false.</p></li>
+</ul>
+<p>The following matrix shows the three actions you can apply to invalid records:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 82%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Action</p></th>
+<th class="head"><p>Result</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <a class="reference internal" href="#retain"><span class="std std-ref">warn</span></a> (default)</p></td>
+<td><p> Invalid records are written to the target; failure is reported as a metric for the dataset.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <a class="reference internal" href="#drop"><span class="std std-ref">drop</span></a></p></td>
+<td><p> Invalid records are dropped before data is written to the target; failure is reported as a metrics for the dataset.</p></td>
+</tr>
+<tr class="row-even"><td><p> <a class="reference internal" href="#fail"><span class="std std-ref">fail</span></a></p></td>
+<td><p> Invalid records prevent the update from succeeding. Manual intervention is required before re-processing.</p></td>
+</tr>
+</tbody>
+</table>
+<p>You can view data quality metrics such as the number of records that violate an expectation by querying the Delta Live Tables event log. See <a class="reference internal" href="observability.html"><span class="doc">Monitor Delta Live Tables pipelines</span></a>.</p>
+<p>For a complete reference of Delta Live Tables dataset declaration syntax, see <a class="reference internal" href="python-ref.html"><span class="doc">Delta Live Tables Python language reference</span></a> or <a class="reference internal" href="sql-ref.html"><span class="doc">Delta Live Tables SQL language reference</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>While you can include multiple clauses in any expectation, only Python supports defining actions based on multiple expectations. See <a class="reference internal" href="#expect-all"><span class="std std-ref">Multiple expectations</span></a>.</p>
+</div>
+</div>
+<div class="section" id="retain-invalid-records">
+<span id="retain"></span><h2>Retain invalid records<a class="headerlink" href="#retain-invalid-records" title="Permalink to this headline"> </a></h2>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">expect</span></code> operator when you want to keep records that violate the expectation. Records that violate the expectation are added to the target dataset along with valid records:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@dlt</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="s2">&quot;valid timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;col(“timestamp”) &gt; &#39;2012-01-01&#39;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">valid_timestamp</span><span class="w"> </span><span class="n">EXPECT</span><span class="w"> </span><span class="p">(</span><span class="k">timestamp</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="s1">&#39;2012-01-01&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="drop-invalid-records">
+<span id="drop"></span><h2>Drop invalid records<a class="headerlink" href="#drop-invalid-records" title="Permalink to this headline"> </a></h2>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">expect</span> <span class="pre">or</span> <span class="pre">drop</span></code> operator to prevent further processing of invalid records. Records that violate the expectation are dropped from the target dataset:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@dlt</span><span class="o">.</span><span class="n">expect_or_drop</span><span class="p">(</span><span class="s2">&quot;valid_current_page&quot;</span><span class="p">,</span> <span class="s2">&quot;current_page_id IS NOT NULL AND current_page_title IS NOT NULL&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">valid_current_page</span><span class="w"> </span><span class="n">EXPECT</span><span class="w"> </span><span class="p">(</span><span class="n">current_page_id</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">current_page_title</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">VIOLATION</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="k">ROW</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="fail-on-invalid-records">
+<span id="fail"></span><h2>Fail on invalid records<a class="headerlink" href="#fail-on-invalid-records" title="Permalink to this headline"> </a></h2>
+<p>When invalid records are unacceptable, use the <code class="docutils literal notranslate"><span class="pre">expect</span> <span class="pre">or</span> <span class="pre">fail</span></code> operator to stop execution immediately when a record fails validation. If the operation is a table update, the system atomically rolls back the transaction:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@dlt</span><span class="o">.</span><span class="n">expect_or_fail</span><span class="p">(</span><span class="s2">&quot;valid_count&quot;</span><span class="p">,</span> <span class="s2">&quot;count &gt; 0&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">valid_count</span><span class="w"> </span><span class="n">EXPECT</span><span class="w"> </span><span class="p">(</span><span class="k">count</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">VIOLATION</span><span class="w"> </span><span class="n">FAIL</span><span class="w"> </span><span class="k">UPDATE</span>
+</pre></div>
+</div>
+</div>
+<p>When a pipeline fails because of an expectation violation, you must fix the pipeline code to handle the invalid data correctly before re-running the pipeline.</p>
+<p>Fail expectations modify the Spark query plan of your transformations to track information required to detect and report on violations. For many queries, you can use this information to identify which input record resulted in the violation. The following is an example exception:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Expectation Violated:</span>
+<span class="go">{</span>
+<span class="go">  &quot;flowName&quot;: &quot;a-b&quot;,</span>
+<span class="go">  &quot;verboseInfo&quot;: {</span>
+<span class="go">    &quot;expectationsViolated&quot;: [</span>
+<span class="go">      &quot;x1 is negative&quot;</span>
+<span class="go">    ],</span>
+<span class="go">    &quot;inputData&quot;: {</span>
+<span class="go">      &quot;a&quot;: {&quot;x1&quot;: 1,&quot;y1&quot;: &quot;a },</span>
+<span class="go">      &quot;b&quot;: {</span>
+<span class="go">        &quot;x2&quot;: 1,</span>
+<span class="go">        &quot;y2&quot;: &quot;aa&quot;</span>
+<span class="go">      }</span>
+<span class="go">    },</span>
+<span class="go">    &quot;outputRecord&quot;: {</span>
+<span class="go">      &quot;x1&quot;: 1,</span>
+<span class="go">      &quot;y1&quot;: &quot;a&quot;,</span>
+<span class="go">      &quot;x2&quot;: 1,</span>
+<span class="go">      &quot;y2&quot;: &quot;aa&quot;</span>
+<span class="go">    },</span>
+<span class="go">    &quot;missingInputData&quot;: false</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="multiple-expectations">
+<span id="expect-all"></span><h2>Multiple expectations<a class="headerlink" href="#multiple-expectations" title="Permalink to this headline"> </a></h2>
+<p>You can define expectations with one or more data quality constraints in Python pipelines. These decorators accept a Python dictionary as an argument, where the key is the expectation name and the value is the expectation constraint.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">expect_all</span></code> to specify multiple data quality constraints when records that fail validation should be included in the target dataset:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@dlt</span><span class="o">.</span><span class="n">expect_all</span><span class="p">({</span><span class="s2">&quot;valid_count&quot;</span><span class="p">:</span> <span class="s2">&quot;count &gt; 0&quot;</span><span class="p">,</span> <span class="s2">&quot;valid_current_page&quot;</span><span class="p">:</span> <span class="s2">&quot;current_page_id IS NOT NULL AND current_page_title IS NOT NULL&quot;</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">expect_all_or_drop</span></code> to specify multiple data quality constraints when records that fail validation should be dropped from the target dataset:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@dlt</span><span class="o">.</span><span class="n">expect_all_or_drop</span><span class="p">({</span><span class="s2">&quot;valid_count&quot;</span><span class="p">:</span> <span class="s2">&quot;count &gt; 0&quot;</span><span class="p">,</span> <span class="s2">&quot;valid_current_page&quot;</span><span class="p">:</span> <span class="s2">&quot;current_page_id IS NOT NULL AND current_page_title IS NOT NULL&quot;</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">expect_all_or_fail</span></code> to specify multiple data quality constraints when records that fail validation should halt pipeline execution:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@dlt</span><span class="o">.</span><span class="n">expect_all_or_fail</span><span class="p">({</span><span class="s2">&quot;valid_count&quot;</span><span class="p">:</span> <span class="s2">&quot;count &gt; 0&quot;</span><span class="p">,</span> <span class="s2">&quot;valid_current_page&quot;</span><span class="p">:</span> <span class="s2">&quot;current_page_id IS NOT NULL AND current_page_title IS NOT NULL&quot;</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>You can also define a collection of expectations as a variable and pass it to one or more queries in your pipeline:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">valid_pages</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;valid_count&quot;</span><span class="p">:</span> <span class="s2">&quot;count &gt; 0&quot;</span><span class="p">,</span> <span class="s2">&quot;valid_current_page&quot;</span><span class="p">:</span> <span class="s2">&quot;current_page_id IS NOT NULL AND current_page_title IS NOT NULL&quot;</span><span class="p">}</span>
+
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">table</span>
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">expect_all</span><span class="p">(</span><span class="n">valid_pages</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">raw_data</span><span class="p">():</span>
+  <span class="c1"># Create raw dataset</span>
+
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">table</span>
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">expect_all_or_drop</span><span class="p">(</span><span class="n">valid_pages</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">prepared_data</span><span class="p">():</span>
+  <span class="c1"># Create cleaned and prepared dataset</span>
+</pre></div>
+</div>
+<p></p>
+</div>
+<div class="section" id="quarantine-invalid-data">
+<span id="quarantine"></span><h2>Quarantine invalid data<a class="headerlink" href="#quarantine-invalid-data" title="Permalink to this headline"> </a></h2>
+<p>The following example uses expectations in combination with temporary tables and views. This pattern provides you with metrics for records that pass expectation checks during pipeline updates, and provides a way to process valid and invalid records through different downstream paths.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This example reads sample data included in the <a class="reference internal" href="../discover/databricks-datasets.html#dbfs-datasets"><span class="std std-ref">Databricks datasets</span></a>. Because the Databricks datasets are not supported with a pipeline that publishes to Unity Catalog, this example works only with a pipeline configured to publish to the Hive metastore. However, this pattern also works with Unity Catalog enabled pipelines, but you must read data from <a class="reference internal" href="../connect/unity-catalog/external-locations.html"><span class="doc">external locations</span></a>. To learn more about using Unity Catalog with Delta Live Tables, see <a class="reference internal" href="unity-catalog.html"><span class="doc">Use Unity Catalog with your Delta Live Tables pipelines</span></a>.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dlt</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">expr</span>
+
+<span class="n">rules</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">rules</span><span class="p">[</span><span class="s2">&quot;valid_website&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;(Website IS NOT NULL)&quot;</span>
+<span class="n">rules</span><span class="p">[</span><span class="s2">&quot;valid_location&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;(Location IS NOT NULL)&quot;</span>
+<span class="n">quarantine_rules</span> <span class="o">=</span> <span class="s2">&quot;NOT(</span><span class="si">{0}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot; AND &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;raw_farmers_market&quot;</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_farmers_market_data</span><span class="p">():</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;csv&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;/databricks-datasets/data.gov/farmers_markets_geographic_data/data-001/&#39;</span><span class="p">)</span>
+  <span class="p">)</span>
+
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;farmers_market_quarantine&quot;</span><span class="p">,</span>
+  <span class="n">temporary</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+  <span class="n">partition_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;is_quarantined&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">expect_all</span><span class="p">(</span><span class="n">rules</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">farmers_market_quarantine</span><span class="p">():</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="n">dlt</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;raw_farmers_market&quot;</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;MarketName&quot;</span><span class="p">,</span> <span class="s2">&quot;Website&quot;</span><span class="p">,</span> <span class="s2">&quot;Location&quot;</span><span class="p">,</span> <span class="s2">&quot;State&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;Facebook&quot;</span><span class="p">,</span> <span class="s2">&quot;Twitter&quot;</span><span class="p">,</span> <span class="s2">&quot;Youtube&quot;</span><span class="p">,</span> <span class="s2">&quot;Organic&quot;</span><span class="p">,</span> <span class="s2">&quot;updateTime&quot;</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;is_quarantined&quot;</span><span class="p">,</span> <span class="n">expr</span><span class="p">(</span><span class="n">quarantine_rules</span><span class="p">))</span>
+  <span class="p">)</span>
+
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">view</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;valid_farmers_market&quot;</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_valid_farmers_market</span><span class="p">():</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="n">dlt</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;farmers_market_quarantine&quot;</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">&quot;is_quarantined=false&quot;</span><span class="p">)</span>
+  <span class="p">)</span>
+
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">view</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;invalid_farmers_market&quot;</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_invalid_farmers_market</span><span class="p">():</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="n">dlt</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;farmers_market_quarantine&quot;</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">&quot;is_quarantined=true&quot;</span><span class="p">)</span>
+  <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="validate-row-counts-across-tables">
+<h2>Validate row counts across tables<a class="headerlink" href="#validate-row-counts-across-tables" title="Permalink to this headline"> </a></h2>
+<p>You can add an additional table to your pipeline that defines an expectation to compare row counts between two live tables. The results of this expectation appear in the event log and the Delta Live Tables UI. This following example validates equal row counts between the <code class="docutils literal notranslate"><span class="pre">tbla</span></code> and <code class="docutils literal notranslate"><span class="pre">tblb</span></code> tables:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">REFRESH</span><span class="w"> </span><span class="n">LIVE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">count_verification</span><span class="p">(</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">no_rows_dropped</span><span class="w"> </span><span class="n">EXPECT</span><span class="w"> </span><span class="p">(</span><span class="n">a_count</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">b_count</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span>
+<span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">a_count</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">LIVE</span><span class="p">.</span><span class="n">tbla</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">b_count</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">LIVE</span><span class="p">.</span><span class="n">tblb</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="perform-advanced-validation-with-delta-live-tables-expectations">
+<span id="perform-advanced-validation-with-dlt-expectations"></span><h2>Perform advanced validation with Delta Live Tables expectations<a class="headerlink" href="#perform-advanced-validation-with-delta-live-tables-expectations" title="Permalink to this headline"> </a></h2>
+<p>You can define live tables using aggregate and join queries and use the results of those queries as part of your expectation checking. This is useful if you wish to perform complex data quality checks, for example, ensuring a derived table contains all records from the source table or guaranteeing the equality of a numeric column across tables. You can use the <code class="docutils literal notranslate"><span class="pre">TEMPORARY</span></code> keyword to prevent these tables from being published to the target schema.</p>
+<p>The following example validates that all expected records are present in the <code class="docutils literal notranslate"><span class="pre">report</span></code> table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TEMPORARY</span><span class="w"> </span><span class="n">LIVE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">report_compare_tests</span><span class="p">(</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">no_missing_records</span><span class="w"> </span><span class="n">EXPECT</span><span class="w"> </span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="k">key</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">LIVE</span><span class="p">.</span><span class="n">validation_copy</span><span class="w"> </span><span class="n">v</span>
+<span class="k">LEFT</span><span class="w"> </span><span class="k">OUTER</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">LIVE</span><span class="p">.</span><span class="n">report</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="k">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="k">key</span>
+</pre></div>
+</div>
+<p>The following example uses an aggregate to ensure the uniqueness of a primary key:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TEMPORARY</span><span class="w"> </span><span class="n">LIVE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">report_pk_tests</span><span class="p">(</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">unique_pk</span><span class="w"> </span><span class="n">EXPECT</span><span class="w"> </span><span class="p">(</span><span class="n">num_entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">pk</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">num_entries</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">LIVE</span><span class="p">.</span><span class="n">report</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">pk</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="make-expectations-portable-and-reusable">
+<h2>Make expectations portable and reusable<a class="headerlink" href="#make-expectations-portable-and-reusable" title="Permalink to this headline"> </a></h2>
+<p>You can maintain data quality rules separately from your pipeline implementations.</p>
+<p>Databricks recommends storing the rules in a Delta table with each rule categorized by a tag. You use this tag in dataset definitions to determine which rules to apply.</p>
+<p>The following example creates a table named <code class="docutils literal notranslate"><span class="pre">rules</span></code> to maintain rules:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">TABLE</span>
+<span class="w">  </span><span class="n">rules</span>
+<span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span>
+<span class="w">  </span><span class="n">col1</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">name</span><span class="p">,</span>
+<span class="w">  </span><span class="n">col2</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">constraint</span><span class="p">,</span>
+<span class="w">  </span><span class="n">col3</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">tag</span>
+<span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="k">VALUES</span>
+<span class="w">  </span><span class="p">(</span><span class="ss">&quot;website_not_null&quot;</span><span class="p">,</span><span class="ss">&quot;Website IS NOT NULL&quot;</span><span class="p">,</span><span class="ss">&quot;validity&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="ss">&quot;location_not_null&quot;</span><span class="p">,</span><span class="ss">&quot;Location IS NOT NULL&quot;</span><span class="p">,</span><span class="ss">&quot;validity&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="ss">&quot;state_not_null&quot;</span><span class="p">,</span><span class="ss">&quot;State IS NOT NULL&quot;</span><span class="p">,</span><span class="ss">&quot;validity&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="ss">&quot;fresh_data&quot;</span><span class="p">,</span><span class="ss">&quot;to_date(updateTime,&#39;M/d/yyyy h:m:s a&#39;) &gt; &#39;2010-01-01&#39;&quot;</span><span class="p">,</span><span class="ss">&quot;maintained&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="ss">&quot;social_media_access&quot;</span><span class="p">,</span><span class="ss">&quot;NOT(Facebook IS NULL AND Twitter IS NULL AND Youtube IS NULL)&quot;</span><span class="p">,</span><span class="ss">&quot;maintained&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The following Python example defines data quality expectations based on the rules stored in the <code class="docutils literal notranslate"><span class="pre">rules</span></code> table. The <code class="docutils literal notranslate"><span class="pre">get_rules()</span></code> function reads the rules from the <code class="docutils literal notranslate"><span class="pre">rules</span></code> table and returns a Python dictionary containing rules matching the <code class="docutils literal notranslate"><span class="pre">tag</span></code> argument passed to the function. The dictionary is applied in the <code class="docutils literal notranslate"><span class="pre">&#64;dlt.expect_all_*()</span></code> decorators to enforce data quality constraints. For example, any records failing the rules tagged with <code class="docutils literal notranslate"><span class="pre">validity</span></code> will be dropped from the <code class="docutils literal notranslate"><span class="pre">raw_farmers_market</span></code> table:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This example reads sample data included in the <a class="reference internal" href="../discover/databricks-datasets.html#dbfs-datasets"><span class="std std-ref">Databricks datasets</span></a>. Because the Databricks datasets are not supported with a pipeline that publishes to Unity Catalog, this example works only with a pipeline configured to publish to the Hive metastore. However, this pattern also works with Unity Catalog enabled pipelines, but you must read data from <a class="reference internal" href="../connect/unity-catalog/external-locations.html"><span class="doc">external locations</span></a>. To learn more about using Unity Catalog with Delta Live Tables, see <a class="reference internal" href="unity-catalog.html"><span class="doc">Use Unity Catalog with your Delta Live Tables pipelines</span></a>.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dlt</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">expr</span><span class="p">,</span> <span class="n">col</span>
+
+<span class="k">def</span> <span class="nf">get_rules</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    loads data quality rules from a table</span>
+<span class="sd">    :param tag: tag to match</span>
+<span class="sd">    :return: dictionary of rules that matched the tag</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">rules</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;rules&quot;</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">tag</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">():</span>
+    <span class="n">rules</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;constraint&#39;</span><span class="p">]</span>
+  <span class="k">return</span> <span class="n">rules</span>
+
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;raw_farmers_market&quot;</span>
+<span class="p">)</span>
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">expect_all_or_drop</span><span class="p">(</span><span class="n">get_rules</span><span class="p">(</span><span class="s1">&#39;validity&#39;</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">get_farmers_market_data</span><span class="p">():</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;csv&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;/databricks-datasets/data.gov/farmers_markets_geographic_data/data-001/&#39;</span><span class="p">)</span>
+  <span class="p">)</span>
+
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;organic_farmers_market&quot;</span>
+<span class="p">)</span>
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">expect_all_or_drop</span><span class="p">(</span><span class="n">get_rules</span><span class="p">(</span><span class="s1">&#39;maintained&#39;</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">get_organic_farmers_market</span><span class="p">():</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="n">dlt</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;raw_farmers_market&quot;</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">expr</span><span class="p">(</span><span class="s2">&quot;Organic = &#39;Y&#39;&quot;</span><span class="p">))</span>
+      <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;MarketName&quot;</span><span class="p">,</span> <span class="s2">&quot;Website&quot;</span><span class="p">,</span> <span class="s2">&quot;State&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Facebook&quot;</span><span class="p">,</span> <span class="s2">&quot;Twitter&quot;</span><span class="p">,</span> <span class="s2">&quot;Youtube&quot;</span><span class="p">,</span> <span class="s2">&quot;Organic&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;updateTime&quot;</span>
+      <span class="p">)</span>
+  <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

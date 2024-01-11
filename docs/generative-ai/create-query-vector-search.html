@@ -1,0 +1,541 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to create and query a vector search index using Databricks Vector Search. This article also provides guidance on how to configure a vector search endpoint to serve an embeddings model of your choosing." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="How to create and query a Vector Search index">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>How to create and query a Vector Search index &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/generative-ai/create-query-vector-search.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/generative-ai/create-query-vector-search.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/generative-ai/create-query-vector-search.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/generative-ai/create-query-vector-search.html" class="notranslate">English</option>
+    <option value="../../ja/generative-ai/create-query-vector-search.html" class="notranslate">日本語</option>
+    <option value="../../pt/generative-ai/create-query-vector-search.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>How to create and query a Vector Search index</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="how-to-create-and-query-a-vector-search-index">
+<h1>How to create and query a Vector Search index<a class="headerlink" href="#how-to-create-and-query-a-vector-search-index" title="Permalink to this headline"> </a></h1>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<p>This article describes how to create and query a vector search index using <a class="reference internal" href="vector-search.html"><span class="doc">Databricks Vector Search</span></a>.</p>
+<p>You can create and manage Vector Search components, like a vector search endpoint and vector search indices, using the UI, Python SDK, and REST API. Databricks recommends using the UI for the simplest experience, but this guide also demonstrates uses of the SDK for reference and querying.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul>
+<li><p>Unity Catalog enabled workspace.</p></li>
+<li><p>Serverless compute enabled in the account console.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> privileges on catalog schema(s) to create indexes.</p></li>
+<li><p><a class="reference internal" href="../administration-guide/access-control/tokens.html"><span class="doc">Personal access tokens enabled</span></a>.</p></li>
+<li><p>If you prefer to use the SDK, be sure to install it in your notebook.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">databricks</span><span class="o">-</span><span class="n">vectorsearch</span>
+<span class="n">dbutils</span><span class="o">.</span><span class="n">library</span><span class="o">.</span><span class="n">restartPython</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="create-a-vector-search-endpoint">
+<h2>Create a Vector Search endpoint<a class="headerlink" href="#create-a-vector-search-endpoint" title="Permalink to this headline"> </a></h2>
+<p>You can create a vector search endpoint for Vector Search using the UI.</p>
+<ol class="arabic">
+<li><p>Click <strong>Compute</strong> on the left sidebar to open the <strong>Compute</strong> UI.</p></li>
+<li><p>Click the <strong>Vector Search</strong> tab and click <strong>Create</strong>.</p>
+<div class="figure align-default">
+<img alt="Create endpoint form" src="../_images/create-endpoint.png" />
+</div>
+</li>
+<li><p>The <strong>Create endpoint form</strong> opens. Enter a name for this endpoint.</p></li>
+<li><p>Click Confirm.</p></li>
+</ol>
+<p>If you prefer to use the SDK, you can use the following to create a Vector Search endpoint:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">VectorSearchClient</span><span class="p">()</span>
+
+<span class="n">client</span><span class="o">.</span><span class="n">create_endpoint</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;vector_search_endpoint_name&quot;</span><span class="p">,</span>
+    <span class="n">endpoint_type</span><span class="o">=</span><span class="s2">&quot;STANDARD&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="configure-a-model-serving-endpoint">
+<h2>Configure a model serving endpoint<a class="headerlink" href="#configure-a-model-serving-endpoint" title="Permalink to this headline"> </a></h2>
+<p>The guidance in this section only applies when you plan to create a vector search index where Databricks automatically computes the embedding vectors for you. If you already have your embeddings in a Delta table or plan to compute embedding vectors yourself, you can skip to <a class="reference external" href="/generative-ai/create-query-vector-search">Create a vector search index</a>.</p>
+<p>In order to have Vector Search compute embeddings, you need to configure a <a class="reference internal" href="../machine-learning/model-serving/index.html"><span class="doc">Model Serving endpoint</span></a> for embeddings generation. See the notebooks in the <a class="reference internal" href="#notebooks"><span class="std std-ref">Call an embedding model notebook examples</span></a> section for examples of configuring a model serving endpoint for serving your embeddings model of choice.</p>
+<p>Databricks recommends configuring a model serving endpoint for Vector Search that does not scale down to zero. Because serving endpoints can take a couple of minutes to warm up, an initial query on an index with a scaled down endpoint results in a timeout while the endpoint is warming up.</p>
+</div>
+<div class="section" id="create-a-vector-search-index">
+<h2>Create a vector search index<a class="headerlink" href="#create-a-vector-search-index" title="Permalink to this headline"> </a></h2>
+<p>You can create a vector search index using the UI. The following steps show how to create a <a class="reference internal" href="vector-search.html#delta-managed"><span class="std std-ref">Delta Sync Index</span></a> that automatically updates when the source Delta table changes. See <a class="reference internal" href="vector-search.html#index"><span class="std std-ref">Vector search index</span></a>.</p>
+<ol class="arabic">
+<li><p>Click <strong>Catalog</strong> on the left sidebar to open the <strong>Catalog Explorer</strong> UI.</p></li>
+<li><p>Select the Delta table you want to use.</p></li>
+<li><p>Select <strong>Create vector search index</strong> from the kebab menu on the top right.</p>
+<div class="figure align-default">
+<img alt="Create index button" src="../_images/create-index-button.png" />
+</div>
+</li>
+<li><p>Populate the <strong>Create vector index</strong> form.</p>
+<ol class="arabic simple">
+<li><p>Provide a name for your index. The name requires a three-level namespace, <code class="docutils literal notranslate"><span class="pre">&lt;catalog&gt;.&lt;schema&gt;.&lt;name&gt;</span></code>, that only allows alphanumeric and underscores.</p></li>
+<li><p>Select which column to use as your primary key.</p></li>
+<li><p>Select the model serving endpoint that is serving the embeddings model you want to use.</p></li>
+<li><p>Select <strong>Compute embeddings</strong>, so Databricks can compute embeddings for you.</p>
+<ol class="arabic simple">
+<li><p>If you already have a Delta table with computed embeddings, select <strong>Use existing embedding column</strong>.</p></li>
+</ol>
+</li>
+<li><p>Select an <strong>Embedding source column</strong>. For Databricks-computed embeddings, only text is supported.</p>
+<ol class="arabic simple">
+<li><p>If you chose <strong>Use existing embedding column</strong>, this field changes to <strong>Embedding vector column</strong> where any data types are supported.</p></li>
+</ol>
+</li>
+<li><p>Select which <strong>Embedding model</strong> to use.</p></li>
+<li><p>Select <strong>Continuous</strong> as the sync mode. The <code class="docutils literal notranslate"><span class="pre">continuous</span></code> mode keeps the index in sync with seconds of latency. However, it has a higher cost associated with it since a compute cluster is provisioned to run the continuous sync streaming pipeline.</p></li>
+</ol>
+</li>
+<li><p>Click <strong>Create</strong>.</p></li>
+</ol>
+<div class="figure align-default">
+<img alt="Create index form" src="../_images/create-index-form.png" />
+</div>
+<p>If you prefer to use the SDK, you can use the following. This example creates a Delta Sync index with embeddings computed by Databricks.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">index</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_delta_sync_index</span><span class="p">(</span>
+  <span class="n">endpoint_name</span><span class="o">=</span><span class="s2">&quot;vector_search_demo_endpoint&quot;</span><span class="p">,</span>
+  <span class="n">source_table_name</span><span class="o">=</span><span class="s2">&quot;vector_search_demo.vector_search.en_wiki&quot;</span><span class="p">,</span>
+  <span class="n">index_name</span><span class="o">=</span><span class="s2">&quot;vector_search_demo.vector_search.en_wiki_index&quot;</span><span class="p">,</span>
+  <span class="n">pipeline_type</span><span class="o">=</span><span class="s1">&#39;TRIGGERED&#39;</span><span class="p">,</span>
+  <span class="n">primary_key</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+  <span class="n">embedding_source_column</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+  <span class="n">embedding_model_endpoint_name</span><span class="o">=</span><span class="s2">&quot;e5-small-v2&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>You can only create a <a class="reference internal" href="vector-search.html#direct-vector"><span class="std std-ref">Direct Vector Access Index</span></a> using the SDK.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">VectorSearchClient</span><span class="p">()</span>
+<span class="n">index</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_direct_access_index</span><span class="p">(</span>
+    <span class="n">endpoint_name</span><span class="o">=</span><span class="s2">&quot;storage_endpoint&quot;</span><span class="p">,</span>
+    <span class="n">index_name</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{catalog_name}</span><span class="s2">.</span><span class="si">{schema_name}</span><span class="s2">.</span><span class="si">{index_name}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">primary_key</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+    <span class="n">embedding_dimension</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>
+    <span class="n">embedding_vector_column</span><span class="o">=</span><span class="s2">&quot;text_vector&quot;</span><span class="p">,</span>
+    <span class="n">schema</span><span class="o">=</span><span class="p">{</span>
+     <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;field2&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;field3&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;text_vector&quot;</span><span class="p">:</span> <span class="s2">&quot;array&lt;float&gt;&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="query-a-vector-search-endpoint">
+<h2>Query a Vector Search endpoint<a class="headerlink" href="#query-a-vector-search-endpoint" title="Permalink to this headline"> </a></h2>
+<p>You can only query the Vector Search endpoint using the SDK. The following example uses the Delta Sync Index created in the previous section.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">similarity_search</span><span class="p">(</span>
+  <span class="n">query_text</span><span class="o">=</span><span class="s2">&quot;Greek myths&quot;</span><span class="p">,</span>
+  <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">],</span>
+  <span class="n">num_results</span><span class="o">=</span><span class="mi">2</span>
+<span class="p">)</span>
+
+<span class="n">results</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-notebooks">
+<span id="notebooks"></span><h2>Example notebooks<a class="headerlink" href="#example-notebooks" title="Permalink to this headline"> </a></h2>
+<p>The examples in this section demonstrate usage of the Vector Search Python SDK.</p>
+<div class="section" id="langchain-examples">
+<h3>LangChain examples<a class="headerlink" href="#langchain-examples" title="Permalink to this headline"> </a></h3>
+<p>See <a class="reference external" href="https://python.langchain.com/docs/integrations/vectorstores/databricks_vector_search">How to use LangChain with Databricks Vector Search</a> for using Databricks Vector Search as in integration with LangChain packages.</p>
+<p>The following notebook shows how to convert your similarity search results to LangChain documents.</p>
+<div class="embedded-notebook-section section" id="vector-search-with-the-python-sdk-notebook">
+<span id="vector-search-python-sdk-example"></span><h4>Vector Search with the Python SDK notebook<a class="headerlink" href="#vector-search-with-the-python-sdk-notebook" title="Permalink to this headline"> </a></h4>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/generative-ai/vector-search-python-sdk-example.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/generative-ai/vector-search-python-sdk-example.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/generative-ai/vector-search-python-sdk-example.html"            id="80b1f8036bf6c0a59a75373d81af415ff20222d38cf6395f44c081fdb77c9264" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+<div class="section" id="call-an-embeddings-model-notebook-examples">
+<h3>Call an embeddings model notebook examples<a class="headerlink" href="#call-an-embeddings-model-notebook-examples" title="Permalink to this headline"> </a></h3>
+<p>The following notebooks demonstrate how to configure a Databricks Model Serving endpoint for embeddings generation.</p>
+<div class="embedded-notebook-section section" id="call-an-openai-embeddings-model-using-databricks-model-serving-notebook">
+<span id="vector-search-external-embedding-model-example"></span><h4>Call an OpenAI embeddings model using Databricks Model Serving notebook<a class="headerlink" href="#call-an-openai-embeddings-model-using-databricks-model-serving-notebook" title="Permalink to this headline"> </a></h4>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/generative-ai/vector-search-external-embedding-model-example.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/generative-ai/vector-search-external-embedding-model-example.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/generative-ai/vector-search-external-embedding-model-example.html"            id="5cd7938c5f52760a5b9805a8fe9558be72474aeb8fdb49159c957e2a05a706a3" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+<div class="embedded-notebook-section section" id="call-a-bge-embeddings-model-using-databricks-model-serving-notebook">
+<span id="vector-search-foundation-embedding-model-bge-example"></span><h4>Call a BGE embeddings model using Databricks Model Serving notebook<a class="headerlink" href="#call-a-bge-embeddings-model-using-databricks-model-serving-notebook" title="Permalink to this headline"> </a></h4>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/generative-ai/vector-search-foundation-embedding-model-bge-example.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/generative-ai/vector-search-foundation-embedding-model-bge-example.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/generative-ai/vector-search-foundation-embedding-model-bge-example.html"            id="e5db722c2ed302963fdd59d15257d55f31f3da638c803a4d7e9ad9444699f73c" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+<div class="embedded-notebook-section section" id="register-and-serve-an-oss-embedding-model-notebook">
+<span id="embedding-with-oss-models"></span><h4>Register and serve an OSS embedding model notebook<a class="headerlink" href="#register-and-serve-an-oss-embedding-model-notebook" title="Permalink to this headline"> </a></h4>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/generative-ai/embedding-with-oss-models.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/generative-ai/embedding-with-oss-models.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/generative-ai/embedding-with-oss-models.html"            id="3edc6e4a31373bf91cf17930e2e60d8e511d41b751e19a1d5ffbb3872eb9ed63" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

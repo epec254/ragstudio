@@ -1,0 +1,604 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to integrate your dbt Core transformations in a Databricks Jobs workflow." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Use dbt transformations in a Databricks job">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Use dbt transformations in a Databricks job &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/workflows/jobs/how-to/use-dbt-in-workflows.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/workflows/jobs/how-to/use-dbt-in-workflows.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/workflows/jobs/how-to/use-dbt-in-workflows.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../../en/workflows/jobs/how-to/use-dbt-in-workflows.html" class="notranslate">English</option>
+    <option value="../../../../ja/workflows/jobs/how-to/use-dbt-in-workflows.html" class="notranslate">日本語</option>
+    <option value="../../../../pt/workflows/jobs/how-to/use-dbt-in-workflows.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Use dbt transformations in a Databricks job</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="use-dbt-transformations-in-a-databricks-job">
+<h1>Use dbt transformations in a Databricks job<a class="headerlink" href="#use-dbt-transformations-in-a-databricks-job" title="Permalink to this headline"> </a></h1>
+<p>You can run your dbt Core projects as a task in a Databricks job. By running your dbt Core project as a job task, you can benefit from the following Databricks Jobs features:</p>
+<ul class="simple">
+<li><p>Automate your dbt tasks and schedule workflows that include dbt tasks.</p></li>
+<li><p>Monitor your dbt transformations and send notifications on the status of the transformations.</p></li>
+<li><p>Include your dbt project in a workflow with other tasks. For example, your workflow can ingest data with Auto Loader, transform the data with dbt, and analyze the data with a notebook task.</p></li>
+<li><p>Automatic archiving of the artifacts from job runs, including logs, results, manifests, and configuration.</p></li>
+</ul>
+<p>To learn more about dbt Core, see the <a class="reference external" href="https://docs.getdbt.com/docs/introduction">dbt documentation</a>.</p>
+<div class="section" id="development-and-production-workflow">
+<h2>Development and production workflow<a class="headerlink" href="#development-and-production-workflow" title="Permalink to this headline"> </a></h2>
+<p>Databricks recommends developing your dbt projects against a Databricks SQL warehouse. Using a Databricks SQL warehouse, you can test the SQL generated by dbt and use the SQL warehouse <a class="reference internal" href="../../../sql/admin/query-history.html"><span class="doc">query history</span></a> to debug the queries generated by dbt.</p>
+<p>To run your dbt transformations in production, Databricks recommends using the dbt task in a Databricks job. By default, the dbt task will run the dbt Python process on a single node job cluster, and the dbt generated SQL against the selected SQL warehouse.</p>
+<p>You can run dbt transformations on a serverless SQL warehouse or pro SQL warehouse, an all-purpose cluster, or any other <a class="reference external" href="https://docs.getdbt.com/docs/available-adapters">dbt-supported warehouse</a>. This article discusses the first two options with examples.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Developing dbt models against a SQL warehouse and running them in production on an all-purpose cluster can lead to subtle differences in performance and SQL language support. Databricks recommends using the same Databricks Runtime version for the all-purpose cluster and the SQL warehouse.</p>
+</div>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul>
+<li><p>To learn how to use dbt Core and the <code class="docutils literal notranslate"><span class="pre">dbt-databricks</span></code> package to create and run dbt projects in your development environment, see <a class="reference internal" href="../../../partners/prep/dbt.html"><span class="doc">Connect to dbt Core</span></a>.</p>
+<p>Databricks recommends the <a class="reference external" href="https://github.com/databricks/dbt-databricks">dbt-databricks</a> package, not the dbt-spark package. The dbt-databricks package is a fork of dbt-spark optimized for Databricks.</p>
+</li>
+<li><p>To use dbt projects in a Databricks job, you must set up <a class="reference internal" href="../../../repos/index.html"><span class="doc">Git integration with Databricks Repos</span></a>. You cannot run a dbt project from DBFS.</p></li>
+</ul>
+<ul class="simple">
+<li><p>You must have <a class="reference internal" href="../../../compute/sql-warehouse.html#warehouse-types"><span class="std std-ref">serverless or pro SQL warehouses</span></a> enabled.</p></li>
+</ul>
+<ul class="simple">
+<li><p>You must have the Databricks SQL <a class="reference internal" href="../../../administration-guide/users-groups/users.html#manage-user-entitlements"><span class="std std-ref">entitlement</span></a>.</p></li>
+</ul>
+</div>
+<div class="section" id="create-and-run-your-first-dbt-job">
+<span id="first-dbt-job"></span><h2>Create and run your first dbt job<a class="headerlink" href="#create-and-run-your-first-dbt-job" title="Permalink to this headline"> </a></h2>
+<p>The following example uses the <a class="reference external" href="https://github.com/dbt-labs/jaffle_shop">jaffle_shop</a> project, an example project that demonstrates core dbt concepts. To create a job that runs the jaffle shop project, perform the following steps.</p>
+<ol class="arabic">
+<li><p>Go to your Databricks landing page and do one of the following:</p>
+<ul class="simple">
+<li><p>Click <img alt="Jobs Icon" src="../../../_images/jobs-icon.png" /> <strong>Workflows</strong> in the sidebar and click <img alt="Create Job Button" src="../../../_images/create-job.png" />.</p></li>
+<li><p>In the sidebar, click <img alt="New Icon" src="../../../_images/create-icon.png" /> <strong>New</strong> and select <strong>Job</strong>.</p></li>
+</ul>
+</li>
+<li><p>In the task dialog box that appears on the <strong>Tasks</strong> tab, replace <strong>Add a name for your job…</strong> with your job name.</p></li>
+<li><p>In <strong>Task name</strong>, enter a name for the task.</p></li>
+<li><p>In <strong>Type</strong>, select the <strong>dbt</strong> task type.</p>
+<div class="figure align-default">
+<img alt="Add a dbt task" src="../../../_images/dbt_task_create_task.png" />
+</div>
+</li>
+<li><p>In <strong>Source</strong>, click <strong>Edit</strong> and enter the details for the jaffle shop GitHub repository.</p>
+<div class="figure align-default">
+<img alt="Configure dbt project repo" src="../../../_images/dbt_task_configure_repo_dbt.png" />
+</div>
+<ul class="simple">
+<li><p>In <strong>Git repository URL</strong>, enter the URL for the jaffle shop project.</p></li>
+<li><p>In <strong>Git reference (branch / tag / commit)</strong>, enter <code class="docutils literal notranslate"><span class="pre">main</span></code>. You can also use a tag or SHA.</p></li>
+</ul>
+</li>
+<li><p>Click <strong>Confirm</strong>.</p></li>
+<li><p>In the <strong>dbt commands</strong> text boxes, specify the dbt commands to run (<strong>deps</strong>, <strong>seed</strong>, and <strong>run</strong>). You must prefix every command with <code class="docutils literal notranslate"><span class="pre">dbt</span></code>. Commands are run in the specified order.</p>
+<div class="figure align-default">
+<img alt="Configure dbt commands" src="../../../_images/dbt_task_configure_commands_serverless.png" />
+</div>
+</li>
+<li><p>In <strong>SQL warehouse</strong>, select a SQL warehouse to run the SQL generated by dbt. The <strong>SQL warehouse</strong> drop-down menu shows only serverless and pro SQL warehouses.</p></li>
+<li><p>(Optional) You can specify a schema for the task output. By default, the schema <code class="docutils literal notranslate"><span class="pre">default</span></code> is used.</p></li>
+<li><p>(Optional) If you want to change the cluster where dbt Core runs, click <strong>dbt CLI cluster</strong>. To minimize cost, the cluster defaults to a small, single node cluster.</p></li>
+<li><p>(Optional) You can specify a dbt-databricks version for the task. For example, to pin your dbt task to a specific version for development and production:</p>
+<ul class="simple">
+<li><p>Under <strong>Dependent libraries</strong>, click <img alt="Delete Icon" src="../../../_images/delete-icon.png" /> next to the current dbt-databricks version.</p></li>
+<li><p>Click <strong>Add</strong>.</p></li>
+<li><p>In <strong>Add dependent library</strong>, click the <strong>PyPI</strong> tab and enter the dbt-package version in the <strong>Package</strong> text box (for example, <code class="docutils literal notranslate"><span class="pre">dbt-databricks==1.2.0</span></code>).</p></li>
+<li><p>Click <strong>Add</strong>.</p></li>
+</ul>
+<div class="figure align-default">
+<img alt="Configure the dbt-databricks version" src="../../../_images/dbt_task_configure_package_version.png" />
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Databricks recommends pinning your dbt tasks to a specific version of the dbt-databricks package to ensure the same version is used for development and production runs. Databricks recommends version 1.2.0 or greater of the dbt-databricks package.</p>
+</div>
+</li>
+<li><p>Click <strong>Create</strong>.</p></li>
+<li><p>To run the job now, click <img alt="Run Now Button" src="../../../_images/run-now-button.png" />.</p></li>
+</ol>
+</div>
+<div class="section" id="view-the-results-of-your-dbt-job-task">
+<h2>View the results of your dbt job task<a class="headerlink" href="#view-the-results-of-your-dbt-job-task" title="Permalink to this headline"> </a></h2>
+<p>When the job is complete, you can test the results by running SQL queries from a <a class="reference internal" href="../../../notebooks/notebooks-manage.html#create-a-notebook"><span class="std std-ref">notebook</span></a> or by running <a class="reference internal" href="../../../sql/user/queries/queries.html#create-a-query"><span class="std std-ref">queries</span></a> in your Databricks warehouse. For example, see the following sample queries:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="k">SHOW</span><span class="w"> </span><span class="n">tables</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="o">&lt;</span><span class="k">schema</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="o">&lt;</span><span class="k">schema</span><span class="o">&gt;</span><span class="p">.</span><span class="n">customers</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;schema&gt;</span></code> with the schema name configured in the task configuration.</p>
+</div>
+<div class="section" id="api-example">
+<h2>API example<a class="headerlink" href="#api-example" title="Permalink to this headline"> </a></h2>
+<p>You can also use the <a class="reference external" href="https://docs.databricks.com/api/workspace/jobs">Jobs API</a> to create and manage jobs that include dbt tasks. The following example creates a job with a single dbt task:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jaffle_shop dbt job&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;max_concurrent_runs&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;git_source&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;git_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://github.com/dbt-labs/jaffle_shop&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;git_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gitHub&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;git_branch&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;job_clusters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;job_cluster_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dbt_CLI&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;new_cluster&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;spark_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.4.x-photon-scala2.12&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;node_type_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;i3.xlarge&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;num_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;spark_conf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;spark.master&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;local[*, 4]&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;spark.databricks.cluster.profile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;singleNode&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;custom_tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;ResourceClass&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SingleNode&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;tasks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;task_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;transform&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;job_cluster_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dbt_CLI&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;dbt_task&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;commands&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;dbt deps&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;dbt seed&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;dbt run&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;warehouse_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1a234b567c8de912&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;libraries&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;pypi&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;package&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dbt-databricks&gt;=1.0.0,&lt;2.0.0&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="advanced-run-dbt-with-a-custom-profile">
+<span id="use-interactive-clusters"></span><h2>(Advanced) Run dbt with a custom profile<a class="headerlink" href="#advanced-run-dbt-with-a-custom-profile" title="Permalink to this headline"> </a></h2>
+<p>To run your dbt task with a SQL warehouse (recommended) or an all-purpose cluster, use a custom <code class="docutils literal notranslate"><span class="pre">profiles.yml</span></code> defining the warehouse or cluster to connect to. To create a job that runs the jaffle shop project with a warehouse or an all-purpose cluster, perform the following steps.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only a SQL warehouse or an all-purpose cluster can be used as the target for a dbt task. You cannot use a job cluster as a target for dbt.</p>
+</div>
+<ol class="arabic">
+<li><p>Create a fork of the <a class="reference external" href="https://github.com/dbt-labs/jaffle_shop">jaffle_shop</a> repository.</p></li>
+<li><p>Clone the forked repository to your desktop. For example, you could run a command like the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/&lt;username&gt;/jaffle_shop.git
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;username&gt;</span></code> with your GitHub handle.</p>
+</li>
+<li><p>Create a new file called <code class="docutils literal notranslate"><span class="pre">profiles.yml</span></code> in the <code class="docutils literal notranslate"><span class="pre">jaffle_shop</span></code> directory with the following content:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="nt">jaffle_shop</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">databricks_job</span>
+<span class="w">   </span><span class="nt">outputs</span><span class="p">:</span>
+<span class="w">     </span><span class="nt">databricks_job</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">databricks</span>
+<span class="w">      </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">      </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;schema&gt;&quot;</span>
+<span class="w">      </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;http-host&gt;&quot;</span>
+<span class="w">      </span><span class="nt">http_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;http-path&gt;&quot;</span>
+<span class="w">      </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">env_var(&#39;DBT_ACCESS_TOKEN&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;schema&gt;</span></code> with a schema name for the project tables.</p></li>
+<li><p>To run your dbt task with a SQL warehouse, replace <code class="docutils literal notranslate"><span class="pre">&lt;http-host&gt;</span></code> with the <strong>Server Hostname</strong> value from the <a class="reference internal" href="../../../integrations/jdbc-odbc-bi.html#connection-details-sql-warehouse"><span class="std std-ref">Connection Details</span></a> tab for your SQL warehouse. To run your dbt task with an all-purpose cluster, replace <code class="docutils literal notranslate"><span class="pre">&lt;http-host&gt;</span></code> with the <strong>Server Hostname</strong> value from the <a class="reference internal" href="../../../integrations/jdbc-odbc-bi.html#connection-details-cluster"><span class="std std-ref">Advanced Options, JDBC/ODBC</span></a> tab for your Databricks cluster.</p></li>
+<li><p>To run your dbt task with a SQL warehouse, replace <code class="docutils literal notranslate"><span class="pre">&lt;http-path&gt;</span></code> with the <strong>HTTP Path</strong> value from the <a class="reference internal" href="../../../integrations/jdbc-odbc-bi.html#connection-details-sql-warehouse"><span class="std std-ref">Connection Details</span></a> tab for your SQL warehouse. To run your dbt task with an all-purpose cluster, replace <code class="docutils literal notranslate"><span class="pre">&lt;http-path&gt;</span></code> with the <strong>HTTP Path</strong> value from the <a class="reference internal" href="../../../integrations/jdbc-odbc-bi.html#connection-details-cluster"><span class="std std-ref">Advanced Options, JDBC/ODBC</span></a> tab for your Databricks cluster.</p></li>
+</ul>
+<p>You do not specify secrets, such as access tokens, in the file because you’re going to check this file in to source control. Instead, this file uses the dbt templating functionality to insert credentials dynamically at runtime.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The generated credentials are valid for the duration of the run, up to a maximum of 30 days, and are automatically revoked after completion.</p>
+</div>
+</li>
+<li><p>Check this file into Git and push it to your forked repository. For example, you could run commands like the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>profiles.yml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;adding profiles.yml for my Databricks job&quot;</span>
+git<span class="w"> </span>push
+</pre></div>
+</div>
+</li>
+<li><p>Click <img alt="Jobs Icon" src="../../../_images/jobs-icon.png" /> <strong>Workflows</strong> in the sidebar of the Databricks UI.</p></li>
+<li><p>Select the dbt job and click the <strong>Tasks</strong> tab.</p></li>
+<li><p>In <strong>Source</strong>, click <strong>Edit</strong> and enter your forked jaffle shop GitHub repository details.</p>
+<div class="figure align-default">
+<img alt="Configure forked project repo" src="../../../_images/dbt_task_configure_repo.png" />
+</div>
+</li>
+<li><p>In <strong>SQL warehouse</strong>, select <strong>None (Manual)</strong>.</p></li>
+<li><p>In <strong>Profiles Directory</strong>, enter the relative path to the directory containing the <code class="docutils literal notranslate"><span class="pre">profiles.yml</span></code> file. Leave the path value blank to use the default of the repository root.</p></li>
+</ol>
+</div>
+<div class="section" id="advanced-use-dbt-python-models-in-a-workflow">
+<span id="use-python-models"></span><h2>(Advanced) Use dbt Python models in a workflow<a class="headerlink" href="#advanced-use-dbt-python-models-in-a-workflow" title="Permalink to this headline"> </a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>dbt support for Python models is in beta and requires dbt 1.3 or greater.</p>
+</div>
+<p>dbt now supports <a class="reference external" href="https://docs.getdbt.com/docs/building-a-dbt-project/building-models/python-models">Python models</a> on specific data warehouses, including Databricks. With dbt Python models, you can use tools from the Python ecosystem to implement transformations that are difficult to implement with SQL. You can create a Databricks job to run a single task with your dbt Python model, or you can include the dbt task as part of a workflow that includes multiple tasks.</p>
+<p>You cannot run Python models in a dbt task using a SQL warehouse. For more information about using dbt Python models with Databricks, see <a class="reference external" href="https://docs.getdbt.com/docs/building-a-dbt-project/building-models/python-models#specific-data-warehouses">Specific data warehouses</a> in the dbt documentation.</p>
+</div>
+<div class="section" id="errors-and-troubleshooting">
+<h2>Errors and troubleshooting<a class="headerlink" href="#errors-and-troubleshooting" title="Permalink to this headline"> </a></h2>
+<div class="section" id="profile-file-does-not-exist-error">
+<h3><em>Profile file does not exist</em> error<a class="headerlink" href="#profile-file-does-not-exist-error" title="Permalink to this headline"> </a></h3>
+<p><strong>Error message</strong>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>dbt looked for a profiles.yml file in /tmp/.../profiles.yml, but did not find one.
+</pre></div>
+</div>
+<p><strong>Possible causes</strong>:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">profiles.yml</span></code> file was not found in the specified $PATH. Make sure the root of your dbt project contains the profiles.yml file.</p>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

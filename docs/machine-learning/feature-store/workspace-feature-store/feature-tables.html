@@ -1,0 +1,866 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to create and work with feature tables in the Workspace Feature Store in Databricks including how to update, control access, and browse feature tables." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Work with features in Workspace Feature Store">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Work with features in Workspace Feature Store &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/machine-learning/feature-store/workspace-feature-store/feature-tables.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/machine-learning/feature-store/workspace-feature-store/feature-tables.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/machine-learning/feature-store/workspace-feature-store/feature-tables.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../../en/machine-learning/feature-store/workspace-feature-store/feature-tables.html" class="notranslate">English</option>
+    <option value="../../../../ja/machine-learning/feature-store/workspace-feature-store/feature-tables.html" class="notranslate">日本語</option>
+    <option value="../../../../pt/machine-learning/feature-store/workspace-feature-store/feature-tables.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Work with features in Workspace Feature Store</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="work-with-features-in-workspace-feature-store">
+<h1>Work with features in Workspace Feature Store<a class="headerlink" href="#work-with-features-in-workspace-feature-store" title="Permalink to this headline"> </a></h1>
+<p>This page describes how to create and work with feature tables in the Workspace Feature Store.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If your workspace is enabled for Unity Catalog, any table managed by Unity Catalog that has a primary key is automatically a feature table that you can use for model training and inference. All Unity Catalog capabilities, such as security, lineage, tagging, and cross-workspace access, are automatically available to the feature table. For information about working with feature tables in a Unity Catalog-enabled workspace, see <a class="reference internal" href="../uc/feature-tables-uc.html"><span class="doc">Feature Engineering in Unity Catalog</span></a>.</p>
+</div>
+<p>For information about tracking feature lineage and freshness, see <a class="reference internal" href="ui.html"><span class="doc">Discover features and track feature lineage</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Database and feature table names can contain only alphanumeric characters and underscores (_).</p>
+</div>
+<div class="section" id="create-a-database-for-feature-tables">
+<h2>Create a database for feature tables<a class="headerlink" href="#create-a-database-for-feature-tables" title="Permalink to this headline"> </a></h2>
+<p>Before creating any feature tables, you must create a <a class="reference internal" href="../../../lakehouse/data-objects.html#database"><span class="std std-ref">database</span></a> to store them.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">sql</span> <span class="n">CREATE</span> <span class="n">DATABASE</span> <span class="n">IF</span> <span class="n">NOT</span> <span class="n">EXISTS</span> <span class="o">&lt;</span><span class="n">database</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Feature tables are stored as <a class="reference internal" href="../../../delta/index.html"><span class="doc">Delta tables</span></a>. When you create a feature table with <code class="docutils literal notranslate"><span class="pre">create_table</span></code> (Feature Store client v0.3.6 and above) or <code class="docutils literal notranslate"><span class="pre">create_feature_table</span></code> (v0.3.5 and below), you must specify the database name. For example, this argument creates a Delta table named <code class="docutils literal notranslate"><span class="pre">customer_features</span></code> in the database <code class="docutils literal notranslate"><span class="pre">recommender_system</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">name='recommender_system.customer_features'</span></code></p>
+<p>When you publish a feature table to an online store, the default table and database name are the ones specified when you created the table; you can specify different names using the <code class="docutils literal notranslate"><span class="pre">publish_table</span></code> method.</p>
+<p>The Databricks Feature Store UI shows the name of the table and database in the online store, along with other metadata.</p>
+</div>
+<div class="section" id="create-a-feature-table-in-databricks-feature-store">
+<span id="create-feature-table"></span><h2>Create a feature table in Databricks Feature Store<a class="headerlink" href="#create-a-feature-table-in-databricks-feature-store" title="Permalink to this headline"> </a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can also register an existing <a class="reference internal" href="../../../delta/index.html"><span class="doc">Delta table</span></a> as a feature table. See <a class="reference internal" href="#register-delta-table"><span class="std std-ref">Register an existing Delta table as a feature table</span></a>.</p>
+</div>
+<p>The basic steps to creating a feature table are:</p>
+<ol class="arabic simple">
+<li><p>Write the Python functions to compute the features. The output of each function should be an Apache Spark DataFrame with a unique primary key. The primary key can consist of one or more columns.</p></li>
+<li><p>Create a feature table by instantiating a <code class="docutils literal notranslate"><span class="pre">FeatureStoreClient</span></code> and using <code class="docutils literal notranslate"><span class="pre">create_table</span></code> (v0.3.6 and above) or <code class="docutils literal notranslate"><span class="pre">create_feature_table</span></code> (v0.3.5 and below).</p></li>
+<li><p>Populate the feature table using <code class="docutils literal notranslate"><span class="pre">write_table</span></code>.</p></li>
+</ol>
+<p>For details about the commands and parameters used in the following examples, see the <a class="reference external" href="https://api-docs.databricks.com/python/feature-store/latest/index.html">Feature Store Python API reference</a>.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="v0.3.6&amp;nbsp;and&amp;nbsp;above">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks.feature_store</span> <span class="kn">import</span> <span class="n">feature_table</span>
+
+<span class="k">def</span> <span class="nf">compute_customer_features</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39; Feature computation code returns a DataFrame with &#39;customer_id&#39; as primary key&#39;&#39;&#39;</span>
+  <span class="k">pass</span>
+
+<span class="c1"># create feature table keyed by customer_id</span>
+<span class="c1"># take schema from DataFrame output by compute_customer_features</span>
+<span class="kn">from</span> <span class="nn">databricks.feature_store</span> <span class="kn">import</span> <span class="n">FeatureStoreClient</span>
+
+<span class="n">customer_features_df</span> <span class="o">=</span> <span class="n">compute_customer_features</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">()</span>
+
+<span class="n">customer_feature_table</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;recommender_system.customer_features&#39;</span><span class="p">,</span>
+  <span class="n">primary_keys</span><span class="o">=</span><span class="s1">&#39;customer_id&#39;</span><span class="p">,</span>
+  <span class="n">schema</span><span class="o">=</span><span class="n">customer_features_df</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span>
+  <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Customer features&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># An alternative is to use `create_table` and specify the `df` argument.</span>
+<span class="c1"># This code automatically saves the features to the underlying Delta table.</span>
+
+<span class="c1"># customer_feature_table = fs.create_table(</span>
+<span class="c1">#  ...</span>
+<span class="c1">#  df=customer_features_df,</span>
+<span class="c1">#  ...</span>
+<span class="c1"># )</span>
+
+<span class="c1"># To use a composite key, pass all keys in the create_table call</span>
+
+<span class="c1"># customer_feature_table = fs.create_table(</span>
+<span class="c1">#   ...</span>
+<span class="c1">#   primary_keys=[&#39;customer_id&#39;, &#39;date&#39;],</span>
+<span class="c1">#   ...</span>
+<span class="c1"># )</span>
+
+<span class="c1"># Use write_table to write data to the feature table</span>
+<span class="c1"># Overwrite mode does a full refresh of the feature table</span>
+
+<span class="n">fs</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;recommender_system.customer_features&#39;</span><span class="p">,</span>
+  <span class="n">df</span> <span class="o">=</span> <span class="n">customer_features_df</span><span class="p">,</span>
+  <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;overwrite&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="v0.3.5&amp;nbsp;and&amp;nbsp;below">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks.feature_store</span> <span class="kn">import</span> <span class="n">feature_table</span>
+
+<span class="k">def</span> <span class="nf">compute_customer_features</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39; Feature computation code returns a DataFrame with &#39;customer_id&#39; as primary key&#39;&#39;&#39;</span>
+  <span class="k">pass</span>
+
+<span class="c1"># create feature table keyed by customer_id</span>
+<span class="c1"># take schema from DataFrame output by compute_customer_features</span>
+<span class="kn">from</span> <span class="nn">databricks.feature_store</span> <span class="kn">import</span> <span class="n">FeatureStoreClient</span>
+
+<span class="n">customer_features_df</span> <span class="o">=</span> <span class="n">compute_customer_features</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">()</span>
+
+<span class="n">customer_feature_table</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">create_feature_table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;recommender_system.customer_features&#39;</span><span class="p">,</span>
+  <span class="n">keys</span><span class="o">=</span><span class="s1">&#39;customer_id&#39;</span><span class="p">,</span>
+  <span class="n">schema</span><span class="o">=</span><span class="n">customer_features_df</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span>
+  <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Customer features&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># An alternative is to use `create_feature_table` and specify the `features_df` argument.</span>
+<span class="c1"># This code automatically saves the features to the underlying Delta table.</span>
+
+<span class="c1"># customer_feature_table = fs.create_feature_table(</span>
+<span class="c1">#  ...</span>
+<span class="c1">#  features_df=customer_features_df,</span>
+<span class="c1">#  ...</span>
+<span class="c1"># )</span>
+
+<span class="c1"># To use a composite key, pass all keys in the create_feature_table call</span>
+
+<span class="c1"># customer_feature_table = fs.create_feature_table(</span>
+<span class="c1">#   ...</span>
+<span class="c1">#   keys=[&#39;customer_id&#39;, &#39;date&#39;],</span>
+<span class="c1">#   ...</span>
+<span class="c1"># )</span>
+
+<span class="c1"># Use write_table to write data to the feature table</span>
+<span class="c1"># Overwrite mode does a full refresh of the feature table</span>
+
+<span class="n">fs</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;recommender_system.customer_features&#39;</span><span class="p">,</span>
+  <span class="n">df</span> <span class="o">=</span> <span class="n">customer_features_df</span><span class="p">,</span>
+  <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;overwrite&#39;</span>
+<span class="p">)</span><span class="kn">from</span> <span class="nn">databricks.feature_store</span> <span class="kn">import</span> <span class="n">feature_table</span>
+
+<span class="k">def</span> <span class="nf">compute_customer_features</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39; Feature computation code returns a DataFrame with &#39;customer_id&#39; as primary key&#39;&#39;&#39;</span>
+  <span class="k">pass</span>
+
+<span class="c1"># create feature table keyed by customer_id</span>
+<span class="c1"># take schema from DataFrame output by compute_customer_features</span>
+<span class="kn">from</span> <span class="nn">databricks.feature_store</span> <span class="kn">import</span> <span class="n">FeatureStoreClient</span>
+
+<span class="n">customer_features_df</span> <span class="o">=</span> <span class="n">compute_customer_features</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">()</span>
+
+<span class="n">customer_feature_table</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">create_feature_table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;recommender_system.customer_features&#39;</span><span class="p">,</span>
+  <span class="n">keys</span><span class="o">=</span><span class="s1">&#39;customer_id&#39;</span><span class="p">,</span>
+  <span class="n">schema</span><span class="o">=</span><span class="n">customer_features_df</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span>
+  <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Customer features&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># An alternative is to use `create_feature_table` and specify the `features_df` argument.</span>
+<span class="c1"># This code automatically saves the features to the underlying Delta table.</span>
+
+<span class="c1"># customer_feature_table = fs.create_feature_table(</span>
+<span class="c1">#  ...</span>
+<span class="c1">#  features_df=customer_features_df,</span>
+<span class="c1">#  ...</span>
+<span class="c1"># )</span>
+
+<span class="c1"># To use a composite key, pass all keys in the create_feature_table call</span>
+
+<span class="c1"># customer_feature_table = fs.create_feature_table(</span>
+<span class="c1">#   ...</span>
+<span class="c1">#   keys=[&#39;customer_id&#39;, &#39;date&#39;],</span>
+<span class="c1">#   ...</span>
+<span class="c1"># )</span>
+
+<span class="c1"># Use write_table to write data to the feature table</span>
+<span class="c1"># Overwrite mode does a full refresh of the feature table</span>
+
+<span class="n">fs</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;recommender_system.customer_features&#39;</span><span class="p">,</span>
+  <span class="n">df</span> <span class="o">=</span> <span class="n">customer_features_df</span><span class="p">,</span>
+  <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;overwrite&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="register-an-existing-delta-table-as-a-feature-table">
+<span id="register-delta-table"></span><h2>Register an existing Delta table as a feature table<a class="headerlink" href="#register-an-existing-delta-table-as-a-feature-table" title="Permalink to this headline"> </a></h2>
+<p>With v0.3.8 and above, you can register an existing <a class="reference internal" href="../../../delta/index.html"><span class="doc">Delta table</span></a> as a feature table. The Delta table must exist in the metastore.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To <a class="reference internal" href="#update-a-feature-table"><span class="std std-ref">update a registered feature table</span></a>, you must use the <a class="reference internal" href="../python-api.html"><span class="doc">Feature Store Python API</span></a>.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span><span class="o">.</span><span class="n">register_table</span><span class="p">(</span>
+  <span class="n">delta_table</span><span class="o">=</span><span class="s1">&#39;recommender.customer_features&#39;</span><span class="p">,</span>
+  <span class="n">primary_keys</span><span class="o">=</span><span class="s1">&#39;customer_id&#39;</span><span class="p">,</span>
+  <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Customer features&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="control-access-to-feature-tables">
+<h2>Control access to feature tables<a class="headerlink" href="#control-access-to-feature-tables" title="Permalink to this headline"> </a></h2>
+<p>See <a class="reference internal" href="access-control.html"><span class="doc">Control access to feature tables</span></a>.</p>
+</div>
+<div class="section" id="update-a-feature-table">
+<h2>Update a feature table<a class="headerlink" href="#update-a-feature-table" title="Permalink to this headline"> </a></h2>
+<p>You can update a feature table by adding new features or by modifying specific rows based on the primary key.</p>
+<p>The following feature table metadata cannot be updated:</p>
+<ul class="simple">
+<li><p>Primary key</p></li>
+<li><p>Partition key</p></li>
+<li><p>Name or type of an existing feature</p></li>
+</ul>
+<div class="section" id="add-new-features-to-an-existing-feature-table">
+<h3>Add new features to an existing feature table<a class="headerlink" href="#add-new-features-to-an-existing-feature-table" title="Permalink to this headline"> </a></h3>
+<p>You can add new features to an existing feature table in one of two ways:</p>
+<ul class="simple">
+<li><p>Update the existing feature computation function and run <code class="docutils literal notranslate"><span class="pre">write_table</span></code> with the returned DataFrame. This updates the feature table schema and merges new feature values based on the primary key.</p></li>
+<li><p>Create a new feature computation function to calculate the new feature values. The DataFrame returned by this new computation function must contain the feature tables’s primary keys and partition keys (if defined). Run <code class="docutils literal notranslate"><span class="pre">write_table</span></code> with the DataFrame to write the new features to the existing feature table, using the same primary key.</p></li>
+</ul>
+</div>
+<div class="section" id="update-only-specific-rows-in-a-feature-table">
+<h3>Update only specific rows in a feature table<a class="headerlink" href="#update-only-specific-rows-in-a-feature-table" title="Permalink to this headline"> </a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">=</span> <span class="pre">&quot;merge&quot;</span></code> in <code class="docutils literal notranslate"><span class="pre">write_table</span></code>. Rows whose primary key does not exist in the DataFrame sent in the <code class="docutils literal notranslate"><span class="pre">write_table</span></code> call remain unchanged.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;recommender.customer_features&#39;</span><span class="p">,</span>
+  <span class="n">df</span> <span class="o">=</span> <span class="n">customer_features_df</span><span class="p">,</span>
+  <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;merge&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="schedule-a-job-to-update-a-feature-table">
+<h3>Schedule a job to update a feature table<a class="headerlink" href="#schedule-a-job-to-update-a-feature-table" title="Permalink to this headline"> </a></h3>
+<p>To ensure that features in feature tables always have the most recent values, Databricks recommends that you <a class="reference internal" href="../../../workflows/jobs/create-run-jobs.html"><span class="doc">create a job</span></a> that runs a notebook to update your feature table on a regular basis, such as every day. If you already have a non-scheduled job created, you can convert it to a <a class="reference internal" href="../../../workflows/jobs/schedule-jobs.html#job-schedule"><span class="std std-ref">scheduled job</span></a> to make sure the feature values are always up-to-date.</p>
+<p>Code to update a feature table uses <code class="docutils literal notranslate"><span class="pre">mode='merge'</span></code>, as shown in the following example.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">()</span>
+
+<span class="n">customer_features_df</span> <span class="o">=</span> <span class="n">compute_customer_features</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">fs</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span>
+  <span class="n">df</span><span class="o">=</span><span class="n">customer_features_df</span><span class="p">,</span>
+  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;recommender_system.customer_features&#39;</span><span class="p">,</span>
+  <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;merge&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="store-past-values-of-daily-features">
+<h3>Store past values of daily features<a class="headerlink" href="#store-past-values-of-daily-features" title="Permalink to this headline"> </a></h3>
+<p>Define a feature table with a composite primary key. Include the date in the primary key. For example, for a feature table <code class="docutils literal notranslate"><span class="pre">store_purchases</span></code>, you might use a composite primary key (<code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">user_id</span></code>) and partition key <code class="docutils literal notranslate"><span class="pre">date</span></code> for efficient reads.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;recommender_system.customer_features&#39;</span><span class="p">,</span>
+  <span class="n">primary_keys</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;customer_id&#39;</span><span class="p">],</span>
+  <span class="n">partition_columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">],</span>
+  <span class="n">schema</span><span class="o">=</span><span class="n">customer_features_df</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span>
+  <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Customer features&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>You can then create code to read from the feature table filtering <code class="docutils literal notranslate"><span class="pre">date</span></code> to the time period of interest.</p>
+<p>You can also create a <a class="reference internal" href="../time-series.html"><span class="doc">time series feature table</span></a> by specifying the <code class="docutils literal notranslate"><span class="pre">date</span></code> column as a timestamp key using the <code class="docutils literal notranslate"><span class="pre">timestamp_keys</span></code> argument.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;recommender_system.customer_features&#39;</span><span class="p">,</span>
+  <span class="n">primary_keys</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;customer_id&#39;</span><span class="p">],</span>
+  <span class="n">timestamp_keys</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">],</span>
+  <span class="n">schema</span><span class="o">=</span><span class="n">customer_features_df</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span>
+  <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Customer timeseries features&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>This enables point-in-time lookups when you use <code class="docutils literal notranslate"><span class="pre">create_training_set</span></code> or <code class="docutils literal notranslate"><span class="pre">score_batch</span></code>. The system performs an as-of timestamp join, using the <code class="docutils literal notranslate"><span class="pre">timestamp_lookup_key</span></code> you specify.</p>
+<p>To keep the feature table up to date, set up a regularly scheduled job to write features, or stream new feature values into the feature table.</p>
+</div>
+<div class="section" id="create-a-streaming-feature-computation-pipeline-to-update-features">
+<h3>Create a streaming feature computation pipeline to update features<a class="headerlink" href="#create-a-streaming-feature-computation-pipeline-to-update-features" title="Permalink to this headline"> </a></h3>
+<p>To create a streaming feature computation pipeline, pass a streaming <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> as an argument to <code class="docutils literal notranslate"><span class="pre">write_table</span></code>. This method returns a <code class="docutils literal notranslate"><span class="pre">StreamingQuery</span></code> object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">compute_additional_customer_features</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39; Returns Streaming DataFrame</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="k">pass</span>  <span class="c1"># not shown</span>
+
+<span class="n">customer_transactions</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">readStream</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;dbfs:/events/customer_transactions&quot;</span><span class="p">)</span>
+<span class="n">stream_df</span> <span class="o">=</span> <span class="n">compute_additional_customer_features</span><span class="p">(</span><span class="n">customer_transactions</span><span class="p">)</span>
+
+<span class="n">fs</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span>
+  <span class="n">df</span><span class="o">=</span><span class="n">stream_df</span><span class="p">,</span>
+  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;recommender_system.customer_features&#39;</span><span class="p">,</span>
+  <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;merge&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="read-from-a-feature-table">
+<h2>Read from a feature table<a class="headerlink" href="#read-from-a-feature-table" title="Permalink to this headline"> </a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">read_table</span></code> to read feature values.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span> <span class="o">=</span> <span class="n">feature_store</span><span class="o">.</span><span class="n">FeatureStoreClient</span><span class="p">()</span>
+<span class="n">customer_features_df</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;recommender.customer_features&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="search-and-browse-feature-tables">
+<h2>Search and browse feature tables<a class="headerlink" href="#search-and-browse-feature-tables" title="Permalink to this headline"> </a></h2>
+<p>Use the Feature Store UI to search for or browse feature tables.</p>
+<ol class="arabic">
+<li><p>In the sidebar, select <strong>Machine Learning &gt; Feature Store</strong> to display the Feature Store UI.</p></li>
+<li><p>In the search box, enter all or part of the name of a feature table, a feature, or a data source used for feature computation. You can also enter all or part of the <a class="reference internal" href="#work-with-feature-table-tags"><span class="std std-ref">key or value of a tag</span></a>. Search text is case-insensitive.</p>
+<div class="figure align-default">
+<img alt="Feature search example" src="../../../_images/feature-search-example.png" />
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="get-feature-table-metadata">
+<h2>Get feature table metadata<a class="headerlink" href="#get-feature-table-metadata" title="Permalink to this headline"> </a></h2>
+<p>The API to get feature table metadata depends on the Databricks runtime version you are using. With v0.3.6 and above, use <code class="docutils literal notranslate"><span class="pre">get_table</span></code>. With v0.3.5 and below, use <code class="docutils literal notranslate"><span class="pre">get_feature_table</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># this example works with v0.3.6 and above</span>
+<span class="c1"># for v0.3.5, use `get_feature_table`</span>
+<span class="kn">from</span> <span class="nn">databricks.feature_store</span> <span class="kn">import</span> <span class="n">FeatureStoreClient</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">()</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;feature_store_example.user_feature_table&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="work-with-feature-table-tags">
+<h2>Work with feature table tags<a class="headerlink" href="#work-with-feature-table-tags" title="Permalink to this headline"> </a></h2>
+<p>Tags are key-value pairs that you can create and use to <a class="reference internal" href="#search-and-browse-feature-tables"><span class="std std-ref">search for feature tables</span></a>. You can create, edit, and delete tags using the Feature Store UI or the <a class="reference internal" href="../python-api.html"><span class="doc">Feature Store Python API</span></a>.</p>
+<div class="section" id="work-with-feature-table-tags-in-the-ui">
+<h3>Work with feature table tags in the UI<a class="headerlink" href="#work-with-feature-table-tags-in-the-ui" title="Permalink to this headline"> </a></h3>
+<p>Use the Feature Store UI to search for or browse feature tables. To access the UI, in the sidebar, select <strong>Machine Learning &gt; Feature Store</strong>.</p>
+<div class="section" id="add-a-tag-using-the-feature-store-ui">
+<h4>Add a tag using the Feature Store UI<a class="headerlink" href="#add-a-tag-using-the-feature-store-ui" title="Permalink to this headline"> </a></h4>
+<ol class="arabic">
+<li><p>Click <img alt="Tag icon" src="../../../_images/tags1.png" /> if it is not already open. The tags table appears.</p>
+<div class="figure align-default">
+<img alt="tag table" src="../../../_images/tags-open.png" />
+</div>
+</li>
+<li><p>Click in the <strong>Name</strong> and <strong>Value</strong> fields and enter the key and value for your tag.</p></li>
+<li><p>Click <strong>Add</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="edit-or-delete-a-tag-using-the-feature-store-ui">
+<h4>Edit or delete a tag using the Feature Store UI<a class="headerlink" href="#edit-or-delete-a-tag-using-the-feature-store-ui" title="Permalink to this headline"> </a></h4>
+<p>To edit or delete an existing tag, use the icons in the <strong>Actions</strong> column.</p>
+<div class="figure align-default">
+<img alt="tag actions" src="../../../_images/tag-edit-or-delete.png" />
+</div>
+</div>
+</div>
+<div class="section" id="work-with-feature-table-tags-using-the-feature-store-python-api">
+<span id="work-with-feature-table-tags-api"></span><h3>Work with feature table tags using the Feature Store Python API<a class="headerlink" href="#work-with-feature-table-tags-using-the-feature-store-python-api" title="Permalink to this headline"> </a></h3>
+<p>On clusters running v0.4.1 and above, you can create, edit, and delete tags using the <a class="reference internal" href="../python-api.html"><span class="doc">Feature Store Python API</span></a>.</p>
+<div class="section" id="requirements">
+<h4>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h4>
+<p>Feature Store client v0.4.1 and above</p>
+</div>
+<div class="section" id="create-feature-table-with-tag-using-the-feature-store-python-api">
+<h4>Create feature table with tag using the Feature Store Python API<a class="headerlink" href="#create-feature-table-with-tag-using-the-feature-store-python-api" title="Permalink to this headline"> </a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks.feature_store</span> <span class="kn">import</span> <span class="n">FeatureStoreClient</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">()</span>
+
+<span class="n">customer_feature_table</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span>
+  <span class="o">...</span>
+  <span class="n">tags</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;tag_key_1&quot;</span><span class="p">:</span> <span class="s2">&quot;tag_value_1&quot;</span><span class="p">,</span> <span class="s2">&quot;tag_key_2&quot;</span><span class="p">:</span> <span class="s2">&quot;tag_value_2&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
+  <span class="o">...</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-update-and-delete-tags-using-the-feature-store-python-api">
+<h4>Add, update, and delete tags using the Feature Store Python API<a class="headerlink" href="#add-update-and-delete-tags-using-the-feature-store-python-api" title="Permalink to this headline"> </a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks.feature_store</span> <span class="kn">import</span> <span class="n">FeatureStoreClient</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">()</span>
+
+<span class="c1"># Upsert a tag</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">set_feature_table_tag</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;my_table&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;quality&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;gold&quot;</span><span class="p">)</span>
+
+<span class="c1"># Delete a tag</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">delete_feature_table_tag</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;my_table&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;quality&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="update-data-sources-for-a-feature-table">
+<span id="update-data-sources"></span><h2>Update data sources for a feature table<a class="headerlink" href="#update-data-sources-for-a-feature-table" title="Permalink to this headline"> </a></h2>
+<p>Feature store automatically tracks the data sources used to compute features. You can also manually update the data sources by using the <a class="reference internal" href="../python-api.html"><span class="doc">Feature Store Python API</span></a>.</p>
+<div class="section" id="requirements">
+<span id="requirements-1"></span><h3>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h3>
+<p>Feature Store client v0.5.0 and above</p>
+</div>
+<div class="section" id="add-data-sources-using-the-feature-store-python-api">
+<h3>Add data sources using the Feature Store Python API<a class="headerlink" href="#add-data-sources-using-the-feature-store-python-api" title="Permalink to this headline"> </a></h3>
+<p>Below are some example commands. For details, see <a class="reference internal" href="../python-api.html"><span class="doc">the API documentation</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks.feature_store</span> <span class="kn">import</span> <span class="n">FeatureStoreClient</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">()</span>
+
+<span class="c1"># Use `source_type=&quot;table&quot;` to add a table in the metastore as data source.</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">add_data_sources</span><span class="p">(</span><span class="n">feature_table_name</span><span class="o">=</span><span class="s2">&quot;clicks&quot;</span><span class="p">,</span> <span class="n">data_sources</span><span class="o">=</span><span class="s2">&quot;user_info.clicks&quot;</span><span class="p">,</span> <span class="n">source_type</span><span class="o">=</span><span class="s2">&quot;table&quot;</span><span class="p">)</span>
+
+<span class="c1"># Use `source_type=&quot;path&quot;` to add a data source in path format.</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">add_data_sources</span><span class="p">(</span><span class="n">feature_table_name</span><span class="o">=</span><span class="s2">&quot;user_metrics&quot;</span><span class="p">,</span> <span class="n">data_sources</span><span class="o">=</span><span class="s2">&quot;dbfs:/FileStore/user_metrics.json&quot;</span><span class="p">,</span> <span class="n">source_type</span><span class="o">=</span><span class="s2">&quot;path&quot;</span><span class="p">)</span>
+
+<span class="c1"># Use `source_type=&quot;custom&quot;` if the source is not a table or a path.</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">add_data_sources</span><span class="p">(</span><span class="n">feature_table_name</span><span class="o">=</span><span class="s2">&quot;user_metrics&quot;</span><span class="p">,</span> <span class="n">data_sources</span><span class="o">=</span><span class="s2">&quot;user_metrics.txt&quot;</span><span class="p">,</span> <span class="n">source_type</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="delete-data-sources-using-the-feature-store-python-api">
+<h3>Delete data sources using the Feature Store Python API<a class="headerlink" href="#delete-data-sources-using-the-feature-store-python-api" title="Permalink to this headline"> </a></h3>
+<p>For details, see <a class="reference internal" href="../python-api.html"><span class="doc">the API documentation</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The following command deletes data sources of all types (“table”, “path”, and “custom”) that match the source names.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks.feature_store</span> <span class="kn">import</span> <span class="n">FeatureStoreClient</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">()</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">delete_data_sources</span><span class="p">(</span><span class="n">feature_table_name</span><span class="o">=</span><span class="s2">&quot;clicks&quot;</span><span class="p">,</span> <span class="n">sources_names</span><span class="o">=</span><span class="s2">&quot;user_info.clicks&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="delete-a-feature-table">
+<h2>Delete a feature table<a class="headerlink" href="#delete-a-feature-table" title="Permalink to this headline"> </a></h2>
+<p>You can delete a feature table using the Feature Store UI or the <a class="reference internal" href="../python-api.html"><span class="doc">Feature Store Python API</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Deleting a feature table can lead to unexpected failures in upstream producers and downstream consumers (models, endpoints, and scheduled jobs). You must delete published online stores with your cloud provider.</p></li>
+<li><p>When you delete a feature table using the API, the underlying Delta table is also dropped. When you delete a feature table from the UI, you must drop the underlying Delta table separately.</p></li>
+</ul>
+</div>
+<div class="section" id="delete-a-feature-table-using-the-ui">
+<h3>Delete a feature table using the UI<a class="headerlink" href="#delete-a-feature-table-using-the-ui" title="Permalink to this headline"> </a></h3>
+<ol class="arabic">
+<li><p>On the feature table page, click <img alt="Button Down" src="../../../_images/button-down.png" /> at the right of the feature table name and select <strong>Delete</strong>. If you do not have <strong>Can Manage</strong> permission for the feature table, you will not see this option.</p>
+<div class="figure align-default">
+<img alt="Select delete from drop-down menu" src="../../../_images/feature-store-deletion.png" />
+</div>
+</li>
+<li><p>In the Delete Feature Table dialog, click <strong>Delete</strong> to confirm.</p></li>
+<li><p>If you also want to <a class="reference internal" href="../../../sql/language-manual/sql-ref-syntax-ddl-drop-table.html"><span class="doc">drop the underlying Delta table</span></a>, run the following command in a notebook.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">sql</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="o">&lt;</span><span class="n">feature</span><span class="o">-</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="delete-a-feature-table-using-the-feature-store-python-api">
+<h3>Delete a feature table using the Feature Store Python API<a class="headerlink" href="#delete-a-feature-table-using-the-feature-store-python-api" title="Permalink to this headline"> </a></h3>
+<p>With Feature Store client v0.4.1 and above, you can use <code class="docutils literal notranslate"><span class="pre">drop_table</span></code> to delete a feature table. When you delete a table with <code class="docutils literal notranslate"><span class="pre">drop_table</span></code>, the underlying Delta table is also dropped.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span><span class="o">.</span><span class="n">drop_table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;recommender_system.customer_features&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="supported-data-types">
+<h2>Supported data types<a class="headerlink" href="#supported-data-types" title="Permalink to this headline"> </a></h2>
+<p>Feature Store supports the following <a class="reference external" href="https://spark.apache.org/docs/latest/sql-ref-datatypes.html">PySpark data types</a>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">IntegerType</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FloatType</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BooleanType</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">StringType</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DoubleType</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LongType</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TimestampType</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DateType</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ShortType</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ArrayType</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BinaryType</span></code> (v0.3.5 and above)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DecimalType</span></code> (v0.3.5 and above)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MapType</span></code> (v0.3.5 and above)</p></li>
+</ul>
+<p>The data types listed above support feature types that are common in machine learning applications. For example:</p>
+<ul class="simple">
+<li><p>You can store dense vectors, tensors, and embeddings as <code class="docutils literal notranslate"><span class="pre">ArrayType</span></code>.</p></li>
+<li><p>You can store sparse vectors, tensors, and embeddings as <code class="docutils literal notranslate"><span class="pre">MapType</span></code>.</p></li>
+<li><p>You can store text as <code class="docutils literal notranslate"><span class="pre">StringType</span></code>.</p></li>
+</ul>
+<p>The Feature Store UI displays metadata on feature data types:</p>
+<div class="figure align-default">
+<img alt="Complex data types example" src="../../../_images/complex-data-type-example.png" />
+</div>
+<p>When published to online stores, <code class="docutils literal notranslate"><span class="pre">ArrayType</span></code> and <code class="docutils literal notranslate"><span class="pre">MapType</span></code> features are stored in JSON format.</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

@@ -1,0 +1,1304 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to monitor Structured Streaming applications on Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Monitoring Structured Streaming queries on Databricks">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Monitoring Structured Streaming queries on Databricks &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/structured-streaming/stream-monitoring.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/structured-streaming/stream-monitoring.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/structured-streaming/stream-monitoring.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/structured-streaming/stream-monitoring.html" class="notranslate">English</option>
+    <option value="../../ja/structured-streaming/stream-monitoring.html" class="notranslate">日本語</option>
+    <option value="../../pt/structured-streaming/stream-monitoring.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Monitoring Structured Streaming queries on Databricks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="monitoring-structured-streaming-queries-on-databricks">
+<span id="monitoring-ss-queries-on-databricks"></span><h1>Monitoring Structured Streaming queries on Databricks<a class="headerlink" href="#monitoring-structured-streaming-queries-on-databricks" title="Permalink to this headline"> </a></h1>
+<p>Databricks provides built-in monitoring for Structured Streaming applications through the Spark UI under the <strong>Streaming</strong> tab.</p>
+<div class="section" id="distinguish-structured-streaming-queries-in-the-spark-ui">
+<span id="distinguish-ss-queries-in-the-spark-ui"></span><h2>Distinguish Structured Streaming queries in the Spark UI<a class="headerlink" href="#distinguish-structured-streaming-queries-in-the-spark-ui" title="Permalink to this headline"> </a></h2>
+<p>Provide your streams a unique query name by adding <code class="docutils literal notranslate"><span class="pre">.queryName(&lt;query-name&gt;)</span></code> to your <code class="docutils literal notranslate"><span class="pre">writeStream</span></code> code to easily distinguish which metrics belong to which stream in the Spark UI.</p>
+</div>
+<div class="section" id="push-structured-streaming-metrics-to-external-services">
+<span id="push-ss-metrics-to-external-services"></span><h2>Push Structured Streaming metrics to external services<a class="headerlink" href="#push-structured-streaming-metrics-to-external-services" title="Permalink to this headline"> </a></h2>
+<p>Streaming metrics can be pushed to external services for alerting or dashboarding use cases by using Apache Spark’s Streaming Query Listener interface. In Databricks Runtime 11.0 and above, the Streaming Query Listener is available in Python and Scala.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Credentials and objects managed by Unity Catalog cannot be used in <code class="docutils literal notranslate"><span class="pre">StreamingQueryListener</span></code> logic.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Processing latency associated with listeners can adversely impact query processing. Databricks recommends minimizing processing logic in these listeners and writing to low latency sinks such as Kafka.</p>
+</div>
+<p>The following code provides basic examples of the syntax for implementing a listener:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">streaming</span><span class="p">.</span><span class="nc">StreamingQueryListener</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">streaming</span><span class="p">.</span><span class="nc">StreamingQueryListener</span><span class="p">.</span><span class="n">_</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">myListener</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">StreamingQueryListener</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">    * Called when a query is started.</span>
+<span class="cm">    * @note This is called synchronously with</span>
+<span class="cm">    *       [[org.apache.spark.sql.streaming.DataStreamWriter `DataStreamWriter.start()`]].</span>
+<span class="cm">    *       `onQueryStart` calls on all listeners before</span>
+<span class="cm">    *       `DataStreamWriter.start()` returns the corresponding [[StreamingQuery]].</span>
+<span class="cm">    *        Do not block this method, as it blocks your query.</span>
+<span class="cm">    */</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">onQueryStarted</span><span class="p">(</span><span class="n">event</span><span class="p">:</span><span class="w"> </span><span class="nc">QueryStartedEvent</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">    * Called when there is some status update (ingestion rate updated, etc.)</span>
+<span class="cm">    *</span>
+<span class="cm">    * @note This method is asynchronous. The status in [[StreamingQuery]] returns the</span>
+<span class="cm">    *       latest status, regardless of when this method is called. The status of [[StreamingQuery]]</span>
+<span class="cm">    *       may change before or when you process the event. For example, you may find [[StreamingQuery]]</span>
+<span class="cm">    *       terminates when processing `QueryProgressEvent`.</span>
+<span class="cm">    */</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">onQueryProgress</span><span class="p">(</span><span class="n">event</span><span class="p">:</span><span class="w"> </span><span class="nc">QueryProgressEvent</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">    * Called when a query is stopped, with or without error.</span>
+<span class="cm">    */</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">onQueryTerminated</span><span class="p">(</span><span class="n">event</span><span class="p">:</span><span class="w"> </span><span class="nc">QueryTerminatedEvent</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyListener</span><span class="p">(</span><span class="n">StreamingQueryListener</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">onQueryStarted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called when a query is started.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event: :class:`pyspark.sql.streaming.listener.QueryStartedEvent`</span>
+<span class="sd">            The properties are available as the same as Scala API.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This is called synchronously with</span>
+<span class="sd">        meth:`pyspark.sql.streaming.DataStreamWriter.start`,</span>
+<span class="sd">        that is, ``onQueryStart`` will be called on all listeners before</span>
+<span class="sd">        ``DataStreamWriter.start()`` returns the corresponding</span>
+<span class="sd">        :class:`pyspark.sql.streaming.StreamingQuery`.</span>
+<span class="sd">        Do not block in this method as it will block your query.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">onQueryProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called when there is some status update (ingestion rate updated, etc.)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event: :class:`pyspark.sql.streaming.listener.QueryProgressEvent`</span>
+<span class="sd">            The properties are available as the same as Scala API.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method is asynchronous. The status in</span>
+<span class="sd">        :class:`pyspark.sql.streaming.StreamingQuery` returns the</span>
+<span class="sd">        most recent status, regardless of when this method is called. The status</span>
+<span class="sd">        of :class:`pyspark.sql.streaming.StreamingQuery`.</span>
+<span class="sd">        may change before or when you process the event.</span>
+<span class="sd">        For example, you may find :class:`StreamingQuery`</span>
+<span class="sd">        terminates when processing `QueryProgressEvent`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">onQueryTerminated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called when a query is stopped, with or without error.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event: :class:`pyspark.sql.streaming.listener.QueryTerminatedEvent`</span>
+<span class="sd">            The properties are available as the same as Scala API.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<span class="n">my_listener</span> <span class="o">=</span> <span class="n">MyListener</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="defining-observable-metrics-in-structured-streaming">
+<span id="defining-observable-metrics-in-ss"></span><h2>Defining observable metrics in Structured Streaming<a class="headerlink" href="#defining-observable-metrics-in-structured-streaming" title="Permalink to this headline"> </a></h2>
+<p>Observable metrics are named arbitrary aggregate functions that can be defined on a query (DataFrame). As soon as the execution of a DataFrame reaches a completion point (that is, finishes a batch query or reaches a streaming epoch), a named event is emitted that contains the metrics for the data processed since the last completion point.</p>
+<p>You can observe these metrics by attaching a listener to the Spark session. The listener depends on the execution mode:</p>
+<ul>
+<li><p><strong>Batch mode</strong>: Use <code class="docutils literal notranslate"><span class="pre">QueryExecutionListener</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">QueryExecutionListener</span></code> is called when the query completes. Access the metrics using the <code class="docutils literal notranslate"><span class="pre">QueryExecution.observedMetrics</span></code> map.</p>
+</li>
+<li><p><strong>Streaming, or micro-batch</strong>: Use <code class="docutils literal notranslate"><span class="pre">StreamingQueryListener</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">StreamingQueryListener</span></code> is called when the streaming query completes an epoch. Access the metrics using the <code class="docutils literal notranslate"><span class="pre">StreamingQueryProgress.observedMetrics</span></code> map. Databricks does not support continuous execution streaming.</p>
+</li>
+</ul>
+<p>For example:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// Observe row count (rc) and error row count (erc) in the streaming Dataset</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">observed_ds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ds</span><span class="p">.</span><span class="n">observe</span><span class="p">(</span><span class="s">&quot;my_event&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">(</span><span class="n">lit</span><span class="p">(</span><span class="mi">1</span><span class="p">)).</span><span class="n">as</span><span class="p">(</span><span class="s">&quot;rc&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">count</span><span class="p">(</span><span class="n">$</span><span class="s">&quot;error&quot;</span><span class="p">).</span><span class="n">as</span><span class="p">(</span><span class="s">&quot;erc&quot;</span><span class="p">))</span>
+<span class="n">observed_ds</span><span class="p">.</span><span class="n">writeStream</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;...&quot;</span><span class="p">).</span><span class="n">start</span><span class="p">()</span>
+
+<span class="c1">// Monitor the metrics using a listener</span>
+<span class="n">spark</span><span class="p">.</span><span class="n">streams</span><span class="p">.</span><span class="n">addListener</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="nc">StreamingQueryListener</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">override</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">onQueryProgress</span><span class="p">(</span><span class="n">event</span><span class="p">:</span><span class="w"> </span><span class="nc">QueryProgressEvent</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">event</span><span class="p">.</span><span class="n">progress</span><span class="p">.</span><span class="n">observedMetrics</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;my_event&quot;</span><span class="p">).</span><span class="n">foreach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">      </span><span class="c1">// Trigger if the number of errors exceeds 5 percent</span>
+<span class="w">      </span><span class="kd">val</span><span class="w"> </span><span class="n">num_rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">row</span><span class="p">.</span><span class="n">getAs</span><span class="p">[</span><span class="nc">Long</span><span class="p">](</span><span class="s">&quot;rc&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="kd">val</span><span class="w"> </span><span class="n">num_error_rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">row</span><span class="p">.</span><span class="n">getAs</span><span class="p">[</span><span class="nc">Long</span><span class="p">](</span><span class="s">&quot;erc&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="kd">val</span><span class="w"> </span><span class="n">ratio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num_error_rows</span><span class="p">.</span><span class="n">toDouble</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">num_rows</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ratio</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0.05</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Trigger alert</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Observe metric</span>
+<span class="n">observed_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="s2">&quot;metric&quot;</span><span class="p">,</span> <span class="n">count</span><span class="p">(</span><span class="n">lit</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="k">as</span><span class="p">(</span><span class="s2">&quot;cnt&quot;</span><span class="p">),</span> <span class="n">count</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">))</span><span class="o">.</span><span class="k">as</span><span class="p">(</span><span class="s2">&quot;malformed&quot;</span><span class="p">))</span>
+<span class="n">observed_df</span><span class="o">.</span><span class="n">writeStream</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;...&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="c1"># Define my listener.</span>
+<span class="k">class</span> <span class="nc">MyListener</span><span class="p">(</span><span class="n">StreamingQueryListener</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">onQueryStarted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; [</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">] got started!&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">onQueryProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">observedMetrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metric&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">malformed</span> <span class="o">/</span> <span class="n">row</span><span class="o">.</span><span class="n">cnt</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ALERT! Ouch! there are too many malformed &quot;</span>
+                      <span class="sa">f</span><span class="s2">&quot;records </span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">malformed</span><span class="si">}</span><span class="s2"> out of </span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">cnt</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">cnt</span><span class="si">}</span><span class="s2"> rows processed!&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">onQueryTerminated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> got terminated!&quot;</span><span class="p">)</span>
+
+<span class="c1"># Add my listener.</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">streams</span><span class="o">.</span><span class="n">addListener</span><span class="p">(</span><span class="n">MyListener</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="streamingquerylistener-object-metrics">
+<span id="metrics"></span><h2>StreamingQueryListener object metrics<a class="headerlink" href="#streamingquerylistener-object-metrics" title="Permalink to this headline"> </a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 91%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">id</span></code></p></td>
+<td><p> Unique query ID that persists across restarts. See <a class="reference external" href="https://spark.apache.org/docs/3.1.1/api/python/reference/api/pyspark.sql.streaming.StreamingQuery.id.html#pyspark.sql.streaming.StreamingQuery.id">StreamingQuery.id()</a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">runId</span></code></p></td>
+<td><p> Unique query ID for every start or restart. See <a class="reference external" href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.StreamingQuery.runId.html">StreamingQuery.runId()</a>.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p> User-specified name of the query. Null if not specified.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">timestamp</span></code></p></td>
+<td><p> Timestamp for the execution of the micro-batch.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">batchId</span></code></p></td>
+<td><p> Unique ID for the current batch of data being processed. Note that in the case of retries after a failure, a given batch ID can be executed more than once. Similarly, when there is no data to be processed, the batch ID is not incremented.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">numInputRows</span></code></p></td>
+<td><p> Aggregate (across all sources) number of records processed in a trigger.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">inputRowsPerSecond</span></code></p></td>
+<td><p> Aggregate (across all sources) rate of arriving data.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">processedRowsPerSecond</span></code></p></td>
+<td><p> Aggregate (across all sources) rate at which Spark is processing data.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="durationms-object">
+<span id="durationms"></span><h3>durationMs object<a class="headerlink" href="#durationms-object" title="Permalink to this headline"> </a></h3>
+<p>Information about the time it takes to complete various stages of the micro-batch execution process.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 82%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">durationMs.addBatch</span></code></p></td>
+<td><p> Time taken to execute the microbatch. This excludes the time Spark takes to plan the microbatch.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">durationMs.getBatch</span></code></p></td>
+<td><p> Time it takes to retrieve the metadata about the offsets from the source.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">durationMs.latestOffset</span></code></p></td>
+<td><p> Latest offset consumed for the microbatch. This progress object refers to the time taken to retrieve the latest offset from sources.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">durationMs.queryPlanning</span></code></p></td>
+<td><p> Time taken to generate the execution plan.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">durationMs.triggerExecution</span></code></p></td>
+<td><p> Time taken to plan and execute the microbatch.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">durationMs.walCommit</span></code></p></td>
+<td><p> Time taken to commit the new available offsets.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="eventtime-object">
+<span id="eventtime"></span><h3>eventTime object<a class="headerlink" href="#eventtime-object" title="Permalink to this headline"> </a></h3>
+<p>Information about the event time value seen within the data being processed in the micro-batch. This data is used by the watermark to figure out how to trim the state for processing stateful aggregations defined in the Structured Streaming job.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">eventTime.avg</span></code></p></td>
+<td><p> Average event time seen in the trigger.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">eventTime.max</span></code></p></td>
+<td><p> Maximum event time seen in the trigger.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">eventTime.min</span></code></p></td>
+<td><p> Minimum event time seen in the trigger.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">eventTime.watermark</span></code></p></td>
+<td><p> Value of the watermark used in the trigger.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="stateoperators-object">
+<span id="stateoperators"></span><h3>stateOperators object<a class="headerlink" href="#stateoperators-object" title="Permalink to this headline"> </a></h3>
+<p>Information about the stateful operations that are defined in the Structured Streaming job and the aggregations that are produced from them.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 86%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">stateOperators.operatorName</span></code></p></td>
+<td><p> Name of the stateful operator that the metrics relate to. For example, <code class="docutils literal notranslate"><span class="pre">symmetricHashJoin</span></code>, <code class="docutils literal notranslate"><span class="pre">dedupe</span></code>, <code class="docutils literal notranslate"><span class="pre">stateStoreSave</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">stateOperators.numRowsTotal</span></code></p></td>
+<td><p> Number of rows in the state as a result of the stateful operator or aggregation.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">stateOperators.numRowsUpdated</span></code></p></td>
+<td><p> Number of rows updated in the state as a result of the stateful operator or aggregation.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">stateOperators.numRowsRemoved</span></code></p></td>
+<td><p> Number of rows removed from the state as a result of the stateful operator or aggregation.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">stateOperators.commitTimeMs</span></code></p></td>
+<td><p> Time taken to commit all updates (puts and removes) and return a new version.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">stateOperators.memoryUsedBytes</span></code></p></td>
+<td><p> Memory used by the state store.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">stateOperators.numRowsDroppedByWatermark</span></code></p></td>
+<td><p> Number of rows that are considered too late to be included in the stateful aggregation. <strong>Streaming aggregations only</strong>: Number of rows dropped post-aggregation, and not raw input rows. The number is not precise, but it can indicate that late data is being dropped.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">stateOperators.numShufflePartitions</span></code></p></td>
+<td><p> Number of shuffle partitions for this stateful operator.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">stateOperators.numStateStoreInstances</span></code></p></td>
+<td><p> Actual state store instance that the operator has initialized and maintained. In many stateful operators, this is the same as the number of partitions, but stream-stream join initializes four state store instances per partition.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="stateoperatorscustommetrics-object">
+<span id="stateoperators-custommetrics"></span><h3>stateOperators.customMetrics object<a class="headerlink" href="#stateoperatorscustommetrics-object" title="Permalink to this headline"> </a></h3>
+<p>Information collected from RocksDB that captures metrics about its performance and operations with respect to the stateful values it maintains for the Structured Streaming job. For more information, see <a class="reference internal" href="rocksdb-state-store.html"><span class="doc">Configure RocksDB state store on Databricks</span></a>.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 82%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbBytesCopied</span></code></p></td>
+<td><p> Number of bytes copied as tracked by the RocksDB File Manager.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbCommitCheckpointLatency</span></code></p></td>
+<td><p> Time in milliseconds to take a snapshot of native RocksDB and write it to a local directory.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbCompactLatency</span></code></p></td>
+<td><p> Time in milliseconds for compaction (optional) during the checkpoint commit.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbCommitFileSyncLatencyMs</span></code></p></td>
+<td><p> Time in milliseconds to sync the native RocksDB snapshot related files to an external storage (checkpoint location).</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbCommitFlushLatency</span></code></p></td>
+<td><p> Time in milliseconds to flush the RocksDB in-memory changes to your local disk.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbCommitPauseLatency</span></code></p></td>
+<td><p> Time in milliseconds to stop the background worker threads (for example, for compaction) as part of the checkpoint commit.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbCommitWriteBatchLatency</span></code></p></td>
+<td><p> Time in milliseconds to apply the staged writes in in-memory structure (<code class="docutils literal notranslate"><span class="pre">WriteBatch</span></code>) to native RocksDB.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbFilesCopied</span></code></p></td>
+<td><p> Number of files copied as tracked by the RocksDB File Manager.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbFilesReused</span></code></p></td>
+<td><p> Number of files reused as tracked by the RocksDB File Manager.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbGetCount</span></code></p></td>
+<td><p> Number of <code class="docutils literal notranslate"><span class="pre">get</span></code> calls to the DB (This doesn’t include <code class="docutils literal notranslate"><span class="pre">gets</span></code> from <code class="docutils literal notranslate"><span class="pre">WriteBatch</span></code>: In-memory batch used for staging writes).</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbGetLatency</span></code></p></td>
+<td><p> Average time in nanoseconds for the underlying native <code class="docutils literal notranslate"><span class="pre">RocksDB::Get</span></code> call.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbReadBlockCacheHitCount</span></code></p></td>
+<td><p> How much of the block cache in RocksDB is useful or not and avoiding local disk reads.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbReadBlockCacheMissCount</span></code></p></td>
+<td><p> How much of the block cache in RocksDB is useful or not and avoiding local disk reads.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbSstFileSize</span></code></p></td>
+<td><p> Size of all SST files. SST stands for Static Sorted Table, which is the tabular structure RocksDB uses to store data.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbTotalBytesRead</span></code></p></td>
+<td><p> Number of uncompressed bytes read by <code class="docutils literal notranslate"><span class="pre">get</span></code> operations.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbTotalBytesReadByCompaction</span></code></p></td>
+<td><p> Number of bytes that the compaction process reads from the disk.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbTotalBytesReadThroughIterator</span></code></p></td>
+<td><p> Some of the stateful operations (for example, timeout processing in <code class="docutils literal notranslate"><span class="pre">FlatMapGroupsWithState</span></code> and watermarking) require reading data in DB through an iterator. This metric represents the size of uncompressed data read using the iterator.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbTotalBytesWritten</span></code></p></td>
+<td><p> Number of uncompressed bytes written by <code class="docutils literal notranslate"><span class="pre">put</span></code> operations.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbTotalBytesWrittenByCompaction</span></code></p></td>
+<td><p> Number of bytes the compaction process writes to the disk.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbTotalCompactionLatencyMs</span></code></p></td>
+<td><p> Time milliseconds for RocksDB compactions, including background compactions and the optional compaction initiated during the commit.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbTotalFlushLatencyMs</span></code></p></td>
+<td><p> Flush time, including background flushing. Flush operations are processes by which the MemTable is flushed to storage once it’s full. MemTables are the first level where data is stored in RocksDB.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">customMetrics.rocksdbZipFileBytesUncompressed</span></code></p></td>
+<td><p> RocksDB File Manager manages the physical SST file disk space utilization and deletion. This metric represents the uncompressed zip files in bytes as reported by the File Manager.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sources-object-kafka">
+<span id="sources-kafka"></span><h3>sources object (Kafka)<a class="headerlink" href="#sources-object-kafka" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 84%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.description</span></code></p></td>
+<td><p> Name of the source the streaming query is reading from. For example, <code class="docutils literal notranslate"><span class="pre">“KafkaV2[Subscribe[KAFKA_TOPIC_NAME_INPUT_A]]”</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.startOffset</span></code> object</p></td>
+<td><p> Starting offset number within the Kafka topic that the streaming job started at.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.endOffset</span></code> object</p></td>
+<td><p> Latest offset processed by the microbatch. This could be equal to <code class="docutils literal notranslate"><span class="pre">latestOffset</span></code> for an ongoing microbatch execution.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.latestOffset</span></code> object</p></td>
+<td><p> Latest offset figured by the microbatch. When there is throttling, the micro-batching process might not process all offsets, causing <code class="docutils literal notranslate"><span class="pre">endOffset</span></code> and <code class="docutils literal notranslate"><span class="pre">latestOffset</span></code> to differ.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.numInputRows</span></code></p></td>
+<td><p> Number of input rows processed from this source.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.inputRowsPerSecond</span></code></p></td>
+<td><p> Rate at which data is arriving for processing for this source.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.processedRowsPerSecond</span></code></p></td>
+<td><p> Rate at which Spark is processing data for this source.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sourcesmetrics-object-kafka">
+<span id="sources-metrics-kafka"></span><h3>sources.metrics object (Kafka)<a class="headerlink" href="#sourcesmetrics-object-kafka" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 71%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.metrics.avgOffsetsBehindLatest</span></code></p></td>
+<td><p> Average number of offsets that the streaming query is behind the latest available offset among all the subscribed topics.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.metrics.estimatedTotalBytesBehindLatest</span></code></p></td>
+<td><p> Estimated number of bytes that the query process has not consumed from the subscribed topics.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.metrics.maxOffsetsBehindLatest</span></code></p></td>
+<td><p> Maximum number of offsets that the streaming query is behind the latest available offset among all the subscribed topics.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.metrics.minOffsetsBehindLatest</span></code></p></td>
+<td><p> Minimum number of offsets that the streaming query is behind the latest available offset among all the subscribed topics.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sink-object-kafka">
+<span id="sink-kafka"></span><h3>sink object (Kafka)<a class="headerlink" href="#sink-object-kafka" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">sink.description</span></code></p></td>
+<td><p> Name of the sink the streaming query is writing to. For example, <code class="docutils literal notranslate"><span class="pre">“org.apache.spark.sql.kafka010.KafkaSourceProvider$KafkaTable&#64;e04b100”</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">sink.numOutputRows</span></code></p></td>
+<td><p> Number of rows that were written to the output table or sink as part of the microbatch. For some situations, this value can be “-1” and generally can be interpreted as “unknown”.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sources-object-delta-lake">
+<span id="sources-object-delta"></span><span id="sources-delta"></span><h3>sources object (Delta Lake)<a class="headerlink" href="#sources-object-delta-lake" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.description</span></code></p></td>
+<td><p> Name of the source the streaming query is reading from. For example, <code class="docutils literal notranslate"><span class="pre">“DeltaSource[table]”</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.[startOffset/endOffset].sourceVersion</span></code></p></td>
+<td><p> Version of serialization that this offset is encoded with.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.[startOffset/endOffset].reservoirId</span></code></p></td>
+<td><p> ID of the table you are reading from. This is used to detect misconfiguration when restarting a query.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.[startOffset/endOffset].reservoirVersion</span></code></p></td>
+<td><p> Version of the table that you are currently processing.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.[startOffset/endOffset].index</span></code></p></td>
+<td><p> Index in the sequence of <code class="docutils literal notranslate"><span class="pre">AddFiles</span></code> in this version. This is used to break large commits into multiple batches. This index is created by sorting on <code class="docutils literal notranslate"><span class="pre">modificationTimestamp</span></code> and <code class="docutils literal notranslate"><span class="pre">path</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.[startOffset/endOffset].isStartingVersion</span></code></p></td>
+<td><p> Whether this offset denotes a query that is starting rather than processing changes. When starting a new query, all data present in the table at the start is processed, and then new data that has arrived.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.latestOffset</span></code></p></td>
+<td><p> Latest offset processed by the microbatch query.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.numInputRows</span></code></p></td>
+<td><p> Number of input rows processed from this source.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.inputRowsPerSecond</span></code></p></td>
+<td><p> Rate at which data is arriving for processing for this source.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.processedRowsPerSecond</span></code></p></td>
+<td><p> Rate at which Spark is processing data for this source.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.metrics.numBytesOutstanding</span></code></p></td>
+<td><p> Size of the outstanding files (files tracked by RocksDB) combined. This is the backlog metric for Delta and Auto Loader as the streaming source.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">sources.metrics.numFilesOutstanding</span></code></p></td>
+<td><p> Number of outstanding files to be processed. This is the backlog metric for Delta and Auto Loader as the streaming source.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sink-object-delta-lake">
+<span id="sink-object-delta"></span><span id="sink-delta"></span><h3>sink object (Delta Lake)<a class="headerlink" href="#sink-object-delta-lake" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">sink.description</span></code></p></td>
+<td><p> Name of the sink that the streaming query writes to. For example, <code class="docutils literal notranslate"><span class="pre">“DeltaSink[table]”</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">sink.numOutputRows</span></code></p></td>
+<td><p> Number of rows in this metric is “-1” because Spark can’t infer output rows for DSv1 sinks, which is the classification for the Delta Lake sink.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sources-object-kinesis">
+<span id="sources-kinesis"></span><h3>sources object (Kinesis)<a class="headerlink" href="#sources-object-kinesis" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 88%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">description</span></code></p></td>
+<td><p> Name of the source that the streaming query reads from. For example, <code class="docutils literal notranslate"><span class="pre">“KinesisV2[stream]”</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+<p>For more information, see <a class="reference internal" href="../connect/streaming/kinesis.html#metrics"><span class="std std-ref">What metrics does Kinesis report?</span></a>.</p>
+</div>
+<div class="section" id="sources-metrics-object-kinesis">
+<span id="sources-metrics-kinesis"></span><h3>sources metrics object (Kinesis)<a class="headerlink" href="#sources-metrics-object-kinesis" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">avgMsBehindLatest</span></code></p></td>
+<td><p> Average number of milliseconds a consumer has fallen behind the beginning of a stream.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">maxMsBehindLatest</span></code></p></td>
+<td><p> Maximum number of milliseconds a consumer has fallen behind the beginning of a stream.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">minMsBehindLatest</span></code></p></td>
+<td><p> Minimum number of milliseconds a consumer has fallen behind the beginning of a stream.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">totalPrefetchedBytes</span></code></p></td>
+<td><p> Number of bytes left to process. This is the backlog metric for Kinesis as a source.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sink-kinesis">
+<span id="sink-object-delta"></span><span id="sink"></span><h3>sink (Kinesis)<a class="headerlink" href="#sink-kinesis" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 81%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">sink.description</span></code></p></td>
+<td><p> Name of the sink that the streaming query writes to. For example, <code class="docutils literal notranslate"><span class="pre">“KinesisV2[stream]”</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">sink.numOutputRows</span></code></p></td>
+<td><p> Number of rows that were written to the output table or sink as part of the microbatch.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"> </a></h2>
+<div class="section" id="example-kafka-to-kafka-streamingquerylistener-event">
+<h3>Example Kafka-to-Kafka StreamingQueryListener event<a class="headerlink" href="#example-kafka-to-kafka-streamingquerylistener-event" title="Permalink to this headline"> </a></h3>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3574feba-646d-4735-83c4-66f657e52517&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;runId&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;38a78903-9e55-4440-ad81-50b591e4746c&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;STREAMING_QUERY_NAME_UNIQUE&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2022-10-31T20:09:30.455Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;batchId&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1377</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;numInputRows&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">687</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;inputRowsPerSecond&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">32.13433743393049</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;processedRowsPerSecond&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">34.067241892293964</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;durationMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;addBatch&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">18352</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;getBatch&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;latestOffset&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">31</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;queryPlanning&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">977</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;triggerExecution&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">20165</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;walCommit&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">342</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;eventTime&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;avg&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2022-10-31T20:09:18.070Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;max&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2022-10-31T20:09:30.125Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;min&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2022-10-31T20:09:09.793Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;watermark&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2022-10-31T20:08:46.355Z&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;stateOperators&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;operatorName&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;stateStoreSave&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numRowsTotal&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">208</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numRowsUpdated&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">73</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;allUpdatesTimeMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">434</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numRowsRemoved&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">76</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;allRemovalsTimeMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">515</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;commitTimeMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;memoryUsedBytes&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">167069743</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numRowsDroppedByWatermark&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numShufflePartitions&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numStateStoreInstances&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;customMetrics&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbBytesCopied&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitCheckpointLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitCompactLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitFileSyncLatencyMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitFlushLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitPauseLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitWriteBatchLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbFilesCopied&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbFilesReused&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbGetCount&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">222</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbGetLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbPutCount&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbPutLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbReadBlockCacheHitCount&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">165</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbReadBlockCacheMissCount&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">41</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbSstFileSize&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">232729</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalBytesRead&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">12844</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalBytesReadByCompaction&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalBytesReadThroughIterator&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">161238</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalBytesWritten&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalBytesWrittenByCompaction&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalCompactionLatencyMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalFlushLatencyMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbWriterStallLatencyMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbZipFileBytesUncompressed&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;operatorName&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dedupe&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numRowsTotal&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">2454744</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numRowsUpdated&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">73</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;allUpdatesTimeMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">4155</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numRowsRemoved&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;allRemovalsTimeMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;commitTimeMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;memoryUsedBytes&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">137765341</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numRowsDroppedByWatermark&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">34</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numShufflePartitions&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numStateStoreInstances&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;customMetrics&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;numDroppedDuplicateRows&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">193</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbBytesCopied&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitCheckpointLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitCompactLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitFileSyncLatencyMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitFlushLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitPauseLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitWriteBatchLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbFilesCopied&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbFilesReused&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbGetCount&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">146</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbGetLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbPutCount&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbPutLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbReadBlockCacheHitCount&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbReadBlockCacheMissCount&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbSstFileSize&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">78959140</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalBytesRead&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalBytesReadByCompaction&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalBytesReadThroughIterator&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalBytesWritten&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalBytesWrittenByCompaction&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalCompactionLatencyMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalFlushLatencyMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbWriterStallLatencyMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbZipFileBytesUncompressed&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;operatorName&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;symmetricHashJoin&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numRowsTotal&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">2583</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numRowsUpdated&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">682</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;allUpdatesTimeMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">9645</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numRowsRemoved&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">508</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;allRemovalsTimeMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">46</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;commitTimeMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">21</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;memoryUsedBytes&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">668544484</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numRowsDroppedByWatermark&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numShufflePartitions&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numStateStoreInstances&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;customMetrics&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbBytesCopied&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitCheckpointLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitCompactLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitFileSyncLatencyMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitFlushLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitPauseLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbCommitWriteBatchLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbFilesCopied&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbFilesReused&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbGetCount&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">4218</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbGetLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbPutCount&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbPutLatency&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbReadBlockCacheHitCount&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">3425</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbReadBlockCacheMissCount&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">149</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbSstFileSize&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">742827</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalBytesRead&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">866864</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalBytesReadByCompaction&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalBytesReadThroughIterator&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalBytesWritten&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalBytesWrittenByCompaction&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalCompactionLatencyMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbTotalFlushLatencyMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbWriterStallLatencyMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rocksdbZipFileBytesUncompressed&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;sources&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KafkaV2[Subscribe[KAFKA_TOPIC_NAME_INPUT_A]]&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;startOffset&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;KAFKA_TOPIC_NAME_INPUT_A&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;0&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">349706380</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;endOffset&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;KAFKA_TOPIC_NAME_INPUT_A&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;0&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">349706672</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;latestOffset&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;KAFKA_TOPIC_NAME_INPUT_A&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;0&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">349706672</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;numInputRows&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">292</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;inputRowsPerSecond&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">13.65826278123392</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;processedRowsPerSecond&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">14.479817514628582</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;metrics&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;avgOffsetsBehindLatest&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.0&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;estimatedTotalBytesBehindLatest&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.0&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;maxOffsetsBehindLatest&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;minOffsetsBehindLatest&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KafkaV2[Subscribe[KAFKA_TOPIC_NAME_INPUT_B]]&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;startOffset&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;KAFKA_TOPIC_NAME_INPUT_B&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;2&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">143147812</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;1&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">129288266</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;0&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">138102966</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;endOffset&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;KAFKA_TOPIC_NAME_INPUT_B&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;2&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">143147812</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;1&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">129288266</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;0&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">138102966</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;latestOffset&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;KAFKA_TOPIC_NAME_INPUT_B&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;2&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">143147812</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;1&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">129288266</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;0&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">138102966</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;numInputRows&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;inputRowsPerSecond&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;processedRowsPerSecond&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;metrics&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;avgOffsetsBehindLatest&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.0&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;maxOffsetsBehindLatest&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;minOffsetsBehindLatest&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;sink&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;org.apache.spark.sql.kafka010.KafkaSourceProvider$KafkaTable@e04b100&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numOutputRows&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">76</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-delta-lake-to-delta-lake-streamingquerylistener-event">
+<span id="example-delta-to-delta-streamingquerylistener-event"></span><h3>Example Delta Lake-to-Delta Lake StreamingQueryListener event<a class="headerlink" href="#example-delta-lake-to-delta-lake-streamingquerylistener-event" title="Permalink to this headline"> </a></h3>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;aeb6bc0f-3f7d-4928-a078-ba2b304e2eaf&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;runId&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;35d751d9-2d7c-4338-b3de-6c6ae9ebcfc2&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;silverTransformFromBronze&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2022-11-01T18:21:29.500Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;batchId&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;numInputRows&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;inputRowsPerSecond&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;processedRowsPerSecond&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;durationMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;latestOffset&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">62</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;triggerExecution&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">62</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;stateOperators&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;sources&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DeltaSource[dbfs:/FileStore/max.fisher@databricks.com/ctc/stateful-trade-analysis-demo/table]&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;startOffset&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;sourceVersion&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;reservoirId&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;84590dac-da51-4e0f-8eda-6620198651a9&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;reservoirVersion&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">3216</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;index&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">3214</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;isStartingVersion&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;endOffset&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;sourceVersion&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;reservoirId&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;84590dac-da51-4e0f-8eda-6620198651a9&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;reservoirVersion&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">3216</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;index&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">3214</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;isStartingVersion&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;latestOffset&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numInputRows&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;inputRowsPerSecond&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;processedRowsPerSecond&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;metrics&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;numBytesOutstanding&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;numFilesOutstanding&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;sink&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DeltaSink[dbfs:/user/hive/warehouse/maxfisher.db/trade_history_silver_delta_demo2]&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numOutputRows&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">-1</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-rate-source-to-delta-lake-streamingquerylistener-event">
+<span id="example-rate-source-to-delta-streamingquerylistener-event"></span><h3>Example rate source to Delta Lake StreamingQueryListener event<a class="headerlink" href="#example-rate-source-to-delta-lake-streamingquerylistener-event" title="Permalink to this headline"> </a></h3>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;912ebdc1-edf2-48ec-b9fb-1a9b67dd2d9e&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;runId&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;85de73a5-92cc-4b7f-9350-f8635b0cf66e&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dataGen&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2022-11-01T18:28:20.332Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;batchId&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">279</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;numInputRows&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;inputRowsPerSecond&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">114.15525114155251</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;processedRowsPerSecond&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">158.9825119236884</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;durationMs&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;addBatch&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1771</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;commitOffsets&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">54</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;getBatch&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;latestOffset&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;queryPlanning&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;triggerExecution&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1887</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;walCommit&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">58</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;stateOperators&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;sources&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RateStreamV2[rowsPerSecond=100, rampUpTimeSeconds=0, numPartitions=default&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;startOffset&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">560</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;endOffset&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">563</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;latestOffset&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">563</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numInputRows&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;inputRowsPerSecond&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">114.15525114155251</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;processedRowsPerSecond&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">158.9825119236884</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;sink&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DeltaSink[dbfs:/user/hive/warehouse/maxfisher.db/trade_history_bronze_delta_demo]&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;numOutputRows&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">-1</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

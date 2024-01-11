@@ -1,0 +1,493 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to create a Unity Catalog external location on Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Create an external location">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Create an external location &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/connect/unity-catalog/external-locations.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/connect/unity-catalog/external-locations.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/connect/unity-catalog/external-locations.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/connect/unity-catalog/external-locations.html" class="notranslate">English</option>
+    <option value="../../../ja/connect/unity-catalog/external-locations.html" class="notranslate">日本語</option>
+    <option value="../../../pt/connect/unity-catalog/external-locations.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Create an external location</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="create-an-external-location">
+<h1>Create an external location<a class="headerlink" href="#create-an-external-location" title="Permalink to this headline"> </a></h1>
+<p>This article describes how to configure an external location in Unity Catalog on Databricks.</p>
+<p>External locations associate Unity Catalog storage credentials with cloud object storage containers. External locations are used to define managed storage locations for catalogs and schemas, and to define locations for external tables and external volumes.</p>
+<p>You can create an external location using Catalog Explorer, the Databricks CLI, SQL commands in a notebook or Databricks SQL query, or <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/external_location">Terraform</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When you define a volume, you can no longer access any paths that overlap the volume location using external locations in the Catalog Explorer or cloud URIs.</p>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>To create external locations, you must have the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">LOCATION</span></code> privilege on both the metastore and the storage credential referenced in the external location. Metastore admins have <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">LOCATION</span></code> on the metastore by default.</p></li>
+<li><p>Each cloud storage path can be associated with only one external location. If you attempt to create a second external location that references the same path, the command fails.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The name of the S3 bucket that you want users to read from and write to cannot use dot notation (for example, <code class="docutils literal notranslate"><span class="pre">incorrect.bucket.name.notation</span></code>). For more bucket naming guidance, see the <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html">AWS bucket naming rules</a>.</p>
+</div>
+</div>
+<div class="section" id="create-an-external-location-using-sql">
+<h2>Create an external location using SQL<a class="headerlink" href="#create-an-external-location-using-sql" title="Permalink to this headline"> </a></h2>
+<p>To create an external location using SQL, run the following command in a notebook or the SQL query editor. Replace the placeholder values:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;location-name&gt;</span></code>: A name for the external location.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;bucket-path&gt;</span></code>: The path in your cloud tenant that this external location grants access to.</p></li>
+</ul>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;storage-credential-name&gt;</span></code>: The name of the storage credential that contains the IAM role ARN that authorizes reading from and writing to the S3 bucket.</p></li>
+</ul>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">EXTERNAL</span><span class="w"> </span><span class="k">LOCATION</span><span class="w"> </span><span class="p">[</span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="k">location</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="n">URL</span><span class="w"> </span><span class="s1">&#39;s3://&lt;bucket-path&gt;&#39;</span>
+<span class="k">WITH</span><span class="w"> </span><span class="p">([</span><span class="k">STORAGE</span><span class="p">]</span><span class="w"> </span><span class="n">CREDENTIAL</span><span class="w"> </span><span class="o">&lt;</span><span class="k">storage</span><span class="o">-</span><span class="n">credential</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="p">[</span><span class="k">COMMENT</span><span class="w"> </span><span class="o">&lt;</span><span class="k">comment</span><span class="o">-</span><span class="n">string</span><span class="o">&gt;</span><span class="p">];</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-an-external-location-using-an-aws-cloudformation-template">
+<span id="create-an-external-location-using-sql"></span><span id="cloudformation"></span><h2>Create an external location using an AWS CloudFormation template<a class="headerlink" href="#create-an-external-location-using-an-aws-cloudformation-template" title="Permalink to this headline"> </a></h2>
+<p>If you create an external location using the AWS CloudFormation template, Databricks configures the external location and creates a storage credential for you. You also have the option to <a class="reference internal" href="#catalog-explorer"><span class="std std-ref">create the external location manually</span></a>, which requires that you first create an IAM role that gives access to the S3 bucket that is referenced by the external location and a storage credential that references that IAM role. For details, see[_](/connect/unity-catalog/storage-credentials.md).</p>
+<p><strong>Permissions required</strong> Metastore admin or user with the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">LOCATION</span></code> and <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">STORAGE</span> <span class="pre">CREDENTIAL</span></code> privileges.</p>
+<p>To create the external location:</p>
+<ol class="arabic">
+<li><p>Open a workspace that is attached to the metastore.</p></li>
+<li><p>Click <img alt="Catalog icon" src="../../_images/data-icon.png" /> <strong>Catalog</strong> to open Catalog Explorer.</p></li>
+<li><p>Click the <strong>+ Add</strong> button and select <strong>Add an external location</strong>.</p></li>
+<li><p>On the <strong>Create a new external location</strong> dialog, click <strong>AWS Quickstart (Recommended) and click **Next</strong>.</p>
+<p>The AWS Quickstart configures the external location and creates a storage credential for you. If you choose to use the <strong>Manual</strong> option, you must manually create an IAM role that gives access to the S3 bucket and create the storage credential in Databricks yourself.</p>
+</li>
+<li><p>On the <strong>Create external location with Quickstart</strong> dialog, enter the path to the S3 bucket in the <strong>Bucket Name</strong> field.</p></li>
+<li><p>Click <strong>Generate new token</strong> to generate the personal access token that you will use to authenticate between Databricks and your AWS account.</p></li>
+<li><p>Copy the token and click <strong>Launch in Quickstart</strong>.</p></li>
+<li><p>In the AWS CloudFormation template that launches (labeled <strong>Quick create stack</strong>), paste the token into the <strong>Databricks Account Credentials</strong> field.</p></li>
+<li><p>Accept the terms at the bottom of the page (<strong>I acknowledge that AWS CloudFormation might create IAM resources with custom names</strong>).</p></li>
+<li><p>Click <strong>Create stack</strong>.</p>
+<p>It may take a few minutes for the CloudFormation template to finish creating the external location object in Databricks.</p>
+</li>
+<li><p>Return to your Databricks workspace and click <strong>Catalog</strong> to open <strong>Catalog Explorer</strong>.</p></li>
+<li><p>In the left pane of Catalog Explorer, scroll down and click <strong>External Data &gt; External Locations</strong>.</p></li>
+<li><p>Confirm that a new external location has been created.</p>
+<p>Automatically-generated external locations use the naming syntax <code class="docutils literal notranslate"><span class="pre">db_s3_external_databricks-S3-ingest-&lt;id&gt;</span></code>.</p>
+</li>
+<li><p>Grant permission to use the external location.</p>
+<p>For anyone to use the external location, you must grant permissions:</p>
+<ul class="simple">
+<li><p>To use the external location to add a managed storage location to metastore, catalog, or schema, grant the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">MANAGED</span> <span class="pre">LOCATION</span></code> privilege.</p></li>
+<li><p>To create external tables or volumes, grant <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">TABLE</span></code> or <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">VOLUME</span></code>.</p></li>
+</ul>
+<p>To use Catalog Explorer to grant permissions:</p>
+<ol class="loweralpha simple">
+<li><p>Click the external location name to open the details pane.</p></li>
+<li><p>On the <strong>Permissions</strong> tab, click <strong>Grant</strong>.</p></li>
+<li><p>On the <strong>Grant on <code class="docutils literal notranslate"><span class="pre">&lt;external</span> <span class="pre">location&gt;</span></code></strong> dialog, select users, groups, or service principals in <strong>Principals</strong> field, and select the privilege you want to grant.</p></li>
+<li><p>Click <strong>Grant</strong>.</p></li>
+</ol>
+</li>
+</ol>
+</div>
+<div class="section" id="create-an-external-location-using-catalog-explorer">
+<span id="catalog-explorer"></span><h2>Create an external location using Catalog Explorer<a class="headerlink" href="#create-an-external-location-using-catalog-explorer" title="Permalink to this headline"> </a></h2>
+<p>You can create an external location using Catalog Explorer.</p>
+<p>If you do not want to use the AWS CloudFormation template to create the external location and storage credential that is referenced by the external location, you can use the procedure described here. You must create a storage credential in advance. See <a class="reference internal" href="storage-credentials.html"><span class="doc">Create a storage credential</span></a>.</p>
+<p>To create the external location:</p>
+<ol class="arabic">
+<li><p>Click <strong>Catalog</strong> to open <strong>Catalog Explorer</strong>.</p></li>
+<li><p>Click the <strong>+ Add</strong> button and select <strong>Add an external location</strong>.</p></li>
+<li><p>On the <strong>Create a new external location</strong> dialog, click <strong>Manual</strong>, then <strong>Next</strong>.</p>
+<p>To learn about the AWS Quickstart option, see <a class="reference internal" href="#cloudformation"><span class="std std-ref">Create an external location using an AWS CloudFormation template</span></a>.</p>
+</li>
+<li><p>In the <strong>Create a new external location manually</strong> dialog, enter an <strong>External location name</strong>.</p></li>
+<li><p>Optionally copy the S3 bucket path from an existing mount point.</p></li>
+<li><p>If you aren’t copying from an existing mount point, use the <strong>URL</strong> field to enter the S3 bucket path that you want to use as the external location.</p></li>
+<li><p>Select the storage credential that grants access to the external location.</p></li>
+<li><p>(Optional) If you want users to have read-only access to the external location, click <strong>Advanced Options</strong> and select <strong>Read only</strong>. For more information, see <a class="reference internal" href="manage-external-locations.html#read-only"><span class="std std-ref">Mark an external location as read-only</span></a>.</p></li>
+<li><p>Click <strong>Create</strong>.</p></li>
+<li><p>Grant permission to use the external location.</p>
+<p>For anyone to use the external location you must grant permissions:</p>
+<ul class="simple">
+<li><p>To use the external location to add a managed storage location to metastore, catalog, or schema, grant the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">MANAGED</span> <span class="pre">LOCATION</span></code> privilege.</p></li>
+<li><p>To create external tables or volumes, grant <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">TABLE</span></code> or <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">VOLUME</span></code>.</p></li>
+</ul>
+<p>To use Catalog Explorer to grant permissions:</p>
+<ol class="loweralpha simple">
+<li><p>Click the external location name to open the details pane.</p></li>
+<li><p>On the <strong>Permissions</strong> tab, click <strong>Grant</strong>.</p></li>
+<li><p>On the <strong>Grant on <code class="docutils literal notranslate"><span class="pre">&lt;external</span> <span class="pre">location&gt;</span></code></strong> dialog, select users, groups, or service principals in <strong>Principals</strong> field, and select the privilege you want to grant.</p></li>
+<li><p>Click <strong>Grant</strong>.</p></li>
+</ol>
+</li>
+</ol>
+</div>
+<div class="section" id="next-steps">
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>Grant other users permission to use external locations. See <a class="reference internal" href="manage-external-locations.html"><span class="doc">Manage external locations</span></a>.</p></li>
+<li><p>Define managed storage locations using external locations. See <a class="reference internal" href="managed-storage.html"><span class="doc">Specify a managed storage location in Unity Catalog</span></a>.</p></li>
+<li><p>Define external tables using external locations. See <a class="reference internal" href="../../data-governance/unity-catalog/create-tables.html#create-an-external-table"><span class="std std-ref">Create an external table</span></a>.</p></li>
+<li><p>Define external volumes using external locations. See <a class="reference internal" href="volumes.html"><span class="doc">Create and work with volumes</span></a>.</p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

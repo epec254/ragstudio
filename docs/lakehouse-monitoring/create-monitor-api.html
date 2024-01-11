@@ -1,0 +1,608 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to create a Lakehouse monitor using the API in Databricks. Learn about the types of monitors available and the parameters for each type." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Create a monitor using the API">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Create a monitor using the API &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/lakehouse-monitoring/create-monitor-api.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/lakehouse-monitoring/create-monitor-api.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/lakehouse-monitoring/create-monitor-api.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/lakehouse-monitoring/create-monitor-api.html" class="notranslate">English</option>
+    <option value="../../ja/lakehouse-monitoring/create-monitor-api.html" class="notranslate">日本語</option>
+    <option value="../../pt/lakehouse-monitoring/create-monitor-api.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Create a monitor using the API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="create-a-monitor-using-the-api">
+<h1>Create a monitor using the API<a class="headerlink" href="#create-a-monitor-using-the-api" title="Permalink to this headline"> </a></h1>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<p>This page describes how to create a monitor in Databricks and describes all of the parameters used in the API call.</p>
+<p>You can create a monitor on any managed or external Delta table registered in Unity Catalog. Only a single monitor can be created in a Unity Catalog metastore for any table.</p>
+<p>For details about the Lakehouse monitoring API, see the <a class="reference external" href="https://api-docs.databricks.com/python/lakehouse-monitoring/latest/index.html">API reference</a>.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<p>To use the Lakehouse monitoring API, you must install the Python client at the beginning of your notebook using the following command:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="s2">&quot;https://ml-team-public-read.s3.amazonaws.com/wheels/data-monitoring/a4050ef7-b183-47a1-a145-e614628e3146/databricks_lakehouse_monitoring-0.4.4-py3-none-any.whl&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="profile-type-parameter">
+<span id="monitor-profile-type"></span><h2>Profile type parameter<a class="headerlink" href="#profile-type-parameter" title="Permalink to this headline"> </a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">profile_type</span></code> parameter determines the class of metrics that monitoring computes for the table. There are three types: Snapshot, TimeSeries, and InferenceLog. This section briefly describes the parameters. For details, see the <a class="reference external" href="https://api-docs.databricks.com/python/lakehouse-monitoring/latest/index.html">API reference</a>.</p>
+<div class="section" id="timeseries-profile">
+<h3><code class="docutils literal notranslate"><span class="pre">TimeSeries</span></code> profile<a class="headerlink" href="#timeseries-profile" title="Permalink to this headline"> </a></h3>
+<p>A <code class="docutils literal notranslate"><span class="pre">TimeSeries</span></code> profile compares data distributions across time windows. For a <code class="docutils literal notranslate"><span class="pre">TimeSeries</span></code> profile, you must provide the following:</p>
+<ul class="simple">
+<li><p>A timestamp column (<code class="docutils literal notranslate"><span class="pre">timestamp_col</span></code>). The timestamp column data type must be either <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span></code> or a type that can be converted to timestamps using the <code class="docutils literal notranslate"><span class="pre">to_timestamp</span></code> <a class="reference external" href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.to_timestamp.html">PySpark function</a>.</p></li>
+<li><p>The set of <code class="docutils literal notranslate"><span class="pre">granularities</span></code> over which to calculate metrics. Available granularities are “5 minutes”, “30 minutes”, “1 hour”, “1 day”, “n week(s)”, “1 month”, “1 year”.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks</span> <span class="kn">import</span> <span class="n">lakehouse_monitoring</span> <span class="k">as</span> <span class="n">lm</span>
+
+<span class="n">lm</span><span class="o">.</span><span class="n">create_monitor</span><span class="p">(</span>
+    <span class="n">table_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">schema</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">profile_type</span><span class="o">=</span><span class="n">lm</span><span class="o">.</span><span class="n">TimeSeries</span><span class="p">(</span>
+        <span class="n">timestamp_col</span><span class="o">=</span><span class="s2">&quot;ts&quot;</span><span class="p">,</span>
+        <span class="n">granularities</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;30 minutes&quot;</span><span class="p">]</span>
+    <span class="p">),</span>
+    <span class="n">output_schema_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">schema</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="snapshot-profile">
+<h3><code class="docutils literal notranslate"><span class="pre">Snapshot</span></code> profile<a class="headerlink" href="#snapshot-profile" title="Permalink to this headline"> </a></h3>
+<p>In contrast to <code class="docutils literal notranslate"><span class="pre">TimeSeries</span></code>, a <code class="docutils literal notranslate"><span class="pre">Snapshot</span></code> profile monitors how the full contents of the table change over time. Metrics are calculated over all data in the table, and monitor the table state at each time the monitor is refreshed.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks</span> <span class="kn">import</span> <span class="n">lakehouse_monitoring</span> <span class="k">as</span> <span class="n">lm</span>
+
+<span class="n">lm</span><span class="o">.</span><span class="n">create_monitor</span><span class="p">(</span>
+    <span class="n">table_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">schema</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">profile_type</span><span class="o">=</span><span class="n">lm</span><span class="o">.</span><span class="n">Snapshot</span><span class="p">(),</span>
+    <span class="n">output_schema_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">schema</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="inferencelog-profile">
+<h3><code class="docutils literal notranslate"><span class="pre">InferenceLog</span></code> profile<a class="headerlink" href="#inferencelog-profile" title="Permalink to this headline"> </a></h3>
+<p>An <code class="docutils literal notranslate"><span class="pre">InferenceLog</span></code> profile is similar to a <code class="docutils literal notranslate"><span class="pre">TimeSeries</span></code> profile but also includes model quality metrics. For an <code class="docutils literal notranslate"><span class="pre">InferenceLog</span></code> profile, the following parameters are required:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 91%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">problem_type</span></code></p></td>
+<td><p> “classification” or “regression”.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">prediction_col</span></code></p></td>
+<td><p> Column containing the model’s predicted values.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">timestamp_col</span></code></p></td>
+<td><p> Column containing the timestamp of the inference request.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">model_id_col</span></code></p></td>
+<td><p> Column containing the id of the model used for prediction.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">granularities</span></code></p></td>
+<td><p> Determines how to partition the data in windows across time. Possible values: “5 minutes”, “30 minutes”, “1 hour”, “1 day”, “n week(s)”, “1 month”, “1 year”.</p></td>
+</tr>
+</tbody>
+</table>
+<p>There is also an optional parameter:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 76%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Optional parameter</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">label_col</span></code></p></td>
+<td><p> Column containing the ground truth for model predictions.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks</span> <span class="kn">import</span> <span class="n">lakehouse_monitoring</span> <span class="k">as</span> <span class="n">lm</span>
+
+<span class="n">lm</span><span class="o">.</span><span class="n">create_monitor</span><span class="p">(</span>
+    <span class="n">table_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">schema</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">profile_type</span><span class="o">=</span><span class="n">lm</span><span class="o">.</span><span class="n">InferenceLog</span><span class="p">(</span>
+        <span class="n">problem_type</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span>
+        <span class="n">prediction_col</span><span class="o">=</span><span class="s2">&quot;preds&quot;</span><span class="p">,</span>
+        <span class="n">timestamp_col</span><span class="o">=</span><span class="s2">&quot;ts&quot;</span><span class="p">,</span>
+        <span class="n">granularities</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;30 minutes&quot;</span><span class="p">,</span> <span class="s2">&quot;1 day&quot;</span><span class="p">],</span>
+        <span class="n">model_id_col</span><span class="o">=</span><span class="s2">&quot;model_ver&quot;</span><span class="p">,</span>
+        <span class="n">label_col</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="c1"># optional</span>
+    <span class="p">),</span>
+    <span class="n">output_schema_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">schema</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>For InferenceLog profiles, slices are automatically created based on the the distinct values of <code class="docutils literal notranslate"><span class="pre">model_id_col</span></code>.</p>
+</div>
+</div>
+<div class="section" id="refresh-and-view-monitor-results">
+<span id="refresh"></span><h2>Refresh and view monitor results<a class="headerlink" href="#refresh-and-view-monitor-results" title="Permalink to this headline"> </a></h2>
+<p>To refresh metrics tables, use <code class="docutils literal notranslate"><span class="pre">run_refresh</span></code>. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks</span> <span class="kn">import</span> <span class="n">lakehouse_monitoring</span> <span class="k">as</span> <span class="n">lm</span>
+
+<span class="n">lm</span><span class="o">.</span><span class="n">run_refresh</span><span class="p">(</span>
+    <span class="n">table_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">schema</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>When you call <code class="docutils literal notranslate"><span class="pre">run_refresh</span></code> from a notebook, the monitor metric tables are created or updated. This calculation runs on serverless compute, not on the cluster that the notebook is attached to. You can continue to run commands in the notebook while the monitor statistics are updated.</p>
+<p>For information about the statistics that are stored in metric tables, see <a class="reference internal" href="monitor-output.html"><span class="doc">Monitor metric tables</span></a>  Metric tables are Unity Catalog tables. You can query them in notebooks or in the SQL query explorer, and view them in Catalog Explorer.</p>
+<p>To display the history of all refreshes associated with a monitor, use <code class="docutils literal notranslate"><span class="pre">list_refreshes</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks</span> <span class="kn">import</span> <span class="n">lakehouse_monitoring</span> <span class="k">as</span> <span class="n">lm</span>
+
+<span class="n">lm</span><span class="o">.</span><span class="n">list_refreshes</span><span class="p">(</span>
+    <span class="n">table_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">schema</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>To get the status of a specific run that has been queued, running, or finished, use <code class="docutils literal notranslate"><span class="pre">get_refresh</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks</span> <span class="kn">import</span> <span class="n">lakehouse_monitoring</span> <span class="k">as</span> <span class="n">lm</span>
+
+<span class="n">run_info</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">run_refresh</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">schema</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">lm</span><span class="o">.</span><span class="n">get_refresh</span><span class="p">(</span>
+    <span class="n">table_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">schema</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">refresh_id</span> <span class="o">=</span> <span class="n">run_info</span><span class="o">.</span><span class="n">refresh_id</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="view-monitor-settings">
+<h2>View monitor settings<a class="headerlink" href="#view-monitor-settings" title="Permalink to this headline"> </a></h2>
+<p>You can review monitor settings using the API <code class="docutils literal notranslate"><span class="pre">get_monitor</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks</span> <span class="kn">import</span> <span class="n">lakehouse_monitoring</span> <span class="k">as</span> <span class="n">lm</span>
+
+<span class="n">lm</span><span class="o">.</span><span class="n">get_monitor</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="n">TABLE_NAME</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="schedule">
+<h2>Schedule<a class="headerlink" href="#schedule" title="Permalink to this headline"> </a></h2>
+<p>To set up a monitor to run on a scheduled basis, use the <code class="docutils literal notranslate"><span class="pre">schedule</span></code> parameter of <code class="docutils literal notranslate"><span class="pre">create_monitor</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lm</span><span class="o">.</span><span class="n">create_monitor</span><span class="p">(</span>
+    <span class="n">table_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">schema</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">profile_type</span><span class="o">=</span><span class="n">lm</span><span class="o">.</span><span class="n">TimeSeries</span><span class="p">(</span>
+        <span class="n">timestamp_col</span><span class="o">=</span><span class="s2">&quot;ts&quot;</span><span class="p">,</span>
+        <span class="n">granularities</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;30 minutes&quot;</span><span class="p">]</span>
+    <span class="p">),</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="n">lm</span><span class="o">.</span><span class="n">MonitorCronSchedule</span><span class="p">(</span>
+        <span class="n">quartz_cron_expression</span><span class="o">=</span><span class="s2">&quot;0 0 12 * * ?&quot;</span><span class="p">,</span> <span class="c1"># schedules a refresh every day at 12 noon</span>
+        <span class="n">timezone_id</span><span class="o">=</span><span class="s2">&quot;PST&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">output_schema_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">schema</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>See <a class="reference external" href="https://en.wikipedia.org/wiki/Cron">cron expressions</a> for more information.</p>
+</div>
+<div class="section" id="control-access-to-metric-tables">
+<h2>Control access to metric tables<a class="headerlink" href="#control-access-to-metric-tables" title="Permalink to this headline"> </a></h2>
+<p>The metric tables and dashboard created by a monitor are owned by the user who created the monitor. You can use Unity Catalog privileges to control access to metric tables. To share dashboards within a workspace, use the <strong>Share</strong> button at the upper-right of the dashboard.</p>
+</div>
+<div class="section" id="delete-a-monitor">
+<h2>Delete a monitor<a class="headerlink" href="#delete-a-monitor" title="Permalink to this headline"> </a></h2>
+<p>To delete a monitor:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lm</span><span class="o">.</span><span class="n">delete_monitor</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="n">TABLE_NAME</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This command does not delete the profile tables and the dashboard created by the monitor. You must delete those assets in a separate step, or you can save them in a different location.</p>
+</div>
+<div class="section" id="example-notebooks">
+<h2>Example notebooks<a class="headerlink" href="#example-notebooks" title="Permalink to this headline"> </a></h2>
+<p>The following example notebooks illustrate how to create a monitor, refresh the monitor, and examine the metric tables it creates.</p>
+</div>
+<div class="section" id="notebook-example-time-series-profile">
+<h2>Notebook example: Time series profile<a class="headerlink" href="#notebook-example-time-series-profile" title="Permalink to this headline"> </a></h2>
+<p>This notebook illustrates how to create a <code class="docutils literal notranslate"><span class="pre">TimeSeries</span></code> type monitor.</p>
+<div class="embedded-notebook-section section" id="timeseries-lakehouse-monitor-example-notebook">
+<span id="timeseries-monitor"></span><h3>TimeSeries Lakehouse Monitor example notebook<a class="headerlink" href="#timeseries-lakehouse-monitor-example-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/monitoring/timeseries-monitor.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/monitoring/timeseries-monitor.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/monitoring/timeseries-monitor.html"            id="74502d23597fd9a0a5c71b18d82191ab08a743fba9da7bc401a4f205c566bc87" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+<div class="section" id="notebook-example-snapshot-profile">
+<h2>Notebook example: Snapshot profile<a class="headerlink" href="#notebook-example-snapshot-profile" title="Permalink to this headline"> </a></h2>
+<p>This notebook illustrates how to create a <code class="docutils literal notranslate"><span class="pre">Snapshot</span></code> type monitor.</p>
+<div class="embedded-notebook-section section" id="snapshot-lakehouse-monitor-example-notebook">
+<span id="snapshot-monitor"></span><h3>Snapshot Lakehouse Monitor example notebook<a class="headerlink" href="#snapshot-lakehouse-monitor-example-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/monitoring/snapshot-monitor.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/monitoring/snapshot-monitor.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/monitoring/snapshot-monitor.html"            id="1643eedcf7205e809559c646335667309f77ca8b47bf3fe051f9278c3a6c5c65" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+<div class="section" id="notebook-example-inference-profile-regression">
+<h2>Notebook example: Inference profile (regression)<a class="headerlink" href="#notebook-example-inference-profile-regression" title="Permalink to this headline"> </a></h2>
+<p>This notebook illustrates how to create a <code class="docutils literal notranslate"><span class="pre">InferenceLog</span></code> type monitor for a regression problem.</p>
+<div class="embedded-notebook-section section" id="inference-lakehouse-monitor-regression-example-notebook">
+<span id="regression-monitor"></span><h3>Inference Lakehouse Monitor regression example notebook<a class="headerlink" href="#inference-lakehouse-monitor-regression-example-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/monitoring/regression-monitor.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/monitoring/regression-monitor.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/monitoring/regression-monitor.html"            id="368f0c818cd351b6b5571bda9f170f7c2f91a36cd1b7ddde884cb7e281a57b27" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+<div class="section" id="notebook-example-inference-profile-classification">
+<h2>Notebook example: Inference profile (classification)<a class="headerlink" href="#notebook-example-inference-profile-classification" title="Permalink to this headline"> </a></h2>
+<p>This notebook illustrates how to create a <code class="docutils literal notranslate"><span class="pre">InferenceLog</span></code> type monitor for a classification problem.</p>
+<div class="embedded-notebook-section section" id="inference-lakehouse-monitor-classification-example-notebook">
+<span id="classification-monitor"></span><h3>Inference Lakehouse Monitor classification example notebook<a class="headerlink" href="#inference-lakehouse-monitor-classification-example-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/monitoring/classification-monitor.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/monitoring/classification-monitor.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/monitoring/classification-monitor.html"            id="07a26a22e3d673ab42ce489dcab872b27a6be146adbbed78e22113c2f175520e" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

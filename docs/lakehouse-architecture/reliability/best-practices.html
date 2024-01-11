@@ -1,0 +1,503 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="This article covers best practices for reliability on the data lakehouse on Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Best practices for reliability">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Best practices for reliability &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/lakehouse-architecture/reliability/best-practices.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/lakehouse-architecture/reliability/best-practices.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/lakehouse-architecture/reliability/best-practices.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/lakehouse-architecture/reliability/best-practices.html" class="notranslate">English</option>
+    <option value="../../../ja/lakehouse-architecture/reliability/best-practices.html" class="notranslate">日本語</option>
+    <option value="../../../pt/lakehouse-architecture/reliability/best-practices.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Best practices for reliability</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="best-practices-for-reliability">
+<h1>Best practices for reliability<a class="headerlink" href="#best-practices-for-reliability" title="Permalink to this headline"> </a></h1>
+<p>This article covers best practices for <strong>reliability</strong> organized by architectural principles listed in the following sections.</p>
+<div class="section" id="1-design-for-failure">
+<h2>1. Design for failure<a class="headerlink" href="#1-design-for-failure" title="Permalink to this headline"> </a></h2>
+<div class="section" id="use-delta-lake">
+<span id="use-delta"></span><span id="delta-lake"></span><h3>Use Delta Lake<a class="headerlink" href="#use-delta-lake" title="Permalink to this headline"> </a></h3>
+<p>Delta Lake is an open source storage format that brings reliability to data lakes. Delta Lake provides ACID transactions, schema enforcement, scalable metadata handling, and unifies streaming and batch data processing. Delta Lake runs on top of your existing data lake and is fully compatible with Apache Spark APIs. Delta Lake on Databricks allows you to configure Delta Lake based on your workload patterns. See <a class="reference internal" href="../../delta/index.html"><span class="doc">What is Delta Lake?</span></a>.</p>
+</div>
+<div class="section" id="use-apache-spark-or-photon-for-distributed-compute">
+<span id="use-as-or-photon-for-distributed-compute"></span><h3>Use Apache Spark or Photon for distributed compute<a class="headerlink" href="#use-apache-spark-or-photon-for-distributed-compute" title="Permalink to this headline"> </a></h3>
+<p>Apache Spark, as the compute engine of the Databricks Data Intelligence Platform, is based on resilient distributed data processing. In case of an internal Spark task not returning a result as expected, Apache Spark automatically reschedules the missing tasks and continues with the execution of the entire job. This is helpful for failures outside the code, like a short network issue or a revoked spot VM. Working with both the SQL API and the Spark DataFrame API comes with this resilience built into the engine.</p>
+<p>In the Databricks Databricks Data Intelligence Platform, <a class="reference internal" href="../../compute/photon.html"><span class="doc">Photon</span></a>, a native vectorized engine entirely written in C++, is high performance compute compatible with Apache Spark APIs.</p>
+</div>
+<div class="section" id="automatically-rescue-invalid-or-nonconforming-data">
+<h3>Automatically rescue invalid or nonconforming data<a class="headerlink" href="#automatically-rescue-invalid-or-nonconforming-data" title="Permalink to this headline"> </a></h3>
+<p>Invalid or nonconforming data can lead to crashes of workloads that rely on an established data format. To increase the end-to-end resilience of the whole process, it is best practice to filter out invalid and nonconforming data at ingestion. Supporting rescued data ensures you never lose or miss out on data during ingest or ETL. The rescued data column contains any data that wasn’t parsed, either because it was missing from the given schema, because there was a type mismatch, or the column casing in the record or file didn’t match that in the schema.</p>
+<ul class="simple">
+<li><p><strong>Databricks Auto Loader:</strong> <a class="reference internal" href="../../ingestion/auto-loader/index.html"><span class="doc">Auto Loader</span></a> is the ideal tool for streaming the ingestion of files. It supports <a class="reference internal" href="../../ingestion/auto-loader/schema.html#what-is-the-rescued-data-column"><span class="std std-ref">rescued data</span></a> for JSON and CSV. For example, for JSON, the rescued data column contains any data that wasn’t parsed, possibly because it was missing from the given schema, because there was a type mismatch, or because the casing of the column didn’t match. The rescued data column is part of the schema returned by Auto Loader as <code class="docutils literal notranslate"><span class="pre">_rescued_data</span></code> by default when the schema is being inferred.</p></li>
+<li><p><strong>Delta Live Tables:</strong> Another option to build workflows for resilience is using <a class="reference internal" href="../../delta-live-tables/index.html"><span class="doc">Delta Live Tables</span></a> with quality constraints. See <a class="reference internal" href="../../delta-live-tables/expectations.html"><span class="doc">Manage data quality with Delta Live Tables</span></a>. Out of the box, Delta Live Tables supports three modes: Retain, drop, and fail on invalid records. To quarantine identified invalid records, expectation rules can be defined in a specific way so that invalid records are stored (“quarantined”) in another table. See <a class="reference internal" href="../../delta-live-tables/expectations.html#quarantine-invalid-data"><span class="std std-ref">Quarantine invalid data</span></a>.</p></li>
+</ul>
+</div>
+<div class="section" id="configure-jobs-for-automatic-retries-and-termination">
+<h3>Configure jobs for automatic retries and termination<a class="headerlink" href="#configure-jobs-for-automatic-retries-and-termination" title="Permalink to this headline"> </a></h3>
+<p>Distributed systems are complex, and a failure at one point can potentially cascade throughout the system.</p>
+<ul class="simple">
+<li><p>Databricks jobs support an <a class="reference internal" href="../../workflows/jobs/settings.html#retry-policies"><span class="std std-ref">automatic retry policy</span></a> that determines when and how many times failed runs are retried.</p></li>
+<li><p>Delta Live Tables also automates failure recovery by using escalating retries to balance speed with reliability. See <a class="reference internal" href="../../delta-live-tables/updates.html#development-and-production-modes"><span class="std std-ref">Development and production modes</span></a>.</p></li>
+</ul>
+<p>On the other hand, a task that hangs can prevent the whole job from finishing, thus incurring high costs. Databricks jobs support a timeout configuration to terminate jobs that take longer than expected.</p>
+</div>
+<div class="section" id="use-a-scalable-and-production-grade-model-serving-infrastructure">
+<h3>Use a scalable and production-grade model serving infrastructure<a class="headerlink" href="#use-a-scalable-and-production-grade-model-serving-infrastructure" title="Permalink to this headline"> </a></h3>
+<p>For batch and streaming inference, use Databricks jobs and MLflow to deploy models as Apache Spark UDFs to leverage job scheduling, retries, autoscaling, and so on. See <a class="reference internal" href="../../machine-learning/model-inference/index.html#offline-batch-predictions"><span class="std std-ref">Use MLflow for model inference</span></a>.</p>
+</div>
+<p><a class="reference internal" href="../../machine-learning/model-serving/index.html"><span class="doc">Model serving</span></a> provides a scalable and production-grade model real-time serving infrastructure. It processes your machine learning models using MLflow and exposes them as REST API endpoints. This functionality uses serverless compute, which means that the endpoints and associated compute resources are managed and run in the Databricks cloud account.</p>
+<div class="section" id="use-managed-services-where-possible">
+<span id="use-a-scalable-and-production-grade-model-serving-infrastructure"></span><h3>Use managed services where possible<a class="headerlink" href="#use-managed-services-where-possible" title="Permalink to this headline"> </a></h3>
+<p>Leverage managed services of the Databricks platform like <a class="reference internal" href="../../serverless-compute/index.html"><span class="doc">Serverless compute</span></a>, <a class="reference internal" href="../../machine-learning/model-serving/index.html"><span class="doc">model serving</span></a>, or <a class="reference internal" href="../../delta-live-tables/index.html"><span class="doc">Delta Live Tables</span></a> where possible. These services are - without extra effort by the customer - operated by Databricks in a reliable and scalable way, making workloads more reliable.</p>
+</div>
+</div>
+<div class="section" id="2-manage-data-quality">
+<h2>2. Manage data quality<a class="headerlink" href="#2-manage-data-quality" title="Permalink to this headline"> </a></h2>
+<div class="section" id="use-a-layered-storage-architecture">
+<h3>Use a layered storage architecture<a class="headerlink" href="#use-a-layered-storage-architecture" title="Permalink to this headline"> </a></h3>
+<p>Curate data by creating a layered architecture and ensuring data quality increases as data moves through the layers. A common layering approach is:</p>
+<ul class="simple">
+<li><p><strong>Raw layer (bronze):</strong> Source data gets ingested into the lakehouse into the first layer and should be persisted there. When all downstream data is created from the raw layer, rebuilding the subsequent layers from this layer is possible if needed.</p></li>
+<li><p><strong>Curated layer (silver):</strong> The purpose of the second layer is to hold cleansed, refined, filtered and aggregated data. The goal of this layer is to provide a sound, reliable foundation for analyses and reports across all roles and functions.</p></li>
+<li><p><strong>Final layer (gold):</strong> The third layer is created around business or project needs. It provides a different view as data products to other business units or projects, preparing data around security needs (such as anonymized data) or optimizing for performance (such as with preaggregated views). The data products in this layer are seen as the truth for the business.</p></li>
+</ul>
+<p>The final layer should only contain high-quality data and can be fully trusted from a business point of view.</p>
+</div>
+<div class="section" id="improve-data-integrity-by-reducing-data-redundancy">
+<h3>Improve data integrity by reducing data redundancy<a class="headerlink" href="#improve-data-integrity-by-reducing-data-redundancy" title="Permalink to this headline"> </a></h3>
+<p>Copying or duplicating data creates data redundancy and will lead to lost integrity, lost data lineage, and often different access permissions. This will decrease the quality of the data in the lakehouse. A temporary or throwaway copy of data is not harmful on its own - it is sometimes necessary for boosting agility, experimentation and innovation. However, if these copies become operational and regularly used for business decisions, they become data silos. These data silos getting out of sync has a significant negative impact on data integrity and quality, raising questions such as “Which data set is the master?” or “Is the data set up to date?”.</p>
+</div>
+<div class="section" id="actively-manage-schemas">
+<h3>Actively manage schemas<a class="headerlink" href="#actively-manage-schemas" title="Permalink to this headline"> </a></h3>
+<p>Uncontrolled schema changes can lead to invalid data and failing jobs that use these data sets. Databricks has several methods to validate and enforce the schema:</p>
+<ul class="simple">
+<li><p>Delta Lake supports <a class="reference internal" href="../../delta/schema-validation.html"><span class="doc">schema validation and schema enforcement</span></a> by automatically handling schema variations to prevent the insertion of bad records during ingestion.</p></li>
+<li><p><a class="reference internal" href="../../ingestion/auto-loader/index.html"><span class="doc">Auto Loader</span></a> detects the addition of new columns as it processes your data. By default, the addition of a new column causes your streams to stop with an <code class="docutils literal notranslate"><span class="pre">UnknownFieldException</span></code>. Auto Loader supports several modes for <a class="reference internal" href="../../ingestion/auto-loader/schema.html"><span class="doc">schema evolution</span></a>.</p></li>
+</ul>
+</div>
+<div class="section" id="use-constraints-and-data-expectations">
+<h3>Use constraints and data expectations<a class="headerlink" href="#use-constraints-and-data-expectations" title="Permalink to this headline"> </a></h3>
+<p>Delta tables support standard SQL constraint management clauses that ensure that the quality and integrity of data added to a table are automatically verified. When a constraint is violated, Delta Lake throws an <code class="docutils literal notranslate"><span class="pre">InvariantViolationException</span></code> error to signal that the new data can’t be added. See <a class="reference internal" href="../../tables/constraints.html"><span class="doc">Constraints on Databricks</span></a>.</p>
+<p>To further improve this handling, Delta Live Tables supports Expectations: Expectations define data quality constraints on the contents of a data set. An expectation consists of a description, an invariant, and an action to take when a record fails the invariant. Expectations to queries use Python decorators or SQL constraint clauses. See <a class="reference internal" href="../../delta-live-tables/expectations.html"><span class="doc">Manage data quality with Delta Live Tables</span></a>.</p>
+</div>
+<div class="section" id="take-a-data-centric-approach-to-machine-learning">
+<h3>Take a data-centric approach to machine learning<a class="headerlink" href="#take-a-data-centric-approach-to-machine-learning" title="Permalink to this headline"> </a></h3>
+<p>Feature engineering, training, inference, and monitoring pipelines are data pipelines. They need to be as robust as other production data engineering processes. Data quality is crucial in any ML application, so ML data pipelines should employ systematic approaches to monitoring and mitigating data quality issues. Avoid tools that make it challenging to join data from ML predictions, model monitoring, and so on, with the rest of your data. The simplest way to achieve this is to develop ML applications on the same platform used to manage production data. For example, instead of downloading training data to a laptop, where it is hard to govern and reproduce results, secure the data in cloud storage and make that storage available to your training process.</p>
+</div>
+</div>
+<div class="section" id="3-design-for-autoscaling">
+<h2>3. Design for autoscaling<a class="headerlink" href="#3-design-for-autoscaling" title="Permalink to this headline"> </a></h2>
+<div class="section" id="enable-autoscaling-for-batch-workloads">
+<h3>Enable autoscaling for batch workloads<a class="headerlink" href="#enable-autoscaling-for-batch-workloads" title="Permalink to this headline"> </a></h3>
+<p><a class="reference internal" href="../../compute/cluster-config-best-practices.html#autoscaling"><span class="std std-ref">Autoscaling</span></a> allows clusters to resize automatically based on workloads. Autoscaling can benefit many use cases and scenarios from both a cost and performance perspective. The documentation provides considerations for determining whether to use Autoscaling and how to get the most benefit.</p>
+<p>For streaming workloads, Databricks recommends using Delta Live Tables with autoscaling. See <a class="reference internal" href="../../delta-live-tables/settings.html#use-autoscaling-to-increase-efficiency-and-reduce-resource-usage"><span class="std std-ref">Use autoscaling to increase efficiency and reduce resource usage</span></a>.</p>
+</div>
+<div class="section" id="enable-autoscaling-for-sql-warehouse">
+<h3>Enable autoscaling for SQL warehouse<a class="headerlink" href="#enable-autoscaling-for-sql-warehouse" title="Permalink to this headline"> </a></h3>
+<p>The scaling parameter of a SQL warehouse sets the minimum and the maximum number of clusters over which queries sent to the warehouse are distributed. The default is a minimum of one and a maximum of one cluster.</p>
+<p>To handle more concurrent users for a given warehouse, increase the cluster count. To learn how Databricks adds clusters to and removes clusters from a warehouse, see <a class="reference internal" href="../../compute/sql-warehouse/warehouse-behavior.html#scaling"><span class="std std-ref">Queueing and autoscaling for pro and classic SQL warehouses</span></a>.</p>
+</div>
+<div class="section" id="use-delta-live-tables-enhanced-autoscaling">
+<span id="use-dlt-enhanced-autoscaling"></span><h3>Use Delta Live Tables enhanced autoscaling<a class="headerlink" href="#use-delta-live-tables-enhanced-autoscaling" title="Permalink to this headline"> </a></h3>
+<p>
+<a class="reference internal" href="../../delta-live-tables/settings.html#use-autoscaling-to-increase-efficiency-and-reduce-resource-usage"><span class="std std-ref">Databricks enhanced autoscaling</span></a> optimizes cluster utilization by automatically allocating cluster resources based on workload volume, with minimal impact on the data processing latency of your pipelines.</p>
+</div>
+</div>
+<div class="section" id="4-test-recovery-procedures">
+<h2>4. Test recovery procedures<a class="headerlink" href="#4-test-recovery-procedures" title="Permalink to this headline"> </a></h2>
+<div class="section" id="create-regular-backups">
+<h3>Create regular backups<a class="headerlink" href="#create-regular-backups" title="Permalink to this headline"> </a></h3>
+<p>To recover from a failure, regular backups need to be available. The Databricks Labs project <em>migrate</em> allows workspace admins to create backups by exporting most of the assets of their workspaces (the tool uses the Databricks CLI/API in the background). See <a class="reference external" href="https://github.com/databrickslabs/migrate">Databricks Migration Tool</a>. Backups can be used either for restoring workspaces or for importing into a new workspace in case of a migration.</p>
+</div>
+<div class="section" id="recover-from-structured-streaming-query-failures">
+<h3>Recover from Structured Streaming query failures<a class="headerlink" href="#recover-from-structured-streaming-query-failures" title="Permalink to this headline"> </a></h3>
+<p>
+Structured Streaming provides fault-tolerance and data consistency for streaming queries. Using Databricks workflows, you can easily configure your Structured Streaming queries to restart on failure automatically. The restarted query continues where the failed one left off. See <a class="reference internal" href="../../structured-streaming/query-recovery.html"><span class="doc">Recover from Structured Streaming query failures with workflows</span></a>.</p>
+</div>
+<div class="section" id="recover-etl-jobs-based-on-delta-time-travel">
+<h3>Recover ETL jobs based on Delta time travel<a class="headerlink" href="#recover-etl-jobs-based-on-delta-time-travel" title="Permalink to this headline"> </a></h3>
+<p>Despite thorough testing, a job in production can fail or produce some unexpected, even invalid, data. Sometimes this can be fixed with an additional job after understanding the source of the issue and fixing the pipeline that led to the issue in the first place. However, often this is not straightforward, and the respective job should be rolled back. Using Delta Time travel allows users to easily roll back changes to an older version or timestamp, repair the pipeline, and restart the fixed pipeline. See <a class="reference internal" href="../../delta/history.html#time-travel"><span class="std std-ref">What is Delta Lake time travel?</span></a>.</p>
+<p>A convenient way to do so is the <a class="reference internal" href="../../sql/language-manual/delta-restore.html"><span class="doc">RESTORE</span></a> command.</p>
+</div>
+<div class="section" id="use-databricks-workflows-and-built-in-recovery">
+<h3>Use Databricks Workflows and built-in recovery<a class="headerlink" href="#use-databricks-workflows-and-built-in-recovery" title="Permalink to this headline"> </a></h3>
+<p>Databricks Workflows are built for recovery. When a task in a multi-task job fails (and, as such, all dependent tasks), Databricks Workflows provide a matrix view of the runs, which lets you examine the issue that led to the failure. See <a class="reference internal" href="../../workflows/jobs/monitor-job-runs.html#view-job-run-list"><span class="std std-ref">View runs for a job</span></a>. Whether it was a short network issue or a real issue in the data, you can fix it and start a repair run in Databricks Workflows. It runs only the failed and dependent tasks and keep the successful results from the earlier run, saving time and money.</p>
+</div>
+<div class="section" id="configure-a-disaster-recovery-pattern">
+<h3>Configure a disaster recovery pattern<a class="headerlink" href="#configure-a-disaster-recovery-pattern" title="Permalink to this headline"> </a></h3>
+<p>
+A clear disaster recovery pattern is critical for a cloud-native data analytics platform like Databricks. For some companies, it’s critical that your data teams can use the Databricks platform even in the rare case of a regional service-wide cloud-service provider outage, whether caused by a regional disaster like a hurricane or earthquake or another source.</p>
+<p>Databricks is often a core part of an overall data ecosystem that includes many services, including upstream data ingestion services (batch/streaming), cloud-native storage, downstream tools and services such as business intelligence apps, and orchestration tooling. Some of your use cases might be particularly sensitive to a regional service-wide outage.</p>
+<p>Disaster recovery involves a set of policies, tools, and procedures that enable the recovery or continuation of vital technology infrastructure and systems following a natural or human-induced disaster. A large cloud service like Azure, AWS, or GCP serves many customers and has built-in guards against a single failure. For example, a region is a group of buildings connected to different power sources to guarantee that a single power loss will not shut down a region. However, cloud region failures can happen, and the degree of disruption and its impact on your organization can vary. See <a class="reference internal" href="../../administration-guide/disaster-recovery.html"><span class="doc">Disaster recovery</span></a>.</p>
+<p>Essential parts of a disaster recovery strategy are selecting a strategy (active/active or active/passive), selecting the right toolset, and testing both <a class="reference internal" href="../../administration-guide/disaster-recovery.html#test-failover"><span class="std std-ref">failover</span></a> and <a class="reference internal" href="../../administration-guide/disaster-recovery.html#failback"><span class="std std-ref">restore</span></a>.</p>
+</div>
+</div>
+<div class="section" id="5-automate-deployments-and-workloads">
+<h2>5. Automate deployments and workloads<a class="headerlink" href="#5-automate-deployments-and-workloads" title="Permalink to this headline"> </a></h2>
+<p>In the Operational excellence article, see <a class="reference internal" href="../operational-excellence/best-practices.html#2-automate-deployments-and-workloads"><span class="std std-ref">Operational Excellence - Automate deployments and workloads</span></a>.</p>
+</div>
+<div class="section" id="6-set-up-monitoring-alerting-and-logging">
+<h2>6. Set up monitoring, alerting, and logging<a class="headerlink" href="#6-set-up-monitoring-alerting-and-logging" title="Permalink to this headline"> </a></h2>
+<p>In the Operational excellence best practices article, see <a class="reference internal" href="../operational-excellence/best-practices.html#system-monitoring"><span class="std std-ref">Operational Excellence - Set up monitoring, alerting, and logging</span></a>.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

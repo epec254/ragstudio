@@ -1,0 +1,561 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how you can use Delta Live Tables to declare transformations on datasets and specify how records are processed through query logic." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Transform data with Delta Live Tables">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Transform data with Delta Live Tables &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/delta-live-tables/transform.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/delta-live-tables/transform.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/delta-live-tables/transform.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/delta-live-tables/transform.html" class="notranslate">English</option>
+    <option value="../../ja/delta-live-tables/transform.html" class="notranslate">日本語</option>
+    <option value="../../pt/delta-live-tables/transform.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Transform data with Delta Live Tables</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="transform-data-with-delta-live-tables">
+<span id="transform-data-with-dlt"></span><h1>Transform data with Delta Live Tables<a class="headerlink" href="#transform-data-with-delta-live-tables" title="Permalink to this headline"> </a></h1>
+<p>This article describes how you can use Delta Live Tables to declare transformations on datasets and specify how records are processed through query logic. It also contains some examples of common transformation patterns that can be useful when building out Delta Live Tables pipelines.</p>
+<p>You can define a dataset against any query that returns a DataFrame. You can use Apache Spark built-in operations, UDFs, custom logic, and MLflow models as transformations in your Delta Live Tables pipeline. Once data has been ingested into your Delta Live Tables pipeline, you can define new datasets against upstream sources to create new streaming tables, materialized views, and views.</p>
+<div class="section" id="when-to-use-views-materialized-views-and-streaming-tables">
+<span id="tables-vs-views"></span><h2>When to use views, materialized views, and streaming tables<a class="headerlink" href="#when-to-use-views-materialized-views-and-streaming-tables" title="Permalink to this headline"> </a></h2>
+<p>To ensure your pipelines are efficient and maintainable, choose the best dataset type when you implement your pipeline queries.</p>
+<p>Consider using a view when:</p>
+<ul class="simple">
+<li><p>You have a large or complex query that you want to break into easier-to-manage queries.</p></li>
+<li><p>You want to validate intermediate results using expectations.</p></li>
+<li><p>You want to reduce storage and compute costs and do not require the materialization of query results. Because tables are materialized, they require additional computation and storage resources.</p></li>
+</ul>
+<p>Consider using a materialized view when:</p>
+<ul class="simple">
+<li><p>Multiple downstream queries consume the table. Because views are computed on demand, the view is re-computed every time the view is queried.</p></li>
+<li><p>Other pipelines, jobs, or queries consume the table. Because views are not materialized, you can only use them in the same pipeline.</p></li>
+<li><p>You want to view the results of a query during development. Because tables are materialized and can be viewed and queried outside of the pipeline, using tables during development can help validate the correctness of computations. After validating, convert queries that do not require materialization into views.</p></li>
+</ul>
+<p>Consider using a streaming table when:</p>
+<ul class="simple">
+<li><p>A query is defined against a data source that is continuously or incrementally growing.</p></li>
+<li><p>Query results should be computed incrementally.</p></li>
+<li><p>High throughput and low latency is desired for the pipeline.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Streaming tables are always defined against streaming sources. You can also use streaming sources with <code class="docutils literal notranslate"><span class="pre">APPLY</span> <span class="pre">CHANGES</span> <span class="pre">INTO</span></code> to apply updates from CDC feeds. See <a class="reference internal" href="cdc.html"><span class="doc">Simplified change data capture with the APPLY CHANGES API in Delta Live Tables</span></a>.</p>
+</div>
+</div>
+<div class="section" id="combine-streaming-tables-and-materialized-views-in-a-single-pipeline">
+<h2>Combine streaming tables and materialized views in a single pipeline<a class="headerlink" href="#combine-streaming-tables-and-materialized-views-in-a-single-pipeline" title="Permalink to this headline"> </a></h2>
+<p>Streaming tables inherit the processing guarantees of Apache Spark Structured Streaming and are configured to process queries from append-only data sources, where new rows are always inserted into the source table rather than modified.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although, by default, streaming tables require append-only data sources, when a streaming source is another streaming table that requires updates or deletes, you can override this behavior with the <a class="reference internal" href="python-ref.html#ignore-changes"><span class="std std-ref">skipChangeCommits flag</span></a>.</p>
+</div>
+<p>A common streaming pattern includes ingesting source data to create the initial datasets in a pipeline. These initial datasets are commonly called <em>bronze</em> tables and often perform simple transformations.</p>
+<p>By contrast, the final tables in a pipeline, commonly referred to as <em>gold</em> tables, often require complicated aggregations or reading from sources that are the targets of an <code class="docutils literal notranslate"><span class="pre">APPLY</span> <span class="pre">CHANGES</span> <span class="pre">INTO</span></code> operation. Because these operations inherently create updates rather than appends, they are not supported as inputs to streaming tables. These transformations are better suited for materialized views.</p>
+<p>By mixing streaming tables and materialized views into a single pipeline, you can simplify your pipeline, avoid costly re-ingestion or re-processing of raw data, and have the full power of SQL to compute complex aggregations over an efficiently encoded and filtered dataset. The following example illustrates this type of mixed processing:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>These examples use Auto Loader to load files from cloud storage. To load files with Auto Loader in a Unity Catalog enabled pipeline, you must use <a class="reference internal" href="../connect/unity-catalog/external-locations.html"><span class="doc">external locations</span></a>. To learn more about using Unity Catalog with Delta Live Tables, see <a class="reference internal" href="unity-catalog.html"><span class="doc">Use Unity Catalog with your Delta Live Tables pipelines</span></a>.</p>
+</div>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@dlt</span><span class="o">.</span><span class="n">table</span>
+<span class="k">def</span> <span class="nf">streaming_bronze</span><span class="p">():</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="c1"># Since this is a streaming source, this table is incremental.</span>
+    <span class="n">spark</span><span class="o">.</span><span class="n">readStream</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;cloudFiles&quot;</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;cloudFiles.format&quot;</span><span class="p">,</span> <span class="s2">&quot;json&quot;</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;s3://path/to/raw/data&quot;</span><span class="p">)</span>
+  <span class="p">)</span>
+
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">table</span>
+<span class="k">def</span> <span class="nf">streaming_silver</span><span class="p">():</span>
+  <span class="c1"># Since we read the bronze table as a stream, this silver table is also</span>
+  <span class="c1"># updated incrementally.</span>
+  <span class="k">return</span> <span class="n">dlt</span><span class="o">.</span><span class="n">read_stream</span><span class="p">(</span><span class="s2">&quot;streaming_bronze&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">table</span>
+<span class="k">def</span> <span class="nf">live_gold</span><span class="p">():</span>
+  <span class="c1"># This table will be recomputed completely by reading the whole silver table</span>
+  <span class="c1"># when it is updated.</span>
+  <span class="k">return</span> <span class="n">dlt</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;streaming_silver&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">REFRESH</span><span class="w"> </span><span class="n">STREAMING</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">streaming_bronze</span>
+<span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">cloud_files</span><span class="p">(</span>
+<span class="w">  </span><span class="ss">&quot;s3://path/to/raw/data&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;json&quot;</span>
+<span class="p">)</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">REFRESH</span><span class="w"> </span><span class="n">STREAMING</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">streaming_silver</span>
+<span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">STREAM</span><span class="p">(</span><span class="n">LIVE</span><span class="p">.</span><span class="n">streaming_bronze</span><span class="p">)</span><span class="w"> </span><span class="k">WHERE</span><span class="p">...</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">REFRESH</span><span class="w"> </span><span class="n">LIVE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">live_gold</span>
+<span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">LIVE</span><span class="p">.</span><span class="n">streaming_silver</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">user_id</span>
+</pre></div>
+</div>
+</div>
+<p>Learn more about using <a class="reference internal" href="../ingestion/auto-loader/index.html"><span class="doc">Auto Loader</span></a> to efficiently read JSON files from S3 for incremental processing.</p>
+</div>
+<div class="section" id="stream-static-joins">
+<span id="stream-static-join"></span><h2>Stream-static joins<a class="headerlink" href="#stream-static-joins" title="Permalink to this headline"> </a></h2>
+<p>Stream-static joins are a good choice when denormalizing a continuous stream of append-only data with a primarily static dimension table.</p>
+<p>With each pipeline update, new records from the stream are joined with the most current snapshot of the static table. If records are added or updated in the static table after corresponding data from the streaming table has been processed, the resultant records are not recalculated unless a full refresh is performed.</p>
+<p>In pipelines configured for triggered execution, the static table returns results as of the time the update started. In pipelines configured for continuous execution, each time the table processes an update, the most recent version of the static table is queried.</p>
+<p>The following is an example of a stream-static join:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@dlt</span><span class="o">.</span><span class="n">table</span>
+<span class="k">def</span> <span class="nf">customer_sales</span><span class="p">():</span>
+  <span class="k">return</span> <span class="n">dlt</span><span class="o">.</span><span class="n">read_stream</span><span class="p">(</span><span class="s2">&quot;sales&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;customers&quot;</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;customer_id&quot;</span><span class="p">],</span> <span class="s2">&quot;left&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">REFRESH</span><span class="w"> </span><span class="n">STREAMING</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">customer_sales</span>
+<span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">STREAM</span><span class="p">(</span><span class="n">LIVE</span><span class="p">.</span><span class="n">sales</span><span class="p">)</span>
+<span class="w">  </span><span class="k">INNER</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="k">LEFT</span><span class="w"> </span><span class="n">LIVE</span><span class="p">.</span><span class="n">customers</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="p">(</span><span class="n">customer_id</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="calculate-aggregates-efficiently">
+<span id="aggregation"></span><h2>Calculate aggregates efficiently<a class="headerlink" href="#calculate-aggregates-efficiently" title="Permalink to this headline"> </a></h2>
+<p>You can use streaming tables to incrementally calculate simple distributive aggregates like count, min, max, or sum, and algebraic aggregates like average or standard deviation. Databricks recommends incremental aggregation for queries with a limited number of groups, for example, a query with a <code class="docutils literal notranslate"><span class="pre">GROUP</span> <span class="pre">BY</span> <span class="pre">country</span></code> clause. Only new input data is read with each update.</p>
+<p></p>
+</div>
+<div class="section" id="use-mlflow-models-in-a-delta-live-tables-pipeline">
+<span id="use-mlflow-models-in-a-dlt-pipeline"></span><h2>Use MLflow models in a Delta Live Tables pipeline<a class="headerlink" href="#use-mlflow-models-in-a-delta-live-tables-pipeline" title="Permalink to this headline"> </a></h2>
+<p>You can use MLflow-trained models in Delta Live Tables pipelines. MLflow models are treated as transformations in Databricks, meaning they act upon a Spark DataFrame input and return results as a Spark DataFrame. Because Delta Live Tables defines datasets against DataFrames, you can convert Apache Spark workloads that leverage MLflow to Delta Live Tables with just a few lines of code. For more on MLflow, see <a class="reference internal" href="../mlflow/index.html"><span class="doc">MLflow guide</span></a>.</p>
+<p>If you already have a Python notebook calling an MLflow model, you can adapt this code to Delta Live Tables by using the <code class="docutils literal notranslate"><span class="pre">&#64;dlt.table</span></code> decorator and ensuring functions are defined to return transformation results. Delta Live Tables does not install MLflow by default, so make sure you <code class="docutils literal notranslate"><span class="pre">%pip</span> <span class="pre">install</span> <span class="pre">mlflow</span></code> and import <code class="docutils literal notranslate"><span class="pre">mlflow</span></code> and <code class="docutils literal notranslate"><span class="pre">dlt</span></code> at the top of your notebook. For an introduction to Delta Live Tables syntax, see <a class="reference internal" href="tutorial-python.html"><span class="doc">Tutorial: Declare a data pipeline with Python in Delta Live Tables</span></a>.</p>
+<p>To use MLflow models in Delta Live Tables, complete the following steps:</p>
+<ol class="arabic simple">
+<li><p>Obtain the run ID and model name of the MLflow model. The run ID and model name are used to construct the URI of the MLflow model.</p></li>
+<li><p>Use the URI to define a Spark UDF to load the MLflow model.</p></li>
+<li><p>Call the UDF in your table definitions to use the MLflow model.</p></li>
+</ol>
+<p>The following example shows the basic syntax for this pattern:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">mlflow</span>
+
+<span class="kn">import</span> <span class="nn">dlt</span>
+<span class="kn">import</span> <span class="nn">mlflow</span>
+
+<span class="n">run_id</span><span class="o">=</span> <span class="s2">&quot;&lt;mlflow-run-id&gt;&quot;</span>
+<span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;&lt;the-model-name-in-run&gt;&quot;</span>
+<span class="n">model_uri</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;runs:/</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">loaded_model_udf</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">pyfunc</span><span class="o">.</span><span class="n">spark_udf</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="n">model_uri</span><span class="o">=</span><span class="n">model_uri</span><span class="p">)</span>
+
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">table</span>
+<span class="k">def</span> <span class="nf">model_predictions</span><span class="p">():</span>
+  <span class="k">return</span> <span class="n">dlt</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="o">&lt;</span><span class="nb">input</span><span class="o">-</span><span class="n">data</span><span class="o">&gt;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;prediction&quot;</span><span class="p">,</span> <span class="n">loaded_model_udf</span><span class="p">(</span><span class="o">&lt;</span><span class="n">model</span><span class="o">-</span><span class="n">features</span><span class="o">&gt;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>As a complete example, the following code defines a Spark UDF named <code class="docutils literal notranslate"><span class="pre">loaded_model_udf</span></code> that loads an MLflow model trained on loan risk data. The data columns used to make the prediction are passed as an argument to the UDF. The table <code class="docutils literal notranslate"><span class="pre">loan_risk_predictions</span></code> calculates predictions for each row in <code class="docutils literal notranslate"><span class="pre">loan_risk_input_data</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">mlflow</span>
+
+<span class="kn">import</span> <span class="nn">dlt</span>
+<span class="kn">import</span> <span class="nn">mlflow</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">struct</span>
+
+<span class="n">run_id</span> <span class="o">=</span> <span class="s2">&quot;mlflow_run_id&quot;</span>
+<span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;the_model_name_in_run&quot;</span>
+<span class="n">model_uri</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;runs:/</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">loaded_model_udf</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">pyfunc</span><span class="o">.</span><span class="n">spark_udf</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="n">model_uri</span><span class="o">=</span><span class="n">model_uri</span><span class="p">)</span>
+
+<span class="n">categoricals</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;term&quot;</span><span class="p">,</span> <span class="s2">&quot;home_ownership&quot;</span><span class="p">,</span> <span class="s2">&quot;purpose&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;addr_state&quot;</span><span class="p">,</span><span class="s2">&quot;verification_status&quot;</span><span class="p">,</span><span class="s2">&quot;application_type&quot;</span><span class="p">]</span>
+
+<span class="n">numerics</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;loan_amnt&quot;</span><span class="p">,</span> <span class="s2">&quot;emp_length&quot;</span><span class="p">,</span> <span class="s2">&quot;annual_inc&quot;</span><span class="p">,</span> <span class="s2">&quot;dti&quot;</span><span class="p">,</span> <span class="s2">&quot;delinq_2yrs&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;revol_util&quot;</span><span class="p">,</span> <span class="s2">&quot;total_acc&quot;</span><span class="p">,</span> <span class="s2">&quot;credit_length_in_years&quot;</span><span class="p">]</span>
+
+<span class="n">features</span> <span class="o">=</span> <span class="n">categoricals</span> <span class="o">+</span> <span class="n">numerics</span>
+
+<span class="nd">@dlt</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
+  <span class="n">comment</span><span class="o">=</span><span class="s2">&quot;GBT ML predictions of loan risk&quot;</span><span class="p">,</span>
+  <span class="n">table_properties</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;quality&quot;</span><span class="p">:</span> <span class="s2">&quot;gold&quot;</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">loan_risk_predictions</span><span class="p">():</span>
+  <span class="k">return</span> <span class="n">dlt</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;loan_risk_input_data&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">&#39;predictions&#39;</span><span class="p">,</span> <span class="n">loaded_model_udf</span><span class="p">(</span><span class="n">struct</span><span class="p">(</span><span class="n">features</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="retain-manual-deletes-or-updates">
+<span id="manual-ddl"></span><h2>Retain manual deletes or updates<a class="headerlink" href="#retain-manual-deletes-or-updates" title="Permalink to this headline"> </a></h2>
+<p>Delta Live Tables allows you to manually delete or update records from a table and do a refresh operation to recompute downstream tables.</p>
+<p>By default, Delta Live Tables recomputes table results based on input data each time a pipeline is updated, so you must ensure the deleted record isn’t reloaded from the source data. Setting the <code class="docutils literal notranslate"><span class="pre">pipelines.reset.allowed</span></code> table property to <code class="docutils literal notranslate"><span class="pre">false</span></code> prevents refreshes to a table but does not prevent incremental writes to the tables or prevent new data from flowing into the table.</p>
+<p>The following diagram illustrates an example using two streaming tables:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">raw_user_table</span></code> ingests raw user data from a source.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bmi_table</span></code> incrementally computes BMI scores using weight and height from <code class="docutils literal notranslate"><span class="pre">raw_user_table</span></code>.</p></li>
+</ul>
+<p>You want to manually delete or update user records from the <code class="docutils literal notranslate"><span class="pre">raw_user_table</span></code> and recompute the <code class="docutils literal notranslate"><span class="pre">bmi_table</span></code>.</p>
+<div class="figure align-default">
+<img alt="Retain data diagram" src="../_images/dlt-cookbook-disable-refresh.png" />
+</div>
+<p>The following code demonstrates setting the <code class="docutils literal notranslate"><span class="pre">pipelines.reset.allowed</span></code> table property to <code class="docutils literal notranslate"><span class="pre">false</span></code> to disable full refresh for <code class="docutils literal notranslate"><span class="pre">raw_user_table</span></code> so that intended changes are retained over time, but downstream tables are recomputed when a pipeline update is run:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">REFRESH</span><span class="w"> </span><span class="n">STREAMING</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">raw_user_table</span>
+<span class="n">TBLPROPERTIES</span><span class="p">(</span><span class="n">pipelines</span><span class="p">.</span><span class="k">reset</span><span class="p">.</span><span class="n">allowed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">cloud_files</span><span class="p">(</span><span class="ss">&quot;/databricks-datasets/iot-stream/data-user&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;csv&quot;</span><span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">REFRESH</span><span class="w"> </span><span class="n">STREAMING</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">bmi_table</span>
+<span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">userid</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">weight</span><span class="o">/</span><span class="mi">2</span><span class="p">.</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">pow</span><span class="p">(</span><span class="n">height</span><span class="o">*</span><span class="mi">0</span><span class="p">.</span><span class="mi">0254</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bmi</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">STREAM</span><span class="p">(</span><span class="n">LIVE</span><span class="p">.</span><span class="n">raw_user_table</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

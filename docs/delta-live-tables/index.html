@@ -1,0 +1,510 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to build data pipelines for ingestion and transformation with Databricks Delta Live Tables." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="What is Delta Live Tables?">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>What is Delta Live Tables? &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/delta-live-tables/index.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/delta-live-tables/index.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/delta-live-tables/index.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/delta-live-tables/index.html" class="notranslate">English</option>
+    <option value="../../ja/delta-live-tables/index.html" class="notranslate">日本語</option>
+    <option value="../../pt/delta-live-tables/index.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>What is Delta Live Tables?</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="what-is-delta-live-tables">
+<span id="what-is-dlt"></span><h1>What is Delta Live Tables?<a class="headerlink" href="#what-is-delta-live-tables" title="Permalink to this headline"> </a></h1>
+<p>Delta Live Tables is a declarative framework for building reliable, maintainable, and testable data processing pipelines. You define the transformations to perform on your data and Delta Live Tables manages task orchestration, cluster management, monitoring, data quality, and error handling.</p>
+<p>Instead of defining your data pipelines using a series of separate Apache Spark tasks, you define streaming tables and materialized views that the system should create and keep up to date. Delta Live Tables manages how your data is transformed based on queries you define for each processing step. You can also enforce data quality with Delta Live Tables <em>expectations</em>, which allow you to define expected data quality and specify how to handle records that fail those expectations.</p>
+<p>To learn more about the benefits of building and running your ETL pipelines with Delta Live Tables, see the <a class="reference external" href="https://www.databricks.com/product/delta-live-tables">Delta Live Tables product page</a>.</p>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="what-are-delta-live-tables-datasets">
+<span id="what-are-dlt-datasets"></span><span id="dlt-datasets"></span><h2>What are Delta Live Tables datasets?<a class="headerlink" href="#what-are-delta-live-tables-datasets" title="Permalink to this headline"> </a></h2>
+<p>Delta Live Tables datasets are the streaming tables, materialized views, and views maintained as the results of declarative queries. The following table describes how each dataset is processed:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 93%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Dataset type</p></th>
+<th class="head"><p>How are records processed through defined queries?</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> Streaming table</p></td>
+<td><p> Each record is processed exactly once. This assumes an append-only source.</p></td>
+</tr>
+<tr class="row-odd"><td><p> Materialized views</p></td>
+<td><p> Records are processed as required to return accurate results for the current data state. Materialized views should be used for data sources with updates, deletions, or aggregations, and for change data capture processing (CDC).</p></td>
+</tr>
+<tr class="row-even"><td><p> Views</p></td>
+<td><p> Records are processed each time the view is queried. Use views for intermediate transformations and data quality checks that should not be published to public datasets.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The following sections provide more detailed descriptions of each dataset type. To learn more about selecting dataset types to implement your data processing requirements, see <a class="reference internal" href="transform.html#tables-vs-views"><span class="std std-ref">When to use views, materialized views, and streaming tables</span></a>.</p>
+<div class="section" id="streaming-table">
+<h3>Streaming table<a class="headerlink" href="#streaming-table" title="Permalink to this headline"> </a></h3>
+<p>A <em>streaming table</em> is a Delta table with extra support for streaming or incremental data processing. Streaming tables allow you to process a growing dataset, handling each row only once. Because most datasets grow continuously over time, streaming tables are good for most ingestion workloads. Streaming tables are optimal for pipelines that require data freshness and low latency. Streaming tables can also be useful for massive scale transformations, as results can be incrementally calculated as new data arrives, keeping results up to date without needing to fully recompute all source data with each update. Streaming tables are designed for data sources that are append-only.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although, by default, streaming tables require append-only data sources, when a streaming source is another streaming table that requires updates or deletes, you can override this behavior with the <a class="reference internal" href="python-ref.html#ignore-changes"><span class="std std-ref">skipChangeCommits flag</span></a>.</p>
+</div>
+</div>
+<div class="section" id="materialized-view">
+<h3>Materialized view<a class="headerlink" href="#materialized-view" title="Permalink to this headline"> </a></h3>
+<p>A <em>materialized view</em> (or <em>live table</em>) is a view where the results have been precomputed. Materialized views are refreshed according to the update schedule of the pipeline in which they’re contained. Materialized views are powerful because they can handle any changes in the input. Each time the pipeline updates, query results are recalculated to reflect changes in upstream datasets that might have occurred because of compliance, corrections, aggregations, or general CDC. Delta Live Tables implements materialized views as Delta tables, but abstracts away complexities associated with efficient application of updates, allowing users to focus on writing queries.</p>
+</div>
+<div class="section" id="views">
+<h3>Views<a class="headerlink" href="#views" title="Permalink to this headline"> </a></h3>
+<p>All <em>views</em> in Databricks compute results from source datasets as they are queried, leveraging caching optimizations when available. Delta Live Tables does not publish views to the catalog, so views can be referenced only within the pipeline in which they are defined. Views are useful as intermediate queries that should not be exposed to end users or systems. Databricks recommends using views to enforce data quality constraints or transform and enrich datasets that drive multiple downstream queries.</p>
+</div>
+</div>
+<div class="section" id="declare-your-first-datasets-in-delta-live-tables">
+<span id="declare-your-first-datasets-in-dlt"></span><h2>Declare your first datasets in Delta Live Tables<a class="headerlink" href="#declare-your-first-datasets-in-delta-live-tables" title="Permalink to this headline"> </a></h2>
+<p>Delta Live Tables introduces new syntax for Python and SQL. To get started with Delta Live Tables syntax, use one of the following tutorials:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="tutorial-sql.html"><span class="doc">Tutorial: Declare a data pipeline with SQL in Delta Live Tables</span></a></p></li>
+<li><p><a class="reference internal" href="tutorial-python.html"><span class="doc">Tutorial: Declare a data pipeline with Python in Delta Live Tables</span></a></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Delta Live Tables separates dataset definitions from update processing, and Delta Live Tables notebooks are not intended for interactive execution. See <a class="reference internal" href="#pipeline"><span class="std std-ref">What is a Delta Live Tables pipeline?</span></a>.</p>
+</div>
+</div>
+<div class="section" id="what-is-a-delta-live-tables-pipeline">
+<span id="what-is-a-dlt-pipeline"></span><span id="pipeline"></span><h2>What is a Delta Live Tables pipeline?<a class="headerlink" href="#what-is-a-delta-live-tables-pipeline" title="Permalink to this headline"> </a></h2>
+<p>A <em>pipeline</em> is the main unit used to configure and run data processing workflows with Delta Live Tables.</p>
+<p>A pipeline contains materialized views and streaming tables declared in Python or SQL source files. Delta Live Tables infers the dependencies between these tables, ensuring updates occur in the correct order. For each dataset, Delta Live Tables compares the current state with the desired state and proceeds to create or update datasets using efficient processing methods.</p>
+<p>The settings of Delta Live Tables pipelines fall into two broad categories:</p>
+<ol class="arabic simple">
+<li><p>Configurations that define a collection of notebooks or files (known as <em>source code</em> or <em>libraries</em>) that use Delta Live Tables syntax to declare datasets.</p></li>
+<li><p>Configurations that control pipeline infrastructure, how updates are processed, and how tables are saved in the workspace.</p></li>
+</ol>
+<p>Most configurations are optional, but some require careful attention, especially when configuring production pipelines. These include the following:</p>
+<ul class="simple">
+<li><p>To make data available outside the pipeline, you must declare a <strong>target schema</strong> to publish to the Hive metastore or a <strong>target catalog</strong> and <strong>target schema</strong> to publish to Unity Catalog.</p></li>
+<li><p>Data access permissions are configured through the cluster used for execution. Make sure your cluster has appropriate permissions configured for data sources and the target <strong>storage location</strong>, if specified.</p></li>
+</ul>
+<p>For details on using Python and SQL to write source code for pipelines, see <a class="reference internal" href="sql-ref.html"><span class="doc">Delta Live Tables SQL language reference</span></a> and <a class="reference internal" href="python-ref.html"><span class="doc">Delta Live Tables Python language reference</span></a>.</p>
+<p>For more on pipeline settings and configurations, see <a class="reference internal" href="settings.html"><span class="doc">Configure pipeline settings for Delta Live Tables</span></a>.</p>
+</div>
+<div class="section" id="deploy-your-first-pipeline-and-trigger-updates">
+<h2>Deploy your first pipeline and trigger updates<a class="headerlink" href="#deploy-your-first-pipeline-and-trigger-updates" title="Permalink to this headline"> </a></h2>
+<p>Before processing data with Delta Live Tables, you must configure a pipeline. Once a pipeline is configured, you can trigger an update to calculate results for each dataset in your pipeline. To get started using Delta Live Tables pipelines, see <a class="reference internal" href="tutorial-pipelines.html"><span class="doc">Tutorial: Run your first Delta Live Tables pipeline</span></a>.</p>
+</div>
+<div class="section" id="what-is-a-pipeline-update">
+<span id="pipeline-updates"></span><h2>What is a pipeline update?<a class="headerlink" href="#what-is-a-pipeline-update" title="Permalink to this headline"> </a></h2>
+<p>Pipelines deploy infrastructure and recompute data state when you start an <em>update</em>. An update does the following:</p>
+<ul class="simple">
+<li><p>Starts a cluster with the correct configuration.</p></li>
+<li><p>Discovers all the tables and views defined, and checks for any analysis errors such as invalid column names, missing dependencies, and syntax errors.</p></li>
+<li><p>Creates or updates tables and views with the most recent data available.</p></li>
+</ul>
+<p>Pipelines can be run continuously or on a schedule depending on your use case’s cost and latency requirements. See <a class="reference internal" href="updates.html"><span class="doc">Run an update on a Delta Live Tables pipeline</span></a>.</p>
+</div>
+<div class="section" id="ingest-data-with-delta-live-tables">
+<span id="ingest-data-with-dlt"></span><h2>Ingest data with Delta Live Tables<a class="headerlink" href="#ingest-data-with-delta-live-tables" title="Permalink to this headline"> </a></h2>
+<p>Delta Live Tables supports all data sources available in Databricks.</p>
+<p>Databricks recommends using streaming tables for most ingestion use cases. For files arriving in cloud object storage, Databricks recommends Auto Loader. You can directly ingest data with Delta Live Tables from most message buses.</p>
+<p>For more information about configuring access to cloud storage, see <a class="reference internal" href="settings.html#configure-cloud-storage"><span class="std std-ref">Cloud storage configuration</span></a>.</p>
+<p>For formats not supported by Auto Loader, you can use Python or SQL to query any format supported by Apache Spark. See <a class="reference internal" href="load.html"><span class="doc">Load data with Delta Live Tables</span></a>.</p>
+</div>
+<div class="section" id="monitor-and-enforce-data-quality">
+<h2>Monitor and enforce data quality<a class="headerlink" href="#monitor-and-enforce-data-quality" title="Permalink to this headline"> </a></h2>
+<p>You can use <em>expectations</em> to specify data quality controls on the contents of a dataset. Unlike a <code class="docutils literal notranslate"><span class="pre">CHECK</span></code> constraint in a traditional database which prevents adding any records that fail the constraint, expectations provide flexibility when processing data that fails data quality requirements. This flexibility allows you to process and store data that you expect to be messy and data that must meet strict quality requirements. See <a class="reference internal" href="expectations.html"><span class="doc">Manage data quality with Delta Live Tables</span></a>.</p>
+</div>
+<div class="section" id="how-are-delta-live-tables-and-delta-lake-related">
+<span id="how-are-dlt-and-delta-related"></span><h2>How are Delta Live Tables and Delta Lake related?<a class="headerlink" href="#how-are-delta-live-tables-and-delta-lake-related" title="Permalink to this headline"> </a></h2>
+<p>Delta Live Tables extends the functionality of Delta Lake. Because tables created and managed by Delta Live Tables are Delta tables, they have the same guarantees and features provided by Delta Lake. See <a class="reference internal" href="../delta/index.html"><span class="doc">What is Delta Lake?</span></a>.</p>
+<p>Delta Live Tables adds several table properties in addition to the many table properties that can be set in Delta Lake. See <a class="reference internal" href="properties.html"><span class="doc">Delta Live Tables properties reference</span></a> and <a class="reference internal" href="../delta/table-properties.html"><span class="doc">Delta table properties reference</span></a>.</p>
+</div>
+<div class="section" id="how-tables-are-created-and-managed-by-delta-live-tables">
+<span id="how-tables-are-created-and-managed-by-dlt"></span><h2>How tables are created and managed by Delta Live Tables<a class="headerlink" href="#how-tables-are-created-and-managed-by-delta-live-tables" title="Permalink to this headline"> </a></h2>
+<p>Databricks automatically manages tables created with Delta Live Tables, determining how updates need to be processed to correctly compute the current state of a table and performing a number of maintenance and optimization tasks.</p>
+<p>For most operations, you should allow Delta Live Tables to process all updates, inserts, and deletes to a target table. For details and limitations, see <a class="reference internal" href="transform.html#manual-ddl"><span class="std std-ref">Retain manual deletes or updates</span></a>.</p>
+</div>
+<div class="section" id="maintenance-tasks-performed-by-delta-live-tables">
+<span id="maintenance-tasks-performed-by-dlt"></span><h2>Maintenance tasks performed by Delta Live Tables<a class="headerlink" href="#maintenance-tasks-performed-by-delta-live-tables" title="Permalink to this headline"> </a></h2>
+<p>Delta Live Tables performs maintenance tasks within 24 hours of a table being updated. Maintenance can improve query performance and reduce cost by removing old versions of tables. By default, the system performs a full <a class="reference internal" href="../sql/language-manual/delta-optimize.html"><span class="doc">OPTIMIZE</span></a> operation followed by <a class="reference internal" href="../sql/language-manual/delta-vacuum.html"><span class="doc">VACUUM</span></a>. You can disable OPTIMIZE for a table by setting <code class="docutils literal notranslate"><span class="pre">pipelines.autoOptimize.managed</span> <span class="pre">=</span> <span class="pre">false</span></code> in the <a class="reference internal" href="properties.html#table-properties"><span class="std std-ref">table properties</span></a> for the table. Maintenance tasks are performed only if a pipeline update has run in the 24 hours before the maintenance tasks are scheduled.</p>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline"> </a></h2>
+<p>The following limitations apply:</p>
+<ul class="simple">
+<li><p>All tables created and updated by Delta Live Tables are Delta tables.</p></li>
+<li><p>Delta Live Tables tables can only be defined once, meaning they can only be the target of a single operation in all Delta Live Tables pipelines.</p></li>
+<li><p>Identity columns are not supported with tables that are the target of <code class="docutils literal notranslate"><span class="pre">APPLY</span> <span class="pre">CHANGES</span> <span class="pre">INTO</span></code> and might be recomputed during updates for materialized views. For this reason, Databricks recommends only using identity columns with streaming tables in Delta Live Tables. See <a class="reference internal" href="../delta/generated-columns.html#identity"><span class="std std-ref">Use identity columns in Delta Lake</span></a>.</p></li>
+<li><p>A Databricks workspace is limited to 100 concurrent pipeline updates.</p></li>
+</ul>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>Delta Live Tables has full support in the Databricks REST API. See <a class="reference internal" href="api-guide.html"><span class="doc">Delta Live Tables API guide</span></a>.</p></li>
+<li><p>For pipeline and table settings, see <a class="reference internal" href="properties.html"><span class="doc">Delta Live Tables properties reference</span></a>.</p></li>
+<li><p><a class="reference internal" href="sql-ref.html"><span class="doc">Delta Live Tables SQL language reference</span></a>.</p></li>
+<li><p><a class="reference internal" href="python-ref.html"><span class="doc">Delta Live Tables Python language reference</span></a>.</p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

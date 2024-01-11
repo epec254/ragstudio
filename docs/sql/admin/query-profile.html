@@ -1,0 +1,493 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use Databricks SQL query history to troubleshoot." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Query profile">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Query profile &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/sql/admin/query-profile.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/sql/admin/query-profile.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/sql/admin/query-profile.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/sql/admin/query-profile.html" class="notranslate">English</option>
+    <option value="../../../ja/sql/admin/query-profile.html" class="notranslate">日本語</option>
+    <option value="../../../pt/sql/admin/query-profile.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Query profile</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="query-profile">
+<h1>Query profile<a class="headerlink" href="#query-profile" title="Permalink to this headline"> </a></h1>
+<p>You can use a query profile to visualize the details of a query execution. The query profile helps you troubleshoot performance bottlenecks during the query’s execution. For example:</p>
+<ul class="simple">
+<li><p>You can visualize each query task and its related metrics, such as the time spent, number of rows processed, rows processed, and memory consumption.</p></li>
+<li><p>You can identify the slowest part of a query execution at a glance and assess the impacts of modifications to the query.</p></li>
+<li><p>You can discover and fix common mistakes in SQL statements, such as exploding joins or full table scans.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The time recorded in query history for a SQL query is only the time the SQL warehouse spends actually executing the query. It does not record any additional overhead associated with getting ready to execute the query, such as internal queuing, or additional time related to the data upload and download process.</p>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<p>To view a query profile, you must either be the owner of the query or you must have the <strong>Can Manage</strong> <a class="reference internal" href="../../security/auth-authz/access-control/sql-endpoint-acl.html"><span class="doc">permission</span></a> on the SQL warehouse that executed the query.</p>
+</div>
+<div class="section" id="view-a-query-profile">
+<h2>View a query profile<a class="headerlink" href="#view-a-query-profile" title="Permalink to this headline"> </a></h2>
+<p>After running a query in the SQL editor or in a notebook, you can open the query profile by clicking the elapsed time at the bottom of the output.</p>
+<div class="figure align-default">
+<img alt="Open query history from editor or notebook output" src="../../_images/elapsed-time.png" />
+</div>
+<p>You can also view the query profile from the query history as follows:</p>
+<ol class="arabic">
+<li><p>View <a class="reference internal" href="query-history.html#view-query-history"><span class="std std-ref">query history</span></a>.</p></li>
+<li><p>Click the name of a query. An overview of query metrics appears.</p>
+<div class="figure align-default">
+<img alt="Query execution summary simple view" src="../../_images/query-profile.png" />
+</div>
+</li>
+<li><p>Click <strong>See query profile</strong>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <strong>Query profile is not available</strong> is displayed, no profile is available for this query. A query profile is not available for queries that run from the <a class="reference internal" href="query-caching.html"><span class="doc">query cache</span></a>. To circumvent the query cache, make a trivial change to the query, such as changing or removing the <code class="docutils literal notranslate"><span class="pre">LIMIT</span></code>.</p>
+</div>
+</li>
+<li><p>To view the query profile in graph view (the default), click <strong>Graph view</strong>. To view the query profile as a tree, click <strong>Tree view</strong>.</p>
+<ul class="simple">
+<li><p>Graph view is optimized for visualizing how data flows from one node to another.</p></li>
+<li><p>Tree view is optimized for quickly finding issues with the query’s performance, such as identifying the longest-running operator.</p></li>
+</ul>
+</li>
+<li><p>In graph view or tree view, you can click one of the tabs at the top of the page to view details about each of the query’s tasks.</p>
+<ul class="simple">
+<li><p><strong>Time spent</strong>: The sum of execution time spent by all tasks for each operation.</p></li>
+<li><p><strong>Rows</strong>: The number and size of the rows affected by each of the query’s tasks.</p></li>
+<li><p><strong>Peak memory</strong>: The peak memory each of the query’s tasks consumed.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some non-Photon operations are executed as a group and share common metrics. In this case, all subtasks have the same value as the parent task for a given metric.</p>
+</div>
+</li>
+<li><p>In graph view, if a task has sub-tasks, click a node to show its details. In tree view, you can click <strong>&gt;</strong> to expand it.</p></li>
+<li><p>Each task’s operation is shown. By default, tasks and metrics for some operations are hidden. These operations are unlikely to be the cause of performance bottlenecks. To see information for all operations, and to see additional metrics, click <img alt="Vertical Ellipsis" src="../../_images/vertical-ellipsis.png" /> at the top of the page, then click <strong>Enable verbose mode</strong>. The most common operations are:</p>
+<ul class="simple">
+<li><p><strong>Scan</strong>: Data was read from a datasource and output as rows.</p></li>
+<li><p><strong>Join</strong>: Rows from multiple relations were combined (interleaved) into a single set of rows.</p></li>
+<li><p><strong>Union</strong>: Rows from multiple relations that use the same schema were concatenated into a single set of rows.</p></li>
+<li><p><strong>Shuffle</strong>: Data was redistributed or repartitioned. Shuffle operations are expensive with regard to resources because they move data between executors on the cluster.</p></li>
+<li><p><strong>Hash / Sort</strong>: Rows were grouped by a key and evaluated using an aggregate function such as <code class="docutils literal notranslate"><span class="pre">SUM</span></code>, <code class="docutils literal notranslate"><span class="pre">COUNT</span></code>, or <code class="docutils literal notranslate"><span class="pre">MAX</span></code> within each group.</p></li>
+<li><p><strong>Filter</strong>: Input is filtered according to a criteria, such as by a <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> clause, and a subset of rows is returned.</p></li>
+<li><p><strong>(Reused) Exchange</strong>: A Shuffle or Broadcast Exchange is used to redistribute the data among the cluster nodes based on the desired partitioning.</p></li>
+<li><p><strong>Collect Limit</strong>: The number of rows returned was truncated by using  a <code class="docutils literal notranslate"><span class="pre">LIMIT</span></code> statement.</p></li>
+<li><p><strong>Take Ordered And Project</strong>: The top N rows of the query result were returned.</p></li>
+</ul>
+</li>
+<li><p>To view the query profile in the Apache Spark UI, click <img alt="Vertical Ellipsis" src="../../_images/vertical-ellipsis.png" /> at the top of the page, then click <strong>Open in Spark UI</strong>.</p></li>
+<li><p>To close the imported query profile, click <strong>X</strong> at the top of the page.</p></li>
+</ol>
+<p>For more details about the information available in the query profile, see <a class="reference internal" href="#query-profile-details"><span class="std std-ref">View details about the query profile</span></a>.</p>
+</div>
+<div class="section" id="view-details-about-the-query-profile">
+<span id="query-profile-details"></span><h2>View details about the query profile<a class="headerlink" href="#view-details-about-the-query-profile" title="Permalink to this headline"> </a></h2>
+<p>The query profile lists the query’s top-level tasks in reverse order, with the last task listed first. On the left, three columns show the task sequence, the name of the operation, and a graph of the selected metric for that task. Follow these steps to familiarize yourself with the different parts of the query profile.</p>
+<ol class="arabic simple">
+<li><p>Click <strong>Time</strong> to see the duration of each subtask.</p></li>
+<li><p>Click <strong>Rows</strong> to see the number and size of rows returned by the query.</p></li>
+<li><p>Click <strong>Memory</strong> to see the memory consumed by each query task. If the task has subtasks, you can click <strong>&gt;</strong> to see details about each subtask.</p></li>
+<li><p>On the right, click <strong>Overview</strong> to see the query’s SQL statement, status, start and end times, duration, the user who ran the query, and the warehouse where the query was executed.</p></li>
+<li><p>Click a task to view details about the task, such as the task’s description and metrics about the task’s duration, memory consumed, number and size of rows returned, and lineage.</p></li>
+<li><p>To close subtask details, click <strong>X</strong>.</p></li>
+<li><p>Click the name of the SQL warehouse to go to that warehouse’s properties.</p></li>
+<li><p>To view the query profile in the Apache Spark UI, click <img alt="Vertical Ellipsis" src="../../_images/vertical-ellipsis.png" /> at the top of the page, then click <strong>Open in Spark UI</strong>.</p></li>
+<li><p>To close the query profile, click <strong>X</strong> at the top of the page.</p></li>
+</ol>
+</div>
+<div class="section" id="share-a-query-profile">
+<h2>Share a query profile<a class="headerlink" href="#share-a-query-profile" title="Permalink to this headline"> </a></h2>
+<p>To share a query profile with another user:</p>
+<ol class="arabic simple">
+<li><p>View <a class="reference internal" href="query-history.html#view-query-history"><span class="std std-ref">query history</span></a>.</p></li>
+<li><p>Click the name of the query.</p></li>
+<li><p>To share the query, you have two choices:</p>
+<ul class="simple">
+<li><p>If the other user has the <strong>Can Manage</strong> permission on the query, you can share the URL for the query profile with them. Click <strong>Share</strong>. The URL is copied to your clipboard.</p></li>
+<li><p>Otherwise, if the other user does not have the <strong>Can Manage</strong> permission or is not a member of the workspace, you can download the query profile as a JSON object. <strong>Download</strong>. The JSON file is downloaded to your local system.</p></li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section" id="import-a-query-profile">
+<h2>Import a query profile<a class="headerlink" href="#import-a-query-profile" title="Permalink to this headline"> </a></h2>
+<p>To import the JSON for a query profile:</p>
+<ol class="arabic">
+<li><p>View <a class="reference internal" href="query-history.html#view-query-history"><span class="std std-ref">query history</span></a>.</p></li>
+<li><p>Click the kebab menu <img alt="Vertical Ellipsis" src="../../_images/vertical-ellipsis.png" /> on the upper right, and select <strong>Import query profile (JSON)</strong>.</p></li>
+<li><p>In the file browser, select the JSON file that was shared with you and click <strong>Open</strong>. The JSON file is uploaded and the query profile is displayed.</p>
+<p>When you import a query profile, it is dynamically loaded into your browser session and does not persist in your workspace. You need to re-import it each time you want to view it.</p>
+</li>
+<li><p>To close the imported query profile, click <strong>X</strong> at the top of the page.</p></li>
+</ol>
+</div>
+<div class="section" id="next-steps">
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>Learn about accessing query metrics using the <a class="reference external" href="https://docs.databricks.com/api/workspace/queryhistory">query history API</a></p></li>
+<li><p>Learn more about <a class="reference internal" href="query-history.html"><span class="doc">query history</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

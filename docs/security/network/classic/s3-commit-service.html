@@ -1,0 +1,526 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn about the S3 commit service, which coordinates consistent writes to Amazon S3 from multiple clusters, and learn how to configure your Databricks deployment to address GuardDuty alerts related to the S3 commit service." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Configure Databricks S3 commit service-related settings">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Configure Databricks S3 commit service-related settings &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/security/network/classic/s3-commit-service.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/security/network/classic/s3-commit-service.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/security/network/classic/s3-commit-service.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../../en/security/network/classic/s3-commit-service.html" class="notranslate">English</option>
+    <option value="../../../../ja/security/network/classic/s3-commit-service.html" class="notranslate">日本語</option>
+    <option value="../../../../pt/security/network/classic/s3-commit-service.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Configure Databricks S3 commit service-related settings</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="configure-databricks-s3-commit-service-related-settings">
+<h1>Configure Databricks S3 commit service-related settings<a class="headerlink" href="#configure-databricks-s3-commit-service-related-settings" title="Permalink to this headline"> </a></h1>
+<p>Databricks runs a commit service that coordinates writes to Amazon S3 from multiple clusters. This service runs in the Databricks <a class="reference internal" href="../../../getting-started/overview.html"><span class="doc">compute plane</span></a>. For additional security, you can disable the service’s direct upload optimization as described in <a class="reference internal" href="#direct-upload-optimization"><span class="std std-ref">Disable the direct upload optimization</span></a>. To further restrict access to your S3 buckets, see <a class="reference internal" href="#additional-security"><span class="std std-ref">Additional bucket security restrictions</span></a>.</p>
+<p>If you receive AWS GuardDuty alerts related to the S3 commit service, see <a class="reference internal" href="#guardduty-alerts"><span class="std std-ref">AWS GuardDuty alerts related to S3 commit service</span></a>.</p>
+<div class="section" id="about-the-commit-service">
+<h2>About the commit service<a class="headerlink" href="#about-the-commit-service" title="Permalink to this headline"> </a></h2>
+<p>The S3 commit service helps guarantee consistency of writes across multiple clusters on a single table in specific cases. For example, the commit service helps <a class="reference internal" href="../../../delta/index.html"><span class="doc">Delta Lake</span></a> implement ACID transactions.</p>
+<p>In the default configuration, Databricks sends temporary AWS credentials from the compute plane to the compute plane in the commit service API call. Instance profile credentials are valid for six hours.</p>
+<p>The compute plane writes data directly to S3, and then the S3 commit service in the compute plane provides concurrency control by finalizing the commit log upload (completing the multipart upload described below). The commit service does not read any data from S3. It puts a new file in S3 if it does not exist.</p>
+<p>The most common data that is written to S3 by the Databricks commit service is the Delta log, which contains statistical aggregates from your data, such as the column’s minimum and maximum values. Most Delta log data is sent to S3 from the <a class="reference internal" href="../../../getting-started/overview.html"><span class="doc">compute plane</span></a> using an <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html">Amazon S3 multipart upload</a>.</p>
+<p>After the cluster stages the multipart data to write the Delta log to S3, the S3 commit service in the Databricks compute plane finishes the S3 multipart upload by letting S3 know that it is complete. As a performance optimization for very small updates, by default the commit service sometimes pushes small updates directly from the compute plane to S3. This direct update optimization can be disabled. See <a class="reference internal" href="#direct-upload-optimization"><span class="std std-ref">Disable the direct upload optimization</span></a>.</p>
+<p>In addition to Delta Lake, the following Databricks features use the same S3 commit service:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../structured-streaming/index.html"><span class="doc">Structured Streaming</span></a></p></li>
+<li><p><a class="reference internal" href="../../../ingestion/auto-loader/index.html"><span class="doc">Auto Loader</span></a></p></li>
+<li><p><a class="reference internal" href="../../../ingestion/copy-into/index.html"><span class="doc">The SQL command COPY INTO</span></a></p></li>
+</ul>
+<p>The commit service is necessary because Amazon doesn’t provide an operation that puts an object only if it does not yet exist. Amazon S3 is a distributed system. If S3 receives multiple write requests for the same object simultaneously, it overwrites all but the last object written. Without the ability to centrally verify commits, simultaneous commits from different clusters would corrupt tables.</p>
+</div>
+<div class="section" id="aws-guardduty-alerts-related-to-s3-commit-service">
+<span id="guardduty-alerts"></span><h2>AWS GuardDuty alerts related to S3 commit service<a class="headerlink" href="#aws-guardduty-alerts-related-to-s3-commit-service" title="Permalink to this headline"> </a></h2>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Commits to tables managed by <a class="reference internal" href="../../../data-governance/unity-catalog/index.html"><span class="doc">Unity Catalog</span></a> do not trigger GuardDuty alerts.</p>
+</div>
+<p>If you use <a class="reference external" href="https://aws.amazon.com/guardduty/">AWS GuardDuty</a> and you access data using AWS IAM instance profiles, GuardDuty may create alerts for default Databricks behavior related to Delta Lake, Structured Streaming, Auto Loader, or <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code>. These alerts are related to instance credential exfiltration detection, which is enabled by default. These alerts include the title <code class="docutils literal notranslate"><span class="pre">UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration.InsideAWS</span></code>.</p>
+<p>You can configure your Databricks deployment to address GuardDuty alerts related to the S3 commit service by creating an <a class="reference internal" href="../../../connect/storage/tutorial-s3-instance-profile.html"><span class="doc">AWS instance profile</span></a> that assumes the role of your original S3 data access IAM role.</p>
+<p>As an alternative to using instance profile credentials, this new instance profile can configure clusters to assume a role with short duration tokens. This capability already exists in all recent Databricks Runtime versions and can be enforced globally via <a class="reference internal" href="../../../administration-guide/clusters/policies.html"><span class="doc">cluster policies</span></a>.</p>
+<ol class="arabic">
+<li><p>If you have not already done so, create a normal <a class="reference internal" href="../../../connect/storage/tutorial-s3-instance-profile.html"><span class="doc">instance profile</span></a> to access the S3 data. This instance profile uses instance profile credentials to directly access the S3 data.</p>
+<p>This section refers to the role ARN in this instance profile as the <code class="docutils literal notranslate"><span class="pre">&lt;data-role-arn&gt;</span></code>.</p>
+</li>
+<li><p>Create a new instance profile that will use tokens and references your instance profile that directly accesses the data. Your cluster will reference this new token-based instance profile. See <a class="reference internal" href="../../../connect/storage/tutorial-s3-instance-profile.html"><span class="doc">Tutorial: Configure S3 access with an instance profile</span></a>.</p>
+<p>This instance profile does not need any direct S3 access. Instead it needs only the permissions to assume the IAM role that you use for data access. This section refers to the role ARN in this instance profile as the <code class="docutils literal notranslate"><span class="pre">&lt;cluster-role-arn&gt;</span></code>.</p>
+<ol class="loweralpha">
+<li><p>Add an attached IAM policy on the new cluster instance profile IAM role (<code class="docutils literal notranslate"><span class="pre">&lt;cluster-role-arn&gt;</span></code>). Add the following policy statement to your new cluster Instance profile IAM Role and replace <code class="docutils literal notranslate"><span class="pre">&lt;data-role-arn&gt;</span></code> with the ARN of your original instance profile that accesses your bucket.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sts:AssumeRole&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;data-role-arn&gt;&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Add a trust policy statement to your existing data access IAM Role and replace <code class="docutils literal notranslate"><span class="pre">&lt;cluster-role-arn&gt;</span></code> with the ARN of the original instance profile that accesses your bucket.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;AWS&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;cluster-role-arn&gt;&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sts:AssumeRole&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</li>
+<li><p>To use notebook code that makes direct connection to S3 without using DBFS, configure your clusters to use the new token-based instance profile and to assume the data access role.</p>
+<ul>
+<li><p>Configure a cluster for S3 access to all buckets. Add the following to the cluster’s Spark configuration:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">fs.s3a.credentialsType AssumeRole</span>
+<span class="na">fs.s3a.stsAssumeRole.arn &lt;data-role-arn&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p>You can configure this for a specific bucket:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">fs.s3a.bucket.&lt;bucket-name&gt;.aws.credentials.provider org.apache.hadoop.fs.s3a.auth.AssumedRoleCredentialProvider</span>
+<span class="na">fs.s3a.bucket.&lt;bucket-name&gt;.assumed.role.arn &lt;data-role-arn&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section" id="disable-the-direct-upload-optimization">
+<span id="direct-upload-optimization"></span><h2>Disable the direct upload optimization<a class="headerlink" href="#disable-the-direct-upload-optimization" title="Permalink to this headline"> </a></h2>
+<p>As a performance optimization for very small updates, by default the commit service sometimes pushes small updates directly from the compute plane to S3. To disable this optimization, set the Spark parameter <code class="docutils literal notranslate"><span class="pre">spark.hadoop.fs.s3a.databricks.s3commit.directPutFileSizeThreshold</span></code> to <code class="docutils literal notranslate"><span class="pre">0</span></code>. You can apply this setting in the cluster’s Spark config or set it using cluster policies.</p>
+<p>Disabling this feature may result in a small performance impact for near real-time Structured Streaming queries with constant small updates. Consider testing the performance impact with your data before disabling this feature in production.</p>
+</div>
+<div class="section" id="additional-bucket-security-restrictions">
+<span id="additional-security"></span><h2>Additional bucket security restrictions<a class="headerlink" href="#additional-bucket-security-restrictions" title="Permalink to this headline"> </a></h2>
+<p>The following bucket policy configurations further restrict access to your S3 buckets.</p>
+<p>Neither of these changes affects GuardDuty alerts.</p>
+<ul>
+<li><p><strong>Limit the bucket access to specific IP addresses and S3 operations.</strong> If you are interested in additional controls on your bucket, you can limit specific S3 buckets to be accessible only from specific IP addresses. For example, you can restrict access to only your own environment and the IP addresses for the Databricks compute plane, including the S3 commit service. See <a class="reference internal" href="customer-managed-vpc.html#s3-restrict-access"><span class="std std-ref">Restrict access to your S3 buckets</span></a>. This configuration limits the risk that credentials are used from other locations.</p></li>
+<li><p><strong>Limit S3 operation types outside the required directories</strong>. You can deny access from the Databricks compute plane to your S3 bucket outside the required directories for the S3 commit service. You also can limit the operations in those directories to just the required S3 operations <code class="docutils literal notranslate"><span class="pre">put</span></code> and <code class="docutils literal notranslate"><span class="pre">list</span></code> from Databricks IP addresses. The Databricks compute plane (including the S3 commit service) does not require <code class="docutils literal notranslate"><span class="pre">get</span></code> access on the bucket.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LimitCommitServiceActions&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;NotAction&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;s3:ListBucket&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;s3:GetBucketLocation&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;s3:PutObject&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;arn:aws:s3:::&lt;bucket-name&gt;/*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;arn:aws:s3:::&lt;bucket-name&gt;&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;IpAddress&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;aws:SourceIp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;control-plane-ip&gt;&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">},</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LimitCommitServicePut&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3:PutObject&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;NotResource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;arn:aws:s3:::&lt;bucket-name&gt;/*_delta_log/*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;arn:aws:s3:::&lt;bucket-name&gt;/*_spark_metadata/*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;arn:aws:s3:::&lt;bucket-name&gt;/*offsets/*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;arn:aws:s3:::&lt;bucket-name&gt;/*sources/*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;arn:aws:s3:::&lt;bucket-name&gt;/*sinks/*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;arn:aws:s3:::&lt;bucket-name&gt;/*_schemas/*&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;IpAddress&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;aws:SourceIp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;control-plane-ip&gt;&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">},</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LimitCommitServiceList&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3:ListBucket&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:s3:::&lt;bucket-name&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;StringNotLike&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;s3:Prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">              </span><span class="s2">&quot;*_delta_log/*&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="s2">&quot;*_spark_metadata/*&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="s2">&quot;*offsets/*&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="s2">&quot;*sources/*&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="s2">&quot;*sinks/*&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="s2">&quot;*_schemas/*&quot;</span>
+<span class="w">          </span><span class="p">]</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;IpAddress&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;aws:SourceIp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;control-plane-ip&gt;&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;control-plane-ip&gt;</span></code> with your <a class="reference internal" href="customer-managed-vpc.html#required-ips-and-storage-buckets"><span class="std std-ref">regional IP address for the Databricks compute plane</span></a>. Replace <code class="docutils literal notranslate"><span class="pre">&lt;bucket-name&gt;</span></code> with your S3 bucket name.</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

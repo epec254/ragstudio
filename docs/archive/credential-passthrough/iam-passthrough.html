@@ -1,0 +1,779 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use IAM credential passthrough to enable secure access to S3." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Access S3 with IAM credential passthrough with SCIM (legacy)">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Access S3 with IAM credential passthrough with SCIM (legacy) &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/archive/credential-passthrough/iam-passthrough.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/archive/credential-passthrough/iam-passthrough.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/archive/credential-passthrough/iam-passthrough.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/archive/credential-passthrough/iam-passthrough.html" class="notranslate">English</option>
+    <option value="../../../ja/archive/credential-passthrough/iam-passthrough.html" class="notranslate">日本語</option>
+    <option value="../../../pt/archive/credential-passthrough/iam-passthrough.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Access S3 with IAM credential passthrough with SCIM (legacy)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="access-s3-with-iam-credential-passthrough-with-scim-legacy">
+<h1>Access S3 with IAM credential passthrough with SCIM (legacy)<a class="headerlink" href="#access-s3-with-iam-credential-passthrough-with-scim-legacy" title="Permalink to this headline"> </a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This documentation has been retired and might not be updated.</p>
+<p>IAM credential passthrough is a preview legacy data governance model and it will not become generally available (GA). Databricks recommends that you upgrade to Unity Catalog. Unity Catalog simplifies security and governance of your data by providing a central place to administer and audit data access across multiple workspaces in your account. See <a class="reference internal" href="../../data-governance/unity-catalog/index.html"><span class="doc">What is Unity Catalog?</span></a>.</p>
+</div>
+<p>IAM credential passthrough allows you to authenticate automatically to S3 buckets from Databricks clusters using the identity that you use to log in to Databricks. When you enable IAM credential passthrough for your cluster, commands that you run on that cluster can read and write data in S3 using your identity. IAM credential passthrough has two key benefits over securing access to S3 buckets using <a class="reference internal" href="../../connect/storage/tutorial-s3-instance-profile.html"><span class="doc">instance profiles</span></a>:</p>
+<ul class="simple">
+<li><p>IAM credential passthrough allows multiple users with different data access policies to share one Databricks cluster to access data in S3 while always maintaining data security. An instance profile can be associated with only one <a class="reference external" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html">IAM role</a>. This requires all users on a Databricks cluster to share that role and the data access policies of that role.</p></li>
+<li><p>IAM credential passthrough associates a user with an identity. This in turn enables S3 object logging via CloudTrail. All S3 access is tied directly to the user via the ARN in CloudTrail logs.</p></li>
+</ul>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://databricks.com/product/pricing/platform-addons">Premium plan or above</a>.</p></li>
+<li><p>AWS administrator access to:</p>
+<ul>
+<li><p>IAM roles and policies in the AWS account of the Databricks deployment.</p></li>
+<li><p>AWS account of the S3 bucket.</p></li>
+<li><p>Databricks administrator access to configure instance profiles.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="set-up-a-meta-instance-profile">
+<span id="meta-instance-profiles"></span><h2>Set up a meta instance profile<a class="headerlink" href="#set-up-a-meta-instance-profile" title="Permalink to this headline"> </a></h2>
+<p>In order to use IAM credential passthrough, you must first set up at least one  <em>meta instance profile</em> to assume the IAM roles that you assign to your users.</p>
+<p>An <em>IAM role</em> is an AWS identity with policies that determine what the identity can and cannot do in AWS. An <em>instance
+profile</em> is a container for an IAM role that you can use to pass the role information to an EC2 instance when
+the instance starts. Instance profiles allow you to access data from Databricks clusters
+without having to <a class="reference internal" href="../../connect/storage/tutorial-s3-instance-profile.html"><span class="doc">embed your AWS keys</span></a> in notebooks.</p>
+<p>While instance profiles make configuring roles on clusters very simple, an instance profile can be associated with only <em>one</em> IAM role.
+This requires all users on a Databricks cluster to share that role and the data access policies of that role.
+However, IAM roles can be used to assume other IAM roles or to access data directly
+themselves. Using the credentials for one role to assume a different role is called <a class="reference external" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_terms-and-concepts.html#iam-term-role-chaining">role
+chaining</a>.</p>
+<p>IAM credential passthrough allows admins to split the IAM role the instance profile is using and
+the roles users use to access data. In Databricks, we call the instance role the <em>meta IAM
+role</em> and the data access role the <em>data IAM role</em>. Similar to the instance profile,
+a <em>meta instance profile</em> is a container for a meta IAM role.</p>
+<div class="figure align-default">
+<img alt="Meta instance profile" src="../../_images/meta-iam-role.png" />
+</div>
+<p>Users are granted access to data IAM roles using the <a class="reference external" href="https://docs.databricks.com/api/workspace">SCIM API</a>.
+If you are mapping roles with your identity provider, then those roles will sync to the Databricks SCIM API. When you use
+a cluster with credential passthrough and a meta instance profile, you can assume only the data IAM roles that you can
+access. This allows multiple users with different data access policies to share one Databricks cluster while keeping data secure.</p>
+<p>This section describes how to set up the meta instance profile required to enable IAM credential passthrough.</p>
+<div class="section" id="step-1-configure-roles-for-iam-credential-passthrough">
+<h3>Step 1: Configure roles for IAM credential passthrough<a class="headerlink" href="#step-1-configure-roles-for-iam-credential-passthrough" title="Permalink to this headline"> </a></h3>
+<div class="contents local topic" id="in-this-section">
+<p class="topic-title first">In this section:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#create-a-data-iam-role" id="id2">Create a data IAM role</a></p></li>
+<li><p><a class="reference internal" href="#configure-a-meta-iam-role" id="id3">Configure a meta IAM role</a></p></li>
+<li><p><a class="reference internal" href="#configure-the-data-iam-role-to-trust-the-meta-iam-role" id="id4">Configure the data IAM role to trust the meta IAM role</a></p></li>
+</ul>
+</div>
+<div class="section" id="create-a-data-iam-role">
+<h4><a class="toc-backref" href="#id2">Create a data IAM role</a><a class="headerlink" href="#create-a-data-iam-role" title="Permalink to this headline"> </a></h4>
+<p>Use an existing data IAM role or optionally follow <a class="reference internal" href="../../connect/storage/tutorial-s3-instance-profile.html"><span class="doc">Tutorial: Configure S3 access with an instance profile</span></a> to create a data IAM role that can access S3 buckets.</p>
+</div>
+<div class="section" id="configure-a-meta-iam-role">
+<span id="meta-iam-role"></span><h4><a class="toc-backref" href="#id3">Configure a meta IAM role</a><a class="headerlink" href="#configure-a-meta-iam-role" title="Permalink to this headline"> </a></h4>
+<p>Configure your meta IAM role to assume the data IAM role.</p>
+<ol class="arabic">
+<li><p>In the AWS console, go to the <strong>IAM</strong> service.</p></li>
+<li><p>Click the <strong>Roles</strong> tab in the sidebar.</p></li>
+<li><p>Click <strong>Create role</strong>.</p>
+<ol class="loweralpha simple">
+<li><p>Under <strong>Select type of trusted entity</strong>, select <strong>AWS</strong> service.</p></li>
+<li><p>Click the <strong>EC2</strong> service.</p></li>
+</ol>
+</li>
+<li><p>Click <strong>Next Permissions</strong>.</p></li>
+<li><p>Click <strong>Create Policy</strong>. A new window opens.</p>
+<ol class="loweralpha">
+<li><p>Click the <strong>JSON</strong> tab.</p></li>
+<li><p>Copy the following policy and set <code class="docutils literal notranslate"><span class="pre">&lt;account-id&gt;</span></code> to your AWS Account ID and <code class="docutils literal notranslate"><span class="pre">&lt;data-iam-role&gt;</span></code> to the name of your data IAM role from  the preceding section.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AssumeDataRoles&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sts:AssumeRole&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;arn:aws:iam::&lt;account-id&gt;:role/&lt;data-iam-role&gt;&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Click <strong>Review Policy</strong>.</p></li>
+<li><p>In the Name field, type a policy name and click <strong>Create policy</strong>.</p></li>
+</ol>
+</li>
+<li><p>Return to the role window and refresh it.</p></li>
+<li><p>Search for the policy name and select the checkbox next to the policy name.</p></li>
+<li><p>Click <strong>Next Tags</strong> and <strong>Next Review</strong>.</p></li>
+<li><p>In the Role name file, type a name for the meta IAM role.</p></li>
+<li><p>Click <strong>Create role</strong>.</p></li>
+<li><p>In the role summary, copy the <strong>Instance Profile ARN</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="configure-the-data-iam-role-to-trust-the-meta-iam-role">
+<h4><a class="toc-backref" href="#id4">Configure the data IAM role to trust the meta IAM role</a><a class="headerlink" href="#configure-the-data-iam-role-to-trust-the-meta-iam-role" title="Permalink to this headline"> </a></h4>
+<p>To make the meta IAM role able to assume the data IAM role, you make the meta role trusted by the data role.</p>
+<ol class="arabic">
+<li><p>In the AWS console, go to the <strong>IAM</strong> service.</p></li>
+<li><p>Click the <strong>Roles</strong> tab in the sidebar.</p></li>
+<li><p>Find the data role created in the previous step and click it to go to the role detail page.</p></li>
+<li><p>Click the <strong>Trust relationships</strong> tab and add the following statement if not set:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">     </span><span class="p">{</span>
+<span class="w">       </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;AWS&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::&lt;account-id&gt;:role/&lt;meta-iam-role&gt;&quot;</span>
+<span class="w">       </span><span class="p">},</span>
+<span class="w">       </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sts:AssumeRole&quot;</span>
+<span class="w">     </span><span class="p">}</span>
+<span class="w">   </span><span class="p">]</span>
+<span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="step-2-configure-a-meta-instance-profile-in-databricks">
+<h3>Step 2: Configure a meta instance profile in Databricks<a class="headerlink" href="#step-2-configure-a-meta-instance-profile-in-databricks" title="Permalink to this headline"> </a></h3>
+<p>This section describes how to configure a meta instance profile in Databricks.</p>
+<div class="contents local topic" id="id1">
+<p class="topic-title first">In this section:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#determine-the-iam-role-used-for-databricks-deployment" id="id5">Determine the IAM role used for Databricks deployment</a></p></li>
+<li><p><a class="reference internal" href="#modify-policy-in-the-iam-role-used-for-databricks-deployment" id="id6">Modify policy in the IAM role used for Databricks deployment</a></p></li>
+<li><p><a class="reference internal" href="#add-the-meta-instance-profile-to-databricks" id="id7">Add the meta instance profile to Databricks</a></p></li>
+</ul>
+</div>
+<div class="section" id="determine-the-iam-role-used-for-databricks-deployment">
+<h4><a class="toc-backref" href="#id5">Determine the IAM role used for Databricks deployment</a><a class="headerlink" href="#determine-the-iam-role-used-for-databricks-deployment" title="Permalink to this headline"> </a></h4>
+<ol class="arabic">
+<li><p>Go to the <a class="reference internal" href="../../administration-guide/account-settings/index.html#account-console"><span class="std std-ref">account console</span></a>.</p></li>
+<li><p>Click the <strong>Workspaces</strong> icon.</p></li>
+<li><p>Click on the name of your workspace.</p></li>
+<li><p>Note the role name at the end of the ARN key in the credentials section, in the image below it’s`testco-role`.</p>
+<div class="figure align-default">
+<img alt="Role arn" src="../../_images/e2-role-arn.png" />
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="modify-policy-in-the-iam-role-used-for-databricks-deployment">
+<h4><a class="toc-backref" href="#id6">Modify policy in the IAM role used for Databricks deployment</a><a class="headerlink" href="#modify-policy-in-the-iam-role-used-for-databricks-deployment" title="Permalink to this headline"> </a></h4>
+<ol class="arabic simple">
+<li><p>In the AWS console, go to the <strong>IAM</strong> service.</p></li>
+<li><p>Click the <strong>Roles</strong> tab in the sidebar.</p></li>
+<li><p>Edit the role you noted in the preceding section.</p></li>
+<li><p>Click the policy attached to the role.</p></li>
+<li><p>Modify the policy to allow the EC2 instances for the Spark clusters within Databricks to use the meta instance profile you created in <a class="reference internal" href="#meta-iam-role"><span class="std std-ref">Configure a meta IAM role</span></a>. For an example, see <a class="reference internal" href="../../connect/storage/tutorial-s3-instance-profile.html#add-s3-role"><span class="std std-ref">Step 5: Add the S3 IAM role to the EC2 policy</span></a>.</p></li>
+<li><p>Click <strong>Review policy</strong> and <strong>Save Changes</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="add-the-meta-instance-profile-to-databricks">
+<span id="add-meta-instance-profile"></span><h4><a class="toc-backref" href="#id7">Add the meta instance profile to Databricks</a><a class="headerlink" href="#add-the-meta-instance-profile-to-databricks" title="Permalink to this headline"> </a></h4>
+<ol class="arabic">
+<li><p>Go to the <a class="reference internal" href="../../administration-guide/index.html#admin-settings"><span class="std std-ref">admin settings page</span></a>.</p></li>
+<li><p>Select the <strong>Instance Profiles</strong> tab.</p></li>
+<li><p>Click the <strong>Add Instance Profile</strong> button. A dialog appears.</p></li>
+<li><p>Paste in the Instance Profile ARN for the meta IAM role from <a class="reference internal" href="#meta-iam-role"><span class="std std-ref">Configure a meta IAM role</span></a>.</p></li>
+<li><p>Check the <strong>Meta Instance Profile</strong> checkbox and click <strong>Add</strong>.</p>
+<div class="figure align-default">
+<img alt="Add instance profile" src="../../_images/add-instance-profile.png" />
+</div>
+</li>
+<li><p>Optionally identify users who can launch clusters with the meta instance profile.</p>
+<div class="figure align-default">
+<img alt="Configure instance profile" src="../../_images/configure-instance-profile.png" />
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="step-3-attach-iam-role-permissions-to-databricks-users">
+<h3>Step 3: Attach IAM role permissions to Databricks users<a class="headerlink" href="#step-3-attach-iam-role-permissions-to-databricks-users" title="Permalink to this headline"> </a></h3>
+<p>There are two ways to maintain the mapping of users to IAM roles:</p>
+<ul class="simple">
+<li><p>Within Databricks using the <a class="reference external" href="https://docs.databricks.com/api/workspace/users">SCIM Users API</a> or <a class="reference external" href="https://docs.databricks.com/api/workspace/groups">SCIM Groups API</a>.</p></li>
+<li><p>Within your <a class="reference internal" href="iam-federation.html"><span class="doc">identity provider</span></a>. This allows you to centralize data access and pass those entitlements directly to Databricks clusters via SAML 2.0 identity federation.</p></li>
+</ul>
+<p>Use the following chart to help you decide which mapping method is better for your workspace:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 13%" />
+<col style="width: 32%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Requirement</p></th>
+<th class="head"><p>SCIM</p></th>
+<th class="head"><p>Identity Provider</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Single sign-on to Databricks</p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>Configure AWS identity provider</p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p>Configure meta instance profile</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>Databricks workspace admin</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p>AWS admin</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>Identity provider admin</p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+</tr>
+</tbody>
+</table>
+<p>When you start a cluster with a meta instance profile, the cluster will pass through your identity
+and only assume the data IAM roles that you can access. An admin must grant users permissions on the
+data IAM roles using <a class="reference external" href="https://docs.databricks.com/api/workspace">SCIM API</a> methods to set permissions on roles.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are mapping roles within your IdP, those roles will overwrite any roles mapped within SCIM and you should not map users to roles directly. See <a class="reference internal" href="iam-federation.html#sync-role-mappings-scim"><span class="std std-ref">Step 6: Optionally configure Databricks to synchronize role mappings from SAML to SCIM</span></a>.</p>
+</div>
+<p>You can also attach an instance profile to a user or group with <a class="reference internal" href="../../dev-tools/terraform/index.html"><span class="doc">Databricks Terraform provider</span></a> and <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/user_role">databricks_user_role</a> or <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/group_instance_profile">databricks_group_instance_profile</a>.</p>
+</div>
+</div>
+<div class="section" id="launch-an-iam-credential-passthrough-cluster">
+<span id="launch-cluster"></span><h2>Launch an IAM credential passthrough cluster<a class="headerlink" href="#launch-an-iam-credential-passthrough-cluster" title="Permalink to this headline"> </a></h2>
+<p>The process to launch a cluster with credential passthrough differs according to the cluster mode.</p>
+<div class="section" id="enable-credential-passthrough-for-a-high-concurrency-cluster">
+<h3>Enable credential passthrough for a High Concurrency cluster<a class="headerlink" href="#enable-credential-passthrough-for-a-high-concurrency-cluster" title="Permalink to this headline"> </a></h3>
+<p>High Concurrency clusters can be shared by multiple users. They support only Python and SQL with passthrough.</p>
+<ol class="arabic">
+<li><p>When you <a class="reference internal" href="../../compute/configure.html"><span class="doc">create a cluster</span></a>, set <strong>Cluster Mode</strong> to <a class="reference internal" href="../compute/configure.html#high-concurrency"><span class="std std-ref">High Concurrency</span></a>.</p></li>
+<li><p>Choose a Databricks Runtime Version 6.1 or above.</p></li>
+<li><p>Under <strong>Advanced Options</strong>, select <strong>Enable credential passthrough for user-level data access and only allow Python and SQL commands</strong>.</p>
+<div class="figure align-default">
+<img alt="Enable credential passthrough for High Concurrency clusters" src="../../_images/iam-role-passthrough.png" />
+</div>
+</li>
+<li><p>Click the <strong>Instances</strong> tab. In the <strong>Instance Profile</strong> drop-down, choose the meta instance profile you created in <a class="reference internal" href="#add-meta-instance-profile"><span class="std std-ref">Add the meta instance profile to Databricks</span></a>.</p>
+<div class="figure align-default">
+<img alt="Select instance profile" src="../../_images/select-instance-profile.png" />
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="enable-iam-credential-passthrough-for-a-standard-cluster">
+<h3>Enable IAM credential passthrough for a Standard cluster<a class="headerlink" href="#enable-iam-credential-passthrough-for-a-standard-cluster" title="Permalink to this headline"> </a></h3>
+<p>Standard clusters with credential passthrough are supported and are limited to a single user. Standard clusters support Python, SQL, Scala, and R. On Databricks Runtime 10.4 LTS and above, sparklyr is also supported.</p>
+<p>You must assign a user at cluster creation, but the cluster can be edited by a user with <strong>Can Manage</strong> permissions at any time to replace the original user.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The user assigned to the cluster must have at least <strong>Can Attach To</strong> permission for the cluster in order to run commands on the cluster. Workspace admins and the cluster creator have <strong>Can Manage</strong> permissions, but cannot run commands on the cluster unless they are the designated cluster user.</p>
+</div>
+<ol class="arabic">
+<li><p>When you <a class="reference internal" href="../../compute/configure.html"><span class="doc">create a cluster</span></a>, set <strong>Cluster Mode</strong> to <a class="reference internal" href="../../compute/configure.html#access-mode"><span class="std std-ref">Standard</span></a>.</p></li>
+<li><p>Choose a Databricks Runtime Version 6.1 or above.</p></li>
+<li><p>Under <strong>Advanced Options</strong>, select <strong>Enable credential passthrough for user-level data access</strong>.</p>
+<div class="figure align-default">
+<img alt="Enable credential passthrough for Standard clusters" src="../../_images/iam-role-passthrough.png" />
+</div>
+</li>
+<li><p>Select the user name from the <strong>Single User Access</strong> drop-down.</p>
+<div class="figure align-default">
+<img alt="Select user for single user access" src="../../_images/single-user-access.png" />
+</div>
+</li>
+<li><p>Click the <strong>Instances</strong> tab. In the <strong>Instance Profile</strong> drop-down, select the meta instance profile you created in <a class="reference internal" href="#add-meta-instance-profile"><span class="std std-ref">Add the meta instance profile to Databricks</span></a>.</p>
+<div class="figure align-default">
+<img alt="Select instance profile" src="../../_images/select-instance-profile.png" />
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="access-s3-using-iam-credential-passthrough">
+<h2>Access S3 using IAM credential passthrough<a class="headerlink" href="#access-s3-using-iam-credential-passthrough" title="Permalink to this headline"> </a></h2>
+<p>You can access S3 using credential passthrough either by assuming a role and accessing S3 directly or by using the role to mount the S3 bucket and accessing the data through the mount.</p>
+<div class="section" id="read-and-write-s3-data-using-credential-passthrough">
+<h3>Read and write S3 data using credential passthrough<a class="headerlink" href="#read-and-write-s3-data-using-credential-passthrough" title="Permalink to this headline"> </a></h3>
+<p>Read and write data to/from S3:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dbutils</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">assumeRole</span><span class="p">(</span><span class="s2">&quot;arn:aws:iam::xxxxxxxx:role/&lt;data-iam-role&gt;&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;csv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;s3a://prod-foobar/sampledata.csv&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;overwrite&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;s3a://prod-foobar/sampledata.parquet&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">dbutils.credentials.assumeRole</span><span class="p">(</span><span class="s">&quot;arn:aws:iam::xxxxxxxx:role/&lt;data-iam-role&gt;&quot;</span><span class="p">)</span>
+
+<span class="c1"># SparkR</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">SparkR</span><span class="p">)</span>
+<span class="nf">sparkR.session</span><span class="p">()</span>
+<span class="nf">read.df</span><span class="p">(</span><span class="s">&quot;s3a://prod-foobar/sampledata.csv&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;csv&quot;</span><span class="p">)</span>
+<span class="nf">write.df</span><span class="p">(</span><span class="nf">as.DataFrame</span><span class="p">(</span><span class="nf">data.frame</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">1000</span><span class="p">)),</span><span class="w"> </span><span class="n">path</span><span class="o">=</span><span class="s">&quot;s3a://prod-foobar/sampledata.parquet&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;parquet&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;overwrite&quot;</span><span class="p">)</span>
+
+<span class="c1"># sparklyr</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">sparklyr</span><span class="p">)</span>
+<span class="n">sc</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">spark_connect</span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;databricks&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">spark_read_csv</span><span class="p">(</span><span class="s">&quot;s3a://prod-foobar/sampledata.csv&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">sdf_len</span><span class="p">(</span><span class="m">1000</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">spark_write_parquet</span><span class="p">(</span><span class="s">&quot;s3a://prod-foobar/sampledata.parquet&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;overwrite&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">dbutils</span></code> with a role:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dbutils</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">assumeRole</span><span class="p">(</span><span class="s2">&quot;arn:aws:iam::xxxxxxxx:role/&lt;data-iam-role&gt;&quot;</span><span class="p">)</span>
+<span class="n">dbutils</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">ls</span><span class="p">(</span><span class="s2">&quot;s3a://bucketA/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">dbutils.credentials.assumeRole</span><span class="p">(</span><span class="s">&quot;arn:aws:iam::xxxxxxxx:role/&lt;data-iam-role&gt;&quot;</span><span class="p">)</span>
+<span class="nf">dbutils.fs.ls</span><span class="p">(</span><span class="s">&quot;s3a://bucketA/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>For other <code class="docutils literal notranslate"><span class="pre">dbutils.credentials</span></code> methods, see <a class="reference internal" href="../../dev-tools/databricks-utils.html#dbutils-credentials"><span class="std std-ref">Credentials utility (dbutils.credentials)</span></a>.</p>
+</div>
+<div class="section" id="mount-an-s3-bucket-to-dbfs-using-iam-credential-passthrough">
+<h3>Mount an S3 bucket to DBFS using IAM credential passthrough<a class="headerlink" href="#mount-an-s3-bucket-to-dbfs-using-iam-credential-passthrough" title="Permalink to this headline"> </a></h3>
+<p>For more advanced scenarios where different buckets or prefixes require different roles, it’s
+more convenient to use Databricks bucket mounts to specify the role to use when accessing a specific
+bucket path.</p>
+<p>When you mount data using a cluster enabled with IAM credential passthrough, any read or write to
+the mount point uses your credentials to authenticate to the mount point. This mount point will be
+visible to other users, but the only users that will have read and write access are those who:</p>
+<ul class="simple">
+<li><p>Have access to the underlying S3 storage account via IAM data roles</p></li>
+<li><p>Are using a cluster enabled for IAM credential passthrough</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dbutils</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span>
+  <span class="s2">&quot;s3a://&lt;s3-bucket&gt;/data/confidential&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;/mnt/confidential-data&quot;</span><span class="p">,</span>
+  <span class="n">extra_configs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;fs.s3a.credentialsType&quot;</span><span class="p">:</span> <span class="s2">&quot;Custom&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fs.s3a.credentialsType.customClass&quot;</span><span class="p">:</span> <span class="s2">&quot;com.databricks.backend.daemon.driver.aws.AwsCredentialContextTokenProvider&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fs.s3a.stsAssumeRole.arn&quot;</span><span class="p">:</span> <span class="s2">&quot;arn:aws:iam::xxxxxxxx:role/&lt;confidential-data-role&gt;&quot;</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="access-s3-data-in-a-job-using-iam-credential-passthrough">
+<h2>Access S3 data in a job using IAM credential passthrough<a class="headerlink" href="#access-s3-data-in-a-job-using-iam-credential-passthrough" title="Permalink to this headline"> </a></h2>
+<p>To access S3 data using credential passthrough in a job, configure the cluster
+according to <a class="reference internal" href="#launch-cluster"><span class="std std-ref">Launch an IAM credential passthrough cluster</span></a> when you select a new or existing cluster.</p>
+<div class="figure align-default">
+<img alt="Select instance profile" src="../../_images/select-instance-profile.png" />
+</div>
+<p>The cluster will assume only the roles that the job owner has been granted permission to assume,
+and therefore can access only the S3 data that the role has permission to access.</p>
+</div>
+<div class="section" id="access-s3-data-from-a-jdbc-or-odbc-client-using-iam-credential-passthrough">
+<h2>Access S3 data from a JDBC or ODBC client using IAM credential passthrough<a class="headerlink" href="#access-s3-data-from-a-jdbc-or-odbc-client-using-iam-credential-passthrough" title="Permalink to this headline"> </a></h2>
+<p>To access S3 data using IAM credential passthrough using a JDBC or ODBC client, configure the cluster
+according to <a class="reference internal" href="#launch-cluster"><span class="std std-ref">Launch an IAM credential passthrough cluster</span></a> and connect to this cluster in your client. The
+cluster will assume only the roles that the user connecting to it has been granted permission to
+access, and therefore can only access the S3 data that the user has permission to access.</p>
+<p>To specify a role in your SQL query, do the following:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">databricks</span><span class="p">.</span><span class="n">credentials</span><span class="p">.</span><span class="n">assumed</span><span class="p">.</span><span class="k">role</span><span class="o">=</span><span class="n">arn</span><span class="p">:</span><span class="n">aws</span><span class="p">:</span><span class="n">iam</span><span class="p">::</span><span class="n">XXXX</span><span class="p">:</span><span class="k">role</span><span class="o">/&lt;</span><span class="k">data</span><span class="o">-</span><span class="n">iam</span><span class="o">-</span><span class="k">role</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="c1">-- Access the bucket which &lt;my-role&gt; has permission to access</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">csv</span><span class="p">.</span><span class="o">`</span><span class="n">s3</span><span class="p">:</span><span class="o">//</span><span class="n">my</span><span class="o">-</span><span class="n">bucket</span><span class="o">/</span><span class="n">test</span><span class="p">.</span><span class="n">csv</span><span class="o">`</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="known-limitations">
+<h2>Known limitations<a class="headerlink" href="#known-limitations" title="Permalink to this headline"> </a></h2>
+<p>The following features are not supported with IAM credential passthrough:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">%fs</span></code> (use the equivalent <a class="reference internal" href="../../dev-tools/databricks-utils.html#dbutils-fs"><span class="std std-ref">dbutils.fs</span></a> command instead).</p></li>
+<li><p><a class="reference internal" href="../../data-governance/table-acls/index.html"><span class="doc">Table access control</span></a>.</p></li>
+<li><p>The following methods on SparkContext (<code class="docutils literal notranslate"><span class="pre">sc</span></code>) and SparkSession (<code class="docutils literal notranslate"><span class="pre">spark</span></code>) objects:</p>
+<ul>
+<li><p>Deprecated methods.</p></li>
+<li><p>Methods such as <code class="docutils literal notranslate"><span class="pre">addFile()</span></code> and <code class="docutils literal notranslate"><span class="pre">addJar()</span></code> that would allow non-admin users to call Scala code.</p></li>
+<li><p>Any method that accesses a filesystem other than S3.</p></li>
+<li><p>Old Hadoop APIs (<code class="docutils literal notranslate"><span class="pre">hadoopFile()</span></code> and <code class="docutils literal notranslate"><span class="pre">hadoopRDD()</span></code>).</p></li>
+<li><p>Streaming APIs, since the passed-through credentials would expire while the stream was still running.</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="../../dbfs/mounts.html"><span class="doc">DBFS mounts</span></a> (<code class="docutils literal notranslate"><span class="pre">/dbfs</span></code>) are available only in Databricks Runtime 7.3 LTS and above. Mount points with credential passthrough configured are not supported through this path.</p></li>
+<li><p>Cluster-wide libraries that require a cluster instance profile’s permission to download. Only libraries with DBFS paths are supported.</p></li>
+<li><p><a class="reference internal" href="../../dev-tools/databricks-connect/index.html"><span class="doc">Databricks Connect</span></a> on <a class="reference internal" href="../compute/configure.html#high-concurrency"><span class="std std-ref">High Concurrency</span></a> clusters is available only in Databricks Runtime 7.3 LTS and above.</p></li>
+<li><p><a class="reference internal" href="../../mlflow/index.html"><span class="doc">MLflow</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

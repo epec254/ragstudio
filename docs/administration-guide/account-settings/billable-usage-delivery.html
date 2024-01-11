@@ -1,0 +1,1003 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to configure billable usage log delivery to your AWS S3 bucket and access logs for analysis." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Deliver and access billable usage logs">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Deliver and access billable usage logs &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/administration-guide/account-settings/billable-usage-delivery.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/administration-guide/account-settings/billable-usage-delivery.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/administration-guide/account-settings/billable-usage-delivery.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/administration-guide/account-settings/billable-usage-delivery.html" class="notranslate">English</option>
+    <option value="../../../ja/administration-guide/account-settings/billable-usage-delivery.html" class="notranslate">日本語</option>
+    <option value="../../../pt/administration-guide/account-settings/billable-usage-delivery.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Deliver and access billable usage logs</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <p></p>
+<p></p>
+<div class="section" id="deliver-and-access-billable-usage-logs">
+<h1>Deliver and access billable usage logs<a class="headerlink" href="#deliver-and-access-billable-usage-logs" title="Permalink to this headline"> </a></h1>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<p>As a Databricks account admin, you can configure daily delivery of billable usage logs in CSV file format to an AWS S3 storage bucket, where you can make the data available for <a class="reference internal" href="usage-analysis.html#analyze"><span class="std std-ref">usage analysis</span></a>. Databricks delivers a separate CSV file for each workspace in your account. This CSV file includes historical data about the workspace’s cluster usage in Databricks Units (DBUs), sortable by cluster ID, billing SKU, cluster creator, cluster tags, and more. For a description of each CSV file column, see <a class="reference internal" href="usage-analysis.html#schema"><span class="std std-ref">CSV file schema</span></a>.</p>
+<p>To use an API to download the billable usage logs without configuring log delivery, see <a class="reference external" href="https://docs.databricks.com/api/account/billableusage/download">Return billable usage logs</a>.</p>
+<p>Account admins can view usage in graph or table form on the <a class="reference internal" href="index.html"><span class="doc">Usage page in the account console</span></a>. That page also includes a usage chart that displays account usage in DBUs, grouped by workload type, and allows you to directly download usage data in CSV format.</p>
+<p>If your account is on another version of the platform, account owners can view usage on the <a class="reference internal" href="../../archive/admin-guide/usage.html"><span class="doc">legacy account console’s Usage Overview tab</span></a>.</p>
+<p>You can optionally deliver logs to an AWS account other than the account used for the IAM role that you create for log delivery. This allows flexibility, for example setting up workspaces from multiple AWS accounts to deliver to the same S3 bucket. This option requires that you configure an S3 bucket policy that references a cross-account IAM role. Instructions and a policy template are provided in this article.</p>
+<p>Account owner and account admin access to the logs depends on how you set up the S3 bucket. Databricks delivers logs to your S3 bucket with AWS’s built-in <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/dev/about-object-ownership.html">BucketOwnerFullControl Canned ACL</a> so that account owners and designees can download the logs directly. To support bucket ownership for newly-created objects, you must set your bucket’s <strong>S3 Object Ownership</strong> setting to the value <strong>Bucket owner preferred</strong>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If instead you set your bucket’s <strong>S3 Object Ownership</strong> setting to <strong>Object writer</strong>, new objects such as your logs remain owned by the uploading account, which is by default the IAM role you created and specified to access your bucket. This can make it difficult to access the logs, because you cannot access them from the AWS console or automation tools that you authenticated with as the bucket owner.</p>
+</div>
+<p>Databricks recommends that you review <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/dev/security-best-practices.html">Security Best Practices for S3</a> for guidance around protecting the data in your bucket from unwanted access.</p>
+<p>In addition to delivery of logs for running workspaces, logs are delivered for <em>cancelled workspaces</em> to ensure that logs are properly delivered that represent the final day of the workspace.</p>
+<div class="section" id="configuration-options">
+<h2>Configuration options<a class="headerlink" href="#configuration-options" title="Permalink to this headline"> </a></h2>
+<p>When you configure billable usage log delivery, you have the following options if you have multiple workspaces in your account:</p>
+<ul class="simple">
+<li><p>Share the same configuration (log delivery S3 bucket and IAM role) for all workspaces in the account. This is the default.</p></li>
+<li><p>Use separate configurations for each workspace in the account.</p></li>
+<li><p>Use separate configurations for different groups of workspaces, each sharing a configuration.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Even though you use the Account API to configure log delivery, you can configure log delivery with any workspace, including workspaces that were not created using the Account API.</p>
+</div>
+</div>
+<div class="section" id="high-level-flow">
+<h2>High-level flow<a class="headerlink" href="#high-level-flow" title="Permalink to this headline"> </a></h2>
+<p>The high-level flow of billable usage log delivery:</p>
+<ol class="arabic">
+<li><p><a class="reference internal" href="#configure-storage"><span class="std std-ref">Configure storage</span></a>: In AWS, create a new AWS S3 bucket. Using Databricks APIs, call the Account API to create a storage configuration object that uses the bucket name.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To deliver logs to an AWS account other than the account used for the IAM role that you create for log delivery, you need to add an S3 bucket policy. You do not add the policy in this step, but in a later one.</p>
+</div>
+</li>
+<li><p><a class="reference internal" href="#configure-credentials"><span class="std std-ref">Configure credentials</span></a>: In AWS, create the appropriate AWS IAM role. Using Databricks APIs, call the Account API to create a credentials configuration object that uses the IAM role’s ARN. The role policy can specify a path prefix for log delivery within your S3 bucket. You can choose to define an IAM role to include multiple path prefixes if you want log delivery configurations for different workspaces that share the S3 bucket but use different path prefixes.</p></li>
+<li><p><a class="reference internal" href="#cross-account-policy"><span class="std std-ref">Optional cross-account support</span></a> To deliver logs to an AWS account other than the account of the IAM role that you create for log delivery, add an S3 bucket policy. This policy references IDs for the cross-account IAM role that you created in the previous step.</p></li>
+<li><p><a class="reference internal" href="#log-delivery-api"><span class="std std-ref">Call the log delivery API</span></a>: Call the Account API to create a log delivery configuration that uses the credential and storage configuration objects from previous steps. This step lets you specify if you want to associate the log delivery configuration for whole account (current and future workspaces) or for a specific set of workspaces.</p></li>
+<li><p><a class="reference internal" href="usage-analysis.html#analyze"><span class="std std-ref">Access the CSV files for analysis</span></a>: The delivery location is <code class="docutils literal notranslate"><span class="pre">&lt;bucket-name&gt;/&lt;prefix&gt;/billable-usage/csv/</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;</span></code> is the name of the optional delivery path prefix you set up during log delivery configuration. Files are named <code class="docutils literal notranslate"><span class="pre">workspaceId=&lt;workspace-id&gt;-usageMonth=&lt;month&gt;.csv</span></code>. Files are delivered daily by overwriting the month’s CSV file for each workspace. You can import this data into Databricks for analysis. There is also a sample notebook that you can use to run a usage analysis dashboard based on these CSV files. See <a class="reference internal" href="usage-analysis.html#analyze"><span class="std std-ref">Analyze usage data in Databricks</span></a>.</p></li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>There is a limit on the number of log delivery configurations that you can create for an account. You can create a maximum of two enabled configurations that use the account level (no workspace filter) and two enabled configurations for every specific workspace (a <code class="docutils literal notranslate"><span class="pre">workspaceId</span></code> can occur in the workspace filter for two configurations). You cannot delete a log delivery configuration, but you can disable it. You can re-enable a disabled configuration, but the request fails if it violates the limits previously described.</p>
+</div>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>You must be an account admin</p></li>
+<li><p>Account ID. You can find the account ID in the <a class="reference internal" href="index.html#account-id"><span class="std std-ref">account console</span></a>.</p></li>
+</ul>
+</div>
+<div class="section" id="how-to-authenticate-to-the-account-api">
+<h2>How to authenticate to the Account API<a class="headerlink" href="#how-to-authenticate-to-the-account-api" title="Permalink to this headline"> </a></h2>
+<p>To authenticate to the Account API, you can use Databricks OAuth for service principals, Databricks OAuth for users, or a Databricks account admin’s username and password. Databricks strongly recommends that you use Databricks OAuth for users or service principals. A service principal is an identity that you create in Databricks for use with automated tools, jobs, and applications. To create an OAuth token, see <a class="reference internal" href="../../dev-tools/authentication-oauth.html"><span class="doc">Authentication using OAuth for service principals</span></a>.</p>
+<p>Use the following examples to authenticate to a Databricks account. You can use OAuth for service principals, OAuth for users, or a user’s username and password (legacy). For background, see:</p>
+<ul class="simple">
+<li><p>For OAuth for service principals, see <a class="reference internal" href="../../dev-tools/auth/oauth-m2m.html"><span class="doc">OAuth machine-to-machine (M2M) authentication</span></a>.</p></li>
+<li><p>For OAuth for users, see <a class="reference internal" href="../../dev-tools/auth/oauth-u2m.html"><span class="doc">OAuth user-to-machine (U2M) authentication</span></a>.</p></li>
+<li><p>For a user’s username and password (legacy), see <a class="reference internal" href="../../dev-tools/auth/basic.html"><span class="doc">Basic authentication (legacy)</span></a>.</p></li>
+</ul>
+<p>For authentication examples, choose from the following:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="OAuth&amp;nbsp;for&amp;nbsp;service&amp;nbsp;principals">
+<ol class="arabic">
+<li><p>Install Databricks CLI version 0.205 or above. See <a class="reference internal" href="../../dev-tools/cli/install.html"><span class="doc">Install or update the Databricks CLI</span></a>.</p></li>
+<li><p>Complete the steps to configure OAuth M2M authentication for service principals in the account. See <a class="reference internal" href="../../dev-tools/auth/oauth-m2m.html"><span class="doc">OAuth machine-to-machine (M2M) authentication</span></a>.</p></li>
+<li><p>Identify or manually create a Databricks configuration profile in your <code class="docutils literal notranslate"><span class="pre">.databrickscfg</span></code> file, with the profile’s fields set correctly for the related <code class="docutils literal notranslate"><span class="pre">host</span></code>, <code class="docutils literal notranslate"><span class="pre">account_id</span></code>, and <code class="docutils literal notranslate"><span class="pre">client_id</span></code> and <code class="docutils literal notranslate"><span class="pre">client_secret</span></code> mapping to the service principal. See <a class="reference internal" href="../../dev-tools/cli/authentication.html#m2m-auth"><span class="std std-ref">OAuth machine-to-machine (M2M) authentication</span></a>.</p></li>
+<li><p>Run your target Databricks CLI command, where <code class="docutils literal notranslate"><span class="pre">&lt;profile-name&gt;</span></code> represents the name of the configuration profile in your <code class="docutils literal notranslate"><span class="pre">.databrickscfg</span></code> file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>account<span class="w"> </span>&lt;command-name&gt;<span class="w"> </span>&lt;subcommand-name&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;profile-name&gt;
+</pre></div>
+</div>
+<p>For example, to list all users in the account:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>account<span class="w"> </span>users<span class="w"> </span>list<span class="w"> </span>-p<span class="w"> </span>MY-AWS-ACCOUNT
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>For a list of available account commands, run the command <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">account</span> <span class="pre">-h</span></code>.</p></li>
+<li><p>For a list of available subcommands for an account command, run the command <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">account</span> <span class="pre">&lt;command-name&gt;</span> <span class="pre">-h</span></code>.</p></li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="compound-middle compound" lang="OAuth&amp;nbsp;for&amp;nbsp;users">
+<ol class="arabic">
+<li><p>Install Databricks CLI version 0.205 or above. See <a class="reference internal" href="../../dev-tools/cli/install.html"><span class="doc">Install or update the Databricks CLI</span></a>.</p></li>
+<li><p>Complete the steps to configure OAuth U2M authentication for users in the account. See <a class="reference internal" href="../../dev-tools/auth/oauth-u2m.html"><span class="doc">OAuth user-to-machine (U2M) authentication</span></a>.</p></li>
+<li><p>Start the user authentication process by running the following Databricks CLI command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>auth<span class="w"> </span>login<span class="w"> </span>--host<span class="w"> </span>&lt;account-console-url&gt;<span class="w"> </span>--account-id<span class="w"> </span>&lt;account-id&gt;
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>auth<span class="w"> </span>login<span class="w"> </span>--host<span class="w"> </span>https://accounts.cloud.databricks.com<span class="w"> </span>--account-id<span class="w"> </span><span class="m">00000000</span>-0000-0000-0000-000000000000
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you have an existing Databricks <a class="reference internal" href="../../dev-tools/auth/index.html#config-profiles"><span class="std std-ref">configuration profile</span></a> with the <code class="docutils literal notranslate"><span class="pre">host</span></code> and <code class="docutils literal notranslate"><span class="pre">account_id</span></code> fields already set, you can substitute <code class="docutils literal notranslate"><span class="pre">--host</span> <span class="pre">&lt;account-console-url&gt;</span> <span class="pre">--account-id</span> <span class="pre">&lt;account-id&gt;</span></code> with <code class="docutils literal notranslate"><span class="pre">--profile</span> <span class="pre">&lt;profile-name&gt;</span></code>.</p>
+</div>
+</li>
+<li><p>Follow the on-screen instructions to have the Databricks CLI automatically create the related Databricks configuration profile in your <code class="docutils literal notranslate"><span class="pre">.databrickscfg</span></code> file.</p></li>
+<li><p>Continue following the on-screen instructions to sign in to your Databricks account through your web browser.</p></li>
+<li><p>Run your target Databricks CLI command, where <code class="docutils literal notranslate"><span class="pre">&lt;profile-name&gt;</span></code> represents the name of the configuration profile in your <code class="docutils literal notranslate"><span class="pre">.databrickscfg</span></code> file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>account<span class="w"> </span>&lt;command-name&gt;<span class="w"> </span>&lt;subcommand-name&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;profile-name&gt;
+</pre></div>
+</div>
+<p>For example, to list all users in the account:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>account<span class="w"> </span>users<span class="w"> </span>list<span class="w"> </span>-p<span class="w"> </span>ACCOUNT-00000000-0000-0000-0000-000000000000
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>For a list of available account commands, run the command <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">account</span> <span class="pre">-h</span></code>.</p></li>
+<li><p>For a list of available subcommands for an account command, run the command <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">account</span> <span class="pre">&lt;command-name&gt;</span> <span class="pre">-h</span></code>.</p></li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="compound-last compound" lang="Username&amp;nbsp;and&amp;nbsp;password&amp;nbsp;(legacy)">
+<ol class="arabic">
+<li><p>Install Databricks CLI version 0.205 or above. See <a class="reference internal" href="../../dev-tools/cli/install.html"><span class="doc">Install or update the Databricks CLI</span></a>.</p></li>
+<li><p>Identify or manually create a Databricks configuration profile in your <code class="docutils literal notranslate"><span class="pre">.databrickscfg</span></code> file, with the profile’s fields set correctly for the related <code class="docutils literal notranslate"><span class="pre">host</span></code>, <code class="docutils literal notranslate"><span class="pre">account_id</span></code>, and <code class="docutils literal notranslate"><span class="pre">username</span></code> and <code class="docutils literal notranslate"><span class="pre">password</span></code> mapping to your Databricks user account. See <a class="reference internal" href="../../dev-tools/cli/authentication.html#basic-auth"><span class="std std-ref">Basic authentication (legacy)</span></a>.</p></li>
+<li><p>Run your target Databricks CLI command, where <code class="docutils literal notranslate"><span class="pre">&lt;profile-name&gt;</span></code> represents the name of the configuration profile in your <code class="docutils literal notranslate"><span class="pre">.databrickscfg</span></code> file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>account<span class="w"> </span>&lt;command-name&gt;<span class="w"> </span>&lt;subcommand-name&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;profile-name&gt;
+</pre></div>
+</div>
+<p>For example, to list all users in the account:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>account<span class="w"> </span>users<span class="w"> </span>list<span class="w"> </span>-p<span class="w"> </span>MY-AWS-ACCOUNT
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>For a list of available account commands, run the command <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">account</span> <span class="pre">-h</span></code>.</p></li>
+<li><p>For a list of available subcommands for an account command, run the command <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">account</span> <span class="pre">&lt;command-name&gt;</span> <span class="pre">-h</span></code>.</p></li>
+</ul>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="section" id="step-1-configure-storage">
+<span id="configure-storage"></span><h2>Step 1: Configure storage<a class="headerlink" href="#step-1-configure-storage" title="Permalink to this headline"> </a></h2>
+<p>Databricks delivers the billable usage data to an S3 bucket in your account. You can configure multiple workspaces to use a single S3 bucket, or you can define different workspaces (or groups of workspaces) to use different buckets.</p>
+<p>This procedure describes how to set up a single configuration object with a common configuration for one or more workspaces in the account. To use different storage locations for different workspaces, repeat the procedures in this article for each workspace or group of workspaces.</p>
+<ol class="arabic">
+<li><p>Create the S3 bucket, following the instructions in <a class="reference internal" href="../account-settings-e2/audit-aws-storage.html"><span class="doc">Step 1: Configure audit log storage</span></a>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>To deliver logs to an AWS account other than the one used for your Databricks workspace, you must add an S3 bucket policy. You do not add the bucket policy in this step. See <a class="reference internal" href="#cross-account-policy"><span class="std std-ref">Step 3: Optional cross-account support</span></a>.</p>
+</div>
+</li>
+<li><p>Create a Databricks storage configuration record that represents your new S3 bucket. Specify your S3 bucket by calling the <a class="reference external" href="https://docs.databricks.com/api/account/introduction">create new storage configuration API</a> (<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/accounts/&lt;account-id&gt;/storage-configurations</span></code>).</p>
+<p>Pass the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">storage_configuration_name</span></code> — New unique storage configuration name.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">root_bucket_info</span></code> — A JSON object that contains a <code class="docutils literal notranslate"><span class="pre">bucket_name</span></code> field that contains your S3 bucket name.</p></li>
+</ul>
+<p>Copy the <code class="docutils literal notranslate"><span class="pre">storage_configuration_id</span></code> value returned in the response body. You will use it to create the log delivery configuration in a later step.</p>
+<p>For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST
+<span class="w">    </span><span class="s1">&#39;https://accounts.cloud.databricks.com/api/2.0/accounts/&lt;databricks-account-id&gt;/storage-configurations&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--header<span class="w"> </span><span class="s1">&#39;Authorization: Bearer $OAUTH_TOKEN&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">    &quot;storage_configuration_name&quot;: &quot;databricks-workspace-storageconf-v1&quot;,</span>
+<span class="s1">    &quot;root_bucket_info&quot;: {</span>
+<span class="s1">      &quot;bucket_name&quot;: &quot;my-company-example-bucket&quot;</span>
+<span class="s1">    }</span>
+<span class="s1">  }&#39;</span>
+</pre></div>
+</div>
+<p>Response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;storage_configuration_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;databricks-storage-config-id&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;account_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;databricks-account-id&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;root_bucket_info&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;bucket_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-company-example-bucket&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;storage_configuration_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;databricks-workspace-storageconf-v1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;creation_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1579754875555</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="step-2-configure-credentials">
+<span id="configure-credentials"></span><h2>Step 2: Configure credentials<a class="headerlink" href="#step-2-configure-credentials" title="Permalink to this headline"> </a></h2>
+<p>This procedure describes how to set up a single configuration object with a common configuration for one or more workspaces in the account. To use different credentials for different workspaces, repeat the procedures in this article for each workspace or group of workspaces.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To use different S3 bucket names, you need to create separate IAM roles.</p>
+</div>
+<ol class="arabic">
+<li><p>Log into your AWS Console as a user with administrator privileges and go to the <strong>IAM</strong> service.</p></li>
+<li><p>Click the <strong>Roles</strong> tab in the sidebar.</p></li>
+<li><p>Click <strong>Create role</strong>.</p>
+<ol class="loweralpha">
+<li><p>In <strong>Select type of trusted entity</strong>, click <strong>AWS service</strong>.</p></li>
+<li><p>In <strong>Common Use Cases</strong>, click <strong>EC2</strong>.</p>
+<p></p>
+</li>
+<li><p>Click the <strong>Next: Permissions</strong> button.</p></li>
+<li><p>Click the <strong>Next: Tags</strong> button.</p></li>
+<li><p>Click the <strong>Next: Review</strong> button.</p></li>
+<li><p>In the <strong>Role name</strong> field, enter a role name.</p>
+<div class="figure align-default">
+<img alt="Role name" src="../../_images/role-name.png" />
+</div>
+</li>
+<li><p>Click <strong>Create role</strong>. The list of roles displays.</p></li>
+</ol>
+</li>
+<li><p>In the list of roles, click the role you created.</p></li>
+<li><p>Add an inline policy.</p>
+<ol class="loweralpha">
+<li><p>On the Permissions tab, click <strong>Add inline policy</strong>.</p>
+<div class="figure align-default">
+<img alt="Inline policy" src="../../_images/inline-policy.png" />
+</div>
+</li>
+<li><p>In the policy editor, click the <strong>JSON</strong> tab.</p>
+<div class="figure align-default">
+<img alt="JSON editor" src="../../_images/policy-editor.png" />
+</div>
+</li>
+<li><p>Copy this access policy and modify it. Replace the following values in the policy with your own configuration values:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket-name&gt;</span></code>: The bucket name of your AWS S3 bucket.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket-path-prefix&gt;</span></code>:  (Optional) The path to the delivery location in the S3 bucket. If unspecified, the logs are delivered to the root of the bucket. This path must match the <code class="docutils literal notranslate"><span class="pre">delivery_path_prefix</span></code> argument when you <a class="reference internal" href="#log-delivery-api"><span class="std std-ref">call the log delivery API</span></a>.</p></li>
+</ul>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:[</span>
+<span class="w">        </span><span class="s2">&quot;s3:GetBucketLocation&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:[</span>
+<span class="w">        </span><span class="s2">&quot;arn:aws:s3:::&lt;s3-bucket-name&gt;&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:[</span>
+<span class="w">        </span><span class="s2">&quot;s3:PutObject&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;s3:GetObject&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;s3:DeleteObject&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;s3:PutObjectAcl&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;s3:AbortMultipartUpload&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:[</span>
+<span class="w">        </span><span class="s2">&quot;arn:aws:s3:::&lt;s3-bucket-name&gt;/&lt;s3-bucket-path-prefix&gt;/&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;arn:aws:s3:::&lt;s3-bucket-name&gt;/&lt;s3-bucket-path-prefix&gt;/*&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:[</span>
+<span class="w">        </span><span class="s2">&quot;s3:ListBucket&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;s3:ListMultipartUploadParts&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;s3:ListBucketMultipartUploads&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="s2">&quot;arn:aws:s3:::&lt;s3-bucket-name&gt;&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Condition&quot;</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">&quot;StringLike&quot;</span><span class="p">:{</span>
+<span class="w">          </span><span class="nt">&quot;s3:prefix&quot;</span><span class="p">:[</span>
+<span class="w">            </span><span class="s2">&quot;&lt;s3-bucket-path-prefix&gt;&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;&lt;s3-bucket-path-prefix&gt;/*&quot;</span>
+<span class="w">          </span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You can customize the policy use of the path prefix:</p>
+<ul class="simple">
+<li><p>If you do not want to use the bucket path prefix, remove <code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket-path-prefix&gt;/</span></code> (including the final slash) from the policy each time it appears.</p></li>
+<li><p>If you want log delivery configurations for different workspaces that share the S3 bucket but use different path prefixes, you can define an IAM role to include multiple path prefixes. There are two separate parts of the policy that reference <code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket-path-prefix&gt;</span></code>. In each case, duplicate the two adjacent lines that reference the path prefix. Repeat each pair of lines for every new path prefix, for example:</p></li>
+</ul>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Resource&quot;</span><span class="p">:[</span>
+<span class="w">    </span><span class="s2">&quot;arn:aws:s3:::&lt;mybucketname&gt;/field-team/&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;arn:aws:s3:::&lt;mybucketname&gt;/field-team/*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;arn:aws:s3:::&lt;mybucketname&gt;/finance-team/&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;arn:aws:s3:::&lt;mybucketname&gt;/finance-team/*&quot;</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Click <strong>Review policy</strong>.</p></li>
+<li><p>In the <strong>Name</strong> field, enter a policy name.</p></li>
+<li><p>Click <strong>Create policy</strong>.</p></li>
+<li><p>If you use <a class="reference external" href="https://aws.amazon.com/blogs/security/how-to-use-service-control-policies-to-set-permission-guardrails-across-accounts-in-your-aws-organization/">service control policies</a> to deny certain actions at the AWS account level, ensure that <code class="docutils literal notranslate"><span class="pre">sts:AssumeRole</span></code> is whitelisted so Databricks can assume the cross-account role.</p></li>
+</ol>
+</li>
+<li><p>On the role summary page, click the <strong>Trust Relationships</strong> tab.</p></li>
+<li><p>Paste this access policy into the editor and replace the following values in the policy with your own configuration values:</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;databricks-account-id&gt;</span></code>: Your Databricks account ID.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Principal&quot;</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">&quot;AWS&quot;</span><span class="p">:</span><span class="s2">&quot;arn:aws:iam::414351767826:role/SaasUsageDeliveryRole-prod-IAMRole-3PLHICCRR1TK&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="s2">&quot;sts:AssumeRole&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Condition&quot;</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">&quot;StringEquals&quot;</span><span class="p">:{</span>
+<span class="w">          </span><span class="nt">&quot;sts:ExternalId&quot;</span><span class="p">:[</span>
+<span class="w">            </span><span class="s2">&quot;&lt;databricks-account-id&gt;&quot;</span>
+<span class="w">          </span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>In the role summary, copy the <strong>Role ARN</strong> and save it for a later step.</p>
+<div class="figure align-default">
+<img alt="Role ARN" src="../../_images/role-arn.png" />
+</div>
+</li>
+<li><p>Create a Databricks credentials configuration ID for your AWS role. Call the <a class="reference external" href="https://docs.databricks.com/api/account/introduction">Create credential configuration API</a> (<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/accounts/&lt;account-id&gt;/credentials</span></code>). This request establishes cross-account trust and returns a reference ID to use when you create a new workspace.</p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;account-id&gt;</span></code> with your Databricks account ID. In the request body:</p>
+<ul class="simple">
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">credentials_name</span></code> to a name that is unique within your account.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">aws_credentials</span></code> to an object that contains an <code class="docutils literal notranslate"><span class="pre">sts_role</span></code> property. That object must specify the <code class="docutils literal notranslate"><span class="pre">role_arn</span></code> for the role you’ve created.</p></li>
+</ul>
+<p>The response body will include a <code class="docutils literal notranslate"><span class="pre">credentials_id</span></code> field, which is the Databricks credentials configuration ID that you need to create the new workspace. Copy this field so you can use it to create the log delivery configuration in a later step.</p>
+<p> For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>curl<span class="w"> </span>-X<span class="w"> </span>POST
+<span class="w">   </span><span class="s1">&#39;https://accounts.cloud.databricks.com/api/2.0/accounts/&lt;databricks-account-id&gt;/credentials&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--header<span class="w"> </span><span class="s1">&#39;Authorization: Bearer $OAUTH_TOKEN&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">   &quot;credentials_name&quot;: &quot;databricks-credentials-v1&quot;,</span>
+<span class="s1">   &quot;aws_credentials&quot;: {</span>
+<span class="s1">     &quot;sts_role&quot;: {</span>
+<span class="s1">       &quot;role_arn&quot;: &quot;arn:aws:iam::&lt;aws-account-id&gt;:role/my-company-example-role&quot;</span>
+<span class="s1">     }</span>
+<span class="s1">   }</span>
+<span class="s1"> }&#39;</span>
+</pre></div>
+</div>
+<p> Example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;credentials_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;databricks-credentials-id&gt;&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;account_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;databricks-account-id&gt;&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;aws_credentials&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="nt">&quot;sts_role&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">       </span><span class="nt">&quot;role_arn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::&lt;aws-account-id&gt;:role/my-company-example-role&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="nt">&quot;external_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;databricks-account-id&gt;&quot;</span>
+<span class="w">     </span><span class="p">}</span>
+<span class="w">   </span><span class="p">},</span>
+<span class="w">   </span><span class="nt">&quot;credentials_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;databricks-credentials-v1&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;creation_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1579753556257</span>
+<span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+<p> Copy the <code class="docutils literal notranslate"><span class="pre">credentials_id</span></code> field from the response for later use.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="step-3-optional-cross-account-support">
+<span id="cross-account-policy"></span><h2>Step 3: Optional cross-account support<a class="headerlink" href="#step-3-optional-cross-account-support" title="Permalink to this headline"> </a></h2>
+<p>If your S3 bucket is in the same AWS account as the IAM role used for log delivery, skip this step.</p>
+<p>To deliver logs to an AWS account other than the account used for the IAM role that you create for log delivery, add the S3 bucket policy shown below. This policy references IDs for the cross-account IAM role that you created in the previous step.</p>
+<ol class="arabic">
+<li><p>In the AWS Console, go to the S3 service.</p></li>
+<li><p>Click the bucket name.</p></li>
+<li><p>Click the <strong>Permissions</strong> tab.</p></li>
+<li><p>Click the <strong>Bucket Policy</strong> button.</p>
+<div class="figure align-default">
+<img alt="Bucket policy button" src="../../_images/bucket-policy.png" />
+</div>
+</li>
+<li><p>Copy and modify this bucket policy.</p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket-name&gt;</span></code> with the S3 bucket name. Replace <code class="docutils literal notranslate"><span class="pre">&lt;customer-iam-role-id&gt;</span></code> with the role ID of your newly-created IAM role. Replace <code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket-path-prefix&gt;</span></code> with the bucket path prefix you want. See the notes after the policy sample for information about customizing the path prefix.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">&quot;AWS&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;arn:aws:iam::&lt;customer-iam-role-id&gt;&quot;</span><span class="p">]</span>
+<span class="w">          </span><span class="p">},</span>
+<span class="w">          </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3:GetBucketLocation&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:s3:::&lt;s3-bucket-name&gt;&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">&quot;AWS&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::&lt;customer-iam-role-id&gt;&quot;</span>
+<span class="w">          </span><span class="p">},</span>
+<span class="w">          </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">              </span><span class="s2">&quot;s3:PutObject&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="s2">&quot;s3:GetObject&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="s2">&quot;s3:DeleteObject&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="s2">&quot;s3:PutObjectAcl&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="s2">&quot;s3:AbortMultipartUpload&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="s2">&quot;s3:ListMultipartUploadParts&quot;</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">              </span><span class="s2">&quot;arn:aws:s3:::&lt;s3-bucket-name&gt;/&lt;s3-bucket-path-prefix&gt;/&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="s2">&quot;arn:aws:s3:::&lt;s3-bucket-name&gt;/&lt;s3-bucket-path-prefix&gt;/*&quot;</span>
+<span class="w">          </span><span class="p">]</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">&quot;AWS&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::&lt;customer-iam-role-id&gt;&quot;</span>
+<span class="w">          </span><span class="p">},</span>
+<span class="w">          </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3:ListBucket&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:s3:::&lt;s3-bucket-name&gt;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">&quot;StringLike&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                  </span><span class="nt">&quot;s3:prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                      </span><span class="s2">&quot;&lt;s3-bucket-path-prefix&gt;&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="s2">&quot;&lt;s3-bucket-path-prefix&gt;/*&quot;</span>
+<span class="w">                  </span><span class="p">]</span>
+<span class="w">              </span><span class="p">}</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You can customize the policy use of the path prefix:</p>
+<ul>
+<li><p>If you do not want to use the bucket path prefix, remove <code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket-path-prefix&gt;/</span></code> (including the final slash) from the policy each time it appears.</p></li>
+<li><p>If you want log delivery configurations for multiple workspaces that share the same S3 bucket but use different path prefixes, you can define an IAM role to include multiple path prefixes. Two parts of the policy reference <code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket-path-prefix&gt;</span></code>. In each place, duplicate the two adjacent lines that reference the path prefix. Repeat each pair of lines for each new path prefix. For example:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Resource&quot;</span><span class="p">:[</span>
+<span class="w">    </span><span class="s2">&quot;arn:aws:s3:::&lt;mybucketname&gt;/field-team/&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;arn:aws:s3:::&lt;mybucketname&gt;/field-team/*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;arn:aws:s3:::&lt;mybucketname&gt;/finance-team/&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;arn:aws:s3:::&lt;mybucketname&gt;/finance-team/*&quot;</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section" id="step-4-call-the-log-delivery-api">
+<span id="log-delivery-api"></span><h2>Step 4: Call the log delivery API<a class="headerlink" href="#step-4-call-the-log-delivery-api" title="Permalink to this headline"> </a></h2>
+<p>To configure log delivery, call the <a class="reference external" href="https://docs.databricks.com/api/account/introduction">Log delivery configuration API</a> (<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/accounts/&lt;account-id&gt;/log-delivery</span></code>).</p>
+<p>You need the following values that you copied in the previous steps:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">credentials_id</span></code>: Your Databricks credential configuration ID, which represents your cross-account role credentials.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">storage_configuration_id</span></code>: Your Databricks storage configuration ID, which represents your root S3 bucket.</p></li>
+</ul>
+<p>Also set the following fields:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_type</span></code>: Always set to <code class="docutils literal notranslate"><span class="pre">BILLABLE_USAGE</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output_format</span></code>: Always set to <code class="docutils literal notranslate"><span class="pre">CSV</span></code>. For details of the CSV file format, see <a class="reference internal" href="usage-analysis.html"><span class="doc">Billable usage log schema</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">delivery_path_prefix</span></code>: (Optional) Set to the path prefix. This must match the path prefix that you used in your role policy.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">workspace_ids_filter</span></code>: (Optional) By default, this log configuration applies to all workspaces associated with your account ID. For some types of deployments there is only one workspace per account ID so this field is unnecessary. If your account was created originally for workspace creation with the Account API, you may have multiple workspaces associated with your account ID. You can optionally set this field to array of workspace IDs that this configuration applies to. If you plan to use different log delivery configurations for different workspaces, set this explicitly rather than leaving it blank. If you leave this blank and your account ID is associated in the future with additional workspaces, this configuration also applies to the new workspaces. A workspace might apply to more than one log delivery configuration, in which case the logs are written to multiple locations.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>There is a limit on the number of log delivery configurations that you can create for an account. You can create a maximum of two enabled configurations that use the account level (no workspace filter) and two enabled configurations for every specific workspace (a <code class="docutils literal notranslate"><span class="pre">workspaceId</span></code> can occur in the workspace filter for two configurations). You cannot delete a log delivery configuration, but you can disable it. You can re-enable a disabled configuration, but the request fails if it violates the limits previously described.</p>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">delivery_start_time</span></code>: (Optional) The month and year at which log delivery starts. Defaults to current month. Format is text in <code class="docutils literal notranslate"><span class="pre">YYYY-MM</span></code> format. You can enter any month and year from 2019-03 on.</p></li>
+</ul>
+<p>For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST
+<span class="w">  </span><span class="s1">&#39;https://accounts.cloud.databricks.com/api/2.0/accounts/&lt;databricks-account-id&gt;/log-delivery&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--header<span class="w"> </span><span class="s1">&#39;Authorization: Bearer $OAUTH_TOKEN&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;log_delivery_configuration&quot;: {</span>
+<span class="s1">    &quot;log_type&quot;: &quot;BILLABLE_USAGE&quot;,</span>
+<span class="s1">    &quot;config_name&quot;: &quot;billable usage config&quot;,</span>
+<span class="s1">    &quot;output_format&quot;: &quot;CSV&quot;,</span>
+<span class="s1">    &quot;credentials_id&quot;: &quot;&lt;databricks-credentials-id&gt;&quot;,</span>
+<span class="s1">    &quot;storage_configuration_id&quot;: &quot;&lt;databricks-storage-config-id&gt;&quot;,</span>
+<span class="s1">    &quot;delivery_path_prefix&quot;: &quot;usage-data&quot;,</span>
+<span class="s1">    &quot;delivery_start_time&quot;: &quot;2020-06&quot;,</span>
+<span class="s1">    &quot;workspace_ids_filter&quot;: [</span>
+<span class="s1">        6383650456894062,</span>
+<span class="s1">        4102272838062927</span>
+<span class="s1">    ]</span>
+<span class="s1">    }</span>
+<span class="s1">}&#39;</span>
+</pre></div>
+</div>
+<p>Example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;log_delivery_configuration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;config_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;config-id&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;config_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;billable usage config&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;log_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BILLABLE_USAGE&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;output_format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CSV&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;account_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;account-id&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;credentials_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;databricks-credentials-id&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;storage_configuration_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;databricks-storage-config-id&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;workspace_ids_filter&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="mi">6383650456894062</span><span class="p">,</span>
+<span class="w">            </span><span class="mi">4102272838062927</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;delivery_path_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;usage-data&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;delivery_start_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2020-06&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ENABLED&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;creation_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1591638409000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;update_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1593108904000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;log_delivery_status&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CREATED&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Log Delivery Configuration is successfully created. Status will be updated after the first delivery attempt.&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p></p>
+<div class="section" id="additional-features-of-the-log-delivery-apis">
+<h3>Additional features of the log delivery APIs<a class="headerlink" href="#additional-features-of-the-log-delivery-apis" title="Permalink to this headline"> </a></h3>
+<p>The <a class="reference external" href="https://docs.databricks.com/api/account/introduction">log delivery APIs</a> have additional features. See the API reference documentation for details.</p>
+<p>Additional operations include:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.databricks.com/api/account/introduction">Get all log delivery configurations</a></p></li>
+<li><p><a class="reference external" href="https://docs.databricks.com/api/account/introduction">Get a log delivery configuration by ID</a></p></li>
+<li><p><a class="reference external" href="https://docs.databricks.com/api/account/introduction">Enable or disable a log delivery configuration by ID</a></p></li>
+</ul>
+<p>Log delivery configuration status can be found in the API response’s <code class="docutils literal notranslate"><span class="pre">log_delivery_status</span></code> object. With <code class="docutils literal notranslate"><span class="pre">log_delivery_status</span></code>, you can check the status (success or failure) and the last time of an attempt or successful delivery.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>There is a limit on the number of log delivery configurations that you can create for an account. You can create a maximum of two enabled configurations that use the account level (no workspace filter) and two enabled configurations for every specific workspace (a <code class="docutils literal notranslate"><span class="pre">workspaceId</span></code> can occur in the workspace filter for two configurations). You cannot delete a log delivery configuration, but you can disable it. You can re-enable a disabled configuration, but the request fails if it violates the limits previously described.</p>
+</div>
+</div>
+</div>
+<div class="section" id="step-5-access-the-log-files-for-analysis">
+<span id="access-csv"></span><h2>Step 5: Access the log files for analysis<a class="headerlink" href="#step-5-access-the-log-files-for-analysis" title="Permalink to this headline"> </a></h2>
+<p>Log files are delivered to <code class="docutils literal notranslate"><span class="pre">&lt;bucket-name&gt;/&lt;prefix&gt;/billable-usage/csv/</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;</span></code> is the name of the optional delivery path prefix you set up during log delivery configuration. Files are named <code class="docutils literal notranslate"><span class="pre">workspaceId=&lt;workspace-id&gt;-usageMonth=&lt;month&gt;.csv</span></code>. Files are delivered daily by overwriting the month’s CSV file for each workspace.</p>
+<p>For the CSV schema, see <a class="reference internal" href="usage-analysis.html#schema"><span class="std std-ref">CSV file schema</span></a></p>
+<p>For information about how to analyze these files using Databricks, see <a class="reference internal" href="usage-analysis.html#analyze"><span class="std std-ref">Analyze usage data in Databricks</span></a></p>
+</div>
+<div class="section" id="automated-configuration-using-terraform">
+<h2>Automated configuration using Terraform<a class="headerlink" href="#automated-configuration-using-terraform" title="Permalink to this headline"> </a></h2>
+<p>You can use <a class="reference internal" href="../../dev-tools/terraform/index.html"><span class="doc">Databricks Terraform provider</span></a> to configure usage log delivery automatically with the help of the <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mws_log_delivery">databricks_mws_log_delivery</a> resource. Here’s an end-to-end example of usage and audit log delivery:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>variable &quot;databricks_account_id&quot; {
+  description = &quot;Account ID. You can get your account ID in the bottom left corner of the account console. See https://accounts.cloud.databricks.com&quot;
+}
+
+resource &quot;aws_s3_bucket&quot; &quot;logdelivery&quot; {
+  bucket = &quot;${var.prefix}-logdelivery&quot;
+  acl    = &quot;private&quot;
+  versioning {
+    enabled = false
+  }
+  force_destroy = true
+  tags = merge(var.tags, {
+    Name = &quot;${var.prefix}-logdelivery&quot;
+  })
+}
+
+resource &quot;aws_s3_bucket_public_access_block&quot; &quot;logdelivery&quot; {
+  bucket             = aws_s3_bucket.logdelivery.id
+  ignore_public_acls = true
+}
+
+data &quot;databricks_aws_assume_role_policy&quot; &quot;logdelivery&quot; {
+  external_id = var.databricks_account_id
+  for_log_delivery = true
+}
+
+resource &quot;aws_iam_role&quot; &quot;logdelivery&quot; {
+  name               = &quot;${var.prefix}-logdelivery&quot;
+  description        = &quot;(${var.prefix}) UsageDelivery role&quot;
+  assume_role_policy = data.databricks_aws_assume_role_policy.logdelivery.json
+  tags               = var.tags
+}
+
+data &quot;databricks_aws_bucket_policy&quot; &quot;logdelivery&quot; {
+  full_access_role = aws_iam_role.logdelivery.arn
+  bucket           = aws_s3_bucket.logdelivery.bucket
+}
+
+resource &quot;aws_s3_bucket_policy&quot; &quot;logdelivery&quot; {
+  bucket = aws_s3_bucket.logdelivery.id
+  policy = data.databricks_aws_bucket_policy.logdelivery.json
+}
+
+resource &quot;databricks_mws_credentials&quot; &quot;log_writer&quot; {
+    account_id       = var.databricks_account_id
+    credentials_name = &quot;Usage Delivery&quot;
+    role_arn         = aws_iam_role.logdelivery.arn
+}
+
+resource &quot;databricks_mws_storage_configurations&quot; &quot;log_bucket&quot; {
+    account_id                 = var.databricks_account_id
+    storage_configuration_name = &quot;Usage Logs&quot;
+    bucket_name                = aws_s3_bucket.logdelivery.bucket
+}
+
+resource &quot;databricks_mws_log_delivery&quot; &quot;usage_logs&quot; {
+    account_id = var.databricks_account_id
+    credentials_id = databricks_mws_credentials.log_writer.credentials_id
+    storage_configuration_id = databricks_mws_storage_configurations.log_bucket.storage_configuration_id
+    delivery_path_prefix = &quot;billable-usage&quot;
+    config_name = &quot;Usage Logs&quot;
+    log_type = &quot;BILLABLE_USAGE&quot;
+    output_format = &quot;CSV&quot;
+}
+
+resource &quot;databricks_mws_log_delivery&quot; &quot;audit_logs&quot; {
+    account_id = var.databricks_account_id
+    credentials_id = databricks_mws_credentials.log_writer.credentials_id
+    storage_configuration_id = databricks_mws_storage_configurations.log_bucket.storage_configuration_id
+    delivery_path_prefix = &quot;audit-logs&quot;
+    config_name = &quot;Audit Logs&quot;
+    log_type = &quot;AUDIT_LOGS&quot;
+    output_format = &quot;JSON&quot;
+}
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

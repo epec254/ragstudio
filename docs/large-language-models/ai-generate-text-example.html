@@ -1,0 +1,536 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use the built-in Databricks SQL function, ai_generate_text(), to examine customer reviews and determine if a response needs to be generated." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Analyze customer reviews with ai_generate_text() and OpenAI">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Analyze customer reviews with ai_generate_text() and OpenAI &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/large-language-models/ai-generate-text-example.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/large-language-models/ai-generate-text-example.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/large-language-models/ai-generate-text-example.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/large-language-models/ai-generate-text-example.html" class="notranslate">English</option>
+    <option value="../../ja/large-language-models/ai-generate-text-example.html" class="notranslate">日本語</option>
+    <option value="../../pt/large-language-models/ai-generate-text-example.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Analyze customer reviews with <code class="docutils literal notranslate"><span class="pre">ai_generate_text()</span></code> and OpenAI</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="analyze-customer-reviews-with-ai_generate_text-and-openai">
+<h1>Analyze customer reviews with <code class="docutils literal notranslate"><span class="pre">ai_generate_text()</span></code> and OpenAI<a class="headerlink" href="#analyze-customer-reviews-with-ai_generate_text-and-openai" title="Permalink to this headline"> </a></h1>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The AI function, <code class="docutils literal notranslate"><span class="pre">ai_generate_text()</span></code>  is deprecated. Databricks recommends using <a class="reference internal" href="ai-query-external-model.html"><span class="doc">ai_query with external models</span></a>.</p>
+</div>
+<p>This article illustrates how to use the built-in Databricks SQL function, <code class="docutils literal notranslate"><span class="pre">ai_generate_text()</span></code> to examine customer reviews and determine if a response needs to be generated. See <a class="reference internal" href="ai-functions.html"><span class="doc">AI Functions on Databricks</span></a> for more detail about the function.</p>
+<p>The dataset and commands in this guide are from the Databricks demo <a class="reference external" href="https://www.dbdemos.ai/demo.html?demoName=sql-ai-functions">Action Customer Reviews at Scale with Databricks SQL AI Functions</a>. The demo uses fake data generated by OpenAI that mimics customer reviews for grocery products submitted to an e-commerce website.</p>
+<div class="figure align-default">
+<img alt="Customer reviews" src="../_images/ai-generate-text-architecture-customer-reviews.png" />
+</div>
+<p>This example steps you through:</p>
+<ul class="simple">
+<li><p>Breaking down free-form customer review text into its constituent entities.</p></li>
+<li><p>For each entity, determining sentiment and whether a response is required back to the customer.</p></li>
+<li><p>Generating a response mentioning alternative products that may satisfy the customer.</p></li>
+</ul>
+<div class="figure align-default">
+<img alt="ai_generate_text data flow" src="../_images/ai-generate-text-data-flow.png" />
+</div>
+<div class="section" id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>If you want to run the commands in this guide, you need a dataset to run it on. You can create a fake dataset in the <a class="reference external" href="https://www.dbdemos.ai/demo-notebooks.html?demoName=sql-ai-functions">Generate Fake data with AI Functions</a> notebook.</p></li>
+<li><p>The SQL commands in this guide must be run in the Databricks SQL query editor. They cannot be run directly in a Databricks notebook using interactive clusters.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ai_generate_text()</span></code> function is only available in public preview on pro or serverless SQL warehouses.</p>
+<ul>
+<li><p>To enroll in the <a class="reference internal" href="../release-notes/release-types.html"><span class="doc">Public Preview</span></a>, please populate and submit the <a class="reference external" href="https://docs.google.com/forms/d/e/1FAIpQLScVyh5eRioqGwuUVxj9JOiKBAo0-FWi7L3f4QWsKeyldqEw8w/viewform">AI Functions Public Preview enrollment form</a>.</p></li>
+</ul>
+</li>
+<li><p>An <a class="reference external" href="https://learn.microsoft.com/azure/cognitive-services/openai/overview#how-do-i-get-access-to-azure-openai">Azure OpenAI key</a>.</p></li>
+<li><p>Store the key in <a class="reference internal" href="../security/secrets/index.html"><span class="doc">Databricks secrets</span></a>. In this example you store the API key in <em>scope</em> <code class="docutils literal notranslate"><span class="pre">tokens</span></code> and <em>secret</em> <code class="docutils literal notranslate"><span class="pre">azure-openai</span></code>. See <a class="reference internal" href="ai-onboard.html"><span class="doc">Set up and considerations for ai_generate_text()</span></a>.</p></li>
+</ul>
+</div>
+<div class="section" id="prompt-design">
+<h2>Prompt design<a class="headerlink" href="#prompt-design" title="Permalink to this headline"> </a></h2>
+<p>The keys to getting useful results back from a GPT model are:</p>
+<ul class="simple">
+<li><p>Asking it a well-formed question.</p></li>
+<li><p>Being specific about the type of answer that you are expecting.</p></li>
+</ul>
+<p>In order to get results in a form that you can easily store in a table, you can ask the model to return the result in a string that reflects <code class="docutils literal notranslate"><span class="pre">JSON</span></code> representation, and specify the expected schema.</p>
+<p>The following is the example prompt for this scenario:</p>
+<p><em>A customer left a review. Follow up with anyone who appears unhappy.</em></p>
+<p><em>Extract all entities mentioned. For each entity:</em></p>
+<ul class="simple">
+<li><p><em>Classify sentiment as [“POSITIVE”,”NEUTRAL”,”NEGATIVE”]</em></p></li>
+<li><p><em>Whether customer requires a follow-up</em>: Y or N</p></li>
+<li><p><em>Reason for requiring followup</em></p></li>
+</ul>
+<p><em>Return JSON ONLY. No other text outside the JSON.</em></p>
+<p><em>JSON format:</em></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;entities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">    </span><span class="nt">&quot;entity_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;entity_name&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;entity_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;entity_type&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;entity_sentiment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;entity_sentiment&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;followup&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Y or N for follow up&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;followup_reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;reason for followup&quot;</span>
+<span class="w">  </span><span class="p">}]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><em>Review</em>:</p>
+<p><em>&lt;’insert</em>review_text_here’&gt;_</p>
+</div>
+<div class="section" id="create-sql-functions">
+<h2>Create SQL functions<a class="headerlink" href="#create-sql-functions" title="Permalink to this headline"> </a></h2>
+<p>Databricks recommends decomposing your questions into granular SQL functions so that they can be reused for other scenarios within your organization.</p>
+<p>Throughout this section, you create SQL functions in order to abstract away the details of the <code class="docutils literal notranslate"><span class="pre">ai_generate_text()</span></code> call from the end users, and use those functions as your interface for interacting with Azure OpenAI.</p>
+<div class="section" id="handle-calls-to-azure-openai">
+<h3>Handle calls to Azure OpenAI<a class="headerlink" href="#handle-calls-to-azure-openai" title="Permalink to this headline"> </a></h3>
+<p>The following wrapper function, <code class="docutils literal notranslate"><span class="pre">prompt_handler()</span></code>, handles all your calls to Azure OpenAI. The Azure OpenAI API key is stored in a Databricks secret, and you can reference it with the <code class="docutils literal notranslate"><span class="pre">secret()</span></code> function. You can also pass it the Azure OpenAI resource name (<code class="docutils literal notranslate"><span class="pre">resourceName</span></code>) and the model’s deployment name (<code class="docutils literal notranslate"><span class="pre">deploymentName</span></code>).</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">PROMPT_HANDLER</span><span class="p">(</span><span class="n">prompt</span><span class="w"> </span><span class="n">STRING</span><span class="p">)</span>
+<span class="k">RETURNS</span><span class="w"> </span><span class="n">STRING</span>
+<span class="k">RETURN</span><span class="w"> </span><span class="n">AI_GENERATE_TEXT</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span>
+<span class="w">  </span><span class="ss">&quot;azure_openai/gpt-35-turbo&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="ss">&quot;apiKey&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">SECRET</span><span class="p">(</span><span class="ss">&quot;tokens&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;azure-openai&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="ss">&quot;temperature&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">CAST</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">DOUBLE</span><span class="p">),</span>
+<span class="w">  </span><span class="ss">&quot;deploymentName&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;llmbricks&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="ss">&quot;apiVersion&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;2023-03-15-preview&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="ss">&quot;resourceName&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;llmbricks&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="analyze-customer-review-data">
+<h3>Analyze customer review data<a class="headerlink" href="#analyze-customer-review-data" title="Permalink to this headline"> </a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">annotate_review()</span></code> function annotates your review with entities, entity sentiments, and whether a follow-up is required and why. Notice the prompt returns a well-formed <code class="docutils literal notranslate"><span class="pre">json</span></code> representation, so you can instruct the function to return a <code class="docutils literal notranslate"><span class="pre">struct</span></code> type for easier querying downstream, such as inserting it into a Delta table.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">ANNOTATE_REVIEW</span><span class="p">(</span><span class="n">review</span><span class="w"> </span><span class="n">STRING</span><span class="p">)</span>
+<span class="k">RETURNS</span><span class="w"> </span><span class="n">STRUCT</span><span class="o">&lt;</span><span class="n">entities</span><span class="p">:</span><span class="w"> </span><span class="nb">ARRAY</span><span class="o">&lt;</span><span class="n">STRUCT</span><span class="o">&lt;</span><span class="n">entity_name</span><span class="p">:</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span><span class="w"> </span><span class="n">entity_type</span><span class="p">:</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span><span class="w"> </span><span class="n">entity_sentiment</span><span class="p">:</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span><span class="w"> </span><span class="n">followup</span><span class="p">:</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span><span class="w"> </span><span class="n">followup_reason</span><span class="p">:</span><span class="w"> </span><span class="n">STRING</span><span class="o">&gt;&gt;&gt;</span>
+<span class="k">RETURN</span><span class="w"> </span><span class="n">FROM_JSON</span><span class="p">(</span>
+<span class="w">  </span><span class="n">PROMPT_HANDLER</span><span class="p">(</span><span class="n">CONCAT</span><span class="p">(</span>
+<span class="w">    </span><span class="s1">&#39;A customer left a review. Follow up with anyone who appears unhappy.</span>
+<span class="s1">     Extract all entities mentioned. For each entity:</span>
+<span class="s1">      - classify sentiment as [&quot;POSITIVE&quot;,&quot;NEUTRAL&quot;,&quot;NEGATIVE&quot;]</span>
+<span class="s1">      - whether customer requires a follow-up: Y or N</span>
+<span class="s1">      - reason for requiring followup</span>
+
+<span class="s1">    Return JSON ONLY. No other text outside the JSON. JSON format:</span>
+<span class="s1">    {</span>
+<span class="s1">        entities: [{</span>
+<span class="s1">            &quot;entity_name&quot;: &lt;entity name&gt;,</span>
+<span class="s1">            &quot;entity_type&quot;: &lt;entity type&gt;,</span>
+<span class="s1">            &quot;entity_sentiment&quot;: &lt;entity sentiment&gt;,</span>
+<span class="s1">            &quot;followup&quot;: &lt;Y or N for follow up&gt;,</span>
+<span class="s1">            &quot;followup_reason&quot;: &lt;reason for followup&gt;</span>
+<span class="s1">        }]</span>
+<span class="s1">    }</span>
+
+<span class="s1">    Review:</span>
+<span class="s1">    &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">review</span><span class="p">)),</span>
+<span class="w">  </span><span class="ss">&quot;STRUCT&lt;entities: ARRAY&lt;STRUCT&lt;entity_name: STRING, entity_type: STRING, entity_sentiment: STRING, followup: STRING, followup_reason: STRING&gt;&gt;&gt;&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>You can pass in data from the customer reviews dataset to see how the <code class="docutils literal notranslate"><span class="pre">annotate_review()</span></code> function classifies freeform customer reviews.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">review_body</span><span class="p">,</span>
+<span class="w">  </span><span class="n">ANNOTATE_REVIEW</span><span class="p">(</span><span class="n">review_body</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">review_annotated</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">dbdemos</span><span class="p">.</span><span class="n">openai_demo</span><span class="p">.</span><span class="n">fake_reviews</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">product_category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;Grocery&quot;</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="generate-responses-with-recommendations">
+<h3>Generate responses with recommendations<a class="headerlink" href="#generate-responses-with-recommendations" title="Permalink to this headline"> </a></h3>
+<p>After reviewing the customer responses, you can use the <code class="docutils literal notranslate"><span class="pre">generate_response()</span></code> function to generate a response to a customer based on their complaint and include recommendations for alternative products to try.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">GENERATE_RESPONSE</span><span class="p">(</span><span class="n">product</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span><span class="w"> </span><span class="n">entity</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span><span class="w"> </span><span class="n">reason</span><span class="w"> </span><span class="n">STRING</span><span class="p">)</span>
+<span class="k">RETURNS</span><span class="w"> </span><span class="n">STRING</span>
+<span class="k">RETURN</span><span class="w"> </span><span class="n">PROMPT_HANDLER</span><span class="p">(</span>
+<span class="w">  </span><span class="n">CONCAT</span><span class="p">(</span><span class="ss">&quot;What alternative products can you recommend for &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">product</span><span class="p">,</span>
+<span class="w">    </span><span class="ss">&quot; when a customer had a complaint about &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">entity</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot; because &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">reason</span><span class="p">,</span>
+<span class="w">    </span><span class="ss">&quot;Give me a response in the tone of an empathetic message back to the customer; only provide the body&quot;</span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>The following generates a sample message response for a customer’s review on Country Choice Snacking Cookies.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">GENERATE_RESPONSE</span><span class="p">(</span><span class="ss">&quot;Country Choice Snacking Cookies&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;cookies&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Quality issue&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">customer_response</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="adhoc-queries">
+<h2>Adhoc queries<a class="headerlink" href="#adhoc-queries" title="Permalink to this headline"> </a></h2>
+<p>You can also create ad-hoc queries using your newly created <code class="docutils literal notranslate"><span class="pre">prompt_handler()</span></code> function.</p>
+<p>For example, you might be interested in understanding whether a review discusses beverages.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">review_id</span><span class="p">,</span>
+<span class="w">  </span><span class="n">PROMPT_HANDLER</span><span class="p">(</span>
+<span class="w">    </span><span class="n">CONCAT</span><span class="p">(</span>
+<span class="w">      </span><span class="ss">&quot;Does this review discuss beverages? Answer Y or N only, no explanations or notes. Review: &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">review_body</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">discusses_beverages</span><span class="p">,</span>
+<span class="w">  </span><span class="n">review_body</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">dbdemos</span><span class="p">.</span><span class="n">openai_demo</span><span class="p">.</span><span class="n">fake_reviews</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">review_id</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="ss">&quot;R9LEFDWWXPDEY&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;R27UON10EV9FSV&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;R299ZTEFIAHRQD&quot;</span><span class="p">)</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">discusses_beverages</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

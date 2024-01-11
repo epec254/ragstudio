@@ -1,0 +1,623 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to govern your data at the row and column level using row filters and column masks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Filter sensitive table data using row filters and column masks">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Filter sensitive table data using row filters and column masks &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/data-governance/unity-catalog/row-and-column-filters.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/data-governance/unity-catalog/row-and-column-filters.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/data-governance/unity-catalog/row-and-column-filters.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/data-governance/unity-catalog/row-and-column-filters.html" class="notranslate">English</option>
+    <option value="../../../ja/data-governance/unity-catalog/row-and-column-filters.html" class="notranslate">日本語</option>
+    <option value="../../../pt/data-governance/unity-catalog/row-and-column-filters.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Filter sensitive table data using row filters and column masks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="filter-sensitive-table-data-using-row-filters-and-column-masks">
+<h1>Filter sensitive table data using row filters and column masks<a class="headerlink" href="#filter-sensitive-table-data-using-row-filters-and-column-masks" title="Permalink to this headline"> </a></h1>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<p>This article provides guidance and examples for using row filters, column masks, and mapping tables to filter sensitive data in your tables.</p>
+<div class="section" id="what-are-row-filters">
+<h2>What are row filters?<a class="headerlink" href="#what-are-row-filters" title="Permalink to this headline"> </a></h2>
+<p>Row filters allow you to apply a filter to a table so that subsequent queries only return rows for which the filter predicate evaluates to true. A row filter is implemented as a SQL user-defined function (UDF).</p>
+<p>To create a row filter, first write a <a class="reference internal" href="../../udf/index.html"><span class="doc">SQL UDF</span></a> to define the filter policy and then apply it to a table with an <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span></code> statement. Alternatively, you can specify a row filter for a table in the initial <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> statement. Each table can have only one row filter. A row filter accepts zero or more input parameters where each input parameter binds to one column of the corresponding table.</p>
+</div>
+<div class="section" id="what-is-the-difference-between-these-filters-and-dynamic-views">
+<h2>What is the difference between these filters and dynamic views?<a class="headerlink" href="#what-is-the-difference-between-these-filters-and-dynamic-views" title="Permalink to this headline"> </a></h2>
+<p>The <a class="reference internal" href="create-views.html#dynamic-view"><span class="std std-ref">dynamic view</span></a> is an abstracted, read-only view of one or more source tables. The user can access the dynamic view without having access to the source tables directly. Creating a dynamic view defines a new table name that must not match the name of any source tables or other tables and views present in the same schema.</p>
+<p>On the other hand, associating a row filter or column mask to a target table applies the corresponding logic directly to the table itself without introducing any new table names. Subsequent queries may continue referring directly to the target table using its original name.</p>
+<p>Both dynamic views and row filters and column masks let you apply complex logic to tables and process their filtering decisions at query runtime.</p>
+<p>Use dynamic views if you need to apply transformation logic such as filters and masks to read-only tables, and if it is acceptable for users to refer to the dynamic views using different names. Use row filters and column masks if you want to filter or compute expressions over specific data but still provide users access to the tables using their original names.</p>
+</div>
+<div class="section" id="row-filter-syntax">
+<h2>Row Filter Syntax<a class="headerlink" href="#row-filter-syntax" title="Permalink to this headline"> </a></h2>
+<p>To create a row filter and add it to an existing table, use the following syntax:</p>
+<p>Create the row filter:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="o">&lt;</span><span class="n">function_name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="o">&lt;</span><span class="k">parameter_name</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&lt;</span><span class="n">parameter_type</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="p">...)</span>
+<span class="k">RETURN</span><span class="w"> </span><span class="err">{</span><span class="n">filter</span><span class="w"> </span><span class="n">clause</span><span class="w"> </span><span class="n">whose</span><span class="w"> </span><span class="k">output</span><span class="w"> </span><span class="n">must</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="nb">boolean</span><span class="err">}</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Apply the row filter to a table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="k">ROW</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="o">&lt;</span><span class="n">function_name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="p">(</span><span class="o">&lt;</span><span class="k">column_name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+</pre></div>
+</div>
+<p>Remove a row filter from a table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="k">ROW</span><span class="w"> </span><span class="n">FILTER</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Modify a row filter:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">Run</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="k">statement</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">drop</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">existing</span><span class="w"> </span><span class="k">function</span><span class="p">,</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">use</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">replace</span><span class="w"> </span><span class="n">it</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>Delete a row filter:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="k">ROW</span><span class="w"> </span><span class="n">FILTER</span><span class="p">;</span>
+<span class="k">DROP</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="o">&lt;</span><span class="n">function_name</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You must perform the <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">...</span> <span class="pre">DROP</span> <span class="pre">ROW</span> <span class="pre">FILTER</span></code> command before dropping the function or the table will be in an inaccessible state.</p>
+<p>If the table becomes inaccessible in this way, alter the table and drop the orphaned row filter reference using <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">&lt;table_name&gt;</span> <span class="pre">DROP</span> <span class="pre">ROW</span> <span class="pre">FILTER;</span></code>.</p>
+</div>
+</div>
+<div class="section" id="row-filter-examples">
+<h2>Row filter examples<a class="headerlink" href="#row-filter-examples" title="Permalink to this headline"> </a></h2>
+<p>Create a SQL user defined function applied to members of the group <code class="docutils literal notranslate"><span class="pre">admin</span></code> in the region <code class="docutils literal notranslate"><span class="pre">US</span></code>.</p>
+<p>With this function, members of the <code class="docutils literal notranslate"><span class="pre">admin</span></code> group can access all records in the table. If the function is called by a non-admin, the <code class="docutils literal notranslate"><span class="pre">RETURN_IF</span></code> condition fails and the <code class="docutils literal notranslate"><span class="pre">region='US'</span></code> expression is evaluated, filtering the table to only show records in the <code class="docutils literal notranslate"><span class="pre">US</span></code> region.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">us_filter</span><span class="p">(</span><span class="n">region</span><span class="w"> </span><span class="n">STRING</span><span class="p">)</span>
+<span class="k">RETURN</span><span class="w"> </span><span class="k">IF</span><span class="p">(</span><span class="n">IS_ACCOUNT_GROUP_MEMBER</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">),</span><span class="w"> </span><span class="k">true</span><span class="p">,</span><span class="w"> </span><span class="n">region</span><span class="o">=</span><span class="s1">&#39;US&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Apply the function to a table as a row filter. Subsequent queries from the <code class="docutils literal notranslate"><span class="pre">sales</span></code> table then return a subset of rows.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">sales</span><span class="w"> </span><span class="p">(</span><span class="n">region</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="p">);</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">sales</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="k">ROW</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="n">us_filter</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="p">(</span><span class="n">region</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Disable the row filter. Future user queries from the <code class="docutils literal notranslate"><span class="pre">sales</span></code> table then return all of the rows in the table.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">sales</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="k">ROW</span><span class="w"> </span><span class="n">FILTER</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Create a table with the function applied as a row filter as part of the CREATE TABLE statement. Future queries from the <code class="docutils literal notranslate"><span class="pre">sales</span></code> table then each return a subset of rows.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">sales</span><span class="w"> </span><span class="p">(</span><span class="n">region</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="p">)</span>
+<span class="k">WITH</span><span class="w"> </span><span class="k">ROW</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="n">us_filter</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="p">(</span><span class="n">region</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="what-are-column-masks">
+<h2>What are column masks?<a class="headerlink" href="#what-are-column-masks" title="Permalink to this headline"> </a></h2>
+<p>Column masks let you apply a masking function to a table column. The masking function gets evaluated at query runtime, substituting each reference of the target column with the results of the masking function. For most use cases, column masks determine whether to return the original column value or redact it based on the identity of the invoking user. Column masks are expressions written as SQL UDFs.</p>
+<p>Each table column can optionally have one masking function applied to it. The masking function takes the unmasked value of the column as input and returns the masked value as its result. The return value of the masking function should be the same type as the column being masked. The masking function can also take additional columns as input parameters and use them in its masking logic.</p>
+<p>To apply column masks, create a function and apply it to a table column using an <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span></code> statement. Alternatively, you can apply the masking function when you create the table.</p>
+</div>
+<div class="section" id="column-mask-syntax">
+<h2>Column mask syntax<a class="headerlink" href="#column-mask-syntax" title="Permalink to this headline"> </a></h2>
+<p>Within the <code class="docutils literal notranslate"><span class="pre">MASK</span></code> clause, you can use any of the Databricks built-in runtime functions or call other user-defined functions. Common use cases include inspecting the identity of the invoking user running the function using <code class="docutils literal notranslate"><span class="pre">current_user(</span> <span class="pre">)</span></code> or which groups they are a member of using <code class="docutils literal notranslate"><span class="pre">is_account_group_member(</span> <span class="pre">)</span></code>.</p>
+<p>Create a column mask:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="o">&lt;</span><span class="n">function_name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="o">&lt;</span><span class="k">parameter_name</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&lt;</span><span class="n">parameter_type</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="p">...)</span>
+<span class="k">RETURN</span><span class="w"> </span><span class="err">{</span><span class="n">expression</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">same</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">first</span><span class="w"> </span><span class="k">parameter</span><span class="err">}</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Apply column mask to a column in an existing table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="o">&lt;</span><span class="n">col_name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">MASK</span><span class="w"> </span><span class="o">&lt;</span><span class="n">mask_func_name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">[</span><span class="k">USING</span><span class="w"> </span><span class="n">COLUMNS</span><span class="w"> </span><span class="o">&lt;</span><span class="n">additional_columns</span><span class="o">&gt;</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>Remove a column mask from a column in a table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="o">&lt;</span><span class="k">column</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">mask</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">applied</span><span class="o">&gt;</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="n">MASK</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Modify a column mask:</p>
+<p>Either <code class="docutils literal notranslate"><span class="pre">DROP</span></code> the existing function, or use <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">OR</span> <span class="pre">REPLACE</span> <span class="pre">TABLE</span></code>.</p>
+<p>Delete a column mask:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="o">&lt;</span><span class="k">column</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">mask</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">applied</span><span class="o">&gt;</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="n">MASK</span><span class="p">;</span>
+<span class="k">DROP</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="o">&lt;</span><span class="n">function_name</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You must perform the <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span></code> command before dropping the function or the table will be in an inaccessible state.</p>
+<p>If the table becomes inaccessible in this way, alter the table and drop the orphaned mask reference reference using <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">&lt;table_name&gt;</span> <span class="pre">ALTER</span> <span class="pre">COLUMN</span> <span class="pre">&lt;column</span> <span class="pre">where</span> <span class="pre">mask</span> <span class="pre">is</span> <span class="pre">applied&gt;</span> <span class="pre">DROP</span> <span class="pre">MASK;</span></code>.</p>
+</div>
+</div>
+<div class="section" id="column-mask-examples">
+<h2>Column mask examples<a class="headerlink" href="#column-mask-examples" title="Permalink to this headline"> </a></h2>
+<p>In this example, you create a user-defined function that masks the <code class="docutils literal notranslate"><span class="pre">ssn</span></code> column so that only users who are members of the <code class="docutils literal notranslate"><span class="pre">HumanResourceDept</span></code> group can view values in that column.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">ssn_mask</span><span class="p">(</span><span class="n">ssn</span><span class="w"> </span><span class="n">STRING</span><span class="p">)</span>
+<span class="w">  </span><span class="k">RETURN</span><span class="w"> </span><span class="k">CASE</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="n">is_member</span><span class="p">(</span><span class="s1">&#39;HumanResourceDept&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="n">ssn</span><span class="w"> </span><span class="k">ELSE</span><span class="w"> </span><span class="s1">&#39;***-**-****&#39;</span><span class="w"> </span><span class="k">END</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Apply the new function to a table as a column mask. You can add the column mask when you create the table or after.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">--Create the `users` table and apply the column mask in a single step:</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">name</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">  </span><span class="n">ssn</span><span class="w"> </span><span class="n">STRING</span><span class="w"> </span><span class="n">MASK</span><span class="w"> </span><span class="n">ssn_mask</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">--Create the `users` table and apply the column mask after:</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">users</span>
+<span class="w">  </span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span><span class="w"> </span><span class="n">ssn</span><span class="w"> </span><span class="n">STRING</span><span class="p">);</span>
+
+<span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">ssn</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">MASK</span><span class="w"> </span><span class="n">ssn_mask</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Queries on that table now return masked <code class="docutils literal notranslate"><span class="pre">ssn</span></code> column values when the querying user is not a member of the <code class="docutils literal notranslate"><span class="pre">HumanResourceDept</span></code> group:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="p">;</span>
+<span class="w">  </span><span class="n">James</span><span class="w">  </span><span class="o">***-**-****</span>
+</pre></div>
+</div>
+<p>To disable the column mask so that queries return the original values in the <code class="docutils literal notranslate"><span class="pre">ssn</span></code> column:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">ssn</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="n">MASK</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-mapping-tables-to-create-an-access-control-list">
+<h2>Use mapping tables to create an access-control list<a class="headerlink" href="#use-mapping-tables-to-create-an-access-control-list" title="Permalink to this headline"> </a></h2>
+<p>To achieve row-level security, consider defining a mapping table (or access-control list). Each mapping table is a comprehensive mapping table that encodes which data rows in the original table are accessible to certain users or groups. Mapping tables are useful because they offer simple integration with your fact tables through direct joins.</p>
+<p>This methodology proves beneficial in addressing many use cases with custom requirements. Examples include:</p>
+<ul class="simple">
+<li><p>Imposing restrictions based on the logged-in user while accommodating different rules for specific user groups.</p></li>
+<li><p>Creating intricate hierarchies, such as organizational structures, requiring diverse sets of rules.</p></li>
+<li><p>Replicating complex security models from external source systems.</p></li>
+</ul>
+<p>By adopting mapping tables in this way, you can effectively tackle these challenging scenarios and ensure robust row-level and column-level security implementations.</p>
+</div>
+<div class="section" id="mapping-table-examples">
+<h2>Mapping table examples<a class="headerlink" href="#mapping-table-examples" title="Permalink to this headline"> </a></h2>
+<p>Use a mapping table to check if the current user is in a list:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">USE</span><span class="w"> </span><span class="k">CATALOG</span><span class="w"> </span><span class="n">main</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Create a new mapping table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">valid_users</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">valid_users</span><span class="p">(</span><span class="n">username</span><span class="w"> </span><span class="n">string</span><span class="p">);</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">valid_users</span>
+<span class="k">VALUES</span>
+<span class="w">  </span><span class="p">(</span><span class="s1">&#39;fred@databricks.com&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="s1">&#39;barney@databricks.com&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Create a new filter:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All filters run with definer’s rights except for functions that check user context (for example, the <code class="docutils literal notranslate"><span class="pre">CURRENT_USER</span></code> and <code class="docutils literal notranslate"><span class="pre">IS_MEMBER</span></code> functions) which run as the invoker.</p>
+</div>
+<p>In this example the function checks to see if the current user is in the <code class="docutils literal notranslate"><span class="pre">valid_users</span></code> table.  If the user is found, the function returns true.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">row_filter</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">row_filter</span><span class="p">()</span>
+<span class="w">  </span><span class="k">RETURN</span><span class="w"> </span><span class="k">EXISTS</span><span class="p">(</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">valid_users</span><span class="w"> </span><span class="n">v</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">CURRENT_USER</span><span class="p">()</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>The example below applies the row filter during table creation. You can also add the filter later using an <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span></code> statement. When applying to a whole table use the <code class="docutils literal notranslate"><span class="pre">ON</span> <span class="pre">()</span></code> syntax. For a specific row use <code class="docutils literal notranslate"><span class="pre">ON</span> <span class="pre">(row);</span></code>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">data_table</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">data_table</span>
+<span class="w">  </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="nb">INT</span><span class="p">)</span>
+<span class="w">  </span><span class="k">WITH</span><span class="w"> </span><span class="k">ROW</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="n">row_filter</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="p">();</span>
+
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">data_table</span><span class="w"> </span><span class="k">VALUES</span>
+<span class="w">  </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">9</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Select data from the table. This should only return data if the user is in the <code class="docutils literal notranslate"><span class="pre">valid_users</span></code> table.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">data_table</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Create a mapping table comprising accounts that should always have access to view all the rows in the table, regardless of the column values:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">valid_accounts</span><span class="p">(</span><span class="n">account</span><span class="w"> </span><span class="n">string</span><span class="p">);</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">valid_accounts</span>
+<span class="k">VALUES</span>
+<span class="w">  </span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="s1">&#39;cstaff&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Now create a SQL UDF that returns <code class="docutils literal notranslate"><span class="pre">true</span></code> if the values of all columns in the row are less than five, or if the invoking user is a member of the above mapping table.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">row_filter_small_values</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="nb">INT</span><span class="p">)</span>
+<span class="w">  </span><span class="k">RETURN</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="w">  </span><span class="k">OR</span><span class="w"> </span><span class="k">EXISTS</span><span class="p">(</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">valid_accounts</span><span class="w"> </span><span class="n">v</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">IS_ACCOUNT_GROUP_MEMBER</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">account</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Finally, apply the SQL UDF to the table as a row filter:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">data_table</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="k">ROW</span><span class="w"> </span><span class="n">FITLER</span><span class="w"> </span><span class="n">row_filter_small_values</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">z</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="supportability">
+<h2>Supportability<a class="headerlink" href="#supportability" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>Databricks SQL and Databricks notebooks for SQL workloads are supported.</p></li>
+<li><p>Databricks Machine Learning commands by users with MODIFY privileges are supported. Filters and masks are applied to the data read by UPDATEs and DELETEs, and are not applied to data that is written (including INSERTed data).</p></li>
+<li><p>Supported formats: Delta and Parquet. Parquet is supported for only managed or external Tables.</p></li>
+<li><p>Views on tables with column masks or row filters are supported</p></li>
+<li><p>Delta Lake change data feeds are supported as long as the schema is compatible with the row filters and column masks that may apply to the target table.</p></li>
+<li><p>Foreign tables are supported.</p></li>
+</ul>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>Databricks Runtime versions before 12.2 LTS do not support row filters or column masks. These runtimes fail securely, meaning if you try to access tables from unsupported versions of these runtimes, no data is returned.</p></li>
+<li><p>Delta Live Tables materialized views and streaming tables don’t support row filters or column masks.</p></li>
+<li><p>Python or Scala UDFs are not supported as row filter or column mask functions directly. However, it is possible to refer to these in SQL UDFs as long as their definitions are permanently stored in the catalog (in other words, not temporary to the session).</p></li>
+<li><p>Delta Sharing does not work with row-level security or column masks.</p></li>
+<li><p>Time travel does not work with row-level security or column masks.</p></li>
+<li><p>Table sampling does not work with row-level security or column masks.</p></li>
+<li><p>Path-based access to files in tables with policies are not currently supported.</p></li>
+<li><p>Row-filter or column-mask policies with circular dependencies back to the original policies are not supported.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MERGE</span></code> and shallow clones are not supported.</p></li>
+</ul>
+</div>
+<div class="section" id="single-user-clusters-limitation">
+<h2>Single user clusters limitation<a class="headerlink" href="#single-user-clusters-limitation" title="Permalink to this headline"> </a></h2>
+<p>Do not add row filters or column masks to any table that you are accessing from single user clusters. This is commonly done in the context of Databricks Jobs. During the public preview, you will be unable to access the table from a single user cluster once a filter or mask has been applied.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

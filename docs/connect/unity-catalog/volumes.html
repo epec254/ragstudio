@@ -1,0 +1,647 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to create and use volumes in Unity Catalog for managing access to data in cloud object storage." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Create and work with volumes">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Create and work with volumes &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/connect/unity-catalog/volumes.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/connect/unity-catalog/volumes.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/connect/unity-catalog/volumes.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/connect/unity-catalog/volumes.html" class="notranslate">English</option>
+    <option value="../../../ja/connect/unity-catalog/volumes.html" class="notranslate">日本語</option>
+    <option value="../../../pt/connect/unity-catalog/volumes.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Create and work with volumes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="create-and-work-with-volumes">
+<h1>Create and work with volumes<a class="headerlink" href="#create-and-work-with-volumes" title="Permalink to this headline"> </a></h1>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../../release-notes/release-types.html"><span class="doc">Public Preview</span></a>. When you work with volumes, you must use a SQL warehouse on SQL compute version 2023.35 or above or a cluster running Databricks Runtime 13.2 or above, unless you are using Databricks UIs such as the Catalog Explorer.</p>
+</div>
+<p>This article introduces volumes, which are Unity Catalog objects that enable governance over non-tabular datasets. It also describes how to create, manage, and work with volumes.</p>
+<div class="section" id="what-are-unity-catalog-volumes">
+<span id="what-are-uc-volumes"></span><h2>What are Unity Catalog volumes?<a class="headerlink" href="#what-are-unity-catalog-volumes" title="Permalink to this headline"> </a></h2>
+<p>Volumes are Unity Catalog objects representing a logical volume of storage in a cloud object storage location. Volumes provide capabilities for accessing, storing, governing, and organizing files. While tables provide governance over tabular datasets, volumes add governance over non-tabular datasets. You can use volumes to store and access files in any format, including structured, semi-structured, and unstructured data.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You cannot use volumes as a location for tables. Volumes are intended for path-based data access only. Use tables for storing tabular data with Unity Catalog.</p>
+</div>
+</div>
+<div class="section" id="what-is-a-managed-volume">
+<span id="managed"></span><h2>What is a managed volume?<a class="headerlink" href="#what-is-a-managed-volume" title="Permalink to this headline"> </a></h2>
+<p>A <strong>managed volume</strong> is a Unity Catalog-governed storage volume created within the default storage location of the containing schema. Managed volumes allow the creation of governed storage for working with files without the overhead of external locations and storage credentials. You do not need to specify a location when creating a managed volume, and all file access for data in managed volumes is through paths managed by Unity Catalog. See <a class="reference internal" href="#path"><span class="std std-ref">What path is used for accessing files in a volume?</span></a>.</p>
+<p>When you delete a managed volume, the files stored in this volume are also deleted from your cloud tenant within 30 days.</p>
+</div>
+<div class="section" id="what-is-an-external-volume">
+<span id="external"></span><h2>What is an external volume?<a class="headerlink" href="#what-is-an-external-volume" title="Permalink to this headline"> </a></h2>
+<p>An <strong>external volume</strong> is a Unity Catalog-governed storage volume registered against a directory within an external location using Unity Catalog-governed storage credentials. External volumes allow you to add Unity Catalog data governance to existing cloud object storage directories. Some use cases for external volumes include the following:</p>
+<ul class="simple">
+<li><p>Adding governance to data files without migration.</p></li>
+<li><p>Governing files produced by other systems that must be ingested or accessed by Databricks.</p></li>
+<li><p>Governing data produced by Databricks that must be accessed directly from cloud object storage by other systems.</p></li>
+</ul>
+<p>External volumes <strong>must</strong> be directories within external locations governed by Unity Catalog storage credentials. Unity Catalog does not manage the lifecycle or layout of the files in external volumes. When you drop an external volume, Unity Catalog does not delete the underlying data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When you define a volume, you can no longer access any paths that overlap the volume location using external locations in the Catalog Explorer or cloud URIs.</p>
+</div>
+</div>
+<div class="section" id="what-path-is-used-for-accessing-files-in-a-volume">
+<span id="path"></span><h2>What path is used for accessing files in a volume?<a class="headerlink" href="#what-path-is-used-for-accessing-files-in-a-volume" title="Permalink to this headline"> </a></h2>
+<p>The path to access volumes is the same whether you use Apache Spark, SQL, Python, or other languages and libraries. This differs from legacy access patterns for files in object storage bound to a Databricks workspace.</p>
+<p>The path to access files in volumes uses the following format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">Volumes</span><span class="o">/&lt;</span><span class="n">catalog</span><span class="o">&gt;/&lt;</span><span class="n">schema</span><span class="o">&gt;/&lt;</span><span class="n">volume</span><span class="o">&gt;/&lt;</span><span class="n">path</span><span class="o">&gt;/&lt;</span><span class="n">file</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Databricks also supports an optional <code class="docutils literal notranslate"><span class="pre">dbfs:/</span></code> scheme when working with Apache Spark, so the following path also works:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dbfs</span><span class="p">:</span><span class="o">/</span><span class="n">Volumes</span><span class="o">/&lt;</span><span class="n">catalog</span><span class="o">&gt;/&lt;</span><span class="n">schema</span><span class="o">&gt;/&lt;</span><span class="n">volume</span><span class="o">&gt;/&lt;</span><span class="n">path</span><span class="o">&gt;/&lt;</span><span class="n">file</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The sequence <code class="docutils literal notranslate"><span class="pre">/&lt;catalog&gt;/&lt;schema&gt;/&lt;volume&gt;</span></code> in the path corresponds to the three Unity Catalog object names associated with the file. These path elements are read-only and not directly writeable by users, meaning it is not possible to create or delete these directories using filesystem operations. They are automatically managed and kept in sync with the corresponding UC entities.</p>
+</div>
+<div class="section" id="what-are-the-privileges-for-volumes">
+<h2>What are the privileges for volumes?<a class="headerlink" href="#what-are-the-privileges-for-volumes" title="Permalink to this headline"> </a></h2>
+<p>Volumes use the same basic privilege model as tables, but where privileges for tables focus on granting access to querying and manipulating rows in a table, privileges for volumes focus on working with files. As such, volumes introduce the following privileges:</p>
+<p></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../data-governance/unity-catalog/manage-privileges/privileges.html#create-volume"><span class="std std-ref">CREATE VOLUME</span></a></p></li>
+<li><p><a class="reference internal" href="../../data-governance/unity-catalog/manage-privileges/privileges.html#create-external-volume"><span class="std std-ref">CREATE EXTERNAL VOLUME</span></a></p></li>
+<li><p><a class="reference internal" href="../../data-governance/unity-catalog/manage-privileges/privileges.html#read-volume"><span class="std std-ref">READ VOLUME</span></a></p></li>
+<li><p><a class="reference internal" href="../../data-governance/unity-catalog/manage-privileges/privileges.html#write-volume"><span class="std std-ref">WRITE VOLUME</span></a></p></li>
+</ul>
+<p>See <a class="reference internal" href="../../data-governance/unity-catalog/manage-privileges/privileges.html"><span class="doc">Unity Catalog privileges and securable objects</span></a>.</p>
+</div>
+<div class="section" id="who-can-manage-volume-privileges">
+<span id="owner"></span><h2>Who can manage volume privileges?<a class="headerlink" href="#who-can-manage-volume-privileges" title="Permalink to this headline"> </a></h2>
+<p>You must have owner privileges on a volume to manage volume privileges or drop volumes. Each object in Unity Catalog can only have one principal assigned as an owner, and while ownership does not cascade (that is, the owner of a catalog does not automatically become the owner of all objects in that catalog), the privileges associated with ownership apply to all objects contained within an object.</p>
+<p>This means that for Unity Catalog volumes, the following principals can manage volume privileges:</p>
+<ul class="simple">
+<li><p>The owner of the parent catalog.</p></li>
+<li><p>The owner of the parent schema.</p></li>
+<li><p>The owner of the volume.</p></li>
+</ul>
+<p>While each object can only have a single owner, Databricks recommends assigning ownership for most objects to a group rather than an individual user. Initial ownership for any object is assigned to the user that creates that object. See <a class="reference internal" href="../../data-governance/unity-catalog/manage-privileges/ownership.html"><span class="doc">Manage Unity Catalog object ownership</span></a>.</p>
+</div>
+<div class="section" id="create-a-managed-volume">
+<h2>Create a managed volume<a class="headerlink" href="#create-a-managed-volume" title="Permalink to this headline"> </a></h2>
+<p>You must have the following permissions to create a managed volume:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 78%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Resource</p></th>
+<th class="head"><p>Permissions required</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> Schema</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">VOLUME</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p> Catalog</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="SQL">
+<p class="compound-first">To create a managed volume, use the following syntax:</p>
+<div class="compound-last highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">VOLUME</span><span class="w"> </span><span class="o">&lt;</span><span class="k">catalog</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">schema</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="n">volume</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="Catalog&amp;nbsp;Explorer">
+<p class="compound-first">To create a managed volume in Catalog Explorer:</p>
+<ol class="compound-last arabic simple">
+<li><p>In your Databricks workspace, click <img alt="Catalog icon" src="../../_images/data-icon.png" /> <strong>Catalog</strong>.</p></li>
+<li><p>Search or browse for the schema that you want to add the volume to and select it.</p></li>
+<li><p>Click the <strong>Create Volume</strong> button. (You must have sufficient privileges.)</p></li>
+<li><p>Enter a name for the volume.</p></li>
+<li><p>Provide a comment (optional).</p></li>
+<li><p>Click <strong>Create</strong>.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="section" id="create-an-external-volume">
+<h2>Create an external volume<a class="headerlink" href="#create-an-external-volume" title="Permalink to this headline"> </a></h2>
+<p>You must have the following permissions to create an external volume:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Resource</p></th>
+<th class="head"><p>Permissions required</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> External location</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">VOLUME</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p> Schema</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">VOLUME</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p> Catalog</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="SQL">
+<p class="compound-first">To create an external volume, specify a path within an external location using the following syntax:</p>
+<div class="compound-last highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">EXTERNAL</span><span class="w"> </span><span class="n">VOLUME</span><span class="w"> </span><span class="o">&lt;</span><span class="k">catalog</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">schema</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">external</span><span class="o">-</span><span class="n">volume</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;s3://&lt;external-location-bucket-path&gt;/&lt;directory&gt;&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="Catalog&amp;nbsp;Explorer">
+<p class="compound-first">To create an external volume in Catalog Explorer:</p>
+<ol class="compound-last arabic simple">
+<li><p>In your Databricks workspace, click <img alt="Catalog icon" src="../../_images/data-icon.png" /> <strong>Catalog</strong>.</p></li>
+<li><p>Search or browse for the schema that you want to add the volume to and select it.</p></li>
+<li><p>Click the <strong>Create Volume</strong> button. (You must have sufficient privileges.)</p></li>
+<li><p>Enter a name for the volume.</p></li>
+<li><p>Choose an external location in which to create the volume.</p></li>
+<li><p>Edit the path to reflect the sub-directory where you want to create the volume.</p></li>
+<li><p>Provide a comment (optional).</p></li>
+<li><p>Click <strong>Create</strong>.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="section" id="drop-a-volume">
+<h2>Drop a volume<a class="headerlink" href="#drop-a-volume" title="Permalink to this headline"> </a></h2>
+<p>Only users with owner privileges can drop a volume. See <a class="reference internal" href="#owner"><span class="std std-ref">Who can manage volume privileges?</span></a>.</p>
+<p>Use the following syntax to drop a volume:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="n">VOLUME</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="o">&lt;</span><span class="n">volume</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>When you drop a managed volume, Databricks deletes the underlying data within 30 days. When you drop an external volume, you remove the volume from Unity Catalog but the underlying data remains unchanged in the external location.</p>
+</div>
+<div class="section" id="read-files-in-a-volume">
+<h2>Read files in a volume<a class="headerlink" href="#read-files-in-a-volume" title="Permalink to this headline"> </a></h2>
+<p>You must have the following permissions to view the contents of a volume or access files that are stored on volumes:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 71%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Resource</p></th>
+<th class="head"><p>Permissions required</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> Volume</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">READ</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p> Schema</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p> Catalog</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>You interact with the contents of volumes using paths. See <a class="reference internal" href="#path"><span class="std std-ref">What path is used for accessing files in a volume?</span></a>.</p>
+</div>
+<div class="section" id="move-create-or-delete-files-on-an-external-volume">
+<h2>Move, create, or delete files on an external volume<a class="headerlink" href="#move-create-or-delete-files-on-an-external-volume" title="Permalink to this headline"> </a></h2>
+<p>You must have the following permissions to move, create, or delete files that are stored on volumes:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 71%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Resource</p></th>
+<th class="head"><p>Permissions required</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> Volume</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">READ</span></code>, <code class="docutils literal notranslate"><span class="pre">WRITE</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p> Schema</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p> Catalog</p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">%fs</span></code> and <code class="docutils literal notranslate"><span class="pre">%sh</span></code> magic commands, Databricks utitlies <code class="docutils literal notranslate"><span class="pre">fs</span></code> commands, open source commands such as <code class="docutils literal notranslate"><span class="pre">os.listdir()</span></code>, or the <a class="reference internal" href="../../ingestion/add-data/upload-to-volume.html"><span class="doc">upload files to volume UI</span></a> to interact with files.</p>
+</div>
+<div class="section" id="example-notebook-create-and-work-with-volumes">
+<h2>Example notebook: Create and work with volumes<a class="headerlink" href="#example-notebook-create-and-work-with-volumes" title="Permalink to this headline"> </a></h2>
+<p>The following notebook demonstrates the basic SQL syntax to create and interact with Unity Catalog volumes.</p>
+<div class="embedded-notebook-section section" id="tutorial-unity-catalog-volumes-notebook">
+<span id="unity-catalog-volumes"></span><h3>Tutorial: Unity Catalog volumes notebook<a class="headerlink" href="#tutorial-unity-catalog-volumes-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/unity-catalog-volumes.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/unity-catalog-volumes.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/unity-catalog-volumes.html"            id="9d652dcc0d7b56743f9dcea8cb31209d7a66d0315b3ca97e699ef85d28386433" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+<div class="section" id="reserved-paths-for-volumes">
+<h2>Reserved paths for volumes<a class="headerlink" href="#reserved-paths-for-volumes" title="Permalink to this headline"> </a></h2>
+<p>Volumes introduces the following reserved paths used for accessing volumes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dbfs:/Volumes</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/Volumes</span></code></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Paths are also reserved for potential typos for these paths from Apache Spark APIs and <code class="docutils literal notranslate"><span class="pre">dbutils</span></code>, including <code class="docutils literal notranslate"><span class="pre">/volumes</span></code>, <code class="docutils literal notranslate"><span class="pre">/Volume</span></code>, <code class="docutils literal notranslate"><span class="pre">/volume</span></code>, whether or not they are preceded by <code class="docutils literal notranslate"><span class="pre">dbfs:/</span></code>. The path <code class="docutils literal notranslate"><span class="pre">/dbfs/Volumes</span></code> is also reserved, but cannot be used to access volumes.</p>
+</div>
+<p>Volumes are only supported on Databricks Runtime 13.2 and above. In Databricks Runtime 13.1 and below, operations against <code class="docutils literal notranslate"><span class="pre">/Volumes</span></code> paths might succeed, but can write data to ephemeral storage disks attached to compute clusters rather than persisting data to Unity Catalog volumes as expected.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If you have pre-existing data stored in a reserved path on the DBFS root, you can file a support ticket to gain temporary access to this data to move it to another location.</p>
+</div>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline"> </a></h2>
+<p>The following limitations apply:</p>
+<ul>
+<li><p>You cannot list Unity Catalog objects using the <code class="docutils literal notranslate"><span class="pre">/Volumes/&lt;catalog-name&gt;/&lt;schema-name&gt;</span></code> pattern. You must use a fully-qualified path that includes a volume name.</p></li>
+<li><p>The DBFS endpoint for the REST API does not support volumes paths.</p></li>
+<li><p>Volumes are excluded from global search results in the Databricks workspace.</p></li>
+<li><p>You cannot specify volumes as the destination for cluster log delivery.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%sh</span> <span class="pre">mv</span></code> is not supported for moving files between volumes. Use <code class="docutils literal notranslate"><span class="pre">dbutils.fs.mv</span></code> or <code class="docutils literal notranslate"><span class="pre">%sh</span> <span class="pre">cp</span></code> instead.</p></li>
+<li><p>Catalog Explorer only displays 1000 files per directory.</p></li>
+<li><p>Scala support for volumes is limited to Apache Spark APIs and <code class="docutils literal notranslate"><span class="pre">dbutils</span></code>. UDFs and other Scala IO code cannot access data using volumes.</p></li>
+<li><p>You cannot create a custom Hadoop file system with volumes, meaning the following is not supported:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">org.apache.hadoop.fs.Path</span>
+<span class="n">val</span> <span class="n">path</span> <span class="o">=</span>  <span class="n">new</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;dbfs:/Volumes/main/default/test-volume/file.txt&quot;</span><span class="p">)</span>
+<span class="n">val</span> <span class="n">fs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">getFileSystem</span><span class="p">(</span><span class="n">sc</span><span class="o">.</span><span class="n">hadoopConfiguration</span><span class="p">)</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">listStatus</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<ul class="simple">
+<li><p>Volumes aren’t available in AWS GovCloud regions.</p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

@@ -1,0 +1,553 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to connect to data in Databricks from your local Python code by using the pyodbc open source module." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Connect Python and pyodbc to Databricks">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Connect Python and pyodbc to Databricks &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/dev-tools/pyodbc.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/dev-tools/pyodbc.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/dev-tools/pyodbc.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/dev-tools/pyodbc.html" class="notranslate">English</option>
+    <option value="../../ja/dev-tools/pyodbc.html" class="notranslate">日本語</option>
+    <option value="../../pt/dev-tools/pyodbc.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Connect Python and pyodbc to Databricks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="connect-python-and-pyodbc-to-databricks">
+<h1>Connect Python and pyodbc to Databricks<a class="headerlink" href="#connect-python-and-pyodbc-to-databricks" title="Permalink to this headline"> </a></h1>
+<p>You can connect from your local Python code through ODBC to data in a Databricks cluster or SQL warehouse. To do this, you can use the open source Python code module <code class="docutils literal notranslate"><span class="pre">pyodbc</span></code>.</p>
+<p>Follow these instructions to install, configure, and use <code class="docutils literal notranslate"><span class="pre">pyodbc</span></code>.</p>
+<p>For more information about <code class="docutils literal notranslate"><span class="pre">pyodbc</span></code>, see the <a class="reference external" href="https://github.com/mkleehammer/pyodbc/wiki">pyodbc Wiki</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Databricks offers the <a class="reference internal" href="python-sql-connector.html"><span class="doc">Databricks SQL Connector for Python</span></a> as an alternative to <code class="docutils literal notranslate"><span class="pre">pyodbc</span></code>. The Databricks SQL Connector for Python is easier to set up and use, and has a more robust set of coding constructs, than <code class="docutils literal notranslate"><span class="pre">pyodbc</span></code>. However <code class="docutils literal notranslate"><span class="pre">pyodbc</span></code> may have better performance when fetching queries results above 10 MB.</p>
+<p>These instructions were tested with <a class="reference external" href="https://databricks.com/spark/odbc-drivers-download">Databricks ODBC driver</a> 2.7.5, <a class="reference external" href="https://pypi.org/project/pyodbc/">pyodbc</a> 5.0.1, and <a class="reference external" href="https://www.unixodbc.org/">unixODBC</a> 2.3.12.</p>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>A local development machine running one of the following:</p>
+<ul>
+<li><p>macOS</p></li>
+<li><p>Windows</p></li>
+<li><p>A Unix or Linux distribution that supports <code class="docutils literal notranslate"><span class="pre">.rpm</span></code> or <code class="docutils literal notranslate"><span class="pre">.deb</span></code> files</p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://pip.pypa.io/en/stable/installing/">pip</a>.</p></li>
+<li><p>For Unix, Linux, or macOS, <a class="reference external" href="https://brew.sh/">Homebrew</a>.</p></li>
+<li><p>A Databricks cluster, a Databricks SQL warehouse, or both. For more information, see <a class="reference internal" href="../compute/configure.html"><span class="doc">Create a cluster</span></a> and <a class="reference internal" href="../compute/sql-warehouse/create-sql-warehouse.html"><span class="doc">Configure SQL warehouses</span></a>.</p></li>
+</ul>
+</div>
+<div class="section" id="step-1-download-install-and-configure-software">
+<h2>Step 1: Download, install, and configure software<a class="headerlink" href="#step-1-download-install-and-configure-software" title="Permalink to this headline"> </a></h2>
+<p>In this step, you download and install the Databricks ODBC driver, the <code class="docutils literal notranslate"><span class="pre">unixodbc</span></code> package, and the <code class="docutils literal notranslate"><span class="pre">pyodbc</span></code> module. (The <code class="docutils literal notranslate"><span class="pre">pyodbc</span></code> module requires the <code class="docutils literal notranslate"><span class="pre">unixodbc</span></code> package on Unix, Linux, and macOS.) You also configure an ODBC Data Source Name (DSN) to authenticate with and connect to your cluster or SQL warehouse.</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="../integrations/jdbc-odbc-bi.html#download-the-odbc-driver"><span class="std std-ref">Download and install the Databricks ODBC driver, and configure an ODBC DSN</span></a> for your operating system.</p></li>
+<li><p>For Unix, Linux, and macOS, install the <code class="docutils literal notranslate"><span class="pre">unixodbc</span></code> package: from the terminal, use Homebrew to run the command <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">unixodbc</span></code>. For more information, see <a class="reference external" href="https://formulae.brew.sh/formula/unixodbc">unixodbc</a> on the Homebrew website.</p></li>
+<li><p>Install the <code class="docutils literal notranslate"><span class="pre">pyodbc</span></code> module: from the terminal or command prompt, use <code class="docutils literal notranslate"><span class="pre">pip</span></code> to run the command <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pyodbc</span></code>. For more information, see <a class="reference external" href="https://pypi.org/project/pyodbc/">pyodbc</a> on the PyPI website and <a class="reference external" href="https://github.com/mkleehammer/pyodbc/wiki/Install">Install</a> in the pyodbc Wiki.</p></li>
+</ol>
+</div>
+<div class="section" id="step-2-test-your-configuration">
+<h2>Step 2: Test your configuration<a class="headerlink" href="#step-2-test-your-configuration" title="Permalink to this headline"> </a></h2>
+<p>In this step, you write and run Python code to use your Databricks cluster or Databricks SQL warehouse to query the <code class="docutils literal notranslate"><span class="pre">trips</span></code> table in the <code class="docutils literal notranslate"><span class="pre">samples</span></code> catalog’s <code class="docutils literal notranslate"><span class="pre">nyctrips</span></code> schema and display the results.</p>
+<ol class="arabic">
+<li><p>Create a file named <code class="docutils literal notranslate"><span class="pre">pyodbc-demo.py</span></code> with the following content. Replace <code class="docutils literal notranslate"><span class="pre">&lt;dsn-name&gt;</span></code> with the name of the ODBC DSN that you created earlier, save the file, and then run the file with your Python interpreter.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyodbc</span>
+
+<span class="c1"># Connect to the Databricks cluster by using the</span>
+<span class="c1"># Data Source Name (DSN) that you created earlier.</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;DSN=&lt;dsn-name&gt;&quot;</span><span class="p">,</span> <span class="n">autocommit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Run a SQL query by using the preceding connection.</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SELECT * FROM samples.nyctaxi.trips&quot;</span><span class="p">)</span>
+
+<span class="c1"># Print the rows retrieved from the query.</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>To speed up running the code, <a class="reference internal" href="../compute/clusters-manage.html#cluster-start"><span class="std std-ref">start the cluster</span></a> that corresponds to the <code class="docutils literal notranslate"><span class="pre">HTTPPath</span></code> setting in your DSN.</p></li>
+<li><p>Run the <code class="docutils literal notranslate"><span class="pre">pyodbc-demo.py</span></code> file with your Python interpreter. Information about the table’s rows are displayed.</p></li>
+</ol>
+</div>
+<div class="section" id="next-steps">
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>To run the Python test code against a different cluster or SQL warehouse, create a different DSN and change <code class="docutils literal notranslate"><span class="pre">&lt;dsn-name&gt;</span></code> to the DSN’s name.</p></li>
+<li><p>To run the Python test code with a different SQL query, change the <code class="docutils literal notranslate"><span class="pre">execute</span></code> command string.</p></li>
+</ul>
+</div>
+<div class="section" id="using-a-dsn-less-connection">
+<span id="dsn-less"></span><h2>Using a DSN-less connection<a class="headerlink" href="#using-a-dsn-less-connection" title="Permalink to this headline"> </a></h2>
+<p>As an alternative to using an DSN name, you can specify the connection settings inline. The following example shows how to use a DSN-less connection string for Databricks personal access token authentication. This example assumes that you have the following environment variables:</p>
+<ul class="simple">
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">DATABRICKS_SERVER_HOSTNAME</span></code> to the <a class="reference internal" href="../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace instance name</span></a>, for example <code class="docutils literal notranslate"><span class="pre">dbc-a1b2345c-d6e7.cloud.databricks.com</span></code>.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">DATABRICKS_HTTP_PATH</span></code> to the <strong>HTTP Path</strong> value for the target cluster or SQL warehouse in the workspace. To get the <strong>HTTP Path</strong> value, see <a class="reference internal" href="../integrations/jdbc-odbc-bi.html#get-server-hostname-port-http-path-and-jdbc-url"><span class="std std-ref">Retrieve the connection details</span></a>.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">DATABRICKS_TOKEN</span></code> to the Databricks personal access token for the target user. To create a personal access token, see <a class="reference internal" href="auth/pat.html#pat-user"><span class="std std-ref">Databricks personal access tokens for workspace users</span></a>.</p></li>
+</ul>
+<p>To set environment variables, see your operating system’s documentation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyodbc</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+  <span class="s2">&quot;Driver=/Library/simba/spark/lib/libsparkodbc_sb64-universal.dylib;&quot;</span> <span class="o">+</span>
+  <span class="sa">f</span><span class="s2">&quot;Host=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DATABRICKS_HOST&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">;&quot;</span> <span class="o">+</span>
+  <span class="s2">&quot;Port=443;&quot;</span> <span class="o">+</span>
+  <span class="sa">f</span><span class="s2">&quot;HTTPPath=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DATABRICKS_HTTP_PATH&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">;&quot;</span> <span class="o">+</span>
+  <span class="s2">&quot;SSL=1;&quot;</span> <span class="o">+</span>
+  <span class="s2">&quot;ThriftTransport=2;&quot;</span> <span class="o">+</span>
+  <span class="s2">&quot;AuthMech=3;&quot;</span> <span class="o">+</span>
+  <span class="s2">&quot;UID=token;&quot;</span> <span class="o">+</span>
+  <span class="sa">f</span><span class="s2">&quot;PWD=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DATABRICKS_TOKEN&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+  <span class="n">autocommit</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># Run a SQL query by using the preceding connection.</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM samples.nyctaxi.trips&quot;</span><span class="p">)</span>
+
+<span class="c1"># Print the rows retrieved from the query.</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The following example uses OAuth user-to-machine (U2M) or OAuth 2.0 browser-based authentication instead of a Databricks personal access token. This example assumes that you have already set the preceding <code class="docutils literal notranslate"><span class="pre">DATABRICKS_SERVER_HOSTNAME</span></code> and <code class="docutils literal notranslate"><span class="pre">DATABRICKS_HTTP_PATH</span></code> environment variables.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyodbc</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+  <span class="s2">&quot;Driver=/Library/simba/spark/lib/libsparkodbc_sb64-universal.dylib;&quot;</span> <span class="o">+</span>
+  <span class="sa">f</span><span class="s2">&quot;Host=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DATABRICKS_HOST&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">;&quot;</span> <span class="o">+</span>
+  <span class="s2">&quot;Port=443;&quot;</span> <span class="o">+</span>
+  <span class="sa">f</span><span class="s2">&quot;HTTPPath=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DATABRICKS_HTTP_PATH&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">;&quot;</span> <span class="o">+</span>
+  <span class="s2">&quot;SSL=1;&quot;</span> <span class="o">+</span>
+  <span class="s2">&quot;ThriftTransport=2;&quot;</span> <span class="o">+</span>
+  <span class="s2">&quot;AuthMech=11;&quot;</span> <span class="o">+</span>
+  <span class="s2">&quot;Auth_Flow=2;&quot;</span> <span class="o">+</span>
+  <span class="s2">&quot;PWD=1234567&quot;</span><span class="p">,</span>
+  <span class="n">autocommit</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># Run a SQL query by using the preceding connection.</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM samples.nyctaxi.trips&quot;</span><span class="p">)</span>
+
+<span class="c1"># Print the rows retrieved from the query.</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The following example uses OAuth machine-to-machine (M2M) or OAuth 2.0 client credentials authentication. This example assumes that you have already set the preceding <code class="docutils literal notranslate"><span class="pre">DATABRICKS_SERVER_HOSTNAME</span></code> and <code class="docutils literal notranslate"><span class="pre">DATABRICKS_HTTP_PATH</span></code> environment variables as well as the following environment variables:</p>
+<ul class="simple">
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">DATABRICKS_CLIENT_ID</span></code> to the service principal’s <strong>UUID</strong>/<strong>Application ID</strong> value.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">DATABRICKS_OAUTH_SECRET</span></code> to the service principal’s OAuth <strong>Secret</strong> value.</p></li>
+</ul>
+<p>For more information, see <a class="reference internal" href="../integrations/jdbc-odbc-bi.html#authentication-m2m"><span class="std std-ref">OAuth machine-to-machine (M2M) authentication</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>   <span class="kn">import</span> <span class="nn">pyodbc</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+  <span class="s2">&quot;Driver=/Library/simba/spark/lib/libsparkodbc_sb64-universal.dylib;&quot;</span> <span class="o">+</span>
+  <span class="sa">f</span><span class="s2">&quot;Host=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DATABRICKS_HOST&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">;&quot;</span> <span class="o">+</span>
+  <span class="s2">&quot;Port=443;&quot;</span> <span class="o">+</span>
+  <span class="sa">f</span><span class="s2">&quot;HTTPPath=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DATABRICKS_HTTP_PATH&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">;&quot;</span> <span class="o">+</span>
+  <span class="s2">&quot;SSL=1;&quot;</span> <span class="o">+</span>
+  <span class="s2">&quot;ThriftTransport=2;&quot;</span> <span class="o">+</span>
+  <span class="s2">&quot;AuthMech=11;&quot;</span> <span class="o">+</span>
+  <span class="s2">&quot;Auth_Flow=1;&quot;</span> <span class="o">+</span>
+  <span class="sa">f</span><span class="s2">&quot;Auth_Client_ID=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DATABRICKS_CLIENT_ID&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">;&quot;</span> <span class="o">+</span>
+  <span class="sa">f</span><span class="s2">&quot;Auth_Client_Secret=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DATABRICKS_OAUTH_SECRET&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+  <span class="n">autocommit</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># Run a SQL query by using the preceding connection.</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM samples.nyctaxi.trips&quot;</span><span class="p">)</span>
+
+<span class="c1"># Print the rows retrieved from the query.</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline"> </a></h2>
+<p>This section addresses common issues when using <code class="docutils literal notranslate"><span class="pre">pyodbc</span></code> with Databricks.</p>
+<div class="section" id="unicode-decode-error">
+<h3>Unicode decode error<a class="headerlink" href="#unicode-decode-error" title="Permalink to this headline"> </a></h3>
+<p><strong>Issue</strong>: You receive an error message similar to the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;pyodbc.Error&#39;&gt; returned a result with an error set
+Traceback (most recent call last):
+File &quot;/Users/user/.pyenv/versions/3.7.5/lib/python3.7/encodings/utf_16_le.py&quot;, line 16, in decode
+return codecs.utf_16_le_decode(input, errors, True)
+UnicodeDecodeError: &#39;utf-16-le&#39; codec can&#39;t decode bytes in position 2112-2113: illegal UTF-16 surrogate
+</pre></div>
+</div>
+<p><strong>Cause</strong>: An issue exists in <code class="docutils literal notranslate"><span class="pre">pyodbc</span></code> version 4.0.31 or below that could manifest with such symptoms when running queries that return columns with long names or a long error message. The issue has been fixed by a newer version of <code class="docutils literal notranslate"><span class="pre">pyodbc</span></code>.</p>
+<p><strong>Solution</strong>: Upgrade your installation of <code class="docutils literal notranslate"><span class="pre">pyodbc</span></code> to version 4.0.32 or above.</p>
+</div>
+<div class="section" id="general-troubleshooting">
+<h3>General troubleshooting<a class="headerlink" href="#general-troubleshooting" title="Permalink to this headline"> </a></h3>
+<p>See <a class="reference external" href="https://github.com/mkleehammer/pyodbc/issues">Issues</a> in the <a class="reference external" href="https://github.com/mkleehammer/pyodbc">mkleehammer/pyodbc</a> repository on GitHub.</p>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

@@ -1,0 +1,712 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to enable data-sharing and speed up queries and dashboards by pre-computing results using materialized views in a Databricks SQL warehouse." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Use materialized views in Databricks SQL">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Use materialized views in Databricks SQL &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/sql/user/materialized-views.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/sql/user/materialized-views.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/sql/user/materialized-views.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/sql/user/materialized-views.html" class="notranslate">English</option>
+    <option value="../../../ja/sql/user/materialized-views.html" class="notranslate">日本語</option>
+    <option value="../../../pt/sql/user/materialized-views.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Use materialized views in Databricks SQL</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="use-materialized-views-in-databricks-sql">
+<span id="use-mvs-in-dbsql"></span><h1>Use materialized views in Databricks SQL<a class="headerlink" href="#use-materialized-views-in-databricks-sql" title="Permalink to this headline"> </a></h1>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in Public Preview. To sign up for access, <a class="reference external" href="https://www.databricks.com/resources/webinar/request-access-databricks-sql-materialized-views">fill out this form</a>.</p>
+</div>
+<p>This article describes how to create and use materialized views in Databricks SQL to improve performance and reduce the cost of your data processing and analysis workloads.</p>
+<div class="section" id="what-are-materialized-views">
+<span id="what-are-mvs"></span><span id="what-is-a-mv"></span><h2>What are materialized views?<a class="headerlink" href="#what-are-materialized-views" title="Permalink to this headline"> </a></h2>
+<p>In Databricks SQL, materialized views are Unity Catalog managed tables that allow users to precompute results based on the latest version of data in source tables. Materialized views on Databricks differ from other implementations as the results returned reflect the state of data when the materialized view was last refreshed rather than always updating results when the materialized view is queried. You can manually refresh materialized views or schedule refreshes.</p>
+<p>Materialized views are powerful for data processing workloads such as extract, transform, and load (ETL) processing. Materialized views provide a simple, declarative way to process data for compliance, corrections, aggregations, or general change data capture (CDC). Materialized views reduce cost and improve query latency by pre-computing slow queries and frequently used computations. Materialized views also enable easy-to-use transformations by cleaning, enriching, and denormalizing base tables. Materialized views can reduce costs while providing a simplified end-user experience because, in some cases, they can incrementally compute changes from the base tables.</p>
+<p>Materialized views were first supported on the Databricks Data Intelligence Platform with the launch of <a class="reference internal" href="../../delta-live-tables/index.html"><span class="doc">Delta Live Tables</span></a>. When you create a materialized view in a Databricks SQL warehouse, a Delta Live Tables pipeline is created to process refreshes to the materialized view. You can monitor the status of refresh operations in the Delta Live Tables UI, the Delta Live Tables API, or the Delta Live Tables CLI. See <a class="reference internal" href="#view-status"><span class="std std-ref">View the status of a materialized view refresh</span></a>.</p>
+</div>
+<div class="section" id="requirements">
+<span id="mv-requirements"></span><h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>You must use a Unity Catalog-enabled Databricks SQL warehouse to create and refresh materialized views.</p></li>
+</ul>
+<ul class="simple">
+<li><p>You must have accepted the serverless <a class="reference internal" href="../../compute/sql-warehouse/serverless.html#accept-terms"><span class="std std-ref">terms of use</span></a>.</p></li>
+</ul>
+<ul class="simple">
+<li><p>Your workspace must be in a <a class="reference internal" href="../../resources/supported-regions.html"><span class="doc">serverless-enabled region</span></a>.</p></li>
+</ul>
+<p>To learn about restrictions when using materialized views with Databricks SQL, see <a class="reference internal" href="#mv-limitations"><span class="std std-ref">Limitations</span></a>.</p>
+</div>
+<div class="section" id="create-a-materialized-view">
+<span id="create-a-mv"></span><span id="mv-create"></span><h2>Create a materialized view<a class="headerlink" href="#create-a-materialized-view" title="Permalink to this headline"> </a></h2>
+<p>To create a materialized view, use the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span></code> statement. See <a class="reference internal" href="../language-manual/sql-ref-syntax-ddl-create-materialized-view.html"><span class="doc">CREATE MATERIALIZED VIEW</span></a> in the Databricks SQL reference. To submit a create statement, use the <a class="reference internal" href="sql-editor/index.html"><span class="doc">SQL editor</span></a> in the Databricks UI, the <a class="reference internal" href="../../dev-tools/databricks-sql-cli.html"><span class="doc">Databricks SQL CLI</span></a>, or the <a class="reference internal" href="../admin/sql-execution-tutorial.html"><span class="doc">Databricks SQL API</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The user who creates a materialized view is the materialized view owner and needs to have the following permissions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SELECT</span></code> privilege on the base tables referenced by the materialized view.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> and <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> privileges on the catalog and schema containing the source tables for the materialized view.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> and <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> privileges on the target catalog and schema for the materialized view.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> and <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span></code> privileges on the schema containing the materialized view.</p></li>
+</ul>
+</div>
+<p>The following example creates the materialized view <code class="docutils literal notranslate"><span class="pre">mv1</span></code> from the base table <code class="docutils literal notranslate"><span class="pre">base_table1</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">mv1</span>
+<span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span>
+<span class="w">  </span><span class="nb">date</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">sales</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">sum_of_sales</span>
+<span class="k">FROM</span>
+<span class="w">  </span><span class="n">table1</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span>
+<span class="w">  </span><span class="nb">date</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="how-are-materialized-views-created">
+<span id="how-are-mvs-created"></span><span id="mv-create-processing"></span><h2>How are materialized views created?<a class="headerlink" href="#how-are-materialized-views-created" title="Permalink to this headline"> </a></h2>
+<p>Databricks SQL materialized view <code class="docutils literal notranslate"><span class="pre">CREATE</span></code> operations use a Databricks SQL warehouse to create and load data in the materialized view. Because creating a materialized view is a synchronous operation in the Databricks SQL warehouse, the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span></code> command blocks until the materialized view is created and the initial data load finishes. A Delta Live Tables pipeline is automatically created for every Databricks SQL materialized view. When the materialized view is <a class="reference internal" href="#mv-refresh"><span class="std std-ref">refreshed</span></a>, an update to the Delta Live Tables pipeline is started to process the refresh.</p>
+</div>
+<div class="section" id="load-data-from-external-systems">
+<h2>Load data from external systems<a class="headerlink" href="#load-data-from-external-systems" title="Permalink to this headline"> </a></h2>
+<p>Databricks recommends loading external data using Lakehouse Federation for <a class="reference internal" href="../../query-federation/index.html#connection-types"><span class="std std-ref">supported data sources</span></a>. For information on loading data from sources not supported by Lakehouse Federation, see <a class="reference internal" href="../../query/formats/index.html"><span class="doc">Data format options</span></a>.</p>
+</div>
+<div class="section" id="refresh-a-materialized-view">
+<span id="refresh-a-mv"></span><span id="mv-refresh"></span><h2>Refresh a materialized view<a class="headerlink" href="#refresh-a-materialized-view" title="Permalink to this headline"> </a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">REFRESH</span></code> operation refreshes the materialized view to reflect the latest changes to the base table. To refresh a materialized view, use the <code class="docutils literal notranslate"><span class="pre">REFRESH</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span></code> statement. See <a class="reference internal" href="../language-manual/sql-ref-syntax-ddl-refresh-full.html"><span class="doc">REFRESH (MATERIALIZED VIEW and STREAMING TABLE)</span></a> in the Databricks SQL reference. To submit a refresh statement, use the <a class="reference internal" href="sql-editor/index.html"><span class="doc">SQL editor</span></a> in the Databricks UI, the <a class="reference internal" href="../../dev-tools/databricks-sql-cli.html"><span class="doc">Databricks SQL CLI</span></a>, or the <a class="reference internal" href="../admin/sql-execution-tutorial.html"><span class="doc">Databricks SQL API</span></a>.</p>
+<p>Only the owner can <code class="docutils literal notranslate"><span class="pre">REFRESH</span></code> the materialized view.</p>
+<p>The following example refreshes the <code class="docutils literal notranslate"><span class="pre">mv1</span></code> materialized view:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">REFRESH</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">mv1</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="how-are-databricks-sql-materialized-views-refreshed">
+<span id="how-are-dbsql-mvs-refreshed"></span><span id="mv-refresh-processing"></span><h2>How are Databricks SQL materialized views refreshed?<a class="headerlink" href="#how-are-databricks-sql-materialized-views-refreshed" title="Permalink to this headline"> </a></h2>
+<p>Databricks SQL materialized views use Delta Live Tables for refresh operations. When the materialized view is refreshed, an <a class="reference internal" href="../../delta-live-tables/updates.html"><span class="doc">update</span></a> to the Delta Live Tables pipeline managing the materialized view is started to process the refresh.</p>
+<p>Databricks SQL materialized view refreshes are asynchronous. When a materialized view refresh is initiated, a background job starts on a Delta Live Tables cluster and the command returns immediately before the data load completes.</p>
+<p>Because the refresh is managed by a Delta Live Tables pipeline, the Databricks SQL warehouse used to create the materialized view is not used and does not need to be running during the refresh operation.</p>
+<p>Some queries can be incrementally refreshed. See <a class="reference internal" href="#incremental-refreshes"><span class="std std-ref">Incremental refresh of materialized views</span></a>. If an incremental refresh cannot be performed, a full refresh is performed instead.</p>
+</div>
+<div class="section" id="schedule-materialized-view-refreshes">
+<span id="schedule-mv-refreshes"></span><span id="schedule-refreshes"></span><h2>Schedule materialized view refreshes<a class="headerlink" href="#schedule-materialized-view-refreshes" title="Permalink to this headline"> </a></h2>
+<p>You can configure a Databricks SQL materialized view to refresh automatically based on a defined schedule. Configure this schedule with the <code class="docutils literal notranslate"><span class="pre">SCHEDULE</span></code> clause when you <a class="reference internal" href="../language-manual/sql-ref-syntax-ddl-create-materialized-view.html"><span class="doc">create the materialized view</span></a> or add a schedule with the <a class="reference internal" href="../language-manual/sql-ref-syntax-ddl-alter-view.html"><span class="doc">ALTER VIEW</span></a> statement. When a schedule is created, a new Databricks job is automatically configured to process the update. You can view the schedule any time with the <code class="docutils literal notranslate"><span class="pre">DESCRIBE</span> <span class="pre">EXTENDED</span></code> statement.</p>
+<p></p>
+</div>
+<div class="section" id="update-the-definition-of-a-materialized-view">
+<span id="update-the-definition-of-a-mv"></span><span id="update-mv"></span><h2>Update the definition of a materialized view<a class="headerlink" href="#update-the-definition-of-a-materialized-view" title="Permalink to this headline"> </a></h2>
+<p>To update the definition of a materialized view, you must first drop, then re-create the materialized view.</p>
+</div>
+<div class="section" id="drop-a-materialized-view">
+<span id="drop-a-mv"></span><span id="drop-mv"></span><h2>Drop a materialized view<a class="headerlink" href="#drop-a-materialized-view" title="Permalink to this headline"> </a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To submit the command to drop a materialized view, you must be the owner of that materialized view.</p>
+</div>
+<p>To drop a materialized view, use the <a class="reference internal" href="../language-manual/sql-ref-syntax-ddl-drop-view.html"><span class="doc">DROP VIEW</span></a> statement. To submit a <code class="docutils literal notranslate"><span class="pre">DROP</span></code> statement, you can use the <a class="reference internal" href="sql-editor/index.html"><span class="doc">SQL editor</span></a> in the Databricks UI, the <a class="reference internal" href="../../dev-tools/databricks-sql-cli.html"><span class="doc">Databricks SQL CLI</span></a>, or the <a class="reference internal" href="../admin/sql-execution-tutorial.html"><span class="doc">Databricks SQL API</span></a>. The following example drops the <code class="docutils literal notranslate"><span class="pre">mv1</span></code> materialized view:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">mv1</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="describe-a-materialized-view">
+<span id="describe-a-mv"></span><span id="describe-mv"></span><h2>Describe a materialized view<a class="headerlink" href="#describe-a-materialized-view" title="Permalink to this headline"> </a></h2>
+<p>To retrieve the columns and data types for a materialized view, use the <code class="docutils literal notranslate"><span class="pre">DESCRIBE</span></code> statement. To retrieve the columns, data types, and metadata such as owner, location, creation time, and refresh status for a materialized view, use <code class="docutils literal notranslate"><span class="pre">DESCRIBE</span> <span class="pre">EXTENDED</span></code>. To submit a <code class="docutils literal notranslate"><span class="pre">DESCRIBE</span></code> statement, use the <a class="reference internal" href="sql-editor/index.html"><span class="doc">SQL editor</span></a> in the Databricks UI, the <a class="reference internal" href="../../dev-tools/databricks-sql-cli.html"><span class="doc">Databricks SQL CLI</span></a>, or the <a class="reference internal" href="../admin/sql-execution-tutorial.html"><span class="doc">Databricks SQL API</span></a>.</p>
+</div>
+<div class="section" id="view-the-status-of-a-materialized-view-refresh">
+<span id="view-the-status-of-a-mv-refresh"></span><span id="view-status"></span><h2>View the status of a materialized view refresh<a class="headerlink" href="#view-the-status-of-a-materialized-view-refresh" title="Permalink to this headline"> </a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Because a Delta Live Tables pipeline manages materialized view refreshes, there is latency incurred by the startup time for the pipeline. This time might be in the seconds to minutes, in addition to the time required to perform the refresh.</p>
+</div>
+<p>You can view the status of a materialized view refresh by viewing the pipeline that manages the materialized view in the Delta Live Tables UI or by viewing the <strong>Refresh Information</strong> returned by the <code class="docutils literal notranslate"><span class="pre">DESCRIBE</span> <span class="pre">EXTENDED</span></code> command for the materialized view.</p>
+<p>You can also view the refresh history of a materialized view by querying the Delta Live Tables event log. See <a class="reference internal" href="#refresh-history"><span class="std std-ref">View the refresh history for a materialized view</span></a>.</p>
+</div>
+<div class="section" id="view-the-refresh-status-in-the-delta-live-tables-ui">
+<span id="view-the-refresh-status-in-the-dlt-ui"></span><h2>View the refresh status in the Delta Live Tables UI<a class="headerlink" href="#view-the-refresh-status-in-the-delta-live-tables-ui" title="Permalink to this headline"> </a></h2>
+<p></p>
+<p>By default, the Delta Live Tables pipeline that manages a materialized view is not visible in the Delta Live Tables UI. To view the pipeline in the Delta Live Tables UI, you must directly access the link to the pipeline’s <strong>Pipeline details</strong> page. To access the link:</p>
+<ul class="simple">
+<li><p>If you submit the <code class="docutils literal notranslate"><span class="pre">REFRESH</span></code> command in the <a class="reference internal" href="sql-editor/index.html"><span class="doc">SQL editor</span></a>, follow the link in the <strong>Results</strong> panel.</p></li>
+<li><p>Follow the link returned by the <code class="docutils literal notranslate"><span class="pre">DESCRIBE</span> <span class="pre">EXTENDED</span></code> statement.</p></li>
+<li><p>On the <a class="reference internal" href="../../data-governance/unity-catalog/data-lineage.html"><span class="doc">lineage tab</span></a> for the materialized view, click <strong>Pipelines</strong> and then click the pipeline link.</p></li>
+</ul>
+</div>
+<div class="section" id="stop-an-active-refresh">
+<span id="stop-refresh"></span><h2>Stop an active refresh<a class="headerlink" href="#stop-an-active-refresh" title="Permalink to this headline"> </a></h2>
+<p>To stop an active refresh in the Delta Live Tables UI, in the <strong>Pipeline details</strong> page click <strong>Stop</strong> to stop the pipeline update. You can also stop the refresh with the <a class="reference internal" href="../../dev-tools/cli/index.html"><span class="doc">Databricks CLI</span></a> or the <a class="reference external" href="https://docs.databricks.com/api/workspace/pipelines/stop">POST /api/2.0/pipelines/{pipeline_id}/stop</a> operation in the Pipelines API.</p>
+</div>
+<div class="section" id="control-access-to-materialized-views">
+<span id="control-access-to-mvs"></span><span id="control-access"></span><h2>Control access to materialized views<a class="headerlink" href="#control-access-to-materialized-views" title="Permalink to this headline"> </a></h2>
+<p>Materialized views support rich access controls to support data-sharing while avoiding exposing potentially private data. A materialized view owner can grant <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> privileges to other users. Users with <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> access to the materialized view do not need <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> access to the tables referenced by the materialized view. This access control enables data sharing while controlling access to the underlying data.</p>
+<div class="section" id="grant-privileges-to-a-materialized-view">
+<span id="grant-privileges-to-a-mv"></span><h3>Grant privileges to a materialized view<a class="headerlink" href="#grant-privileges-to-a-materialized-view" title="Permalink to this headline"> </a></h3>
+<p>To grant access to a materialized view, use the <code class="docutils literal notranslate"><span class="pre">GRANT</span></code> statement:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">GRANT</span>
+<span class="w">  </span><span class="n">privilege_type</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="n">privilege_type</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">...</span>
+<span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="o">&lt;</span><span class="n">mv_name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">principal</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The privilege_type can be:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SELECT</span></code> - the user can <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> the materialized view.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">REFRESH</span></code> - the user can <code class="docutils literal notranslate"><span class="pre">REFRESH</span></code> the materialized view. Refreshes are run using the owner’s permissions.</p></li>
+</ul>
+<p>The following example creates a materialized view and grants select and refresh privileges to a user:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="o">&lt;</span><span class="n">mv_name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="o">&lt;</span><span class="n">base_table</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">&lt;</span><span class="n">mv_name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="k">user</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="n">REFRESH</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">&lt;</span><span class="n">mv_name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="k">user</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="revoke-privileges-from-a-materialized-view">
+<span id="revoke-privileges-from-a-mv"></span><h3>Revoke privileges from a materialized view<a class="headerlink" href="#revoke-privileges-from-a-materialized-view" title="Permalink to this headline"> </a></h3>
+<p>To revoke access from a materialized view, use the <code class="docutils literal notranslate"><span class="pre">REVOKE</span></code> statement:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">REVOKE</span>
+<span class="w">  </span><span class="n">privilege_type</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="n">privilege_type</span><span class="w"> </span><span class="p">]</span>
+<span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">principal</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>When <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> privileges on a base table are revoked from the materialized view owner or any other user who has been granted <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> privileges to the materialized view, or the base table is dropped, the materialized view owner or user granted access is still able to query the materialized view. However, the following behavior occurs:</p>
+<ul class="simple">
+<li><p>The materialized view owner or others who have lost access to a materialized view can no longer <code class="docutils literal notranslate"><span class="pre">REFRESH</span></code> that materialized view, and the materialized view will become stale.</p></li>
+<li><p>If automated with a schedule, the next scheduled <code class="docutils literal notranslate"><span class="pre">REFRESH</span></code> fails or is not run.</p></li>
+</ul>
+<p>The following example revokes the <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> privilege from <code class="docutils literal notranslate"><span class="pre">mv1</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">REVOKE</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">mv1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">user1</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="incremental-refresh-of-materialized-views">
+<span id="incremental-refresh-of-mvs"></span><span id="incremental-refreshes"></span><h2>Incremental refresh of materialized views<a class="headerlink" href="#incremental-refresh-of-materialized-views" title="Permalink to this headline"> </a></h2>
+<p>Materialized views always return the semantically correct results for the defining query based on the latest snapshot version of data available in base tables at the time of the last refresh. When possible, results are updated incrementally, but results are identical to those that would be delivered by full recomputation.</p>
+<p>While any query can be defined in a materialized view, only a subset of queries are incrementally refreshed. If the materialized view cannot be incrementally refreshed, the refresh process uses a full refresh instead. To determine which mode is used, see <a class="reference internal" href="#determine-refresh-type"><span class="std std-ref">Determining if an incremental or full refresh is used</span></a>.</p>
+<div class="section" id="what-type-of-materialized-views-are-incrementally-refreshed">
+<span id="what-type-of-mvs-are-incrementally-refreshed"></span><h3>What type of materialized views are incrementally refreshed?<a class="headerlink" href="#what-type-of-materialized-views-are-incrementally-refreshed" title="Permalink to this headline"> </a></h3>
+<p>The following describes the expressions, keywords, and clauses supporting incremental refresh.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Materialized views that query certain types of base tables have a greater scope of incremental refresh. See <a class="reference internal" href="#defining-for-incremental-refresh"><span class="std std-ref">(Advanced) Defining materialized views that can be incrementally refreshed</span></a>.</p>
+</div>
+<ul class="simple">
+<li><p>The materialized view can query only a single table or perform an <code class="docutils literal notranslate"><span class="pre">INNER</span> <span class="pre">JOIN</span></code> and <code class="docutils literal notranslate"><span class="pre">UNION</span> <span class="pre">ALL</span></code> (or combinations of <code class="docutils literal notranslate"><span class="pre">INNER</span> <span class="pre">JOIN</span></code> and <code class="docutils literal notranslate"><span class="pre">UNION</span> <span class="pre">ALL</span></code>) on multiple tables.</p></li>
+<li><p>The materialized view must have a <code class="docutils literal notranslate"><span class="pre">GROUP</span> <span class="pre">BY</span></code> in the main select clause.</p></li>
+<li><p>The materialized view <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> clause supports the following aggregate functions. Any aggregate function not in this list is not supported:</p>
+<ul>
+<li><p>SUM</p></li>
+<li><p>COUNT</p></li>
+</ul>
+</li>
+<li><p>Incremental refresh is not supported for materialized views that include:</p>
+<ul>
+<li><p>Window functions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HAVING</span></code> clauses.</p></li>
+<li><p>Subqueries in <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> or <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> clauses.</p></li>
+</ul>
+</li>
+<li><p>Change data feed is required on the base tables, except for certain <a class="reference internal" href="#defining-for-incremental-refresh"><span class="std std-ref">advanced use cases</span></a>. See <a class="reference internal" href="#enable-cdf"><span class="std std-ref">Enabling change data feed</span></a>.</p></li>
+<li><p>Functions used in the query to create a materialized view must be deterministic. For example, using <code class="docutils literal notranslate"><span class="pre">CURRENT_TIMESTAMP</span></code> is not permitted.</p></li>
+<li><p>Materialized views cannot be created using the Delta Lake <a class="reference internal" href="../../delta/history.html#time-travel"><span class="std std-ref">time travel</span></a> feature.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LEFT</span> <span class="pre">JOIN</span></code>s and <code class="docutils literal notranslate"><span class="pre">OUTER</span> <span class="pre">JOIN</span></code>s are not supported.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="enabling-change-data-feed">
+<span id="enable-cdf"></span><h2>Enabling change data feed<a class="headerlink" href="#enabling-change-data-feed" title="Permalink to this headline"> </a></h2>
+<p>Change data feed can be enabled on a base table by setting the <code class="docutils literal notranslate"><span class="pre">delta.enableChangeDataFeed</span></code> table property using the following syntax:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">table1</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">TBLPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="n">delta</span><span class="p">.</span><span class="n">enableChangeDataFeed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Change data feed is not enabled by default on materialized views. To enable the change data feed on a materialized view created in Databricks SQL, specify the appropriate table setting at creation time. If you have an existing materialized view, you must drop it and re-create it.</p>
+<p>To enable change data feed on a materialized view created in Delta Live Tables, you (or the pipeline owner) must modify the Delta Live Tables source code to add the table property.</p>
+<p>The following example enables change data feed on a materialized view:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="o">&lt;</span><span class="n">mv_name</span><span class="o">&gt;</span>
+<span class="n">TBLPROPERTIES</span><span class="p">(</span><span class="n">delta</span><span class="p">.</span><span class="n">enableChangeDataFeed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">)</span>
+<span class="k">As</span><span class="w"> </span><span class="o">&lt;</span><span class="n">query</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="advanced-defining-materialized-views-that-can-be-incrementally-refreshed">
+<span id="advanced-defining-mvs-that-can-be-incrementally-refreshed"></span><span id="defining-for-incremental-refresh"></span><h2>(Advanced) Defining materialized views that can be incrementally refreshed<a class="headerlink" href="#advanced-defining-materialized-views-that-can-be-incrementally-refreshed" title="Permalink to this headline"> </a></h2>
+<p>The following describes advanced use cases where materialized views can be incrementally refreshed. Change data feed is not required for incremental refresh in the following advanced use cases.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The following limitations still apply to the use cases described here:</p>
+<ul class="simple">
+<li><p>Functions used in the query to create a materialized view must be deterministic. For example, using <code class="docutils literal notranslate"><span class="pre">CURRENT_TIMESTAMP</span></code> is not permitted.</p></li>
+<li><p>Materialized views cannot be created using the Delta Lake <a class="reference internal" href="../../delta/history.html#time-travel"><span class="std std-ref">time travel</span></a> feature.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LEFT</span> <span class="pre">JOIN</span></code>s and <code class="docutils literal notranslate"><span class="pre">OUTER</span> <span class="pre">JOIN</span></code>s are not supported.</p></li>
+</ul>
+</div>
+<div class="section" id="queries-over-tables-with-partitions">
+<h3>Queries over tables with partitions<a class="headerlink" href="#queries-over-tables-with-partitions" title="Permalink to this headline"> </a></h3>
+<p></p>
+<p>Materialized views can leverage partitions to avoid full refreshes. When a materialized view shares the same partition keys as its base tables, the materialized view can detect changed partitions and modify only the partitions in the materialized view that are necessary to materialize the result. For large tables, this might save significant time and resources.</p>
+<p>The following are the expressions, keywords, and clauses that support incremental refresh when defining materialized views on tables with partitions. In the following scenarios, a materialized view is “co-partitioned” with a base table if the materialized view shares at least one partition key with the base tables.</p>
+<ul class="simple">
+<li><p>A partitioned materialized view can query a single table.</p>
+<ul>
+<li><p>The materialized view must be co-partitioned with the base table.</p></li>
+</ul>
+</li>
+<li><p>A partitioned materialized view can do a <code class="docutils literal notranslate"><span class="pre">UNION</span> <span class="pre">ALL</span></code> over multiple tables.</p>
+<ul>
+<li><p>The materialized view must be co-partitioned with all base tables.</p></li>
+</ul>
+</li>
+<li><p>A partitioned materialized view can use an <code class="docutils literal notranslate"><span class="pre">INNER</span> <span class="pre">JOIN</span></code> on a fact table with a dimension table.</p>
+<ul>
+<li><p>The materialized view must be co-partitioned with the fact table.</p></li>
+<li><p>The dimension table is not required to be partitioned. If an update is detected on the dimension table, the materialized view is fully refreshed.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="queries-over-tables-that-are-append-only">
+<h3>Queries over tables that are append-only<a class="headerlink" href="#queries-over-tables-that-are-append-only" title="Permalink to this headline"> </a></h3>
+<p>A common pattern for tables in the <a class="reference internal" href="../../lakehouse/medallion.html"><span class="doc">bronze layer</span></a> is that new rows are only inserted into the table. Materialized views automatically detect append-only base tables and incrementally refresh by inserting only new rows into the materialized view. For large tables, this might save significant time and resources.</p>
+<p>The following are required to support incremental refresh when defining materialized views on top of append-only tables:</p>
+<ul class="simple">
+<li><p>A materialized view can query only a single table or <code class="docutils literal notranslate"><span class="pre">INNER</span> <span class="pre">JOIN</span></code> and <code class="docutils literal notranslate"><span class="pre">UNION</span> <span class="pre">ALL</span></code> (or combinations of <code class="docutils literal notranslate"><span class="pre">INNER</span> <span class="pre">JOIN</span> <span class="pre">and</span> <span class="pre">UNION</span> <span class="pre">ALL</span></code>) on multiple tables.</p></li>
+<li><p>The base tables must be append-only.</p></li>
+<li><p>If a row is updated or deleted into the base table of the materialized view by an external system, the materialized view is fully refreshed.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="view-the-refresh-history-for-a-materialized-view">
+<span id="view-the-refresh-history-for-a-mv"></span><span id="refresh-history"></span><h2>View the refresh history for a materialized view<a class="headerlink" href="#view-the-refresh-history-for-a-materialized-view" title="Permalink to this headline"> </a></h2>
+<p>To view the status of <code class="docutils literal notranslate"><span class="pre">REFRESH</span></code> operations on a materialized view, including current and past refreshes, query the Delta Live Tables event log:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span>
+<span class="w">  </span><span class="o">*</span>
+<span class="k">FROM</span>
+<span class="w">  </span><span class="n">event_log</span><span class="p">(</span><span class="k">TABLE</span><span class="p">(</span><span class="o">&lt;</span><span class="n">fully</span><span class="o">-</span><span class="n">qualified</span><span class="o">-</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">))</span>
+<span class="k">WHERE</span>
+<span class="w">  </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;update_progress&quot;</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span>
+<span class="w">  </span><span class="k">timestamp</span><span class="w"> </span><span class="k">desc</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;fully-qualified-table-name&gt;</span></code> with the fully qualified name of the materialized view, including the catalog and schema.</p>
+<p>See <a class="reference internal" href="../../delta-live-tables/observability.html#event-log"><span class="std std-ref">What is the Delta Live Tables event log?</span></a>.</p>
+</div>
+<div class="section" id="determining-if-an-incremental-or-full-refresh-is-used">
+<span id="determine-refresh-type"></span><h2>Determining if an incremental or full refresh is used<a class="headerlink" href="#determining-if-an-incremental-or-full-refresh-is-used" title="Permalink to this headline"> </a></h2>
+<p>To optimize the performance of materialized view refreshes, Databricks uses a cost model to select the technique used for the refresh. The following table describes these techniques:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 15%" />
+<col style="width: 58%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Technique</p></th>
+<th class="head"><p>Incremental refresh?</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">FULL_RECOMPUTE</span></code></p></td>
+<td><p> No</p></td>
+<td><p> The materialized view was fully recomputed</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">NO_OP</span></code></p></td>
+<td><p> Not applicable</p></td>
+<td><p> The materialized view was not updated because no changes to the base table were detected.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">ROW_BASED</span></code> or <code class="docutils literal notranslate"><span class="pre">PARTITION_OVERWRITE</span></code></p></td>
+<td><p> Yes</p></td>
+<td><p> The materialized view was incrementally refreshed using the specified technique.</p></td>
+</tr>
+</tbody>
+</table>
+<p>To determine the technique used, query the Delta Live Tables event log where the <code class="docutils literal notranslate"><span class="pre">event_type</span></code> is <code class="docutils literal notranslate"><span class="pre">planning_information</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span>
+<span class="w">  </span><span class="k">timestamp</span><span class="p">,</span>
+<span class="w">  </span><span class="n">message</span>
+<span class="k">FROM</span>
+<span class="w">  </span><span class="n">event_log</span><span class="p">(</span><span class="k">TABLE</span><span class="p">(</span><span class="o">&lt;</span><span class="n">fully</span><span class="o">-</span><span class="n">qualified</span><span class="o">-</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">))</span>
+<span class="k">WHERE</span>
+<span class="w">  </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;planning_information&#39;</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span>
+<span class="w">  </span><span class="k">timestamp</span><span class="w"> </span><span class="k">desc</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;fully-qualified-table-name&gt;</span></code> with the fully qualified name of the materialized view, including the catalog and schema.</p>
+<p>See <a class="reference internal" href="../../delta-live-tables/observability.html#event-log"><span class="std std-ref">What is the Delta Live Tables event log?</span></a>.</p>
+</div>
+<div class="section" id="limitations">
+<span id="mv-limitations"></span><h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>There are restrictions on how MVs can be managed and where they can be queried:</p>
+<ul>
+<li><p>Databricks SQL materialized views can only be created and refreshed in pro SQL warehouses and serverless SQL warehouses.</p></li>
+<li><p>Databricks SQL materialized views can only be queried from Databricks SQL warehouses, Delta Live Tables, and shared clusters running Databricks Runtime 11.3 or greater. You cannot query materialized views from Single User access mode clusters.</p></li>
+</ul>
+</li>
+<li><p>The base tables for the materialized view must be registered in Unity Catalog as managed or external tables.</p></li>
+<li><p>The owner of the Databricks SQL materialized view cannot be changed.</p></li>
+<li><p>Materialized views do not support identity columns or surrogate keys.</p></li>
+<li><p>You cannot run ad hoc <code class="docutils literal notranslate"><span class="pre">OPTIMIZE</span></code> or <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> commands against materialized views.</p></li>
+<li><p>If a materialized view uses a sum aggregate over a <code class="docutils literal notranslate"><span class="pre">NULL</span></code>-able column and only <code class="docutils literal notranslate"><span class="pre">NULL</span></code> values remain in that column, the materialized views resultant aggregate value is zero instead of <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p></li>
+<li><p>Although column references do not require aliases, non-column reference expressions require an alias. For example, the following statement is not allowed: <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">col1,</span> <span class="pre">SUM(col2)</span> <span class="pre">FROM</span> <span class="pre">t</span> <span class="pre">GROUP</span> <span class="pre">BY</span> <span class="pre">col1</span></code>. Instead, use the following statement: <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">col1,</span> <span class="pre">SUM(col2)</span> <span class="pre">AS</span> <span class="pre">sum_col2</span> <span class="pre">FROM</span> <span class="pre">t</span> <span class="pre">GROUP</span> <span class="pre">BY</span> <span class="pre">col1</span></code>.</p></li>
+<li><p>You cannot use <a class="reference internal" href="../../data-governance/unity-catalog/row-and-column-filters.html"><span class="doc">row filters or column masks</span></a> with Databricks SQL materialized views.</p></li>
+<li><p>The underlying files supporting materialized views might include data from upstream tables (including possible personally identifiable information) that do not appear in the materialized view definition. This data is automatically added to the underlying storage to support incremental refreshing of materialized views. Because the underlying files of a materialized view might risk exposing data from upstream tables not part of the materialized view schema, Databricks recommends not sharing the underlying storage with untrusted downstream consumers. For example, suppose the definition of a materialized view includes a <code class="docutils literal notranslate"><span class="pre">COUNT(DISTINCT</span> <span class="pre">field_a)</span></code> clause. Even though the materialized view definition only includes the aggregate <code class="docutils literal notranslate"><span class="pre">COUNT</span> <span class="pre">DISTINCT</span></code> clause, the underlying files will contain a list of the actual values of <code class="docutils literal notranslate"><span class="pre">field_a</span></code>.</p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

@@ -1,0 +1,510 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="This article covers best practices supporting principles of cost optimization on the data lakehouse on Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Best practices for cost optimization">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Best practices for cost optimization &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/lakehouse-architecture/cost-optimization/best-practices.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/lakehouse-architecture/cost-optimization/best-practices.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/lakehouse-architecture/cost-optimization/best-practices.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/lakehouse-architecture/cost-optimization/best-practices.html" class="notranslate">English</option>
+    <option value="../../../ja/lakehouse-architecture/cost-optimization/best-practices.html" class="notranslate">日本語</option>
+    <option value="../../../pt/lakehouse-architecture/cost-optimization/best-practices.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Best practices for cost optimization</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="best-practices-for-cost-optimization">
+<h1>Best practices for cost optimization<a class="headerlink" href="#best-practices-for-cost-optimization" title="Permalink to this headline"> </a></h1>
+<p>This article covers best practices supporting principles of <strong>cost optimization</strong>, organized by principle.</p>
+<div class="section" id="1-choose-the-correct-resources">
+<h2>1. Choose the correct resources<a class="headerlink" href="#1-choose-the-correct-resources" title="Permalink to this headline"> </a></h2>
+<div class="section" id="use-delta-lake">
+<span id="use-delta"></span><h3>Use Delta Lake<a class="headerlink" href="#use-delta-lake" title="Permalink to this headline"> </a></h3>
+<p>Delta Lake comes with many performance improvements that can significantly speed up a workload (compared to using Parquet, ORC, and JSON). See <a class="reference internal" href="../../optimizations/index.html"><span class="doc">Optimization recommendations on Databricks</span></a>. If the workload also runs on a job cluster, this directly leads to a shorter runtime of the cluster and lower costs.</p>
+</div>
+<div class="section" id="use-job-clusters">
+<span id="use-automated-clusters"></span><h3>Use job clusters<a class="headerlink" href="#use-job-clusters" title="Permalink to this headline"> </a></h3>
+<p>A job is a way to run non-interactive code in a Databricks cluster. For example, you can run an extract, transform, and load (ETL) workload interactively or on a schedule. Of course, you can also run jobs interactively in the notebook UI. However, on job clusters, the non-interactive workloads will cost significantly less than on all-purpose clusters. See the <a class="reference external" href="https://www.databricks.com/product/aws-pricing">pricing overview</a> to compare “Jobs Compute” and “All-Purpose Compute”.</p>
+<p>An additional advantage is that every job or workflow runs on a new cluster, isolating workloads from one another.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Multitask workflows can reuse compute resources for all tasks, so that the cluster startup time only appears once per workflow. See <a class="reference internal" href="../../workflows/jobs/use-compute.html"><span class="doc">Use Databricks compute with your jobs</span></a>.</p>
+</div>
+</div>
+<div class="section" id="use-sql-warehouse-for-sql-workloads">
+<span id="use-automated-clusters"></span><h3>Use SQL warehouse for SQL workloads<a class="headerlink" href="#use-sql-warehouse-for-sql-workloads" title="Permalink to this headline"> </a></h3>
+<p>For interactive SQL workloads, a <a class="reference internal" href="../../compute/sql-warehouse.html#warehouse-types"><span class="std std-ref">Databricks SQL warehouse</span></a> is the most cost-efficient engine. See the <a class="reference external" href="https://www.databricks.com/product/aws-pricing">pricing overview</a>.</p>
+</div>
+<div class="section" id="use-up-to-date-runtimes-for-your-workloads">
+<h3>Use up-to-date runtimes for your workloads<a class="headerlink" href="#use-up-to-date-runtimes-for-your-workloads" title="Permalink to this headline"> </a></h3>
+<p>The Databricks platform provides different runtimes that are optimized for data engineering tasks (<a class="reference internal" href="../../release-notes/runtime/index.html"><span class="doc">Databricks Runtime</span></a>) or for Machine Learning (<a class="reference internal" href="../../machine-learning/index.html"><span class="doc">Databricks Runtime for Machine Learning</span></a>). The runtimes are built to provide the best selection of libraries for the tasks and ensures that all provided libraries are up-to-date and work together optimally. Databricks Runtime is released on a regular cadence and offers performance improvements between major releases. These improvements in performance often lead to cost savings due to more efficient usage of cluster resources.</p>
+</div>
+<div class="section" id="only-use-gpus-for-the-right-workloads">
+<h3>Only use GPUs for the right workloads<a class="headerlink" href="#only-use-gpus-for-the-right-workloads" title="Permalink to this headline"> </a></h3>
+<p>Virtual machines with GPUs can dramatically speed up computational processes for deep learning, but have a significantly higher price than CPU-only machines. Use GPU instances only for workloads that have GPU-accelerated libraries.</p>
+<p>Most workloads do not use GPU-accelerated libraries do not benefit from GPU-enabled instances. Workspace admins can restrict GPU machines and clusters to prevent unnecessary use. See the blog post <a class="reference external" href="https://www.databricks.com/blog/2021/12/15/are-gpus-really-expensive-benchmarking-gpus-for-inference-on-the-databricks-clusters.html">“Are GPUs Really Expensive? Benchmarking GPUs for Inference on Databricks Clusters”</a>.</p>
+</div>
+<div class="section" id="balance-between-on-demand-and-capacity-excess-instances">
+<h3>Balance between on-demand and capacity excess instances<a class="headerlink" href="#balance-between-on-demand-and-capacity-excess-instances" title="Permalink to this headline"> </a></h3>
+<p><a class="reference internal" href="../../compute/cluster-config-best-practices.html#instance-types-aws"><span class="std std-ref">Spot instances</span></a> use cloud virtual machine excess resources that are available at a cheaper price. To save cost, Databricks supports creating clusters using spot instances. It is recommended to always have the first instance (Spark driver) as an on-demand virtual machine. Spot instances are a great selection for workloads when it is acceptable to take longer because one or more spot instances have been evicted by the cloud provider.</p>
+</div>
+</div>
+<div class="section" id="2-dynamically-allocate-and-de-allocate-resources">
+<h2>2. Dynamically allocate and de-allocate resources<a class="headerlink" href="#2-dynamically-allocate-and-de-allocate-resources" title="Permalink to this headline"> </a></h2>
+<div class="section" id="leverage-auto-scaling-compute">
+<h3>Leverage auto-scaling compute<a class="headerlink" href="#leverage-auto-scaling-compute" title="Permalink to this headline"> </a></h3>
+<p>Autoscaling allows your workloads to use the right amount of compute required to complete your jobs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Compute auto-scaling has limitations scaling down cluster size for Structured Streaming workloads. Databricks recommends using Delta Live Tables with Enhanced Autoscaling for streaming workloads. See <a class="reference internal" href="../../delta-live-tables/auto-scaling.html"><span class="doc">What is Enhanced Autoscaling?</span></a>.</p>
+</div>
+<p>See <a class="reference internal" href="../reliability/best-practices.html#3-design-for-autoscaling"><span class="std std-ref">Reliabilty - Design for auto scaling</span></a>:</p>
+<ul class="simple">
+<li><p>Enable autoscaling for batch workloads.</p></li>
+<li><p>Enable autoscaling for SQL warehouse.</p></li>
+<li><p>Use Delta Live Tables Enhanced Autoscaling.</p></li>
+</ul>
+</div>
+<div class="section" id="use-auto-termination">
+<h3>Use auto termination<a class="headerlink" href="#use-auto-termination" title="Permalink to this headline"> </a></h3>
+<p>Databricks provides a number of features to help control costs by reducing idle resources and controlling when compute resources can be deployed.</p>
+<ul class="simple">
+<li><p>Configure auto termination for all interactive clusters. After a specified idle time, the cluster shuts down. See <a class="reference internal" href="../../compute/cluster-config-best-practices.html#automatic-termination"><span class="std std-ref">Automatic termination</span></a>.</p></li>
+<li><p>For use cases where clusters are only needed during business hours, the clusters can be configured with auto termination, and a scheduled process can restart the cluster (and potentially prewarm data if required) in the morning before users are back at their desktops. See <a class="reference internal" href="../../sql/language-manual/delta-cache.html"><span class="doc">CACHE SELECT</span></a>.</p></li>
+<li><p>If a starting time that is significantly shorter than a full cluster start would be acceptable, consider using cluster pools. See <a class="reference internal" href="../../compute/pool-best-practices.html"><span class="doc">Best practices: pools</span></a>. Databricks pools reduce cluster start and auto-scaling times by maintaining a set of idle, ready-to-use instances. When a cluster is attached to a pool, cluster nodes are created using the pool’s idle instances. If the pool has no idle instances, the pool expands by allocating a new instance from the instance provider in order to accommodate the cluster’s request. When a cluster releases an instance, it returns to the pool and is free for another cluster to use. Only clusters attached to a pool can use that pool’s idle instances.</p></li>
+</ul>
+<p>Databricks does not charge DBUs while instances are idle in the pool, resulting in cost savings. Instance provider billing does apply.</p>
+</div>
+<div class="section" id="use-cluster-policies-to-control-costs">
+<h3>Use cluster policies to control costs<a class="headerlink" href="#use-cluster-policies-to-control-costs" title="Permalink to this headline"> </a></h3>
+<p>Cluster policies can enforce many cost specific restrictions for clusters. See <a class="reference internal" href="../operational-excellence/best-practices.html#use-cluster-policies"><span class="std std-ref">Operational Excellence - Use cluster policies</span></a>. For example:</p>
+<ul class="simple">
+<li><p>Enable <a class="reference internal" href="../reliability/best-practices.html#3-design-for-autoscaling"><span class="std std-ref">cluster autoscaling</span></a> with a set minimum number of worker nodes.</p></li>
+<li><p>Enable <a class="reference internal" href="#use-auto-termination"><span class="std std-ref">cluster auto termination</span></a> with a reasonable value (for example, 1 hour) to avoid paying for idle times.</p></li>
+<li><p>Ensure that only cost-efficient VM instances can be selected. Follow the best practices for cluster configuration (see <a class="reference internal" href="../../compute/cluster-config-best-practices.html"><span class="doc">Best practices: Cluster configuration</span></a>).</p></li>
+<li><p>Apply a <a class="reference internal" href="#balance-between-on-demand-and-capacity-excess-instances"><span class="std std-ref">spot instance strategy</span></a>.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="3-monitor-and-control-cost">
+<h2>3. Monitor and control cost<a class="headerlink" href="#3-monitor-and-control-cost" title="Permalink to this headline"> </a></h2>
+<div class="section" id="monitor-costs">
+<h3>Monitor costs<a class="headerlink" href="#monitor-costs" title="Permalink to this headline"> </a></h3>
+<p>The <a class="reference external" href="https://accounts.cloud.databricks.com/login">account console</a> allows <a class="reference internal" href="../../administration-guide/account-settings/usage.html"><span class="doc">viewing the billable usage</span></a>. As a Databricks account owner or account admin, you can also use the account console to <a class="reference internal" href="../../administration-guide/account-settings/usage.html#usage-downloads"><span class="std std-ref">download billable usage logs</span></a>. To access this data programmatically, you can also use the <a class="reference external" href="https://docs.databricks.com/api/account/billableusage/download">Account API</a> to download the logs. Alternatively, you can configure <a class="reference internal" href="../../administration-guide/account-settings/billable-usage-delivery.html"><span class="doc">daily delivery of billable usage logs</span></a> in CSV file format to an AWS S3 storage bucket.</p>
+<p>As a best practice, the full costs (including VMs, storage, and network infrastructure) should be monitored. This can be achieved by cloud provider cost management tools or by adding third party tools.</p>
+</div>
+<div class="section" id="evaluate-photon-for-your-workloads">
+<h3>Evaluate Photon for your workloads<a class="headerlink" href="#evaluate-photon-for-your-workloads" title="Permalink to this headline"> </a></h3>
+<p><a class="reference internal" href="../../compute/photon.html"><span class="doc">Photon</span></a> provides extremely fast query performance at low cost – from data ingestion, ETL, streaming, data science and interactive queries – directly on your data lake. Photon is compatible with Apache Spark APIs, so getting started is as easy as turning it on – no code changes and no lock-in.
+Compared to Apache Spark, Photon provides an additional 2x speedup as measured by the TPC-DS 1TB benchmark. Customers have observed 3x–8x speedups on average, based on their workloads, compared to the latest DBR versions.</p>
+<p>From a cost perspective, Photon workloads use about 2x–3x more DBUs per hour than Spark workloads. Given the observed speedup, this could lead to significant cost savings, and jobs that run regularly should be evaluated whether they are not only faster but also cheaper with Photon.</p>
+</div>
+<div class="section" id="use-serverless-for-your-workloads">
+<h3>Use serverless for your workloads<a class="headerlink" href="#use-serverless-for-your-workloads" title="Permalink to this headline"> </a></h3>
+<p>BI workloads typically use data in bursts and generate multiple concurrent queries. For example, someone using a BI tool might update a dashboard, write a query, or simply analyze query results without interacting further with the platform. This example demonstrates two requirements:</p>
+<ul class="simple">
+<li><p>Terminate clusters during idle periods to save costs.</p></li>
+<li><p>Have compute resources available quickly (for both start-up and scale-up) to satisfy user queries when they request new or updated data with the BI tool.</p></li>
+</ul>
+<p>Non-serverless Databricks SQL warehouses have a startup time of minutes, so many users tend to accept the higher cost and do not terminate them during idle periods. On the other hand, serverless SQL warehouses start and scale up in seconds, so both immediate availability and termination during idle times can be achieved. This results in a great user experience and overall cost savings.</p>
+<p>Additionally, serverless SQL warehouses scale down earlier than non-serverless warehouses, resulting lower costs.</p>
+</div>
+</div>
+<div class="section" id="4-analyze-and-attribute-expenditure">
+<h2>4. Analyze and attribute expenditure<a class="headerlink" href="#4-analyze-and-attribute-expenditure" title="Permalink to this headline"> </a></h2>
+<div class="section" id="tag-clusters-for-cost-attribution">
+<h3>Tag clusters for cost attribution<a class="headerlink" href="#tag-clusters-for-cost-attribution" title="Permalink to this headline"> </a></h3>
+<p>To monitor cost and accurately attribute Databricks usage to your organization’s business units and teams (for example, for chargebacks), you can tag clusters and pools. These tags propagate to detailed DBU usage reports and to cloud provider VMs and blob storage instances for cost analysis.</p>
+<p>Ensure that cost control and attribution are already in mind when setting up workspaces and clusters for teams and use cases. This streamlines tagging and improves the accuracy of cost attributions.</p>
+<p>For the overall costs, DBU virtual machine, disk, and any associated network costs must be considered. For serverless SQL warehouses this is simpler since the DBU costs already include virtual machine and disk costs.</p>
+<p>See <a class="reference internal" href="../../administration-guide/account-settings/usage-detail-tags.html"><span class="doc">Monitor usage using cluster, pool, and workspace tags</span></a>.</p>
+</div>
+<div class="section" id="share-cost-reports-regularly">
+<h3>Share cost reports regularly<a class="headerlink" href="#share-cost-reports-regularly" title="Permalink to this headline"> </a></h3>
+<p>Create cost reports every month to track growth and anomalies in consumption. Share these reports broken down to use cases or teams with the teams that own the respective workloads by using <a class="reference internal" href="#tag-clusters-for-cost-attribution"><span class="std std-ref">cluster tagging</span></a>. This avoids surprises and allows teams to proactively adapt their workloads if costs get too high.</p>
+</div>
+</div>
+<div class="section" id="5-optimize-workloads-aim-for-scalable-costs">
+<h2>5. Optimize workloads, aim for scalable costs<a class="headerlink" href="#5-optimize-workloads-aim-for-scalable-costs" title="Permalink to this headline"> </a></h2>
+<div class="section" id="balance-always-on-and-triggered-streaming">
+<h3>Balance always-on and triggered streaming<a class="headerlink" href="#balance-always-on-and-triggered-streaming" title="Permalink to this headline"> </a></h3>
+<p>Traditionally, when people think about streaming, terms such as “real-time,” “24/7,” or “always on” come to mind. If data ingestion happens in “real-time”, the underlying cluster needs to run 24/7, producing consumption costs every single hour of the day.</p>
+<p>However, not every use case that is based on a continuous stream of events needs these events to be added to the analytics data set immediately. If the business requirement for the use case only needs fresh data every few hours or every day, then this requirement can be achieved with only several runs a day, leading to a significant cost reduction for the workload. Databricks recommends using Structured Streaming with trigger <code class="docutils literal notranslate"><span class="pre">AvailableNow</span></code> for incremental workloads that do not have low latency requirements. See <a class="reference internal" href="../../structured-streaming/triggers.html#configuring-incremental-batch-processing"><span class="std std-ref">Configuring incremental batch processing</span></a>.</p>
+</div>
+<div class="section" id="choose-the-most-efficient-cluster-size">
+<h3>Choose the most efficient cluster size<a class="headerlink" href="#choose-the-most-efficient-cluster-size" title="Permalink to this headline"> </a></h3>
+<p>Databricks runs one executor per worker node. Therefore, the terms executor and worker are used interchangeably in the context of the Databricks architecture. People often think of cluster size in terms of the number of workers, but there are other important factors to consider:</p>
+<ul class="simple">
+<li><p>Total executor cores (compute): The total number of cores across all executors. This determines the maximum parallelism of a cluster.</p></li>
+<li><p>Total executor memory: The total amount of RAM across all executors. This determines how much data can be stored in memory before spilling it to disk.</p></li>
+<li><p>Executor local storage: The type and amount of local disk storage. Local disk is primarily used in the case of spills during shuffles and caching.</p></li>
+</ul>
+<p>Additional considerations include worker instance type and size, which also influence the preceding factors. When sizing your cluster, consider the following:</p>
+<ul class="simple">
+<li><p>How much data will your workload consume?</p></li>
+<li><p>What’s the computational complexity of your workload?</p></li>
+<li><p>Where are you reading data from?</p></li>
+<li><p>How is the data partitioned in external storage?</p></li>
+<li><p>How much parallelism do you need?</p></li>
+</ul>
+<p>Details and examples can be found under <a class="reference internal" href="../../compute/cluster-config-best-practices.html#cluster-sizing-considerations"><span class="std std-ref">Cluster sizing considerations</span></a>.</p>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

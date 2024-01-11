@@ -1,0 +1,650 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn the syntax of the read_kafka function of the SQL language in Databricks SQL and Databricks Runtime." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="read_kafka table-valued function">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>read_kafka table-valued function &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/sql/language-manual/functions/read_kafka.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/sql/language-manual/functions/read_kafka.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/sql/language-manual/functions/read_kafka.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../../en/sql/language-manual/functions/read_kafka.html" class="notranslate">English</option>
+    <option value="../../../../ja/sql/language-manual/functions/read_kafka.html" class="notranslate">日本語</option>
+    <option value="../../../../pt/sql/language-manual/functions/read_kafka.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li><code class="docutils literal notranslate"><span class="pre">read_kafka</span></code> table-valued function</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="read_kafka-table-valued-function">
+<h1><code class="docutils literal notranslate"><span class="pre">read_kafka</span></code> table-valued function<a class="headerlink" href="#read_kafka-table-valued-function" title="Permalink to this headline"> </a></h1>
+<p><strong>Applies to:</strong> <img alt="check marked yes" src="../../../_images/check.png" /> Databricks SQL <img alt="check marked yes" src="../../../_images/check.png" /> Databricks Runtime 13.1 and above</p>
+<p>Reads data from an Apache Kafka cluster and returns the data in tabular form.</p>
+<p>Can read data from one or more Kafka topics. It supports both batch queries and streaming ingestion.</p>
+<div class="section" id="syntax">
+<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline"> </a></h2>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">read_kafka</span><span class="p">([</span><span class="n">option_key</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">option_value</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="p">...])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="arguments">
+<h2>Arguments<a class="headerlink" href="#arguments" title="Permalink to this headline"> </a></h2>
+<p>This function requires <a class="reference internal" href="../sql-ref-function-invocation.html#named-parameter-invocation"><span class="std std-ref">named parameter invocation</span></a>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">option_key</span></code>: The name of the option to configure. You must use backticks (`) for options that contain dots (<code class="docutils literal notranslate"><span class="pre">.</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">option_value</span></code>: A constant expression to set the option. Accepts literals and scalar functions.</p></li>
+</ul>
+</div>
+<div class="section" id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Permalink to this headline"> </a></h2>
+<p>Records read from an Apache Kafka cluster with the following schema:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">key</span> <span class="pre">BINARY</span></code>: The key of the Kafka record.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">BINARY</span> <span class="pre">NOT</span> <span class="pre">NULL</span></code>: The value of the Kafka record.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">topic</span> <span class="pre">STRING</span> <span class="pre">NOT</span> <span class="pre">NULL</span></code>: The name of the Kafka topic the record is read from.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">partition</span> <span class="pre">INT</span> <span class="pre">NOT</span> <span class="pre">NULL</span></code>: The ID of the Kafka partition the record is read from.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">offset</span> <span class="pre">BIGINT</span> <span class="pre">NOT</span> <span class="pre">NULL</span></code>: The offset number of the record in the Kafka <code class="docutils literal notranslate"><span class="pre">TopicPartition</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timestamp</span> <span class="pre">TIMESTAMP</span> <span class="pre">NOT</span> <span class="pre">NULL</span></code>: A timestamp value for the record. The <code class="docutils literal notranslate"><span class="pre">timestampType</span></code> column defines what this timestamp corresponds to.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timestampType</span> <span class="pre">INTEGER</span> <span class="pre">NOT</span> <span class="pre">NULL</span></code>: The type of the timestamp specified in the <code class="docutils literal notranslate"><span class="pre">timestamp</span></code> column.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">headers</span> <span class="pre">ARRAY&lt;STRUCT&lt;key:</span> <span class="pre">STRING,</span> <span class="pre">VALUE:</span> <span class="pre">BINARY&gt;&gt;</span></code>: Header values provided as part of the record (if enabled).</p></li>
+</ul>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"> </a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>-- A batch query to read from a topic.
+&gt; SELECT value::string as value
+  FROM read_kafka(
+    bootstrapServers =&gt; &#39;kafka_server:9092&#39;,
+    subscribe =&gt; &#39;events&#39;
+  ) LIMIT 10;
+
+
+-- A more advanced query with security credentials for Kafka.
+&gt; SELECT * FROM read_kafka(
+    bootstrapServers =&gt; &#39;kafka_server:9092&#39;,
+    subscribe =&gt; &#39;events&#39;,
+    startingOffsets =&gt; &#39;earliest&#39;,
+    `kafka.security.protocol` =&gt; &#39;SASL_SSL&#39;,
+    `kafka.sasl.mechanism` =&gt; &#39;PLAIN&#39;,
+    `kafka.sasl.jaas.config` =&gt;  &#39;kafkashaded.org.apache.kafka.common.security.plain.PlainLoginModule required username=&quot;{USER_NAME}&quot; password=&quot;{PASSWORD}&quot;;&#39;,
+  );
+
+-- Streaming ingestion from Kafka with JSON parsing.
+&gt; CREATE OR REFRESH STREAMING TABLE catalog.schema.raw_events AS
+  SELECT
+    value::string:events,                 -- extract the field `events`
+    to_timestamp(value::string:ts) as ts  -- extract the field `ts` and cast to timestamp
+  FROM STREAM read_kafka(
+    bootstrapServers =&gt; &#39;kafka_server:9092&#39;,
+    subscribe =&gt; &#39;events&#39;
+  );
+</pre></div>
+</div>
+</div>
+<div class="section" id="options-1">
+<span id="options"></span><h2>Options<a class="headerlink" href="#options-1" title="Permalink to this headline"> </a></h2>
+<p>You can find a detailed list of options in the <a class="reference external" href="https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html">Apache Spark documentation</a>.</p>
+<div class="section" id="required-options">
+<h3>Required options<a class="headerlink" href="#required-options" title="Permalink to this headline"> </a></h3>
+<p>Provide the option below for connecting to your Kafka cluster.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">bootstrapServers</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>A comma-separated list of host/port pairs pointing to Kafka cluster.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Provide only one of the options below to configure which Kafka topics to pull data from.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">assign</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>A JSON string that contains the specific topic-partitions to consume from.
+For example, for <code class="docutils literal notranslate"><span class="pre">'{&quot;topicA&quot;:[0,1],&quot;topicB&quot;:[2,4]}'</span></code>, topicA’s 0’th and 1st
+partitions will be consumed from.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">subscribe</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>A comma-separated list of Kafka topics to read from.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">subscribePattern</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>A regular expression matching topics to subscribe to.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="miscellaneous-options">
+<h3>Miscellaneous options<a class="headerlink" href="#miscellaneous-options" title="Permalink to this headline"> </a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">read_kafka</span></code> can be used in batch queries and in streaming queries. The options below specify which type of query they apply to.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">endingOffsets</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code>
+Query Type: batch only</p>
+<p>The offsets to read until for a batch query, either <code class="docutils literal notranslate"><span class="pre">&quot;latest&quot;</span></code> to specify the
+latest records, or a JSON string specifying an ending offset for each
+TopicPartition. In the JSON, <code class="docutils literal notranslate"><span class="pre">-1</span></code> as an offset can be used to refer to
+latest. <code class="docutils literal notranslate"><span class="pre">-2</span></code> (earliest) as an offset is not allowed.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">&quot;latest&quot;</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">endingOffsetsByTimestamp</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code>
+Query Type: batch only</p>
+<p>A JSON string specifying an ending timestamp to read until for each
+TopicPartition. The timestamps need to be provided as a long value of the
+timestamp in milliseconds since <code class="docutils literal notranslate"><span class="pre">1970-01-01</span> <span class="pre">00:00:00</span> <span class="pre">UTC</span></code>, for example
+<code class="docutils literal notranslate"><span class="pre">1686444353000</span></code>. See <a class="reference internal" href="#timestamp-note"><span class="std std-ref">note below</span></a> on details of behavior
+with timestamps.
+<code class="docutils literal notranslate"><span class="pre">endingOffsetsByTimestamp</span></code> takes precedence over <code class="docutils literal notranslate"><span class="pre">endingOffsets</span></code>.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">endingTimestamp</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code>
+Query Type: batch only</p>
+<p>A string value of the timestamp in milliseconds since
+<code class="docutils literal notranslate"><span class="pre">1970-01-01</span> <span class="pre">00:00:00</span> <span class="pre">UTC</span></code>, for example <code class="docutils literal notranslate"><span class="pre">&quot;1686444353000&quot;</span></code>.
+If Kafka doesn’t return the matched offset, the offset will be set to latest.
+See <a class="reference internal" href="#timestamp-note"><span class="std std-ref">note below</span></a> on details of behavior with timestamps.
+Note: <code class="docutils literal notranslate"><span class="pre">endingTimestamp</span></code> takes precedence over <code class="docutils literal notranslate"><span class="pre">endingOffsetsByTimestamp</span></code> and
+<code class="docutils literal notranslate"><span class="pre">endingOffsets</span></code>.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">includeHeaders</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code>
+Query Type: streaming and batch</p>
+<p>Whether to include the Kafka headers in the row.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">kafka.&lt;consumer_option&gt;</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code>
+Query Type: streaming and batch</p>
+<p>Any Kafka consumer specific options can be passed in with the <code class="docutils literal notranslate"><span class="pre">kafka.</span></code>
+prefix. These options need to be surrounded by backticks when provided,
+otherwise you will get a parser error. You can find the options in the Kafka
+<a class="reference external" href="https://kafka.apache.org/documentation/#consumerconfigs">documentation</a>.</p>
+<p>Note: You should not set the following options with this function:
+<code class="docutils literal notranslate"><span class="pre">key.deserializer</span></code>, <code class="docutils literal notranslate"><span class="pre">value.deserializer</span></code>, <code class="docutils literal notranslate"><span class="pre">bootstrap.servers</span></code>, <code class="docutils literal notranslate"><span class="pre">group.id</span></code></p>
+<p>Default value: None</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">maxOffsetsPerTrigger</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Long</span></code>
+Query Type: streaming only</p>
+<p>Rate limit on the maximum number of offsets or rows processed per trigger
+interval. The specified total number of offsets will be proportionally split
+across TopicPartitions.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">startingOffsets</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code>
+Query Type: streaming and batch</p>
+<p>The start point when a query is started, either <code class="docutils literal notranslate"><span class="pre">&quot;earliest&quot;</span></code> which is from
+the earliest offsets, <code class="docutils literal notranslate"><span class="pre">&quot;latest&quot;</span></code> which is just from the latest offsets, or a
+JSON string specifying a starting offset for each TopicPartition. In the
+JSON, <code class="docutils literal notranslate"><span class="pre">-2</span></code> as an offset can be used to refer to earliest, <code class="docutils literal notranslate"><span class="pre">-1</span></code> to latest.</p>
+<p>Note: For batch queries, latest (either implicitly or by using -1 in JSON) is
+not allowed. For streaming queries, this only applies when a new query is
+started. Restarted streaming queries will continue from the offsets defined
+in the query checkpoint. Newly discovered partitions during a query will
+start at earliest.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">&quot;latest&quot;</span></code> for streaming, <code class="docutils literal notranslate"><span class="pre">&quot;earliest&quot;</span></code> for batch</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">startingOffsetsByTimestamp</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code>
+Query Type: streaming and batch</p>
+<p>A JSON string specifying a starting timestamp for each TopicPartition.
+The timestamps need to be provided as a long value of the timestamp in
+milliseconds since <code class="docutils literal notranslate"><span class="pre">1970-01-01</span> <span class="pre">00:00:00</span> <span class="pre">UTC</span></code>, for example <code class="docutils literal notranslate"><span class="pre">1686444353000</span></code>.
+See <a class="reference internal" href="#timestamp-note"><span class="std std-ref">note below</span></a> on details of behavior with timestamps.
+If Kafka doesn’t return the matched offset, the behavior will follow to the
+value of the option <code class="docutils literal notranslate"><span class="pre">startingOffsetsByTimestampStrategy</span></code>.
+<code class="docutils literal notranslate"><span class="pre">startingOffsetsByTimestamp</span></code> takes precedence over <code class="docutils literal notranslate"><span class="pre">startingOffsets</span></code>.</p>
+<p>Note: For streaming queries, this only applies when a new query is started.
+Restarted streaming queries will continue from the offsets defined
+in the query checkpoint. Newly discovered partitions during a query will
+start at earliest.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">startingOffsetsByTimestampStrategy</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code>
+Query Type: streaming and batch</p>
+<p>This strategy is used when the specified starting offset by timestamp (either
+global or per partition) doesn’t match with the offset Kafka returned. The
+available strategies are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;error&quot;</span></code>: fail the query</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;latest&quot;</span></code>: assigns the latest offset for these partitions so that Spark
+can read newer records from these partitions in later micro-batches.</p></li>
+</ul>
+</li>
+</ul>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">&quot;error&quot;</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">startingTimestamp</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code>
+Query Type: streaming and batch</p>
+<p>A string value of the timestamp in milliseconds since
+<code class="docutils literal notranslate"><span class="pre">1970-01-01</span> <span class="pre">00:00:00</span> <span class="pre">UTC</span></code>, for example <code class="docutils literal notranslate"><span class="pre">&quot;1686444353000&quot;</span></code>.
+See <a class="reference internal" href="#timestamp-note"><span class="std std-ref">note below</span></a> on details of behavior with timestamps.
+If Kafka doesn’t return the matched offset, the behavior will follow to the
+value of the option <code class="docutils literal notranslate"><span class="pre">startingOffsetsByTimestampStrategy</span></code>.
+<code class="docutils literal notranslate"><span class="pre">startingTimestamp</span></code> takes precedence over <code class="docutils literal notranslate"><span class="pre">startingOffsetsByTimestamp</span></code>
+and <code class="docutils literal notranslate"><span class="pre">startingOffsets</span></code>.</p>
+<p>Note: For streaming queries, this only applies when a new query is started.
+Restarted streaming queries will continue from the offsets defined
+in the query checkpoint. Newly discovered partitions during a query will
+start earliest.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note" id="timestamp-note">
+<p class="admonition-title">Note</p>
+<p>The returned offset for each partition is the earliest offset whose timestamp is greater than or equal to the given timestamp in the corresponding partition. The behavior varies across options if Kafka doesn’t return the matched offset - check the description of each option.</p>
+<p>Spark simply passes the timestamp information to <code class="docutils literal notranslate"><span class="pre">KafkaConsumer.offsetsForTimes</span></code>, and doesn’t interpret or reason about the value. For more details on <code class="docutils literal notranslate"><span class="pre">KafkaConsumer.offsetsForTimes</span></code>, please refer to the <a class="reference external" href="http://kafka.apache.org/0101/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html#offsetsForTimes(java.util.Map">documentation</a>). Also, the meaning of timestamp here can vary according to the Kafka configuration (<code class="docutils literal notranslate"><span class="pre">log.message.timestamp.type</span></code>). For details, see <a class="reference external" href="https://kafka.apache.org/documentation/">Apache Kafka documentation</a>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="related-articles">
+<h2>Related articles<a class="headerlink" href="#related-articles" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../sql-ref-syntax-ddl-create-streaming-table.html"><span class="doc">CREATE STREAMING TABLE</span></a></p></li>
+<li><p><a class="reference internal" href="read_files.html"><span class="doc">read_files table-valued function</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

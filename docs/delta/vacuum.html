@@ -1,0 +1,475 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Remove stale data files to reduce storage costs with Delta Lake vacuum command." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Remove unused data files with vacuum">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Remove unused data files with vacuum &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/delta/vacuum.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/delta/vacuum.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/delta/vacuum.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/delta/vacuum.html" class="notranslate">English</option>
+    <option value="../../ja/delta/vacuum.html" class="notranslate">日本語</option>
+    <option value="../../pt/delta/vacuum.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Remove unused data files with vacuum</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="remove-unused-data-files-with-vacuum">
+<h1>Remove unused data files with vacuum<a class="headerlink" href="#remove-unused-data-files-with-vacuum" title="Permalink to this headline"> </a></h1>
+<p>You can remove data files no longer referenced by a Delta table that are older than the retention threshold by running the <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> command on the table. Running <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> regularly is important for cost and compliance because of the following considerations:</p>
+<ul class="simple">
+<li><p>Deleting unused data files reduces cloud storage costs.</p></li>
+<li><p>Data files removed by <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> might contain records that have been modified or deleted. Permanently removing these files from cloud storage ensures these records are no longer accessible.</p></li>
+</ul>
+<p>The default retention threshold for data files after running <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> is 7 days. To change this behavior, see <a class="reference internal" href="history.html#data-retention"><span class="std std-ref">Configure data retention for time travel queries</span></a>.</p>
+<p>Databricks recommends using predictive optimization to automatically run <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> for Delta tables. See <a class="reference internal" href="../optimizations/predictive-optimization.html"><span class="doc">Predictive optimization for Delta Lake</span></a>.</p>
+<p>Some Delta Lake features use metadata files to mark data as deleted rather than rewriting data files. You can use <code class="docutils literal notranslate"><span class="pre">REORG</span> <span class="pre">TABLE</span> <span class="pre">...</span> <span class="pre">APPLY</span> <span class="pre">(PURGE)</span></code> to commit these deletions and rewrite data files. See <a class="reference internal" href="#purge"><span class="std std-ref">Purge metadata-only deletes to force data rewrite</span></a>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<ul class="simple">
+<li><p>In Databricks Runtime 13.2 and above, <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> semantics for shallow clones with Unity Catalog managed tables differ from other Delta tables. See <a class="reference internal" href="clone-unity-catalog.html#vacuum"><span class="std std-ref">Vacuum and Unity Catalog shallow clones</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> removes all files from directories not managed by Delta Lake, ignoring directories beginning with <code class="docutils literal notranslate"><span class="pre">_</span></code> or <code class="docutils literal notranslate"><span class="pre">.</span></code>. If you are storing additional metadata like Structured Streaming checkpoints within a Delta table directory, use a directory name such as <code class="docutils literal notranslate"><span class="pre">_checkpoints</span></code>.</p>
+<ul>
+<li><p>Data for change data feed is managed by Delta Lake in the <code class="docutils literal notranslate"><span class="pre">_change_data</span></code> directory and removed with <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code>. See <a class="reference internal" href="delta-change-data-feed.html"><span class="doc">Use Delta Lake change data feed on Databricks</span></a>.</p></li>
+<li><p>Liquid clustering uses the <code class="docutils literal notranslate"><span class="pre">_delta_index</span></code> directory managed by Delta Lake. <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> cleans up files in this directory. See <a class="reference internal" href="clustering.html"><span class="doc">Use liquid clustering for Delta tables</span></a>.</p></li>
+</ul>
+</li>
+<li><p>The ability to query table versions older than the retention period is lost after running <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code>.</p></li>
+<li><p>Log files are deleted automatically and asynchronously after checkpoint operations and are not governed by <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code>. While the default retention period of log files is 30 days, running <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> on a table removes the data files necessary for time travel.</p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When disk caching is enabled, a cluster might contain data from Parquet files that have been deleted with <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code>. Therefore, it may be possible to query the data of previous table versions whose files have been deleted. Restarting the cluster will remove the cached data. See <a class="reference internal" href="../optimizations/disk-cache.html#configure-cache"><span class="std std-ref">Configure the disk cache</span></a>.</p>
+</div>
+<div class="section" id="example-syntax-for-vacuum">
+<h2>Example syntax for vacuum<a class="headerlink" href="#example-syntax-for-vacuum" title="Permalink to this headline"> </a></h2>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">VACUUM</span><span class="w"> </span><span class="n">eventsTable</span><span class="w">   </span><span class="c1">-- vacuum files not required by versions older than the default retention period</span>
+
+<span class="k">VACUUM</span><span class="w"> </span><span class="s1">&#39;/data/events&#39;</span><span class="w"> </span><span class="c1">-- vacuum files in path-based table</span>
+
+<span class="k">VACUUM</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`/</span><span class="k">data</span><span class="o">/</span><span class="n">events</span><span class="o">/`</span>
+
+<span class="k">VACUUM</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`/</span><span class="k">data</span><span class="o">/</span><span class="n">events</span><span class="o">/`</span><span class="w"> </span><span class="n">RETAIN</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="n">HOURS</span><span class="w">  </span><span class="c1">-- vacuum files not required by versions more than 100 hours old</span>
+
+<span class="k">VACUUM</span><span class="w"> </span><span class="n">eventsTable</span><span class="w"> </span><span class="n">DRY</span><span class="w"> </span><span class="n">RUN</span><span class="w">    </span><span class="c1">-- do dry run to get the list of files to be deleted</span>
+</pre></div>
+</div>
+<p>For Spark SQL syntax details, see <a class="reference internal" href="../sql/language-manual/delta-vacuum.html"><span class="doc">VACUUM</span></a>.</p>
+<p>See the <a class="reference internal" href="index.html#delta-api"><span class="std std-ref">Delta Lake API documentation</span></a> for Scala, Java, and Python syntax details.</p>
+</div>
+<div class="section" id="purge-metadata-only-deletes-to-force-data-rewrite">
+<span id="purge"></span><h2>Purge metadata-only deletes to force data rewrite<a class="headerlink" href="#purge-metadata-only-deletes-to-force-data-rewrite" title="Permalink to this headline"> </a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">REORG</span> <span class="pre">TABLE</span></code> command provides the <code class="docutils literal notranslate"><span class="pre">APPLY</span> <span class="pre">(PURGE)</span></code> syntax to rewrite data to apply soft-deletes. Soft-deletes do not rewrite data or delete data files, but rather use metadata files to indicate that some data values have changed. See <a class="reference internal" href="../sql/language-manual/delta-reorg-table.html"><span class="doc">REORG TABLE</span></a>.</p>
+<p>Operations that create soft-deletes in Delta Lake include the following:</p>
+<ul class="simple">
+<li><p>Dropping columns with <a class="reference internal" href="delta-column-mapping.html"><span class="doc">column mapping</span></a> enabled.</p></li>
+<li><p>Deleting rows with <a class="reference internal" href="deletion-vectors.html"><span class="doc">deletion vectors</span></a> enabled.</p></li>
+<li><p>Any data modifications on Photon-enabled clusters when deletion vectors are enabled.</p></li>
+</ul>
+<p>With soft-deletes enabled, old data may remain physically present in the table’s current files even after the data has been deleted or updated. To remove this data physically from the table, complete the following steps:</p>
+<ol class="arabic simple">
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">REORG</span> <span class="pre">TABLE</span> <span class="pre">...</span> <span class="pre">APPLY</span> <span class="pre">(PURGE)</span></code>. After doing this, the old data is no longer present in the table’s <em>current</em> files, but it is still present in the older files that are used for time travel.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> to delete these older files.</p></li>
+</ol>
+<p><code class="docutils literal notranslate"><span class="pre">REORG</span> <span class="pre">TABLE</span></code> creates a new version of the table as the operation completes. All table versions in the history prior to this transaction refer to older data files. Conceptually, this is similar to the <code class="docutils literal notranslate"><span class="pre">OPTIMIZE</span></code> command, where data files are rewritten even though data in the current table version stays consistent.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Data files are only deleted when the files have <em>expired</em> according to the <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> retention period. This means that the <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> must be done with a delay after the <code class="docutils literal notranslate"><span class="pre">REORG</span></code> so that the older files have expired. The retention period of <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> can be reduced to shorten the required waiting time, at the cost of reducing the maximum history that is retained.</p>
+</div>
+</div>
+<div class="section" id="what-size-cluster-does-vacuum-need">
+<span id="cluster-size"></span><h2>What size cluster does vacuum need?<a class="headerlink" href="#what-size-cluster-does-vacuum-need" title="Permalink to this headline"> </a></h2>
+<p>To select the correct cluster size for <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code>, it helps to understand that the operation occurs in two phases:</p>
+<ol class="arabic simple">
+<li><p>The job begins by using all available executor nodes to list files in the source directory in parallel. This list is compared to all files currently referenced in the Delta transaction log to identify files to be deleted. The driver sits idle during this time.</p></li>
+<li><p>The driver then issues deletion commands for each file to be deleted. File deletion is a driver-only operation, meaning that all operations occur in a single node while the worker nodes sit idle.</p></li>
+</ol>
+<p>To optimize cost and performance, Databricks recommends the following, especially for long-running vacuum jobs:</p>
+<ul class="simple">
+<li><p>Run vacuum on a cluster with auto-scaling set for 1-4 workers, where each worker has 8 cores.</p></li>
+<li><p>Select a driver with between 8 and 32 cores. Increase the size of the driver to avoid out-of-memory (OOM) errors.</p></li>
+</ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> operations are regularly deleting more than 10 thousand files or taking over 30 minutes of processing time, you might want to increase either the size of the driver or the number of workers.</p>
+<p>If you find that the slowdown occurs while identifying files to be removed, add more worker nodes. If the slowdown occurs while delete commands are running, try increasing the size of the driver.</p>
+</div>
+<div class="section" id="how-frequently-should-you-run-vacuum">
+<h2>How frequently should you run vacuum?<a class="headerlink" href="#how-frequently-should-you-run-vacuum" title="Permalink to this headline"> </a></h2>
+<p>Databricks recommends regularly running <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> on all tables to reduce excess cloud data storage costs. The default retention threshold for vacuum is 7 days. Setting a higher threshold gives you access to a greater history for your table, but increases the number of data files stored and, as a result, incurs greater storage costs from your cloud provider.</p>
+</div>
+<div class="section" id="why-cant-you-vacuum-a-delta-table-with-a-low-retention-threshold">
+<h2>Why can’t you vacuum a Delta table with a low retention threshold?<a class="headerlink" href="#why-cant-you-vacuum-a-delta-table-with-a-low-retention-threshold" title="Permalink to this headline"> </a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is recommended that you set a retention interval to be at least 7 days,
+because old snapshots and uncommitted files can still be in use by concurrent
+readers or writers to the table.  If <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> cleans up active files,
+concurrent readers can fail or, worse, tables can be corrupted when <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code>
+deletes files that have not yet been committed. You must choose an interval
+that is longer than the longest running concurrent transaction and the longest
+period that any stream can lag behind the most recent update to the table.</p>
+</div>
+<p>Delta Lake has a safety check to prevent you from running a dangerous <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> command. If you are certain that there are no operations being performed on this table that take longer than the retention interval you plan to specify, you can turn off this safety check by setting the Spark configuration property <code class="docutils literal notranslate"><span class="pre">spark.databricks.delta.retentionDurationCheck.enabled</span></code> to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</div>
+<div class="section" id="audit-information">
+<h2>Audit information<a class="headerlink" href="#audit-information" title="Permalink to this headline"> </a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> commits to the Delta transaction log contain audit information. You can query the audit events using <code class="docutils literal notranslate"><span class="pre">DESCRIBE</span> <span class="pre">HISTORY</span></code>.</p>
+<p>To capture audit information, enable <code class="docutils literal notranslate"><span class="pre">spark.databricks.delta.vacuum.logging.enabled</span></code>. Audit logging is not enabled by default for AWS S3 tables due to the limited consistency guarantees provided by S3 with regard to multi-workspace writes. If you enable it on S3, make sure there are no workflows that involve multi-workspace writes. Failing to do so may result in data loss.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

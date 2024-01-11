@@ -1,0 +1,641 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn about managing machine learning training runs using MLflow. It also includes guidance on how to manage and compare runs across experiments." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Manage training code with MLflow runs">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Manage training code with MLflow runs &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/mlflow/runs.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/mlflow/runs.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/mlflow/runs.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/mlflow/runs.html" class="notranslate">English</option>
+    <option value="../../ja/mlflow/runs.html" class="notranslate">日本語</option>
+    <option value="../../pt/mlflow/runs.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Manage training code with MLflow runs</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="manage-training-code-with-mlflow-runs">
+<h1>Manage training code with MLflow runs<a class="headerlink" href="#manage-training-code-with-mlflow-runs" title="Permalink to this headline"> </a></h1>
+<p>This article describes MLflow runs for managing machine learning training. It also includes guidance on how to manage and compare runs across <a class="reference internal" href="experiments.html"><span class="doc">experiments</span></a>.</p>
+<p>An MLflow <em>run</em> corresponds to a single execution of model code. Each run records the following information:</p>
+<ul class="simple">
+<li><p><strong>Source</strong>: Name of the notebook that launched the run or the project name and entry point for the run.</p>
+<ul>
+<li><p><strong>Version</strong>: Notebook revision if run from a notebook in a Databricks workspace, or Git commit hash if run from <a class="reference internal" href="../repos/index.html"><span class="doc">Databricks Repos</span></a> or from an <a class="reference internal" href="projects.html"><span class="doc">MLflow Project</span></a>.</p></li>
+<li><p><strong>Start &amp; end time</strong>: Start and end time of the run.</p></li>
+<li><p><strong>Parameters</strong>: Model parameters saved as key-value pairs. Both keys and values are strings.</p></li>
+<li><p><strong>Metrics</strong>: Model evaluation metrics saved as key-value pairs. The value is numeric. Each metric can be updated throughout the course of the run (for example, to track how your model’s loss function is converging), and MLflow records and lets you visualize the metric’s history.</p></li>
+<li><p><strong>Tags</strong>: Run metadata saved as key-value pairs. You can update tags during and after a run completes. Both keys and values are strings.</p></li>
+<li><p><strong>Artifacts</strong>: Output files in any format. For example, you can record images, models (for example, a pickled scikit-learn model), and data files (for example, a Parquet file) as an artifact.</p></li>
+</ul>
+</li>
+</ul>
+<p>All MLflow runs are logged to the <a class="reference internal" href="tracking.html#where-mlflow-runs-are-logged"><span class="std std-ref">active experiment</span></a>. If you have not explicitly set an experiment as the active experiment, runs are logged to the notebook experiment.</p>
+<div class="section" id="view-runs">
+<h2>View runs<a class="headerlink" href="#view-runs" title="Permalink to this headline"> </a></h2>
+<p>You can access a run either from its parent experiment page or directly from the notebook that created the run.</p>
+<p>From the <a class="reference internal" href="experiments.html#experiment-page"><span class="std std-ref">experiment page</span></a>, in the runs table, click the start time of a run.</p>
+<p>From the notebook, click <img alt="External Link" src="../_images/external-link.png" /> next to the date and time of the run in the Experiment Runs sidebar.</p>
+<p>The <a class="reference internal" href="#run-details-screen"><span class="std std-ref">run screen</span></a> shows the parameters used for the run, the metrics resulting from the run, and any tags or notes. To display <strong>Notes</strong>, <strong>Parameters</strong>, <strong>Metrics</strong>, or <strong>Tags</strong> for this run, click <img alt="right-pointing arrow" src="../_images/right-arrow.png" /> to the left of the label.</p>
+<p>You also access artifacts saved from a run in this screen.</p>
+<div class="figure align-default" id="run-details-screen">
+<img alt="View run" src="../_images/quick-start-nb-run.png" />
+</div>
+<div class="section" id="code-snippets-for-prediction">
+<h3>Code snippets for prediction<a class="headerlink" href="#code-snippets-for-prediction" title="Permalink to this headline"> </a></h3>
+<p>If you log a model from a run, the model appears in the Artifacts section of this page.  To display code snippets illustrating how to load and use the model to make predictions on Spark and pandas DataFrames, click the model name.</p>
+<div class="figure align-default">
+<img alt="predict code snippets" src="../_images/model-snippets.png" />
+</div>
+</div>
+<div class="section" id="view-the-notebook-or-git-project-used-for-a-run">
+<h3>View the notebook or Git project used for a run<a class="headerlink" href="#view-the-notebook-or-git-project-used-for-a-run" title="Permalink to this headline"> </a></h3>
+<p>To view the <a class="reference internal" href="../notebooks/notebooks-code.html#version-control"><span class="std std-ref">version of the notebook</span></a> that created a run:</p>
+<ul class="simple">
+<li><p>On the experiment page, click the link in the <strong>Source</strong> column.</p></li>
+<li><p>On the run page, click the link next to <strong>Source</strong>.</p></li>
+<li><p>From the notebook, in the Experiment Runs sidebar, click the <strong>Notebook</strong> icon <img alt="Notebook Version Icon" src="../_images/notebook-version.png" /> in the box for that Experiment Run.</p></li>
+</ul>
+<p>The version of the notebook associated with the run appears in the main window with a highlight bar showing the date and time of the run.</p>
+<p>If the run was launched remotely from a <a class="reference internal" href="projects.html#remote-run"><span class="std std-ref">Git project</span></a>, click the link in the <strong>Git Commit</strong> field to open the specific version of the project used in the run. The link in the <strong>Source</strong> field opens the main branch of the Git project used in the run.</p>
+</div>
+</div>
+<div class="section" id="add-a-tag-to-a-run">
+<h2>Add a tag to a run<a class="headerlink" href="#add-a-tag-to-a-run" title="Permalink to this headline"> </a></h2>
+<p>Tags are key-value pairs that you can create and use later to <a class="reference internal" href="#filter-runs"><span class="std std-ref">search for runs</span></a>.</p>
+<ol class="arabic">
+<li><p>From the <a class="reference internal" href="#run-details-screen"><span class="std std-ref">run page</span></a>, click <img alt="Tag icon" src="../_images/tags1.png" /> if it is not already open. The tags table appears.</p>
+<div class="figure align-default">
+<img alt="tag table" src="../_images/tags-open.png" />
+</div>
+</li>
+<li><p>Click in the <strong>Name</strong> and <strong>Value</strong> fields and type the key and value for your tag.</p></li>
+<li><p>Click <strong>Add</strong>.</p>
+<div class="figure align-default">
+<img alt="add tag" src="../_images/tag-add.png" />
+</div>
+</li>
+</ol>
+<div class="section" id="edit-or-delete-a-tag-for-a-run">
+<h3>Edit or delete a tag for a run<a class="headerlink" href="#edit-or-delete-a-tag-for-a-run" title="Permalink to this headline"> </a></h3>
+<p>To edit or delete an existing tag, use the icons in the <strong>Actions</strong> column.</p>
+<div class="figure align-default">
+<img alt="tag actions" src="../_images/tag-edit-or-delete.png" />
+</div>
+</div>
+</div>
+<div class="section" id="reproduce-the-software-environment-of-a-run">
+<h2>Reproduce the software environment of a run<a class="headerlink" href="#reproduce-the-software-environment-of-a-run" title="Permalink to this headline"> </a></h2>
+<p>You can reproduce the exact software environment for the run by clicking <strong>Reproduce Run</strong>. The following dialog appears:</p>
+<div class="figure align-default">
+<img alt="Reproduce run dialog" src="../_images/reproduce-run.png" />
+</div>
+<p>With the default settings, when you click <strong>Confirm</strong>:</p>
+<ul class="simple">
+<li><p>The notebook is cloned to the location shown in the dialog.</p></li>
+<li><p>If the original cluster still exists, the cloned notebook is attached to the original cluster and the cluster is started.</p></li>
+<li><p>If the original cluster no longer exists, a new cluster with the same configuration, including any installed libraries, is created and started. The notebook is attached to the new cluster.</p></li>
+</ul>
+<p>You can select a different location for the cloned notebook and inspect the cluster configuration and installed libraries:</p>
+<ul class="simple">
+<li><p>To select a different folder to save the cloned notebook, click <strong>Edit Folder</strong>.</p></li>
+<li><p>To see the cluster spec, click <strong>View Spec</strong>. To clone only the notebook and not the cluster, uncheck this option.</p></li>
+<li><p>To see the libraries installed on the original cluster, click <strong>View Libraries</strong>. If you don’t care about installing the same libraries as on the original cluster, uncheck this option.</p></li>
+</ul>
+</div>
+<div class="section" id="manage-runs">
+<h2>Manage runs<a class="headerlink" href="#manage-runs" title="Permalink to this headline"> </a></h2>
+<div class="section" id="rename-run">
+<h3>Rename run<a class="headerlink" href="#rename-run" title="Permalink to this headline"> </a></h3>
+<p>To rename a run, click <img alt="three button icon" src="../_images/three-button-icon.png" /> at the upper right corner of the run page and select <strong>Rename</strong>.</p>
+</div>
+<div class="section" id="filter-runs">
+<h3>Filter runs<a class="headerlink" href="#filter-runs" title="Permalink to this headline"> </a></h3>
+<p>You can search for runs based on parameter or metric values. You can also search for runs by tag.</p>
+<ul>
+<li><p>To search for runs that match an expression containing parameter and metric values, enter a query in the search field and click <strong>Search</strong>. Some query syntax examples are:</p>
+<p><code class="docutils literal notranslate"><span class="pre">metrics.r2</span> <span class="pre">&gt;</span> <span class="pre">0.3</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">params.elasticNetParam</span> <span class="pre">=</span> <span class="pre">0.5</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">params.elasticNetParam</span> <span class="pre">=</span> <span class="pre">0.5</span> <span class="pre">AND</span> <span class="pre">metrics.avg_areaUnderROC</span> <span class="pre">&gt;</span> <span class="pre">0.3</span></code></p>
+</li>
+<li><p>To search for runs by tag, enter tags in the format: <code class="docutils literal notranslate"><span class="pre">tags.&lt;key&gt;=&quot;&lt;value&gt;&quot;</span></code>. String values must be enclosed in quotes as shown.</p>
+<p><code class="docutils literal notranslate"><span class="pre">tags.estimator_name=&quot;RandomForestRegressor&quot;</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">tags.color=&quot;blue&quot;</span> <span class="pre">AND</span> <span class="pre">tags.size=5</span></code></p>
+<p>Both keys and values can contain spaces. If the key includes spaces, you must enclose it in backticks as shown.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>tags.`my custom tag` = &quot;my value&quot;
+</pre></div>
+</div>
+</li>
+</ul>
+<p>You can also filter runs based on their state (Active or Deleted) and based on whether a model version is associated with the run. To do this, make your selections from the <strong>State</strong> and <strong>Time Created</strong> drop-down menus respectively.</p>
+<div class="figure align-default">
+<img alt="Filter runs" src="../_images/quick-start-nb-experiment.png" />
+</div>
+</div>
+<div class="section" id="download-runs">
+<h3>Download runs<a class="headerlink" href="#download-runs" title="Permalink to this headline"> </a></h3>
+<ol class="arabic">
+<li><p>Select one or more runs.</p></li>
+<li><p>Click <strong>Download CSV</strong>. A CSV file containing the following fields downloads:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Run ID,Name,Source Type,Source Name,User,Status,&lt;parameter1&gt;,&lt;parameter2&gt;,...,&lt;metric1&gt;,&lt;metric2&gt;,...
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="delete-runs">
+<h3>Delete runs<a class="headerlink" href="#delete-runs" title="Permalink to this headline"> </a></h3>
+<p>You can delete runs using the Databricks Machine Learning UI with the following steps:</p>
+<ol class="arabic simple">
+<li><p>In the experiment, select one or more runs by clicking in the checkbox to the left of the run.</p></li>
+<li><p>Click <strong>Delete</strong>.</p></li>
+<li><p>If the run is a parent run, decide whether you also want to delete descendant runs. This option is selected by default.</p></li>
+<li><p>Click <strong>Delete</strong> to confirm. Deleted runs are saved for 30 days. To display deleted runs, select <strong>Deleted</strong> in the State field.</p></li>
+</ol>
+<div class="section" id="bulk-delete-runs-based-on-the-creation-time">
+<h4>Bulk delete runs based on the creation time<a class="headerlink" href="#bulk-delete-runs-based-on-the-creation-time" title="Permalink to this headline"> </a></h4>
+<p>You can also use Python to bulk delete runs of an experiment that were created prior to or at a UNIX timestamp. The following client code can be run in a Databricks Notebook.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="k">def</span> <span class="nf">delete_runs</span><span class="p">(</span><span class="n">experiment_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                <span class="n">max_timestamp_millis</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                <span class="n">max_runs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Bulk delete runs in an experiment that were created prior to or at the specified timestamp.</span>
+<span class="sd">    Deletes at most max_runs per request.</span>
+
+<span class="sd">    :param experiment_id: The ID of the experiment containing the runs to delete.</span>
+<span class="sd">    :param max_timestamp_millis: The maximum creation timestamp in milliseconds</span>
+<span class="sd">                                  since the UNIX epoch for deleting runs. Only runs</span>
+<span class="sd">                                  created prior to or at this timestamp are deleted.</span>
+<span class="sd">    :param max_runs: Optional. A positive integer indicating the maximum number</span>
+<span class="sd">                      of runs to delete. The maximum allowed value for max_runs</span>
+<span class="sd">                      is 10000. If not specified, max_runs defaults to 10000.</span>
+<span class="sd">    :return: The number of runs deleted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">mlflow.utils.databricks_utils</span> <span class="kn">import</span> <span class="n">get_databricks_host_creds</span>
+    <span class="kn">from</span> <span class="nn">mlflow.utils.request_utils</span> <span class="kn">import</span> <span class="n">augmented_raise_for_status</span>
+    <span class="kn">from</span> <span class="nn">mlflow.utils.rest_utils</span> <span class="kn">import</span> <span class="n">http_request</span>
+
+    <span class="n">json_body</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;experiment_id&quot;</span><span class="p">:</span> <span class="n">experiment_id</span><span class="p">,</span> <span class="s2">&quot;max_timestamp_millis&quot;</span><span class="p">:</span> <span class="n">max_timestamp_millis</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">max_runs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">json_body</span><span class="p">[</span><span class="s2">&quot;max_runs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_runs</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">http_request</span><span class="p">(</span>
+        <span class="n">host_creds</span><span class="o">=</span><span class="n">get_databricks_host_creds</span><span class="p">(),</span>
+        <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;/api/2.0/mlflow/databricks/runs/delete-runs&quot;</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+        <span class="n">json</span><span class="o">=</span><span class="n">json_body</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">augmented_raise_for_status</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;runs_deleted&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>See the Databricks Experiments API documentation for parameters and return value specifications for <a class="reference external" href="https://docs.databricks.com/api/workspace/experiments/deleteruns">deleting runs based on creation time</a>.</p>
+</div>
+</div>
+<div class="section" id="restore-runs">
+<h3>Restore runs<a class="headerlink" href="#restore-runs" title="Permalink to this headline"> </a></h3>
+<p>You can restore previously deleted runs using the Databricks Machine Learning UI.</p>
+<ol class="arabic simple">
+<li><p>On the <strong>Experiment</strong> page, select <strong>Deleted</strong> in the <strong>State</strong> field to display deleted runs.</p></li>
+<li><p>Select one or more runs by clicking in the checkbox to the left of the run.</p></li>
+<li><p>Click <strong>Restore</strong>.</p></li>
+<li><p>Click <strong>Restore</strong> to confirm. To display the restored runs, select <strong>Active</strong> in the State field.</p></li>
+</ol>
+<div class="section" id="bulk-restore-runs-based-on-the-deletion-time">
+<h4>Bulk restore runs based on the deletion time<a class="headerlink" href="#bulk-restore-runs-based-on-the-deletion-time" title="Permalink to this headline"> </a></h4>
+<p>You can also use Python to bulk restore runs of an experiment that were deleted prior to or at a UNIX timestamp. The following client code can be run in a Databricks Notebook.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="k">def</span> <span class="nf">restore_runs</span><span class="p">(</span><span class="n">experiment_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">min_timestamp_millis</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">max_runs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Bulk restore runs in an experiment that were deleted no earlier than the specified timestamp.</span>
+<span class="sd">    Restores at most max_runs per request.</span>
+
+<span class="sd">    :param experiment_id: The ID of the experiment containing the runs to restore.</span>
+<span class="sd">    :param min_timestamp_millis: The minimum deletion timestamp in milliseconds</span>
+<span class="sd">                                  since the UNIX epoch for restoring runs. Only runs</span>
+<span class="sd">                                  deleted no earlier than this timestamp are restored.</span>
+<span class="sd">    :param max_runs: Optional. A positive integer indicating the maximum number</span>
+<span class="sd">                      of runs to restore. The maximum allowed value for max_runs</span>
+<span class="sd">                      is 10000. If not specified, max_runs defaults to 10000.</span>
+<span class="sd">    :return: The number of runs restored.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">mlflow.utils.databricks_utils</span> <span class="kn">import</span> <span class="n">get_databricks_host_creds</span>
+    <span class="kn">from</span> <span class="nn">mlflow.utils.request_utils</span> <span class="kn">import</span> <span class="n">augmented_raise_for_status</span>
+    <span class="kn">from</span> <span class="nn">mlflow.utils.rest_utils</span> <span class="kn">import</span> <span class="n">http_request</span>
+    <span class="n">json_body</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;experiment_id&quot;</span><span class="p">:</span> <span class="n">experiment_id</span><span class="p">,</span> <span class="s2">&quot;min_timestamp_millis&quot;</span><span class="p">:</span> <span class="n">min_timestamp_millis</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">max_runs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">json_body</span><span class="p">[</span><span class="s2">&quot;max_runs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_runs</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">http_request</span><span class="p">(</span>
+        <span class="n">host_creds</span><span class="o">=</span><span class="n">get_databricks_host_creds</span><span class="p">(),</span>
+        <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;/api/2.0/mlflow/databricks/runs/restore-runs&quot;</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+        <span class="n">json</span><span class="o">=</span><span class="n">json_body</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">augmented_raise_for_status</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;runs_restored&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>See the Databricks Experiments API documentation for parameters and return value specifications for <a class="reference external" href="https://docs.databricks.com/api/workspace/experiments/restoreruns">restoring runs based on deletion time</a>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="compare-runs">
+<span id="compare-n-runs"></span><h2>Compare runs<a class="headerlink" href="#compare-runs" title="Permalink to this headline"> </a></h2>
+<p>You can compare runs from a single experiment or from multiple experiments. The <strong>Comparing Runs</strong> page presents information about the selected runs in graphic and tabular formats. You can also create visualizations of run results and tables of run information, run parameters, and metrics.</p>
+<p>To create a visualization:</p>
+<ol class="arabic">
+<li><p>Select the plot type (<strong>Parallel Coordinates Plot</strong>, <strong>Scatter Plot</strong>, or <strong>Contour Plot</strong>).</p>
+<ol class="arabic">
+<li><p>For a <strong>Parallel Coordinates Plot</strong>, select the parameters and metrics to plot. From here, you can identify relationships between the selected parameters and metrics, which helps you better define the hyperparameter tuning space for your models.</p>
+<div class="figure align-default">
+<img alt="compare runs page visualization" src="../_images/mlflow-run-comparison-viz.png" />
+</div>
+</li>
+<li><p>For a <strong>Scatter Plot</strong> or <strong>Contour Plot</strong>, select the parameter or metric to display on each axis.</p></li>
+</ol>
+</li>
+</ol>
+<p>The <strong>Parameters</strong> and <strong>Metrics</strong> tables display the run parameters and metrics from all selected runs. The columns in these tables are identified by the <strong>Run details</strong> table immediately above. For simplicity, you can hide parameters and metrics that are identical in all selected runs by toggling <img alt="Show diff only button" src="../_images/show-diff-only.png" />.</p>
+<p>  <img alt="compare runs page tables" src="../_images/mlflow-run-comparison-table.png" /></p>
+<div class="section" id="compare-runs-from-a-single-experiment">
+<h3>Compare runs from a single experiment<a class="headerlink" href="#compare-runs-from-a-single-experiment" title="Permalink to this headline"> </a></h3>
+<ol class="arabic simple">
+<li><p>On the <a class="reference internal" href="experiments.html"><span class="doc">experiment page</span></a>, select two or more runs by clicking in the checkbox to the left of the run, or select all runs by checking the box at the top of the column.</p></li>
+<li><p>Click <strong>Compare</strong>. The Comparing <code class="docutils literal notranslate"><span class="pre">&lt;N&gt;</span></code> Runs screen appears.</p></li>
+</ol>
+</div>
+<div class="section" id="compare-runs-from-multiple-experiments">
+<span id="compare-runs-from-multiple-expts"></span><h3>Compare runs from multiple experiments<a class="headerlink" href="#compare-runs-from-multiple-experiments" title="Permalink to this headline"> </a></h3>
+<ol class="arabic simple">
+<li><p>On the <a class="reference internal" href="experiments.html"><span class="doc">experiments page</span></a>, select the experiments you want to compare by clicking in the box at the left of the experiment name.</p></li>
+<li><p>Click <strong>Compare (n)</strong> (<strong>n</strong> is the number of experiments you selected). A screen appears showing all of the runs from the experiments you selected.</p></li>
+<li><p>Select two or more runs by clicking in the checkbox to the left of the run, or select all runs by checking the box at the top of the column.</p></li>
+<li><p>Click <strong>Compare</strong>. The Comparing <code class="docutils literal notranslate"><span class="pre">&lt;N&gt;</span></code> Runs screen appears.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="copy-runs-between-workspaces">
+<h2>Copy runs between workspaces<a class="headerlink" href="#copy-runs-between-workspaces" title="Permalink to this headline"> </a></h2>
+<p>To import or export MLflow runs to or from your Databricks workspace, you can use the community-driven open source project <a class="reference external" href="https://github.com/mlflow/mlflow-export-import#why-use-mlflow-export-import">MLflow Export-Import</a>.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

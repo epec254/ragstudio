@@ -1,0 +1,682 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use Unity Catalog to create, view, and analyze data lineage." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Capture and view data lineage with Unity Catalog">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Capture and view data lineage with Unity Catalog &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/data-governance/unity-catalog/data-lineage.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/data-governance/unity-catalog/data-lineage.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/data-governance/unity-catalog/data-lineage.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/data-governance/unity-catalog/data-lineage.html" class="notranslate">English</option>
+    <option value="../../../ja/data-governance/unity-catalog/data-lineage.html" class="notranslate">日本語</option>
+    <option value="../../../pt/data-governance/unity-catalog/data-lineage.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Capture and view data lineage with Unity Catalog</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="capture-and-view-data-lineage-with-unity-catalog">
+<span id="capture-and-view-data-lineage-with-uc"></span><h1>Capture and view data lineage with Unity Catalog<a class="headerlink" href="#capture-and-view-data-lineage-with-unity-catalog" title="Permalink to this headline"> </a></h1>
+<p>You can use Unity Catalog to capture runtime data lineage across queries run on Databricks. Lineage is supported for all languages and is captured down to the column level. Lineage data includes notebooks, workflows, and dashboards related to the query. Lineage can be visualized in Catalog Explorer in near real-time and retrieved with the Databricks REST API.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can also view and query lineage data using the lineage system tables (Public Preview). For more information, see <a class="reference internal" href="../../administration-guide/system-tables/lineage.html"><span class="doc">Lineage system tables reference</span></a>.</p>
+</div>
+<p>Lineage is aggregated across all workspaces attached to a Unity Catalog metastore. This means that lineage captured in one workspace is visible in any other workspace sharing that metastore. Users must have the correct permissions to view the lineage data. Lineage data is retained for 90 days.</p>
+<p>This article describes visualizing lineage using Catalog Explorer and the REST API.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<p>The following are required to capture data lineage using Unity Catalog:</p>
+<ul class="simple">
+<li><p>The workspace must have <a class="reference internal" href="enable-workspaces.html"><span class="doc">Unity Catalog enabled</span></a>.</p></li>
+<li><p>Tables must be registered in a Unity Catalog metastore.</p></li>
+<li><p>Queries must use the Spark DataFrame (for example, Spark SQL functions that return a DataFrame) or Databricks SQL interfaces. For examples of Databricks SQL and PySpark queries, see <a class="reference internal" href="#lineage-examples"><span class="std std-ref">Examples</span></a>.</p></li>
+<li><p>To view the lineage of a table or view, users must have the <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> privilege on the table or view.</p></li>
+<li><p>To view lineage information for notebooks, workflows, or dashboards, users must have permissions on these objects as defined by the access control settings in the workspace. See <a class="reference internal" href="#permissions"><span class="std std-ref">Lineage permissions</span></a>.</p></li>
+<li><p>To view lineage for a <a class="reference internal" href="../../delta-live-tables/unity-catalog.html"><span class="doc">Unity Catalog-enabled pipeline</span></a>, you must have <code class="docutils literal notranslate"><span class="pre">CAN_VIEW</span></code> permissions on the pipeline.</p></li>
+</ul>
+<ul class="simple">
+<li><p>You might need to update your outbound firewall rules to allow for connectivity to the Amazon Kinesis endpoint in the Databricks control plane. Typically this applies if your Databricks workspace is deployed in your own VPC or you use AWS PrivateLink within your Databricks network environment. To get the Kinesis endpoint for your workspace region, see <a class="reference internal" href="../../resources/supported-regions.html#kinesis"><span class="std std-ref">Kinesis addresses</span></a>. See also <a class="reference internal" href="../../security/network/classic/customer-managed-vpc.html"><span class="doc">Configure a customer-managed VPC</span></a> and <a class="reference internal" href="../../security/network/classic/privatelink.html"><span class="doc">Enable AWS PrivateLink</span></a>.</p></li>
+</ul>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>Streaming between Delta tables is supported only in Databricks Runtime 11.3 LTS or above.</p></li>
+<li><p>Because lineage is computed on a 90-day rolling window, lineage collected more than 90 days ago is not displayed. For example, if a job or query reads data from table A and writes to table B, the link between table A and table B is displayed for only 90 days.</p></li>
+<li><p>Workflows that use the Jobs API <code class="docutils literal notranslate"><span class="pre">runs</span> <span class="pre">submit</span></code> request are unavailable when viewing lineage. Table and column level lineage is still captured when using the <code class="docutils literal notranslate"><span class="pre">runs</span> <span class="pre">submit</span></code> request, but the link to the run is not captured.</p></li>
+<li><p>Unity Catalog captures lineage to the column level as much as possible. However, there are some cases where column-level lineage cannot be captured.</p></li>
+<li><p>Data lineage doesn’t capture reads on tables with column masks. See <a class="reference internal" href="row-and-column-filters.html"><span class="doc">Filter sensitive table data using row filters and column masks</span></a>.</p></li>
+<li><p>If a table is renamed, lineage is not captured for the renamed table.</p></li>
+<li><p>If you use Spark SQL dataset checkpointing, lineage is not captured. See <a class="reference external" href="https://spark.apache.org/docs/3.1.1/api/python/reference/api/pyspark.sql.DataFrame.checkpoint.html#pyspark.sql.DataFrame.checkpoint">pyspark.sql.DataFrame.checkpoint</a> in the Apache Spark documentation.</p></li>
+</ul>
+</div>
+<div class="section" id="examples">
+<span id="lineage-examples"></span><h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"> </a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li><p>The following examples use the catalog name <code class="docutils literal notranslate"><span class="pre">lineage_data</span></code> and the schema name <code class="docutils literal notranslate"><span class="pre">lineagedemo</span></code>. To use a different catalog and schema, change the names used in the examples.</p></li>
+<li><p>To complete this example, you must have <code class="docutils literal notranslate"><span class="pre">CREATE</span></code> and <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> privileges on a schema. A metastore admin, catalog owner, or schema owner can grant these privileges. For example, to give all users in the group ‘data_engineers’ permission to create tables in the <code class="docutils literal notranslate"><span class="pre">lineagedemo</span></code> schema in the <code class="docutils literal notranslate"><span class="pre">lineage_data</span></code> catalog, a user with one of the above privileges or roles can run the following queries:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="n">lineage_data</span><span class="p">.</span><span class="n">lineagedemo</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="n">USE</span><span class="w"> </span><span class="k">SCHEMA</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="n">lineage_data</span><span class="p">.</span><span class="n">lineagedemo</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="o">`</span><span class="n">data_engineers</span><span class="o">`</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="capture-and-explore-lineage">
+<h3>Capture and explore lineage<a class="headerlink" href="#capture-and-explore-lineage" title="Permalink to this headline"> </a></h3>
+<p>To capture lineage data, use the following steps:</p>
+<ol class="arabic">
+<li><p>Go to your Databricks landing page, click <img alt="New Icon" src="../../_images/create-icon.png" /> <strong>New</strong> in the sidebar, and select <strong>Notebook</strong> from the menu.</p></li>
+<li><p>Enter a name for the notebook and select <strong>SQL</strong> in <strong>Default Language</strong>.</p></li>
+<li><p>In <strong>Cluster</strong>, select a cluster with access to Unity Catalog.</p></li>
+<li><p>Click <strong>Create</strong>.</p></li>
+<li><p>In the first notebook cell, enter the following queries:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span>
+<span class="w">  </span><span class="n">lineage_data</span><span class="p">.</span><span class="n">lineagedemo</span><span class="p">.</span><span class="n">menu</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">recipe_id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">app</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
+<span class="w">    </span><span class="n">main</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
+<span class="w">    </span><span class="n">dessert</span><span class="w"> </span><span class="n">string</span>
+<span class="w">  </span><span class="p">);</span>
+
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">lineage_data</span><span class="p">.</span><span class="n">lineagedemo</span><span class="p">.</span><span class="n">menu</span>
+<span class="w">    </span><span class="p">(</span><span class="n">recipe_id</span><span class="p">,</span><span class="w"> </span><span class="n">app</span><span class="p">,</span><span class="w"> </span><span class="n">main</span><span class="p">,</span><span class="w"> </span><span class="n">dessert</span><span class="p">)</span>
+<span class="k">VALUES</span>
+<span class="w">    </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="ss">&quot;Ceviche&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Tacos&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Flan&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="ss">&quot;Tomato Soup&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Souffle&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Creme Brulee&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="ss">&quot;Chips&quot;</span><span class="p">,</span><span class="ss">&quot;Grilled Cheese&quot;</span><span class="p">,</span><span class="ss">&quot;Cheesecake&quot;</span><span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span>
+<span class="w">  </span><span class="n">lineage_data</span><span class="p">.</span><span class="n">lineagedemo</span><span class="p">.</span><span class="n">dinner</span>
+<span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span>
+<span class="w">  </span><span class="n">recipe_id</span><span class="p">,</span><span class="w"> </span><span class="n">concat</span><span class="p">(</span><span class="n">app</span><span class="p">,</span><span class="ss">&quot; + &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">main</span><span class="p">,</span><span class="ss">&quot; + &quot;</span><span class="p">,</span><span class="n">dessert</span><span class="p">)</span>
+<span class="k">AS</span>
+<span class="w">  </span><span class="n">full_menu</span>
+<span class="k">FROM</span>
+<span class="w">  </span><span class="n">lineage_data</span><span class="p">.</span><span class="n">lineagedemo</span><span class="p">.</span><span class="n">menu</span>
+</pre></div>
+</div>
+</li>
+<li><p>To run the queries, click in the cell and press <strong>shift+enter</strong> or click <img alt="Run Menu" src="../../_images/run-menu.png" /> and select <strong>Run Cell</strong>.</p></li>
+</ol>
+<p>To use Catalog Explorer to view the lineage generated by these queries, use the following steps:</p>
+<ol class="arabic">
+<li><p>In the <strong>Search</strong> box in the top bar of the Databricks workspace, enter <code class="docutils literal notranslate"><span class="pre">lineage_data.lineagedemo.dinner</span></code> and click <strong>Search lineage_data.lineagedemo.dinner in Databricks</strong>.</p></li>
+<li><p>Under <strong>Tables</strong>, click the <code class="docutils literal notranslate"><span class="pre">dinner</span></code> table.</p></li>
+<li><p>Select the <strong>Lineage</strong> tab. The lineage panel appears and displays related tables (for this example it’s the <code class="docutils literal notranslate"><span class="pre">menu</span></code> table).</p></li>
+<li><p>To view an interactive graph of the data lineage, click <strong>See Lineage Graph</strong>. By default, one level is displayed in the graph. You can click on the <img alt="Plus Sign Icon" src="../../_images/plus-sign-icon.png" /> icon on a node to reveal more connections if they are available.</p></li>
+<li><p>Click on an arrow connecting nodes in the lineage graph to open the <strong>Lineage connection</strong> panel. The <strong>Lineage connection</strong> panel shows details about the connection, including source and target tables, notebooks, and workflows.</p>
+<div class="figure align-default">
+<img alt="Lineage graph" src="../../_images/uc-lineage-graph.png" />
+</div>
+</li>
+<li><p>To show the notebook associated with the <code class="docutils literal notranslate"><span class="pre">dinner</span></code> table, select the notebook in the <strong>Lineage connection</strong> panel or close the lineage graph and click <strong>Notebooks</strong>. To open the notebook in a new tab, click on the notebook name.</p></li>
+<li><p>To view the column-level lineage, click on a column in the graph to show links to related columns. For example, clicking on the ‘full_menu’ column shows the upstream columns the column was derived from:</p>
+<div class="figure align-default">
+<img alt="Full menu column lineage" src="../../_images/uc-lineage-column-lineage.png" />
+</div>
+</li>
+</ol>
+<p>To demonstrate creating and viewing lineage with a different language, for example, Python, use the following steps:</p>
+<ol class="arabic">
+<li><p>Open the notebook you created previously, create a new cell, and enter the following Python code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">python</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">rand</span><span class="p">,</span> <span class="nb">round</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="n">rand</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span><span class="s2">&quot;recipe_id&quot;</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;overwrite&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">&quot;lineage_data.lineagedemo.price&quot;</span><span class="p">)</span>
+
+<span class="n">dinner</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;lineage_data.lineagedemo.dinner&quot;</span><span class="p">)</span>
+<span class="n">price</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;lineage_data.lineagedemo.price&quot;</span><span class="p">)</span>
+
+<span class="n">dinner_price</span> <span class="o">=</span> <span class="n">dinner</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;recipe_id&quot;</span><span class="p">)</span>
+<span class="n">dinner_price</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;overwrite&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">&quot;lineage_data.lineagedemo.dinner_price&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Run the cell by clicking in the cell and pressing <strong>shift+enter</strong> or clicking <img alt="Run Menu" src="../../_images/run-menu.png" /> and selecting <strong>Run Cell</strong>.</p></li>
+<li><p>In the <strong>Search</strong> box in the top bar of the Databricks workspace, enter <code class="docutils literal notranslate"><span class="pre">lineage_data.lineagedemo.price</span></code> and click <strong>Search lineage_data.lineagedemo.price in Databricks</strong>.</p></li>
+<li><p>Under <strong>Tables</strong>, click the <code class="docutils literal notranslate"><span class="pre">price</span></code> table.</p></li>
+<li><p>Select the <strong>Lineage</strong> tab and click <strong>See Lineage Graph</strong>. Click on the <img alt="Plus Sign Icon" src="../../_images/plus-sign-icon.png" /> icons to explore the data lineage generated by the SQL and Python queries.</p>
+<div class="figure align-default">
+<img alt="Expanded lineage graph" src="../../_images/uc-expanded-lineage-graph.png" />
+</div>
+</li>
+<li><p>Click on an arrow connecting nodes in the lineage graph to open the <strong>Lineage connection</strong> panel. The <strong>Lineage connection</strong> panel shows details about the connection, including source and target tables, notebooks, and workflows.</p></li>
+</ol>
+</div>
+<div class="section" id="capture-and-view-workflow-lineage">
+<span id="capture-workflow-lineage"></span><h3>Capture and view workflow lineage<a class="headerlink" href="#capture-and-view-workflow-lineage" title="Permalink to this headline"> </a></h3>
+<p>Lineage is also captured for any workflow that reads or writes to Unity Catalog. To demonstrate viewing lineage for a Databricks workflow, use the following steps:</p>
+<ol class="arabic">
+<li><p>Click <img alt="New Icon" src="../../_images/create-icon.png" /> <strong>New</strong> in the sidebar and select <strong>Notebook</strong> from the menu.</p></li>
+<li><p>Enter a name for the notebook and select <strong>SQL</strong> in <strong>Default Language</strong>.</p></li>
+<li><p>Click <strong>Create</strong>.</p></li>
+<li><p>In the first notebook cell, enter the following query:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lineage_data</span><span class="p">.</span><span class="n">lineagedemo</span><span class="p">.</span><span class="n">menu</span>
+</pre></div>
+</div>
+</li>
+<li><p>Click <strong>Schedule</strong> in the top bar. In the schedule dialog, select <strong>Manual</strong>, select a cluster with access to Unity Catalog, and click <strong>Create</strong>.</p></li>
+<li><p>Click <strong>Run now</strong>.</p></li>
+<li><p>In the <strong>Search</strong> box in the top bar of the Databricks workspace, enter <code class="docutils literal notranslate"><span class="pre">lineage_data.lineagedemo.menu</span></code> and click <strong>Search lineage_data.lineagedemo.menu in Databricks</strong>.</p></li>
+<li><p>Under <strong>Tables View all tables</strong>, click the <code class="docutils literal notranslate"><span class="pre">menu</span></code> table.</p></li>
+<li><p>Select the <strong>Lineage</strong> tab, click <strong>Workflows</strong>, and select the <strong>Downstream</strong> tab. The job name appears under <strong>Job Name</strong> as a consumer of the <code class="docutils literal notranslate"><span class="pre">menu</span></code> table.</p></li>
+</ol>
+</div>
+<div class="section" id="capture-and-view-dashboard-lineage">
+<h3>Capture and view dashboard lineage<a class="headerlink" href="#capture-and-view-dashboard-lineage" title="Permalink to this headline"> </a></h3>
+<p>To demonstrate viewing lineage for a SQL dashboard, use the following steps:</p>
+<ol class="arabic simple">
+<li><p>Go to your Databricks landing page and open the Catalog Explorer by clicking <strong>Catalog</strong> in the sidebar.</p></li>
+<li><p>Click on the catalog name, click <strong>lineagedemo</strong>, and select the <code class="docutils literal notranslate"><span class="pre">menu</span></code> table. You can also use the <strong>Search tables</strong> text box in the top bar to search for the <code class="docutils literal notranslate"><span class="pre">menu</span></code> table.</p></li>
+<li><p>Click <strong>Actions &gt; Create a quick dashboard</strong>.</p></li>
+<li><p>Select columns to add to the dashboard and click <strong>Create</strong>.</p></li>
+<li><p>In the <strong>Search</strong> box in the top bar of the Databricks workspace, enter <code class="docutils literal notranslate"><span class="pre">lineage_data.lineagedemo.menu</span></code> and click <strong>Search lineage_data.lineagedemo.menu in Databricks</strong>.</p></li>
+<li><p>Under <strong>Tables View all tables</strong>, click the <code class="docutils literal notranslate"><span class="pre">menu</span></code> table.</p></li>
+<li><p>Select the <strong>Lineage</strong> tab and click <strong>Dashboards</strong>. The dashboard name appears under <strong>Dashboard Name</strong> as a consumer of the menu table.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="lineage-permissions">
+<span id="permissions"></span><h2>Lineage permissions<a class="headerlink" href="#lineage-permissions" title="Permalink to this headline"> </a></h2>
+<p>Lineage graphs share the same <a class="reference internal" href="manage-privileges/index.html"><span class="doc">permission model</span></a> as Unity Catalog. If a user does not have the SELECT privilege on a table, they will not be able to explore the lineage. Additionally, users can only see notebooks, workflows, and dashboards that they have permission to view. For example, if you run the following commands for a non-admin user <code class="docutils literal notranslate"><span class="pre">userA</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">GRANT</span><span class="w"> </span><span class="n">USE</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">lineage_data</span><span class="p">.</span><span class="n">lineagedemo</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="o">`</span><span class="n">userA</span><span class="o">@</span><span class="n">company</span><span class="p">.</span><span class="n">com</span><span class="o">`</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">lineage_data</span><span class="p">.</span><span class="n">lineagedemo</span><span class="p">.</span><span class="n">menu</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="o">`</span><span class="n">userA</span><span class="o">@</span><span class="n">company</span><span class="p">.</span><span class="n">com</span><span class="o">`</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>When <code class="docutils literal notranslate"><span class="pre">userA</span></code> views the lineage graph for the <code class="docutils literal notranslate"><span class="pre">lineage_data.lineagedemo.menu</span></code> table, they will see the <code class="docutils literal notranslate"><span class="pre">menu</span></code> table, but will not be able to see information about associated tables, for example, the downstream <code class="docutils literal notranslate"><span class="pre">lineage_data.lineagedemo.dinner</span></code> table. The <code class="docutils literal notranslate"><span class="pre">dinner</span></code> table is displayed as a <code class="docutils literal notranslate"><span class="pre">masked</span></code> node in the display to <code class="docutils literal notranslate"><span class="pre">userA</span></code>, and <code class="docutils literal notranslate"><span class="pre">userA</span></code> cannot expand the graph to reveal downstream tables from tables they do not have permission to access.</p>
+<p>For more information about managing access to securable objects in Unity Catalog, see <a class="reference internal" href="manage-privileges/index.html"><span class="doc">Manage privileges in Unity Catalog</span></a>. For more information about managing access to workspace objects like notebooks, workflows, and dashboards, see <a class="reference internal" href="../../security/auth-authz/access-control/index.html"><span class="doc">Access control overview</span></a>.</p>
+</div>
+<div class="section" id="delete-lineage-data">
+<h2>Delete lineage data<a class="headerlink" href="#delete-lineage-data" title="Permalink to this headline"> </a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The following instructions delete all objects stored in Unity Catalog. Use these instructions only if necessary. For example, to meet compliance requirements.</p>
+</div>
+<p>To delete lineage data, you must delete the metastore managing the Unity Catalog objects. For more information about deleting the metastore, see <a class="reference internal" href="create-metastore.html#delete"><span class="std std-ref">Delete a metastore</span></a>. Data will be deleted within 90 days.</p>
+</div>
+<div class="section" id="data-lineage-api">
+<h2>Data lineage API<a class="headerlink" href="#data-lineage-api" title="Permalink to this headline"> </a></h2>
+<p>The data lineage API allows you to retrieve table and column lineage.</p>
+<p></p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>To access Databricks REST APIs, you must <a class="reference internal" href="../../dev-tools/auth/index.html"><span class="doc">authenticate</span></a>.</p>
+</div>
+<div class="section" id="retrieve-table-lineage">
+<h3>Retrieve table lineage<a class="headerlink" href="#retrieve-table-lineage" title="Permalink to this headline"> </a></h3>
+<p>This example retrieves lineage data for the <code class="docutils literal notranslate"><span class="pre">dinner</span></code> table.</p>
+<div class="section" id="request">
+<h4>Request<a class="headerlink" href="#request" title="Permalink to this headline"> </a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--netrc<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+https://&lt;databricks-instance/api/2.0/lineage-tracking/table-lineage<span class="w"> </span><span class="se">\</span>
+-d<span class="w"> </span><span class="s1">&#39;{&quot;table_name&quot;: &quot;lineage_data.lineagedemo.dinner&quot;, &quot;include_entity_lineage&quot;: true}}&#39;</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;get-workspace-instance&gt;</span></code>.</p>
+<p>This example uses a <a class="reference external" href="https://everything.curl.dev/usingcurl/netrc">.netrc</a> file.</p>
+</div>
+<div class="section" id="response">
+<h4>Response<a class="headerlink" href="#response" title="Permalink to this headline"> </a></h4>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;upstreams&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;tableInfo&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;menu&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;catalog_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lineage_data&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;schema_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lineagedemo&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;table_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TABLE&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;notebookInfos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;workspace_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4169371664718798</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;notebook_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1111169262439324</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;downstreams&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;notebookInfos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;workspace_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4169371664718798</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;notebook_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1111169262439324</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;tableInfo&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dinner_price&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;catalog_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lineage_data&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;schema_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lineagedemo&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;table_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TABLE&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;notebookInfos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;workspace_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4169371664718798</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;notebook_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1111169262439324</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="retrieve-column-lineage">
+<h3>Retrieve column lineage<a class="headerlink" href="#retrieve-column-lineage" title="Permalink to this headline"> </a></h3>
+<p>This example retrieves column data for the <code class="docutils literal notranslate"><span class="pre">dinner</span></code> table.</p>
+<div class="section" id="request">
+<span id="request-1"></span><h4>Request<a class="headerlink" href="#request" title="Permalink to this headline"> </a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--netrc<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+https://&lt;databricks-instance/api/2.0/lineage-tracking/column-lineage<span class="w"> </span><span class="se">\</span>
+-d<span class="w"> </span><span class="s1">&#39;{&quot;table_name&quot;: &quot;lineage_data.lineagedemo.dinner&quot;, &quot;column_name&quot;: &quot;dessert&quot;}}&#39;</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;get-workspace-instance&gt;</span></code>.</p>
+<p>This example uses a <a class="reference external" href="https://everything.curl.dev/usingcurl/netrc">.netrc</a> file.</p>
+</div>
+<div class="section" id="response">
+<span id="response-1"></span><h4>Response<a class="headerlink" href="#response" title="Permalink to this headline"> </a></h4>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;upstream_cols&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dessert&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;catalog_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lineage_data&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;schema_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lineagedemo&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;table_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;menu&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;table_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TABLE&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;catalog_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lineage_data&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;schema_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lineagedemo&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;table_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;menu&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;table_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TABLE&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;app&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;catalog_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lineage_data&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;schema_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lineagedemo&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;table_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;menu&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;table_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TABLE&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;downstream_cols&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;full_menu&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;catalog_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lineage_data&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;schema_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lineagedemo&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;table_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dinner_price&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;table_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TABLE&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

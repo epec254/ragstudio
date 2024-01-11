@@ -1,0 +1,982 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to configure AWS PrivateLink for a Databricks workspace." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Enable AWS PrivateLink">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Enable AWS PrivateLink &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/security/network/classic/privatelink.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/security/network/classic/privatelink.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/security/network/classic/privatelink.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../../en/security/network/classic/privatelink.html" class="notranslate">English</option>
+    <option value="../../../../ja/security/network/classic/privatelink.html" class="notranslate">日本語</option>
+    <option value="../../../../pt/security/network/classic/privatelink.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Enable AWS PrivateLink</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="enable-aws-privatelink">
+<span id="enable-aws-pl"></span><h1>Enable AWS PrivateLink<a class="headerlink" href="#enable-aws-privatelink" title="Permalink to this headline"> </a></h1>
+<p>This article explains how to use AWS PrivateLink to enable private connectivity between users and their Databricks workspaces and between clusters on the compute plane and core services on the control plane within the Databricks workspace infrastructure.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<ul class="simple">
+<li><p>This article mentions the term <em>compute plane</em>, which is the compute layer of the Databricks platform. In the context of this article, compute plane refers to the classic compute plane in your AWS account. By contrast, the serverless compute plane that supports <a class="reference internal" href="../../../compute/sql-warehouse/serverless.html"><span class="doc">serverless SQL warehouses</span></a> runs in your Databricks account. To learn more, see <a class="reference internal" href="../../../serverless-compute/index.html"><span class="doc">Serverless compute</span></a>.</p></li>
+<li><p>Previously, Databricks referred to the compute plane as the data plane.</p></li>
+</ul>
+</div>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline"> </a></h2>
+<p>AWS PrivateLink provides private connectivity from AWS VPCs and on-premises networks to AWS services without exposing the traffic to the public network. Databricks workspaces on the E2 version of the platform support PrivateLink connections for two connection types:</p>
+<ul class="simple">
+<li><p><strong>Front-end (user to workspace)</strong>: A front-end PrivateLink connection allows users to connect to the Databricks web application, REST API, and Databricks Connect API over a VPC interface endpoint.</p></li>
+<li><p><strong>Back-end (compute plane to control plane)</strong>: Databricks Runtime clusters in a customer-managed VPC (the <a class="reference internal" href="../../../getting-started/overview.html"><span class="doc">compute plane</span></a>) connect to a Databricks workspace’s core services (the <a class="reference internal" href="../../../getting-started/overview.html"><span class="doc">control plane</span></a>) in the Databricks cloud account. Clusters connect to the control plane for two destinations: REST APIs (such as the Secrets API) and the <a class="reference internal" href="secure-cluster-connectivity.html"><span class="doc">secure cluster connectivity</span></a> relay. This PrivateLink connection type involves two different VPC interface endpoints because of the two different destination services.</p></li>
+</ul>
+<p>You can implement both front-end and back-end PrivateLink connections or just one of them. This article discusses how to configure either one or both PrivateLink connection types. If you implement PrivateLink for both the front-end and back-end connections, you can optionally mandate private connectivity for the workspace, which means Databricks rejects any connections over the public network. If you decline to implement any one of these connection types, you cannot enforce this requirement.</p>
+<p>To enable PrivateLink connections, you must create Databricks configuration objects and add new fields to existing configuration objects.</p>
+<p>To create configuration objects and create (or update) a workspace, this article describes how to <a class="reference internal" href="#account-console"><span class="std std-ref">use the account console</span></a> or <a class="reference internal" href="#account-api"><span class="std std-ref">use the Account API</span></a>.</p>
+<p>The following table describes important terminology.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Terminology</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>AWS PrivateLink</p></td>
+<td><p>An AWS technology that provides private connectivity from AWS VPCs and on-premises networks to AWS services without exposing the traffic to the public network.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Front-end PrivateLink</p></td>
+<td><p>The PrivateLink connection for users to connect to the Databricks web application, REST API, and Databricks Connect API.</p></td>
+</tr>
+<tr class="row-even"><td><p>Back-end PrivateLink</p></td>
+<td><p>The PrivateLink connection for the <a class="reference internal" href="../../../getting-started/overview.html"><span class="doc">compute plane</span></a> in your AWS account to connect to the Databricks <a class="reference internal" href="../../../getting-started/overview.html"><span class="doc">control plane</span></a>).</p></td>
+</tr>
+<tr class="row-odd"><td><p>AWS VPC endpoint service</p></td>
+<td><p>An AWS VPC endpoint service is a PrivateLink-powered service. Each Databricks control plane (typically one per region) publishes two AWS VPC endpoint services for PrivateLink. The workspace VPC endpoint service applies to both a Databricks front-end PrivateLink connection or the Databricks back-end PrivateLink connection for REST APIs. Databricks publishes another VPC endpoint service for its <a class="reference internal" href="secure-cluster-connectivity.html"><span class="doc">secure cluster connectivity</span></a> relay.</p></td>
+</tr>
+<tr class="row-even"><td><p>AWS VPC endpoint</p></td>
+<td><p>An <a class="reference external" href="https://docs.aws.amazon.com/vpc/latest/privatelink/vpce-interface.html">AWS VPC interface endpoint</a> enables private connections between your VPC and VPC endpoint services powered by AWS PrivateLink. You must create AWS VPC interface endpoints and then register them with Databricks. Registering a VPC endpoint creates a Databricks-specific object called a VPC endpoint registration that references the AWS VPC endpoint.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Databricks network configuration</p></td>
+<td><p>A Databricks object that describes the important information about a <a class="reference internal" href="customer-managed-vpc.html"><span class="doc">Configure a customer-managed VPC</span></a>. If you implement any PrivateLink connection (front-end or back-end), your workspace must use a customer-managed VPC. For PrivateLink back-end support only, your network configuration needs an extra property that identifies the VPC endpoints for the back-end connection.</p></td>
+</tr>
+<tr class="row-even"><td><p>Databricks private access settings object</p></td>
+<td><p>A Databricks object that describes a workspace’s PrivateLink connectivity. You must attach a private access settings object to the workspace during workspace creation, whether using front-end, back-end, or both. It expresses your intent to use AWS PrivateLink with your workspace. It controls your settings for the front-end use case of AWS PrivateLink for public network access. It controls which VPC endpoints are permitted to access your workspace.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Databricks workspace configuration object</p></td>
+<td><p>A Databricks object that describes a workspace. To enable PrivateLink, this object must reference Databricks private access settings object. For back-end PrivateLink, the workspace must also have a Databricks network configuration object with two extra fields that specify which VPC endpoint registrations to use, one for control plane’s secure cluster connectivity relay and the other connects to the workspace to access REST APIs.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="updates-of-existing-privatelink-configuration-objects">
+<span id="update-related"></span><h3>Updates of existing PrivateLink configuration objects<a class="headerlink" href="#updates-of-existing-privatelink-configuration-objects" title="Permalink to this headline"> </a></h3>
+<p>This article focuses on the main two use cases of creating a new workspace or enabling PrivateLink on a workspace. You also can make other configuration changes to related objects using the UI or API:</p>
+<ul class="simple">
+<li><p>You can enable PrivateLink support for front-end, back-end, or both types of connectivity on a new or existing workspace. Add a private access settings object (<a class="reference internal" href="../../../administration-guide/workspace/update-workspace.html"><span class="doc">UI</span></a> or <a class="reference external" href="https://docs.databricks.com/api/account/introduction">API</a>). To do so, create a new network configuration with new settings, for example for a new VPC or different PrivateLink support settings, and then update the workspace to use the new network configuration. Note that you cannot remove (downgrade) any existing front-end or back-end PrivateLink support on a workspace.</p></li>
+<li><p>Add or update a workspace’s registered VPC endpoints by creating a new network configuration object with registered VPC endpoints and then update the workspace’s network configuration (<a class="reference internal" href="../../../administration-guide/workspace/update-workspace.html"><span class="doc">UI</span></a> or <a class="reference external" href="https://docs.databricks.com/api/account/introduction">API</a>).</p></li>
+<li><p>For more information about what kinds of workspace fields can be changed on failed or running workspaces, see information about this task by using the <a class="reference internal" href="../../../administration-guide/workspace/update-workspace.html"><span class="doc">UI</span></a> or <a class="reference external" href="https://docs.databricks.com/api/account/introduction">API</a>.</p></li>
+</ul>
+<p>Note that not all related objects can be updated. Where update is not possible, create new objects and set their parent objects to reference the new objects. The following rules apply both to the account console UI and the Account API:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Object</p></th>
+<th class="head"><p>Can be created</p></th>
+<th class="head"><p>Can be updated</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Workspace configurations</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>Private access settings</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p>Network configurations</p></td>
+<td><p>Yes</p></td>
+<td><p><strong>No</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>VPC endpoint registrations</p></td>
+<td><p>Yes</p></td>
+<td><p><strong>No</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>To update CIDR ranges on an existing VPC, see <a class="reference internal" href="customer-managed-vpc.html#update-cidr"><span class="std std-ref">Updating CIDRs</span></a>.</p>
+</div>
+<div class="section" id="network-flow">
+<h3>Network flow<a class="headerlink" href="#network-flow" title="Permalink to this headline"> </a></h3>
+<p>The following diagram shows the network flow in a typical implementation.</p>
+<div class="figure align-default">
+<img alt="PrivateLink network architecture" src="../../../_images/privatelink-network.png" />
+</div>
+<p></p>
+</div>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<p><strong>Databricks account</strong></p>
+<ul class="simple">
+<li><p>Your Databricks account is on the E2 version of the platform.</p></li>
+<li><p>Your Databricks account is on the <a class="reference external" href="https://databricks.com/product/pricing/platform-addons">Enterprise pricing tier</a>.</p></li>
+<li><p>You have your Databricks account ID. Get your account ID from the <a class="reference internal" href="../../../administration-guide/account-settings/index.html#account-id"><span class="std std-ref">account console</span></a>.</p></li>
+</ul>
+<p><strong>Databricks workspace</strong></p>
+<ul class="simple">
+<li><p>Your workspace must be in an <a class="reference internal" href="../../../resources/supported-regions.html"><span class="doc">AWS region that supports the E2 version of the platform</span></a>. However, the <code class="docutils literal notranslate"><span class="pre">us-west-1</span></code> region does not support PrivateLink even for workspaces on the E2 version of the platform.</p></li>
+<li><p>Your Databricks workspace must use <a class="reference internal" href="customer-managed-vpc.html"><span class="doc">Configure a customer-managed VPC</span></a> to add any PrivateLink connection (even a front-end-only connection). Note that you cannot update an existing workspace with a Databricks-managed VPC and change it to use a customer-managed VPC.</p></li>
+<li><p>If you implement the back-end PrivateLink connection, your Databricks workspace must use <a class="reference internal" href="secure-cluster-connectivity.html"><span class="doc">Secure cluster connectivity</span></a>, which is the default for new workspaces on the E2 version of the platform. To add back-end PrivateLink to an older existing workspace that does not use secure cluster connectivity, contact your Databricks account team.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To use PrivateLink with workspaces enabled for <a class="reference internal" href="../../../administration-guide/account-settings-e2/single-sign-on/index.html#unified-login"><span class="std std-ref">unified login</span></a>, contact your Databricks account team.</p>
+</div>
+<p><strong>AWS account permissions</strong></p>
+<ul class="simple">
+<li><p>If you are the user who sets up PrivateLink, you must have all necessary AWS permissions to provision a Databricks workspace and to provision new VPC endpoints for your workspace.</p></li>
+</ul>
+<p><strong>Network architecture</strong></p>
+<ul class="simple">
+<li><p>To implement the front-end PrivateLink connection to access the workspace from your on-premises network, add private connectivity from the on-premises network to an AWS VPC using either Direct Connect or VPN.</p></li>
+<li><p>For guidance for other network objects, see <a class="reference internal" href="#create-vpc"><span class="std std-ref">Step 1: Configure AWS network objects</span></a>.</p></li>
+</ul>
+</div>
+<div class="section" id="step-1-configure-aws-network-objects">
+<span id="create-vpc"></span><h2>Step 1: Configure AWS network objects<a class="headerlink" href="#step-1-configure-aws-network-objects" title="Permalink to this headline"> </a></h2>
+<p></p>
+<p>You can use the AWS Management Console to create these objects or automate the process with tools such as the <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mws_networks">Terraform provider for networks</a>.</p>
+<p>To configure a VPC, subnets, and security groups:</p>
+<ol class="arabic">
+<li><p>Set up a VPC for your workspace if you haven’t already done so. You may re-use a VPC from another workspace, but you must create separate subnets for each workspace. Every workspace requires at least two private subnets.</p>
+<ol class="loweralpha">
+<li><p>To create a VPC, see <a class="reference internal" href="customer-managed-vpc.html"><span class="doc">Configure a customer-managed VPC</span></a>. If you are updating a workspace for PrivateLink rather than creating a new workspace, note that the workspace must already be using a customer-managed VPC.</p></li>
+<li><p>On your VPC, ensure that you enable both of the settings <strong>DNS Hostnames</strong> and <strong>DNS resolution</strong>.</p></li>
+<li><p>Ensure that the network ACLs for the subnets have <strong>bidirectional</strong> (outbound and inbound) rules that allow TCP access to 0.0.0.0/0 for these ports:</p>
+<ul class="simple">
+<li><p>443: for Databricks infrastructure, cloud data sources, and library repositories</p></li>
+<li><p>3306: for the metastore</p></li>
+<li><p>6666: for PrivateLink</p></li>
+<li><p>2443: only for use with compliance security profile</p></li>
+<li><p>8443 through 8451: Future extendability. Ensure these <a class="reference internal" href="../../../release-notes/product/2023/august.html#aws-new-egress-ports"><span class="std std-ref">ports are open by January 31, 2024</span></a>.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If your workspace uses the <a class="reference internal" href="../../privacy/security-profile.html"><span class="doc">compliance security profile</span></a>, you must also allow <strong>bidirectional</strong> (outbound and inbound) access to port 2443 to support FIPS endpoints for the secure cluster connectivity relay.</p>
+</div>
+</li>
+</ol>
+</li>
+<li><p>For back-end PrivateLink:</p>
+<ol class="loweralpha">
+<li><p>Create and configure an extra VPC subnet (optional):</p>
+<ul class="simple">
+<li><p>For your VPC endpoints, including back-end PrivateLink VPC endpoints and also any <a class="reference internal" href="#optional-vpce"><span class="std std-ref">optional VPC endpoints to other AWS services</span></a>, you can create them in any of your workspace subnets as long as the network can route to the VPC endpoints.</p></li>
+</ul>
+<ul class="simple">
+<li><p>Attach a separate route table to your VPC endpoints subnet, which would be different from the route table attached to your workspace subnets. The route table for your VPC endpoints subnet needs only a single default route for the local VPC.</p></li>
+</ul>
+</li>
+<li><p>Create and configure an extra security group (recommended but optional):</p>
+<ul>
+<li><p>In addition to the security group that is normally required for a workspace, create a separate security group that allows HTTPS/443 and TCP/6666 <strong>bidirectional</strong> (outbound and inbound) access to both the workspace subnets as well as the separate VPC endpoints subnet if you created one. This configuration allows access for both the workspace for REST APIs (port 443) and for secure cluster connectivity (6666). This makes it easy to share the security group for both purposes.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If your workspace uses the <a class="reference internal" href="../../privacy/security-profile.html"><span class="doc">compliance security profile</span></a>, you must also allow <strong>bidirectional</strong> (outbound and inbound) access to port 2443 to support FIPS endpoints for the secure cluster connectivity relay.</p>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>For front-end PrivateLink:</p>
+<ul>
+<li><p>For your transit VPC and its subnets, ensure they are reachable from the user environment. Create a transit VPC that terminates your AWS Direct Connect or VPN gateway connection or one that is routable from your transit VPC.</p>
+<p>If you enable both front-end and back-end PrivateLink, you can optionally share the front-end workspace (web application) VPC endpoint with the back-end workspace (REST API) VPC endpoint if the VPC endpoint is network accessible from the workspace subnets.</p>
+</li>
+<li><p>Create a new security group for the front-end endpoint. The security group must allow HTTPS (port 443) <strong>bidirectional</strong> (outbound and inbound) access for both the source network and the endpoint subnet itself.</p></li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section" id="step-2-create-vpc-endpoints">
+<span id="create-vpce"></span><h2>Step 2: Create VPC endpoints<a class="headerlink" href="#step-2-create-vpc-endpoints" title="Permalink to this headline"> </a></h2>
+<div class="section" id="back-end-vpc-endpoints">
+<h3>Back-end VPC endpoints<a class="headerlink" href="#back-end-vpc-endpoints" title="Permalink to this headline"> </a></h3>
+<p>For back-end PrivateLink, you create two VPC endpoints. One is for the <a class="reference internal" href="secure-cluster-connectivity.html"><span class="doc">secure cluster connectivity</span></a> relay. One is for the workspace, which allows compute plane calls to Databricks REST APIs. For general documentation on VPC endpoint management with the AWS Management Console, see the AWS article <a class="reference external" href="https://docs.aws.amazon.com/vpc/latest/privatelink/vpce-interface.html">Create VPC endpoints in the AWS Management Console</a>. When you create the VPC endpoints, it’s important to set the field in <strong>Additional settings</strong> that in the AWS Management Console page for creating VPC endpoints is called <strong>Enable DNS name</strong>. As a terminology note, this is the same field that AWS in some places refers to as <strong>Enable Private DNS</strong> or <strong>Enable Private DNS on this endpoint</strong> when viewing or editing a VPC endpoint.</p>
+<p>For tools that help you automate creating and managing VPC endpoints, see the AWS articles <a class="reference external" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html">CloudFormation: Creating VPC Endpoint</a> and <a class="reference external" href="https://docs.aws.amazon.com/cli/latest/reference/ec2/create-vpc-endpoint.html">AWS CLI: create-vpc-endpoint</a>.</p>
+<p>You can share the back-end VPC endpoints across multiple workspaces that use the same customer-managed VPC. Whether you share the back-end VPC endpoints across multiple workspaces depends on your organization’s AWS architecture best practices and your overall throughput requirements across all workloads.</p>
+<ul class="simple">
+<li><p>If you decide to share those across workspaces, you must create the back-end VPC endpoints in a separate subnet that is routable from the subnets of all the workspaces. For guidance, contact your Databricks account team.</p></li>
+<li><p>You can also share VPC endpoints across workspaces from multiple Databricks accounts as long as the workspaces share the same customer-managed VPC, in which case you need to register the VPC endpoints in each Databricks account.</p></li>
+</ul>
+<p>The following procedure uses the AWS Management Console. You can also automate this step using the <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mws_vpc_endpoint">Terraform provider for VPC endpoints</a>.</p>
+<p>To create the back-end VPC endpoints in the AWS Management Console:</p>
+<ol class="arabic">
+<li><p>Go to the <a class="reference external" href="https://console.aws.amazon.com/vpc/home#Endpoints:">VPC endpoints</a> section of the AWS Management Console.</p></li>
+<li><p>Use the region picker in the upper right next to your account name picker and confirm you are using the region that matches the region you will use for your workspace. If needed, change the region using the region picker.</p></li>
+<li><p>Create the VPC endpoint:</p>
+<ol class="loweralpha">
+<li><p>Click <strong>Create Endpoint</strong>.</p></li>
+<li><p>Give the endpoint a name that indicates the region and the purpose of the VPC endpoint. For the workspace VPC endpoint, Databricks recommends that you include the region and the word <code class="docutils literal notranslate"><span class="pre">workspace</span></code>, such as <code class="docutils literal notranslate"><span class="pre">databricks-us-west-2-workspace-vpce</span></code>.</p></li>
+<li><p>Under <strong>Service Category</strong>, choose <strong>Other endpoint services</strong>.</p></li>
+<li><p>In the service name field, paste in the service name. Use the table in <a class="reference internal" href="#regional-endpoints"><span class="std std-ref">Regional endpoint reference</span></a> to get the two regional service names for your region.</p>
+<p>For your first VPC endpoint that you create, copy the regional service name for the workspace (REST API).</p>
+</li>
+<li><p>Click <strong>Verify service</strong>. Confirm the page reports in a green box <strong>Service name verified</strong>. If you see an error “Service name could not be verified”, check whether you have correctly matched the regions of your VPC, subnets, and your new VPC endpoint.</p></li>
+<li><p>In the <strong>VPC</strong> field, select your VPC. Choose your workspace VPC.</p></li>
+<li><p>In the <strong>Subnets</strong> section, choose exactly one of your Databricks workspace subnets. For related discussion, see <a class="reference internal" href="#create-vpc"><span class="std std-ref">Step 1: Configure AWS network objects</span></a>.</p></li>
+<li><p>In the <strong>Security groups</strong> section, choose the security group you created for back-end connections in <a class="reference internal" href="#create-vpc"><span class="std std-ref">Step 1: Configure AWS network objects</span></a>.</p></li>
+<li><p>Click to expand the <strong>Additional settings</strong> section.</p></li>
+<li><p>Ensure that the endpoint has the <strong>Enable DNS name</strong> field enabled. As a terminology note, this is the same field that AWS in some places refers to as <strong>Enable Private DNS</strong> or <strong>Enable Private DNS on this endpoint</strong> when viewing or editing a VPC endpoint.</p></li>
+<li><p>Click <strong>Create endpoint</strong>.</p></li>
+</ol>
+</li>
+<li><p>Repeat the above procedure and use the table in <a class="reference internal" href="#regional-endpoints"><span class="std std-ref">Regional endpoint reference</span></a> to get the regional service name for the secure cluster connectivity relay. Give the endpoint a name that indicates the region and the purpose of the VPC endpoint. Databricks recommends that you include the region and the word <code class="docutils literal notranslate"><span class="pre">scc</span></code>, such as <code class="docutils literal notranslate"><span class="pre">databricks-us-west-2-scc-vpce</span></code>.</p></li>
+</ol>
+</div>
+<div class="section" id="front-end-vpc-endpoints">
+<h3>Front-end VPC endpoints<a class="headerlink" href="#front-end-vpc-endpoints" title="Permalink to this headline"> </a></h3>
+<p>A front-end endpoint originates in your transit VPC that usually is the source of user web application access, Typically it is a transit VPC that is connected to an on-premises network. This is generally a separate VPC from the workspace’s compute plane VPC. Although the Databricks VPC endpoint service is the same shared service for the front-end connection and the back-end REST API connection, in typical implementations, connections originate from two separate VPCs and thus need separate AWS VPC endpoints that originate in each VPC.</p>
+<p>If you have multiple Databricks accounts, you can share a front-end VPC endpoint across Databricks accounts. Register the endpoint in each relevant Databricks account.</p>
+<p>The following procedure uses the AWS Management Console. You can also automate this step using the <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mws_vpc_endpoint">Terraform provider for VPC endpoints</a>.</p>
+<p>To create the front-end VPC endpoints in the AWS Management Console:</p>
+<ol class="arabic simple">
+<li><p>Go to the <a class="reference external" href="https://console.aws.amazon.com/vpc/home#Endpoints:">VPC endpoints</a> section of the AWS Management Console.</p></li>
+<li><p>Use the region picker in the upper right next to your account name picker and confirm you are using the region that matches the <strong>transit VPC region</strong>, which in some cases might be different than your workspace region. If needed, change the region using the region picker.</p></li>
+<li><p>Create the VPC endpoint:</p>
+<ol class="loweralpha simple">
+<li><p>Click <strong>Create Endpoint</strong>.</p></li>
+<li><p>Give the endpoint a name that indicates the region and the purpose of the VPC endpoint. For the workspace VPC endpoint, Databricks recommends that you include the region and the word <code class="docutils literal notranslate"><span class="pre">workspace</span></code> or <code class="docutils literal notranslate"><span class="pre">frontend</span></code>, such as <code class="docutils literal notranslate"><span class="pre">databricks-us-west-2-workspace-vpce</span></code>.</p></li>
+<li><p>Under <strong>Service Category</strong>, choose <strong>Other endpoint services</strong>.</p></li>
+<li><p>In the service name field, paste in the service name. Use the table in <a class="reference internal" href="#regional-endpoints"><span class="std std-ref">Regional endpoint reference</span></a> to find the regional service names. Copy the one labelled <strong>Workspace (including REST API)</strong>.</p></li>
+<li><p>Click <strong>Verify service</strong>. Confirm the page reports in a green box <strong>Service name verified</strong>. If you see an error “Service name could not be verified”, check whether you have correctly matched the regions of your VPC, subnets, and your new VPC endpoint.</p></li>
+<li><p>In the <strong>VPC</strong> menu, click your transit VPC.</p></li>
+<li><p>In the <strong>Subnets</strong> section, choose a subnet. For related discussion, see <a class="reference internal" href="#create-vpc"><span class="std std-ref">Step 1: Configure AWS network objects</span></a>.</p></li>
+<li><p>In the <strong>Security groups</strong> section, choose the security group you created for front-end connections in <a class="reference internal" href="#create-vpc"><span class="std std-ref">Step 1: Configure AWS network objects</span></a>.</p></li>
+<li><p>Click <strong>Create endpoint</strong>.</p></li>
+</ol>
+</li>
+</ol>
+</div>
+<div class="section" id="regional-endpoint-reference">
+<span id="regional-endpoints"></span><h3>Regional endpoint reference<a class="headerlink" href="#regional-endpoint-reference" title="Permalink to this headline"> </a></h3>
+<p>Get your region’s VPC endpoint service domains from the table at <a class="reference internal" href="../../../resources/supported-regions.html#privatelink"><span class="std std-ref">PrivateLink VPC endpoint services</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you use the account console to create your network configuration, the UI refers to the workspace VPC endpoint as the VPC endpoint for REST APIs.</p>
+</div>
+</div>
+</div>
+<div class="section" id="step-3-register-privatelink-objects-and-attach-them-to-a-workspace">
+<span id="step-3-register-pl-objects-and-attach-them-to-a-workspace"></span><h2>Step 3: Register PrivateLink objects and attach them to a workspace<a class="headerlink" href="#step-3-register-privatelink-objects-and-attach-them-to-a-workspace" title="Permalink to this headline"> </a></h2>
+<p>There are two ways you can perform this step:</p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#use-the-account-console" id="id1">Use the account console</a></p></li>
+<li><p><a class="reference internal" href="#use-the-account-api" id="id2">Use the Account API</a></p></li>
+<li><p><a class="reference internal" href="#use-terraform" id="id3">Use Terraform</a></p></li>
+</ul>
+</div>
+<div class="section" id="use-the-account-console">
+<span id="account-console"></span><h3><a class="toc-backref" href="#id1">Use the account console</a><a class="headerlink" href="#use-the-account-console" title="Permalink to this headline"> </a></h3>
+<p>You can use the <a class="reference internal" href="../../../administration-guide/account-settings/index.html#account-console"><span class="std std-ref">account console</span></a> to register your VPC endpoints, create and register other required workspace resources, and finally create a new workspace with PrivateLink.</p>
+<p>Within the account console, several types of objects are relevant for PrivateLink configuration:</p>
+<ul class="simple">
+<li><p><strong>VPC endpoint registrations (required for front-end, back-end, or both)</strong>: After creating VPC endpoints in the AWS Management Console (see the <a class="reference internal" href="#regional-endpoints"><span class="std std-ref">previous step</span></a>), register them in Databricks to create VPC endpoint registrations. See the <a class="reference external" href="https://accounts.cloud.databricks.com/cloud-resources/network/vpc-endpoints">account console’s page for VPC endpoints</a>.</p></li>
+<li><p><strong>Network configurations (required for back-end VPC endpoints)</strong>: Network configurations represent information about a customer-managed VPC. They also contain two back-end PrivateLink configuration fields. Add these two fields in the network configuration object. They must reference the two back-end VPC endpoints that you created in AWS. See the <a class="reference external" href="https://accounts.cloud.databricks.com/cloud-resources/network/network-configurations">account console’s page for network configurations</a>. If you have an existing network configuration and you want to add fields for PrivateLink, you must create a new network configuration.</p></li>
+<li><p><strong>Private access configurations (required for front-end, back-end, or both)</strong>: A workspace’s private access configuration object encapsulates a few settings about AWS PrivateLink connectivity. Create a new private access settings object just for this workspace, or share one among multiple workspaces in the same AWS region. This object serves several purposes. It expresses your intent to use AWS PrivateLink with your workspace. It controls your settings for the front-end use case of AWS PrivateLink for public network access. It controls which VPC endpoints are permitted to access your workspace.</p></li>
+</ul>
+<p>There are two ways to use the account console to define cloud resources for a workspace.</p>
+<ul class="simple">
+<li><p><strong>Create resources in advance</strong>: You can create relevant cloud resources first before you create your workspace in the <a class="reference external" href="https://accounts.cloud.databricks.com/cloud-resources">cloud resources area of the account console</a>. This is useful if you might not be able to do all the steps at the same time or if different teams perform network setup and  create workspaces.</p></li>
+<li><p><strong>Within the workspace creation page, add configurations as needed</strong>: On the page that creates (or updates) a workspace, there are pickers for different cloud resources. In most cases, there are picker items that let you create that resource immediately in a pop-up view. For example, a network configuration picker has an option <strong>Add a new network configuration</strong>.</p></li>
+</ul>
+<p>This article describes the how to create resources in advance and then reference them. You can use the other approach if that works better for you. See the editors for <a class="reference internal" href="vpc-endpoints.html"><span class="doc">VPC endpoints</span></a>, <a class="reference internal" href="../../../administration-guide/account-settings-e2/networks.html"><span class="doc">network configurations</span></a>, and <a class="reference internal" href="private-access-settings.html"><span class="doc">private access settings</span></a>.</p>
+<div class="section" id="step-3a-register-your-vpc-endpoints-for-front-end-back-end-or-both">
+<h4>Step 3a: Register your VPC endpoints (for front-end, back-end, or both)<a class="headerlink" href="#step-3a-register-your-vpc-endpoints-for-front-end-back-end-or-both" title="Permalink to this headline"> </a></h4>
+<p>Follow the instructions in <a class="reference internal" href="vpc-endpoints.html"><span class="doc">Manage VPC endpoint registrations</span></a>.</p>
+<ul class="simple">
+<li><p>For back-end PrivateLink, register the back-end VPC endpoints you created and name the configurations for their purposes, for example add <code class="docutils literal notranslate"><span class="pre">-scc</span></code> for secure cluster connectivity and <code class="docutils literal notranslate"><span class="pre">-workspace</span></code> for the workspace (REST API) VPC endpoint registration. For back-end VPC endpoints, the region field must match your workspace region and the region of the AWS VPC endpoints that you are registering. However, Databricks validates this only during workspace creation (or during updating a workspace with PrivateLink), so it is critical that you carefully set the region in this step.</p></li>
+<li><p>For front-end PrivateLink, register the front-end VPC endpoint you created in the transit VPC. For front-end PrivateLink, the region field must match your transit VPC region and the region of the AWS VPC endpoint for the workspace for the front-end connection.</p></li>
+</ul>
+</div>
+<div class="section" id="step-3b-create-a-network-configuration-for-back-end">
+<h4>Step 3b: Create a network configuration (for back-end)<a class="headerlink" href="#step-3b-create-a-network-configuration-for-back-end" title="Permalink to this headline"> </a></h4>
+<p>Follow the instructions in <a class="reference internal" href="../../../administration-guide/account-settings-e2/networks.html"><span class="doc">Create network configurations for custom VPC deployment</span></a>. For detailed requirements for customer-managed VPC along with its associated subnets and security groups, see <a class="reference internal" href="customer-managed-vpc.html"><span class="doc">Configure a customer-managed VPC</span></a>. The most important fields for PrivateLink are under the heading <strong>Back-end private connectivity</strong>. There are two fields where you choose your back-end VPC endpoint registrations that you <a class="reference internal" href="#create-vpce"><span class="std std-ref">created in the previous step</span></a>. For the first one, select the VPC endpoint registration for the <em>secure cluster connectivity relay</em>. For the other choose the VPC endpoint registration for the <em>workspace (REST APIs)</em>.</p>
+</div>
+<div class="section" id="step-3c-create-a-pas-object-for-front-end-back-end-or-both">
+<h4>Step 3c: Create a PAS object (for front-end, back-end, or both)<a class="headerlink" href="#step-3c-create-a-pas-object-for-front-end-back-end-or-both" title="Permalink to this headline"> </a></h4>
+<p>Creating a private access settings (PAS) object is an important step for PrivateLink configuration. Follow the instructions in <a class="reference internal" href="private-access-settings.html"><span class="doc">Manage private access settings</span></a>.</p>
+<ul class="simple">
+<li><p>For the region, be sure it matches the region of your workspace as this is not validated immediately but workspace deployment fails if it does not match.</p></li>
+<li><p>Set the <strong>Public access enabled</strong> field, which configures public access to the front-end connection (the web application and REST APIs) for your workspace.</p>
+<ul>
+<li><p>If set to <strong>False</strong> (the default), the front-end connection can be accessed only using PrivateLink connectivity and not from the public internet. Because access from the public network is disallowed in this case, the <a class="reference internal" href="../front-end/ip-access-list-workspace.html"><span class="doc">Configure IP access lists for workspaces</span></a> feature is not supported for the workspace.</p></li>
+<li><p>If set to <strong>True</strong>, the front-end connection can be accessed either from PrivateLink connectivity or from the public internet. You can optionally configure an IP access list for the workspace to restrict the source networks that could access the web application and REST APIs from the public internet (but not the PrivateLink connection).</p></li>
+</ul>
+</li>
+<li><p>Set the <strong>Private Access Level</strong> field to the value that best represents which VPC endpoints to allow for your workspace.</p>
+<ul>
+<li><p>Set to <strong>Account</strong> to limit connections to those VPC endpoints that are registered in your Databricks account.</p></li>
+<li><p>Set to <strong>Endpoint</strong> to limit connections to an explicit set of VPC endpoints, which you can enter in a field that appears. It lets you select VPC endpoint registrations that you’ve already created. Be sure to include your <em>front-end</em> VPC endpoint registration if you created one.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="step-3d-create-or-update-the-workspace-front-end-back-end-or-both">
+<h4>Step 3d: Create or update the workspace (front-end, back-end, or both)<a class="headerlink" href="#step-3d-create-or-update-the-workspace-front-end-back-end-or-both" title="Permalink to this headline"> </a></h4>
+<p>The workspace must already use a customer-managed VPC and secure cluster connectivity must be enabled, which is the case for most E2 workspaces.</p>
+<p>The following instructions describe creating a workspace using <a class="reference external" href="https://accounts.cloud.databricks.com/workspaces">the account console’s workspaces page</a>.</p>
+<ol class="loweralpha simple">
+<li><p>Follow the instructions in <a class="reference internal" href="../../../administration-guide/workspace/create-workspace.html"><span class="doc">Manually create a workspace (existing Databricks accounts)</span></a> to create a workspace. See that article for guidance on workspace fields such as workspace URL, region, Unity Catalog, credential configurations, and storage configurations. Do not yet click the <strong>Save</strong> button.</p></li>
+<li><p>Click <strong>Advanced configurations</strong> to view additional fields.</p></li>
+<li><p>For back-end PrivateLink, choose the network configuration. Under <strong>Virtual Private Cloud</strong>, in the menu choose the Databricks network configuration you created.</p></li>
+<li><p>For any PrivateLink usage, select the private access settings object. Look below the <strong>Private Link</strong> heading. Click the menu and choose the name of the private access settings object that you created.</p></li>
+<li><p>Click <strong>Save</strong>.</p></li>
+<li><p>After creating (or updating) a workspace, wait until it’s available for using or creating clusters. The workspace status stays at status <code class="docutils literal notranslate"><span class="pre">RUNNING</span></code> and the VPC change happens immediately. However, you cannot use or create clusters for another 20 minutes. If you create or use clusters before this time interval elapses, clusters do not launch successfully, fail, or could cause other unexpected behavior.</p></li>
+<li><p>Continue on to <a class="reference internal" href="#create-dns-name"><span class="std std-ref">Step 4: Configure internal DNS to redirect user requests to the web application (for front-end)</span></a>.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="use-the-account-api">
+<span id="account-api"></span><h3><a class="toc-backref" href="#id2">Use the Account API</a><a class="headerlink" href="#use-the-account-api" title="Permalink to this headline"> </a></h3>
+<div class="section" id="step-3a-register-vpc-endpoints-front-end-back-end-or-both">
+<span id="register-vpce-ids"></span><h4>Step 3a: Register VPC endpoints (front-end, back-end, or both)<a class="headerlink" href="#step-3a-register-vpc-endpoints-front-end-back-end-or-both" title="Permalink to this headline"> </a></h4>
+<p>Using the <a class="reference external" href="https://docs.databricks.com/api/account/introduction">Account API</a>, register the VPC endpoint IDs for your back-end VPC endpoints. For each one, this creates a Databricks VPC endpoint registration.</p>
+<p>For back-end VPC endpoints, if you have multiple workspaces in the same region that share the same customer-managed VPC, you can choose to share the AWS VPC endpoints. You can also share these VPC endpoints among multiple Databricks accounts, in which case register the AWS VPC endpoint in each Databricks account.</p>
+<p>For front-end VPC endpoints, if you have multiple Databricks accounts, you can share a front-end VPC endpoint across Databricks accounts. Register the endpoint in each relevant Databricks account.</p>
+<p>To register a VPC endpoint in Databricks, make a <code class="docutils literal notranslate"><span class="pre">POST</span></code> request to the <code class="docutils literal notranslate"><span class="pre">/accounts/&lt;account-id&gt;/vpc-endpoints</span></code> REST API endpoint and pass the following fields in the request body:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">vpc_endpoint_name</span></code>: User-visible name for the VPC endpoint registration within Databricks.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">region</span></code>: AWS region name</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">aws_vpc_endpoint_id</span></code>: Your VPC endpoint’s ID within AWS. It starts with prefix <code class="docutils literal notranslate"><span class="pre">vpce-</span></code>.</p></li>
+</ul>
+<p>For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-n<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s1">&#39;https://accounts.cloud.databricks.com/api/2.0/accounts/&lt;account-id&gt;/vpc-endpoints&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;vpc_endpoint_name&quot;: &quot;Databricks front-end endpoint&quot;,</span>
+<span class="s1">  &quot;region&quot;: &quot;us-west-2&quot;,</span>
+<span class="s1">  &quot;aws_vpc_endpoint_id&quot;: &quot;&lt;vpce-id&gt;&quot;</span>
+<span class="s1">}&#39;</span>
+</pre></div>
+</div>
+<p>The response JSON includes a <code class="docutils literal notranslate"><span class="pre">vpc_endpoint_id</span></code> field. If you are adding a back-end PrivateLink connection, save this value. This ID is specific to this configuration within Databricks. You need this ID when you create the network configuration in a later step (<a class="reference internal" href="#create-network-config"><span class="std std-ref">Step 3b: Create a network configuration (back-end)</span></a>).</p>
+<p>Related Account API operations that may be useful:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.databricks.com/api/account/introduction">Check the state of a VPC endpoint registration</a> — The <code class="docutils literal notranslate"><span class="pre">state</span></code> field in the response JSON indicates the state within AWS.</p></li>
+<li><p><a class="reference external" href="https://docs.databricks.com/api/account/introduction">Get all VPC endpoint registrations in your account</a></p></li>
+<li><p><a class="reference external" href="https://docs.databricks.com/api/account/introduction">Delete VPC endpoint registration</a></p></li>
+</ul>
+</div>
+<div class="section" id="step-3b-create-a-network-configuration-back-end">
+<span id="create-network-config"></span><h4>Step 3b: Create a network configuration (back-end)<a class="headerlink" href="#step-3b-create-a-network-configuration-back-end" title="Permalink to this headline"> </a></h4>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you implement only the front-end connection, skip this step. Although you must create a network configuration because a customer-managed VPC is required, there are no PrivateLink changes to this object if you only implement a front-end PrivateLink connection.</p>
+</div>
+<p></p>
+<p>For any PrivateLink support, you must use a <a class="reference internal" href="customer-managed-vpc.html"><span class="doc">Configure a customer-managed VPC</span></a>. This feature requires you to create a network configuration object that encapsulates the ID for the VPC, the subnets, and the security groups.</p>
+<p>For back-end PrivateLink support, your network configuration must have an extra field that is specific to PrivateLink. The network configuration <code class="docutils literal notranslate"><span class="pre">vpc_endpoints</span></code> field references your Databricks-specific VPC endpoint IDs that were returned when you registered your VPC endpoints. See <a class="reference internal" href="#register-vpce-ids"><span class="std std-ref">Step 3a: Register VPC endpoints (front-end, back-end, or both)</span></a>.</p>
+<p>Add both of these fields in that object:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">rest_api</span></code>: Set this to a JSON array that includes exactly one element: the Databricks-specific ID for the back-end REST API VPC endpoint that you registered in <a class="reference internal" href="#register-vpce-ids"><span class="std std-ref">Step 3a: Register VPC endpoints (front-end, back-end, or both)</span></a>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Be careful to use the Databricks-specific ID that was created when you registered the regional endpoint based on the table in <a class="reference internal" href="#regional-endpoints"><span class="std std-ref">Regional endpoint reference</span></a>. It is a common configuration error to set the wrong ID on this field.</p>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dataplane_relay</span></code>: Set this to a JSON array that includes exactly one element: the Databricks-specific ID for the back-end SCC VPC endpoint that you registered in <a class="reference internal" href="#register-vpce-ids"><span class="std std-ref">Step 3a: Register VPC endpoints (front-end, back-end, or both)</span></a>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Be careful to use the Databricks-specific ID that was created when you registered the regional endpoint based on the table in <a class="reference internal" href="#regional-endpoints"><span class="std std-ref">Regional endpoint reference</span></a>. It is a common configuration error to set the wrong ID on this field.</p>
+</div>
+</li>
+</ul>
+<p>You get these Databricks-specific VPC endpoint IDs from the JSON responses of the requests you made in <a class="reference internal" href="#register-vpce-ids"><span class="std std-ref">Step 3a: Register VPC endpoints (front-end, back-end, or both)</span></a>, within the <code class="docutils literal notranslate"><span class="pre">vpc_endpoint_id</span></code> response field.</p>
+<p>The following example creates a new network configuration that references the VPC endpoint IDs. Replace <code class="docutils literal notranslate"><span class="pre">&lt;databricks-vpce-id-for-scc&gt;</span></code> with your Databricks-specific VPC endpoint ID for the secure cluster connectivity relay.  Replace <code class="docutils literal notranslate"><span class="pre">&lt;databricks-vpce-id-for-rest-apis&gt;</span></code> with your Databricks-specific VPC endpoint ID for the REST APIs.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-n<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s1">&#39;https://accounts.cloud.databricks.com/api/2.0/accounts/&lt;account-id&gt;/networks&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">    &quot;network_name&quot;: &quot;Provide name for the Network configuration&quot;,</span>
+<span class="s1">    &quot;vpc_id&quot;: &quot;&lt;aws-vpc-id&gt;&quot;,</span>
+<span class="s1">    &quot;subnet_ids&quot;: [</span>
+<span class="s1">        &quot;&lt;aws-subnet-1-id&gt;&quot;,</span>
+<span class="s1">        &quot;&lt;aws-subnet-2-id&gt;&quot;</span>
+<span class="s1">    ],</span>
+<span class="s1">    &quot;security_group_ids&quot;: [</span>
+<span class="s1">        &quot;&lt;aws-sg-id&gt;&quot;</span>
+<span class="s1">    ],</span>
+<span class="s1">    &quot;vpc_endpoints&quot;: {</span>
+<span class="s1">        &quot;dataplane_relay&quot;: [</span>
+<span class="s1">            &quot;&lt;databricks-vpce-id-for-scc&gt;&quot;</span>
+<span class="s1">        ],</span>
+<span class="s1">        &quot;rest_api&quot;: [</span>
+<span class="s1">            &quot;&lt;databricks-vpce-id-for-rest-apis&gt;&quot;</span>
+<span class="s1">        ]</span>
+<span class="s1">    }</span>
+<span class="s1">}&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-3c-create-a-pas-configuration-front-end-back-end-or-both">
+<span id="add-pas-config"></span><h4>Step 3c: Create a PAS configuration (front-end, back-end, or both)<a class="headerlink" href="#step-3c-create-a-pas-configuration-front-end-back-end-or-both" title="Permalink to this headline"> </a></h4>
+<p>Use the Databricks <a class="reference external" href="https://docs.databricks.com/api/account/introduction">Account API</a> to create or attach a private access settings (PAS) object.</p>
+<p>The private access settings object supports the following scenarios:</p>
+<ul class="simple">
+<li><p>Implement only a front-end VPC endpoint</p></li>
+<li><p>Implement only a back-end VPC endpoint</p></li>
+<li><p>Implement both front-end and back-end VPC endpoints</p></li>
+</ul>
+<p>For a workspace to support any of these PrivateLink connectivity scenarios, the workspace must be created with an attached <em>private access settings object</em>. This can be a new private access settings object intended only for this workspace, or re-use and share an existing private access setting object across multiple workspaces in the same AWS region.</p>
+<p>This object serves two purposes:</p>
+<ol class="arabic simple">
+<li><p>Expresses your intent to use AWS PrivateLink with your workspace. If you intend to connect to your workspace using front-end or back-end PrivateLink, you must attach one of these objects to your workspace during workspace creation.</p></li>
+<li><p>Controls your settings for the front-end use case of AWS PrivateLink. If you wish to use back-end PrivateLink only, you can choose to set the object’s <code class="docutils literal notranslate"><span class="pre">public_access_enabled</span></code> field to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
+</ol>
+<p>In the private access settings object definition, the <code class="docutils literal notranslate"><span class="pre">public_access_enabled</span></code> configures public access to the front-end connection (the web application and REST APIs) for your workspace:</p>
+<ul class="simple">
+<li><p>If set to <code class="docutils literal notranslate"><span class="pre">false</span></code> (the default), the front-end connection can be accessed only using PrivateLink connectivity and not from the public internet. Because access from the public network is disallowed in this case, the <a class="reference internal" href="../front-end/ip-access-list-workspace.html"><span class="doc">Configure IP access lists for workspaces</span></a> feature is not supported for the workspace.</p></li>
+<li><p>If set to <code class="docutils literal notranslate"><span class="pre">true</span></code>, the front-end connection can be accessed either from PrivateLink connectivity or from the public internet. You can optionally configure an IP access list for the workspace to restrict the source networks that could access the web application and REST APIs from the public internet (but not the PrivateLink connection).</p></li>
+</ul>
+<p>To create a private access settings object, make a <code class="docutils literal notranslate"><span class="pre">POST</span></code> request to the <code class="docutils literal notranslate"><span class="pre">/accounts/&lt;account-id&gt;/private-access-settings</span></code> REST API endpoint. The request body must include the following properties:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">private_access_settings_name</span></code>: Human-readable name for the private access settings object.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">region</span></code>: AWS region name.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">public_access_enabled</span></code>: Specifies whether to enable public access for the front-end connection. If <code class="docutils literal notranslate"><span class="pre">true</span></code>, public access is possible for the front-end connection in addition to PrivateLink connections. See the previous table for the required value for your implementation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">private_access_level</span></code>: Specify which VPC endpoints can connect to this workspace:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ACCOUNT</span> <span class="pre">(the</span> <span class="pre">default)</span></code>: Limit connections to those VPC endpoints that are registered in your Databricks account.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ENDPOINT</span></code>: Limit connections to an explicit set of VPC endpoints. See the related <code class="docutils literal notranslate"><span class="pre">allowed_vpc_endpoint_ids</span></code> property.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The private access level <code class="docutils literal notranslate"><span class="pre">ANY</span></code> is deprecated. The level is unavailable for new or existing private access settings objects.</p>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">allowed_vpc_endpoint_ids</span></code>: Use only if <code class="docutils literal notranslate"><span class="pre">private_access_level</span></code> is set to <code class="docutils literal notranslate"><span class="pre">ENDPOINT</span></code>. This property specifies the set of VPC endpoints that can connect to this workspace. Specify as a JSON array of VPC endpoint IDs. Use the Databricks IDs that were returned during <a class="reference internal" href="#register-vpce-ids"><span class="std std-ref">endpoint registration</span></a>, not the AWS IDs.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-n<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s1">&#39;https://accounts.cloud.databricks.com/api/2.0/accounts/&lt;account-id&gt;/private-access-settings&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;private_access_settings_name&quot;: &quot;Default PAS for us-west-2&quot;,</span>
+<span class="s1">  &quot;region&quot;: &quot;us-west-2&quot;,</span>
+<span class="s1">  &quot;public_access_enabled&quot;: true</span>
+<span class="s1">}&#39;</span>
+</pre></div>
+</div>
+<p>The response JSON includes a <code class="docutils literal notranslate"><span class="pre">private_access_settings_id</span></code> field. This ID is specific to this configuration within Databricks. It is important that you save that result field because you will need it when you create the workspace.</p>
+<p>Related APIs:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.databricks.com/api/account/introduction">Get a private access settings object by its ID</a></p></li>
+<li><p><a class="reference external" href="https://docs.databricks.com/api/account/introduction">Get all private access settings objects</a></p></li>
+<li><p><a class="reference external" href="https://docs.databricks.com/api/account/introduction">Update a private access settings object</a></p></li>
+<li><p><a class="reference external" href="https://docs.databricks.com/api/account/introduction">Delete private access settings object</a></p></li>
+</ul>
+</div>
+<div class="section" id="step-3d-create-or-update-a-workspace">
+<span id="create-or-update-workspace"></span><h4>Step 3d: Create or update a workspace<a class="headerlink" href="#step-3d-create-or-update-a-workspace" title="Permalink to this headline"> </a></h4>
+<p>The workspace must already use a customer-managed VPC and have secure cluster connectivity enabled, which is the case for most E2 workspaces.</p>
+<p>The important fields for creating a workspace with PrivateLink connectivity are <code class="docutils literal notranslate"><span class="pre">private_access_settings_id</span></code> (the ID of your new <a class="reference internal" href="#add-pas-config"><span class="std std-ref">private access settings object</span></a> and <code class="docutils literal notranslate"><span class="pre">network_id</span></code> (the ID of your new <a class="reference internal" href="#create-network-config"><span class="std std-ref">network configuration</span></a>).</p>
+<p>To create a workspace with PrivateLink connectivity:</p>
+<ol class="arabic">
+<li><p>Read the instructions in Databricks <a class="reference external" href="https://docs.databricks.com/api/account/introduction">Account API</a> for guidance on all fields for a new workspace with Account API. For complete instructions on all fields such as storage configurations, credential configurations, and customer-managed keys, see <a class="reference internal" href="../../../administration-guide/workspace/create-workspace-api.html"><span class="doc">Create a workspace using the Account API</span></a>.</p></li>
+<li><p>Call the <a class="reference external" href="https://docs.databricks.com/api/account/introduction">Create a new workspace API</a> (<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/accounts/{account_id}/workspaces</span></code>) and be sure to include <code class="docutils literal notranslate"><span class="pre">private_access_settings_id</span></code> and <code class="docutils literal notranslate"><span class="pre">network_id</span></code>, for example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-n<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s1">&#39;https://accounts.cloud.databricks.com/api/2.0/accounts/&lt;databricks-account-id&gt;/workspaces&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;workspace_name&quot;: &quot;my-company-example&quot;,</span>
+<span class="s1">  &quot;deployment_name&quot;: &quot;my-company-example&quot;,</span>
+<span class="s1">  &quot;aws_region&quot;: &quot;us-west-2&quot;,</span>
+<span class="s1">  &quot;credentials_id&quot;: &quot;&lt;aws-credentials-id&gt;&quot;,</span>
+<span class="s1">  &quot;storage_configuration_id&quot;: &quot;&lt;databricks-storage-config-id&gt;&quot;,</span>
+<span class="s1">  &quot;network_id&quot;: &quot;&lt;databricks-network-config-id&gt;&quot;,</span>
+<span class="s1">  &quot;managed_services_customer_managed_key_id&quot;: &quot;&lt;aws-kms-managed-services-key-id&gt;&quot;,</span>
+<span class="s1">  &quot;storage_customer_managed_key_id&quot;: &quot;&lt;aws-kms-notebook-workspace-storage-config-id&gt;&quot;,</span>
+<span class="s1">  &quot;private_access_settings_id&quot;: &quot;&lt;private-access-settings-id&gt;&quot;</span>
+<span class="s1">}&#39;</span>
+</pre></div>
+</div>
+</li>
+<li><p>After creating or updating an existing workspace with PrivateLink, you must wait before the workspace is available for using or creating clusters, the workspace status stays at status <code class="docutils literal notranslate"><span class="pre">RUNNING</span></code> and the VPC change happens immediately. However, you cannot use or create clusters for another 20 minutes. If you create or use clusters before this time interval elapses, clusters do not launch successfully, fail, or could cause other unexpected behavior.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="use-terraform">
+<h3><a class="toc-backref" href="#id3">Use Terraform</a><a class="headerlink" href="#use-terraform" title="Permalink to this headline"> </a></h3>
+<p>To use Terraform to create underlying AWS network objects and the related Databricks PrivateLink objects, see these Terraform providers:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mws_vpc_endpoint">Terraform provider that registers VPC endpoints</a>. Before using this resource, you must have already created the necessary AWS VPC endpoints.</p></li>
+<li><p><a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mws_networks">Terraform provider that creates an AWS VPC and a Databricks network configuration</a>.</p></li>
+<li><p><a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mws_private_access_settings">Terraform provider that creates a Databricks private access settings object</a>.</p></li>
+</ul>
+<p>To use Terraform to deploy a workspace, see this Terraform provider:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mws_workspaces">Terraform provider for workspaces</a>.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="step-4-configure-internal-dns-to-redirect-user-requests-to-the-web-application-for-front-end">
+<span id="create-dns-name"></span><h2>Step 4: Configure internal DNS to redirect user requests to the web application (for front-end)<a class="headerlink" href="#step-4-configure-internal-dns-to-redirect-user-requests-to-the-web-application-for-front-end" title="Permalink to this headline"> </a></h2>
+<p>To use your front-end PrivateLink connection, redirect user requests to the web application. This requires changing private DNS for the network that your users use or connect to. If users need to access the Databricks workspace from an on-premises network that is under the scope of your internal or custom DNS, perform the following configuration after the workspace is created or updated to ensure that your workspace URL maps to the VPC endpoint private IP for your workspace VPC endpoint.</p>
+<p>Configure your internal DNS such that it maps the web application workspace URL to your front-end VPC endpoint.</p>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">nslookup</span></code> Unix command line tool to test the DNS resolution using your workspace deploy domain name, for example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nslookup<span class="w"> </span>my-workspace-name-here.cloud.databricks.com
+</pre></div>
+</div>
+<p>Example response:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Non-authoritative answer:
+
+my-workspace-name-here.cloud.databricks.com     canonical name = oregon.cloud.databricks.com.
+
+oregon.cloud.databricks.com     canonical name = a89b3c627d423471389d6ada5c3311b4-f09b129745548506.elb.us-west-2.amazonaws.com.
+
+Name:   a89b3c627d423471389d6ada5c3311b4-f09b129745548506.elb.us-west-2.amazonaws.com
+
+Address: 44.234.192.47
+</pre></div>
+</div>
+<p>Example DNS mapping for a workspace with front-end VPC endpoint in AWS region <code class="docutils literal notranslate"><span class="pre">us-east-1</span></code>:</p>
+<ul class="simple">
+<li><p>By default the DNS mapping is:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">myworkspace.cloud.databricks.com</span></code> maps to <code class="docutils literal notranslate"><span class="pre">nvirginia.privatelink.cloud.databricks.com</span></code>. In this case <code class="docutils literal notranslate"><span class="pre">nvirginia</span></code> is the control plane instance short name in that region.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nvirginia.privatelink.cloud.databricks.com</span></code> maps to <code class="docutils literal notranslate"><span class="pre">nvirginia.cloud.databricks.com</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nvirginia.cloud.databricks.com</span></code> maps to the AWS public IPs.</p></li>
+</ul>
+</li>
+<li><p>After your DNS changes, from your transit VPC (where your front-end VPC endpoint is), the DNS mapping would be:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">myworkspace.cloud.databricks.com</span></code> maps to <code class="docutils literal notranslate"><span class="pre">nvirginia.privatelink.cloud.databricks.com</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nvirginia.privatelink.cloud.databricks.com</span></code> maps to the VPC endpoint private IP address.</p></li>
+</ul>
+</li>
+</ul>
+<p>For the workspace URL to map to the VPC endpoint private IP from the on-premises network, you must do one of the following:</p>
+<ul class="simple">
+<li><p>Configure conditional forwarding for the workspace URL to use <a class="reference external" href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_DHCP_Options.html#AmazonDNS">AmazonDNS</a>.</p></li>
+<li><p>Create an A-record for the workspace URL in your on-premises or internal DNS that maps to the VPC endpoint private IP.</p></li>
+<li><p>Complete steps similar to what you would do to enable access to other similar PrivateLink-enabled services.</p></li>
+</ul>
+<p>You can choose to map the workspace URL directly to the front-end (workspace) VPC endpoint private IP by creating an A-record in your internal DNS, such that the DNS mapping looks like this:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">myworkspace.cloud.databricks.com</span></code> maps to the VPC endpoint private IP</p></li>
+</ul>
+<p>After you make changes to your internal DNS configuration, test the configuration by accessing the Databricks workspace web application and REST API from your transit VPC. Create a VPC in the transit VPC if necessary to test the configuration.</p>
+<p>If you didn’t configure your DNS record in your private DNS domain, you may receive an error. You can fix this by creating the following records on your DNS server. Then, you can access the workspace, Spark interface, and web terminal services.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Record type</p></th>
+<th class="head"><p>Record name</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>A</p></td>
+<td><p>&lt;deployment-name&gt;.cloud.databricks.com</p></td>
+<td><p>PrivateLink interface IP</p></td>
+</tr>
+<tr class="row-odd"><td><p>CNAME</p></td>
+<td><p>dbc-dp-&lt;workspace-id&gt;.cloud.databricks.com</p></td>
+<td><p>&lt;deployment-name&gt;.cloud.databricks.com</p></td>
+</tr>
+</tbody>
+</table>
+<p>If you have questions about how this applies to your network architecture, contact your Databricks account team.</p>
+</div>
+<div class="section" id="step-5-add-vpc-endpoints-for-other-aws-services">
+<span id="optional-vpce"></span><h2>Step 5: Add VPC endpoints for other AWS services<a class="headerlink" href="#step-5-add-vpc-endpoints-for-other-aws-services" title="Permalink to this headline"> </a></h2>
+<p>If you are using <a class="reference internal" href="secure-cluster-connectivity.html"><span class="doc">secure cluster connectivity</span></a>, (Required to implement a PrivateLink back-end connection) you can add other VPC endpoints to your compute plane VPC, so your clusters can connect to AWS native services that Databricks uses, such as S3, STS, Kinesis, and other resources that your workspace accesses.</p>
+<ul class="simple">
+<li><p><strong>S3 VPC gateway endpoint</strong>: Attach this only to the route table that’s attached to your workspace subnets. If you’re using the recommended separate subnet with its own route table for back-end VPC endpoints, then the S3 VPC endpoint doesn’t need to be attached to that particular route table.</p></li>
+<li><p><strong>STS VPC interface endpoint</strong>: Create this in all the workspace subnets and attach it to the workspace security group. Do not create this in the subnet for back-end VPC endpoints.</p></li>
+<li><p><strong>Kinesis VPC interface endpoint</strong>: Just like the STS VPC interface endpoint, create the Kinesis VPC interface endpoint in all the workspace subnets and attach them to the workspace security group.</p></li>
+</ul>
+<p>If you want to lock down a workspace VPC so that no other outbound connections are supported, the workspace won’t have access to the Databricks-provided metastore (RDS-based Hive Metastore) because AWS does not yet support PrivateLink for JDBC traffic to RDS. One option is that you could configure the regional Databricks-provided metastore FQDN or IP in an egress firewall, or a public route table to Internet Gateway, or a Network ACL for the public subnet hosting a NAT Gateway. In such a case, the traffic to the Databricks-provided metastore would go over the public network. However, if you do not want to access the Databricks-managed metastore over the public network:</p>
+<ul class="simple">
+<li><p>You could deploy an external metastore in your own VPC. See <a class="reference internal" href="../../../archive/external-metastores/external-hive-metastore.html"><span class="doc">External Apache Hive metastore (legacy)</span></a>.</p></li>
+<li><p>You could use AWS Glue for your metastore. Glue supports PrivateLink. See <a class="reference internal" href="../../../archive/external-metastores/aws-glue-metastore.html"><span class="doc">Use AWS Glue Data Catalog as a metastore (legacy)</span></a>.</p></li>
+</ul>
+<p>You may also want to consider any need for access to public library repositories like pypi (for python) or CRAN (for R). To access those, either reconsider deploying in a fully-locked-down outbound mode, or instead use an egress firewall in your architecture to configure the required repositories. The overall architecture of your deployment depends on your overall requirements. If you have questions, contact your Databricks account team.</p>
+<p>To create the AWS VPC endpoints using the AWS Management Console, see the AWS article for <a class="reference external" href="https://docs.aws.amazon.com/vpc/latest/privatelink/vpce-interface.html">creating VPC endpoints in the AWS Management Console</a>.</p>
+<p>For tools that can help automate VPC endpoint creation and management, see:</p>
+<ul class="simple">
+<li><p>The article <a class="reference internal" href="../../../dev-tools/terraform/index.html"><span class="doc">Databricks Terraform provider</span></a></p></li>
+<li><p>The Terraform resources <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mws_vpc_endpoint">databricks_mws_vpc_endpoint</a> and <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mws_private_access_settings">databricks_mws_private_access_settings</a>.</p></li>
+<li><p>The Terraform guide <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/guides/aws-private-link-workspace">Deploying prerequisite resources and enabling PrivateLink connections</a>.</p></li>
+<li><p>The AWS article <a class="reference external" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html">CloudFormation: Creating VPC Endpoint</a></p></li>
+<li><p>The AWS article <a class="reference external" href="https://docs.aws.amazon.com/cli/latest/reference/ec2/create-vpc-endpoint.html">AWS CLI : create-vpc-endpoint</a>.</p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

@@ -1,0 +1,466 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to implement Python and SQL user-defined functions for use with Unity Catalog on Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="User-defined functions (UDFs) in Unity Catalog">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>User-defined functions (UDFs) in Unity Catalog &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/udf/unity-catalog.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/udf/unity-catalog.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/udf/unity-catalog.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/udf/unity-catalog.html" class="notranslate">English</option>
+    <option value="../../ja/udf/unity-catalog.html" class="notranslate">日本語</option>
+    <option value="../../pt/udf/unity-catalog.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>User-defined functions (UDFs) in Unity Catalog</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="user-defined-functions-udfs-in-unity-catalog">
+<span id="user-defined-functions-udfs-in-uc"></span><h1>User-defined functions (UDFs) in Unity Catalog<a class="headerlink" href="#user-defined-functions-udfs-in-unity-catalog" title="Permalink to this headline"> </a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This feature is in Public Preview and requires Databricks Runtime 13.2 and above.</p>
+</div>
+<p>Databricks provides a SQL-native syntax to register custom functions to schemas governed by Unity Catalog. Standard <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">FUNCTION</span></code> SQL syntax is supported for all Unity Catalog compute on Databricks. On pro or serverless SQL warehouses and in Databricks Runtime 13.2 and above, you can include Python code in functions registered to Unity Catalog.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Views registered from queries that use UDFs must use supported compute. Classic SQL warehouses and Databricks Runtime 13.1 and below cannot resolve views that contain UDFs registered to Unity Catalog.</p>
+</div>
+<p>For the complete SQL language reference, see <a class="reference internal" href="../sql/language-manual/sql-ref-syntax-ddl-create-sql-function.html"><span class="doc">CREATE FUNCTION (SQL and Python)</span></a>.</p>
+<p>For information about how Unity Catalog manages permissions on functions, see <a class="reference internal" href="../data-governance/unity-catalog/manage-privileges/privileges.html#function"><span class="std std-ref">CREATE FUNCTION</span></a>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Python UDFs registered as functions in Unity Catalog differ in scope and support from PySpark UDFs scoped to a notebook or SparkSession. See <a class="reference internal" href="python.html"><span class="doc">User-defined scalar functions - Python</span></a>.</p>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>UDFs and UDAFs are not supported on Graviton clusters configured with shared access mode and Unity Catalog.</p>
+</div>
+<div class="section" id="custom-sql-functions-in-unity-catalog">
+<span id="custom-sql-functions-in-uc"></span><h2>Custom SQL functions in Unity Catalog<a class="headerlink" href="#custom-sql-functions-in-unity-catalog" title="Permalink to this headline"> </a></h2>
+<p>When you create a SQL function using compute configured for Unity Catalog, the function is registered to the currently active schema by default. The following example demonstrates the syntax you might use to declare a target catalog and schema for a new function:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">target_catalog</span><span class="p">.</span><span class="n">target_schema</span><span class="p">.</span><span class="n">roll_dice</span><span class="p">()</span>
+<span class="w">    </span><span class="k">RETURNS</span><span class="w"> </span><span class="nb">INT</span>
+<span class="w">    </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="k">SQL</span>
+<span class="w">    </span><span class="k">NOT</span><span class="w"> </span><span class="k">DETERMINISTIC</span>
+<span class="w">    </span><span class="k">CONTAINS</span><span class="w"> </span><span class="k">SQL</span>
+<span class="w">    </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;Roll a single 6 sided die&#39;</span>
+<span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="p">(</span><span class="n">rand</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">6</span><span class="p">)::</span><span class="nb">INT</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>All users with sufficient privileges on the function can then use the function in compute environments configured for Unity Catalog, as in the following example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">target_catalog</span><span class="p">.</span><span class="n">target_schema</span><span class="p">.</span><span class="n">roll_dice</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can use UDFs using <code class="docutils literal notranslate"><span class="pre">LANGUAGE</span> <span class="pre">SQL</span></code> to return tables or scalar values.</p>
+</div>
+</div>
+<div class="section" id="register-a-python-udf-to-uc">
+<span id="register-a-python-udf-to-unity-catalog"></span><h2>Register a Python UDF to Unity Catalog<a class="headerlink" href="#register-a-python-udf-to-uc" title="Permalink to this headline"> </a></h2>
+<p>In Databricks Runtime 13.1 and above, you can use the SQL <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">FUNCTION</span></code> statement to register scalar Python UDFs to Unity Catalog.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Only pro and serverless SQL warehouses support Python UDFs for Unity Catalog.</p>
+</div>
+<p>Python UDFs are designed to provide the full expressiveness of Python directly within SQL functions, allowing for customized operations such as advanced transformations, data masking, and hashing.</p>
+<p>Python UDFs execute in a secure, isolated environment and do not have access to file systems or internal services.</p>
+<p>Python UDFs running on serverless compute or in shared access mode allow TCP/UDP network traffic over ports 80, 443, and 53.</p>
+<p>See <a class="reference internal" href="index.html#udf-efficiency"><span class="std std-ref">Which UDFs are most efficient?</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Syntax and semantics for Python UDFs in Unity Catalog differ from Python UDFs registered to the SparkSession. See <a class="reference internal" href="python.html"><span class="doc">User-defined scalar functions - Python</span></a>.</p>
+</div>
+<p>Python UDFs for Unity Catalog use statements set off by double dollar signs (<code class="docutils literal notranslate"><span class="pre">$$</span></code>), as in the following code example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">target_catalog</span><span class="p">.</span><span class="n">target_schema</span><span class="p">.</span><span class="n">greet</span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="n">STRING</span><span class="p">)</span>
+<span class="k">RETURNS</span><span class="w"> </span><span class="n">STRING</span>
+<span class="k">LANGUAGE</span><span class="w"> </span><span class="n">PYTHON</span>
+<span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">f</span><span class="ss">&quot;Hello, {s}&quot;</span>
+<span class="err">$$</span>
+</pre></div>
+</div>
+<p>The following example demonstrates using this function to return greeting statements for all names stored in the <code class="docutils literal notranslate"><span class="pre">first_name</span></code> column of a table named <code class="docutils literal notranslate"><span class="pre">students</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">target_catalog</span><span class="p">.</span><span class="n">target_schema</span><span class="p">.</span><span class="n">greet</span><span class="p">(</span><span class="n">first_name</span><span class="p">)</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">students</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>You can define any number of Python functions within a Python UDF, but must return a scalar value.</p>
+<p>Python functions must handle <code class="docutils literal notranslate"><span class="pre">NULL</span></code> values independently, and all type mappings must follow Databricks <a class="reference internal" href="../sql/language-manual/sql-ref-datatypes.html#language-mappings"><span class="std std-ref">SQL language mappings</span></a>.</p>
+<p>You can import standard Python libraries included by Databricks, but you cannot include custom libraries or external dependencies.</p>
+<p>If no catalog or schema is specified, Python UDFs are registered to the current active schema.</p>
+<p>The following example imports a library and uses multiple functions within a Python UDF:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">roll_dice</span><span class="p">(</span><span class="n">num_dice</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span><span class="w"> </span><span class="n">num_sides</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">)</span>
+<span class="k">RETURNS</span><span class="w"> </span><span class="nb">INTEGER</span>
+<span class="k">LANGUAGE</span><span class="w"> </span><span class="n">PYTHON</span>
+<span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<span class="w">  </span><span class="n">import</span><span class="w"> </span><span class="n">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">np</span>
+
+<span class="w">  </span><span class="n">def</span><span class="w"> </span><span class="n">roll_die</span><span class="p">(</span><span class="n">num_sides</span><span class="p">):</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="n">num_sides</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+
+<span class="w">  </span><span class="n">def</span><span class="w"> </span><span class="n">sum_dice</span><span class="p">(</span><span class="n">num_dice</span><span class="p">,</span><span class="n">num_sides</span><span class="p">):</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">sum</span><span class="p">([</span><span class="n">roll_die</span><span class="p">(</span><span class="n">num_sides</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">range</span><span class="p">(</span><span class="n">num_dice</span><span class="p">)])</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">sum_dice</span><span class="p">(</span><span class="n">num_dice</span><span class="p">,</span><span class="w"> </span><span class="n">num_sides</span><span class="p">)</span>
+<span class="err">$$</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

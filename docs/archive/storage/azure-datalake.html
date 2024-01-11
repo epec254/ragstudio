@@ -1,0 +1,510 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to configure Databricks to read and write data stored on Azure Data Lake Storage Gen 1." name="description" />
+<meta content="noindex" name="robots" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Accessing Azure Data Lake Storage Gen1 from Databricks">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Accessing Azure Data Lake Storage Gen1 from Databricks &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/archive/storage/azure-datalake.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/archive/storage/azure-datalake.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/archive/storage/azure-datalake.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/archive/storage/azure-datalake.html" class="notranslate">English</option>
+    <option value="../../../ja/archive/storage/azure-datalake.html" class="notranslate">日本語</option>
+    <option value="../../../pt/archive/storage/azure-datalake.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Accessing Azure Data Lake Storage Gen1 from Databricks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="accessing-azure-data-lake-storage-gen1-from-databricks">
+<h1>Accessing Azure Data Lake Storage Gen1 from Databricks<a class="headerlink" href="#accessing-azure-data-lake-storage-gen1-from-databricks" title="Permalink to this headline"> </a></h1>
+<p>Microsoft has announced the planned retirement of <a class="reference external" href="https://learn.microsoft.com/azure/data-lake-store/">Azure Data Lake Storage Gen1</a> (formerly Azure Data Lake Store, also known as ADLS) and recommends all users migrate to <a class="reference internal" href="../../connect/storage/azure-storage.html"><span class="doc">Azure Data Lake Storage Gen2</span></a>. Databricks recommends upgrading to Azure Data Lake Storage Gen2 for best performance and new features.</p>
+<p>You can access Azure Data Lake Storage Gen1 directly using a service principal.</p>
+<div class="section" id="create-and-grant-permissions-to-service-principal">
+<span id="gen1-service-principal"></span><h2>Create and grant permissions to service principal<a class="headerlink" href="#create-and-grant-permissions-to-service-principal" title="Permalink to this headline"> </a></h2>
+<p>If your selected access method requires a service principal with adequate permissions, and you do not have one, follow these steps:</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://learn.microsoft.com/azure/azure-resource-manager/resource-group-create-service-principal-portal">Create a Microsoft Entra ID application and service principal that can access resources</a>. Note the following properties:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">application-id</span></code>: An ID that uniquely identifies the client application.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">directory-id</span></code>:  An ID that uniquely identifies the Microsoft Entra ID instance.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">service-credential</span></code>: A string that the application uses to prove its identity.</p></li>
+</ul>
+</li>
+<li><p>Register the service principal, granting the correct <a class="reference external" href="https://learn.microsoft.com/azure/data-lake-store/data-lake-store-secure-data">role assignment</a>, such as Contributor, on the Azure Data Lake Storage Gen1 account.</p></li>
+</ol>
+</div>
+<div class="section" id="access-directly-with-spark-apis-using-a-service-principal-and-oauth-20">
+<span id="adls-gen1-oauth-2"></span><h2>Access directly with Spark APIs using a service principal and OAuth 2.0<a class="headerlink" href="#access-directly-with-spark-apis-using-a-service-principal-and-oauth-20" title="Permalink to this headline"> </a></h2>
+<p>To read from your Azure Data Lake Storage Gen1 account, you can configure Spark to use service credentials with the following snippet in your notebook:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;fs.adl.oauth2.access.token.provider.type&quot;</span><span class="p">,</span> <span class="s2">&quot;ClientCredential&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;fs.adl.oauth2.client.id&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;application-id&gt;&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;fs.adl.oauth2.credential&quot;</span><span class="p">,</span> <span class="n">dbutils</span><span class="o">.</span><span class="n">secrets</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scope</span> <span class="o">=</span> <span class="s2">&quot;&lt;scope-name&gt;&quot;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;&lt;key-name-for-service-credential&gt;&quot;</span><span class="p">))</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;fs.adl.oauth2.refresh.url&quot;</span><span class="p">,</span> <span class="s2">&quot;https://login.microsoftonline.com/&lt;directory-id&gt;/oauth2/token&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dbutils.secrets.get(scope</span> <span class="pre">=</span> <span class="pre">&quot;&lt;scope-name&gt;&quot;,</span> <span class="pre">key</span> <span class="pre">=</span> <span class="pre">&quot;&lt;key-name&gt;&quot;)</span></code> retrieves your storage account access key that has been stored as a <a class="reference internal" href="../../security/secrets/secrets.html"><span class="doc">secret</span></a> in a <a class="reference internal" href="../../security/secrets/secret-scopes.html"><span class="doc">secret scope</span></a>.</p></li>
+</ul>
+<p>After you’ve set up your credentials, you can use standard Spark and Databricks APIs to access the resources. For example:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;parquet&quot;</span><span class="p">).</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;adl://&lt;storage-resource&gt;.azuredatalakestore.net/&lt;directory-name&gt;&quot;</span><span class="p">)</span>
+
+<span class="n">dbutils</span><span class="p">.</span><span class="n">fs</span><span class="p">.</span><span class="n">ls</span><span class="p">(</span><span class="s">&quot;adl://&lt;storage-resource&gt;.azuredatalakestore.net/&lt;directory-name&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Azure Data Lake Storage Gen1 provides directory level access control, so the service principal must have access to the directories that you want to read from as well as the Azure Data Lake Storage Gen1 resource.</p>
+<div class="section" id="access-through-metastore">
+<span id="adls-creds-spark-conf"></span><h3>Access through metastore<a class="headerlink" href="#access-through-metastore" title="Permalink to this headline"> </a></h3>
+<p>To access <code class="docutils literal notranslate"><span class="pre">adl://</span></code> locations specified in the metastore, you must specify Hadoop credential configuration options as Spark options when you create the cluster by adding the <code class="docutils literal notranslate"><span class="pre">spark.hadoop.</span></code> prefix to the corresponding Hadoop configuration keys to propagate them to the Hadoop configurations used by the metastore:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">spark.hadoop.fs.adl.oauth2.access.token.provider.type ClientCredential</span>
+<span class="na">spark.hadoop.fs.adl.oauth2.client.id &lt;application-id&gt;</span>
+<span class="na">spark.hadoop.fs.adl.oauth2.credential &lt;service-credential&gt;</span>
+<span class="na">spark.hadoop.fs.adl.oauth2.refresh.url https</span><span class="o">:</span><span class="s">//login.microsoftonline.com/&lt;directory-id&gt;/oauth2/token</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>These credentials are available to all users who access the cluster.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="mount-azure-data-lake-storage-gen1-resource-or-folder">
+<span id="access-through-metastore"></span><span id="mount-adls"></span><h3>Mount Azure Data Lake Storage Gen1 resource or folder<a class="headerlink" href="#mount-azure-data-lake-storage-gen1-resource-or-folder" title="Permalink to this headline"> </a></h3>
+<p>To mount an Azure Data Lake Storage Gen1 resource or a folder inside it, use the following command:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">configs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;fs.adl.oauth2.access.token.provider.type&quot;</span><span class="p">:</span> <span class="s2">&quot;ClientCredential&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;fs.adl.oauth2.client.id&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;application-id&gt;&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;fs.adl.oauth2.credential&quot;</span><span class="p">:</span> <span class="n">dbutils</span><span class="o">.</span><span class="n">secrets</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scope</span> <span class="o">=</span> <span class="s2">&quot;&lt;scope-name&gt;&quot;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;&lt;key-name-for-service-credential&gt;&quot;</span><span class="p">),</span>
+          <span class="s2">&quot;fs.adl.oauth2.refresh.url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://login.microsoftonline.com/&lt;directory-id&gt;/oauth2/token&quot;</span><span class="p">}</span>
+
+<span class="c1"># Optionally, you can add &lt;directory-name&gt; to the source URI of your mount point.</span>
+<span class="n">dbutils</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span>
+  <span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;adl://&lt;storage-resource&gt;.azuredatalakestore.net/&lt;directory-name&gt;&quot;</span><span class="p">,</span>
+  <span class="n">mount_point</span> <span class="o">=</span> <span class="s2">&quot;/mnt/&lt;mount-name&gt;&quot;</span><span class="p">,</span>
+  <span class="n">extra_configs</span> <span class="o">=</span> <span class="n">configs</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="n">configs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">  </span><span class="s">&quot;fs.adl.oauth2.access.token.provider.type&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;ClientCredential&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s">&quot;fs.adl.oauth2.client.id&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;&lt;application-id&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s">&quot;fs.adl.oauth2.credential&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">dbutils</span><span class="p">.</span><span class="n">secrets</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">scope</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&lt;scope-name&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&lt;key-name-for-service-credential&gt;&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="s">&quot;fs.adl.oauth2.refresh.url&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;https://login.microsoftonline.com/&lt;directory-id&gt;/oauth2/token&quot;</span><span class="p">)</span>
+
+<span class="c1">// Optionally, you can add &lt;directory-name&gt; to the source URI of your mount point.</span>
+<span class="n">dbutils</span><span class="p">.</span><span class="n">fs</span><span class="p">.</span><span class="n">mount</span><span class="p">(</span>
+<span class="w">  </span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;adl://&lt;storage-resource&gt;.azuredatalakestore.net/&lt;directory-name&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">mountPoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/mnt/&lt;mount-name&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">extraConfigs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">configs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>where</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;mount-name&gt;</span></code> is a DBFS path that represents where the Azure Data Lake Storage Gen1 account or a folder inside it (specified in <code class="docutils literal notranslate"><span class="pre">source</span></code>) will be mounted in DBFS.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dbutils.secrets.get(scope</span> <span class="pre">=</span> <span class="pre">&quot;&lt;scope-name&gt;&quot;,</span> <span class="pre">key</span> <span class="pre">=</span> <span class="pre">&quot;&lt;key-name&gt;&quot;)</span></code> retrieves your storage account access key that has been stored as a <a class="reference internal" href="../../security/secrets/secrets.html"><span class="doc">secret</span></a> in a <a class="reference internal" href="../../security/secrets/secret-scopes.html"><span class="doc">secret scope</span></a>.</p></li>
+</ul>
+<p>Access files in your container as if they were local files, for example:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;/mnt/&lt;mount-name&gt;/....&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;dbfs:/mnt/&lt;mount-name&gt;/....&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">).</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;/mnt/&lt;mount-name&gt;/....&quot;</span><span class="p">)</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">).</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;dbfs:/mnt/&lt;mount-name&gt;/....&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="set-up-service-credentials-for-multiple-accounts">
+<h2>Set up service credentials for multiple accounts<a class="headerlink" href="#set-up-service-credentials-for-multiple-accounts" title="Permalink to this headline"> </a></h2>
+<p>You can set up service credentials for multiple Azure Data Lake Storage Gen1 accounts for use within in a single Spark session by adding <code class="docutils literal notranslate"><span class="pre">account.&lt;account-name&gt;</span></code> to the configuration keys. For example, if you want to set up credentials for both the accounts to access <code class="docutils literal notranslate"><span class="pre">adl://example1.azuredatalakestore.net</span></code> and <code class="docutils literal notranslate"><span class="pre">adl://example2.azuredatalakestore.net</span></code>, you can do this as follows:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.adl.oauth2.access.token.provider.type&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ClientCredential&quot;</span><span class="p">)</span>
+
+<span class="n">spark</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.adl.account.example1.oauth2.client.id&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&lt;application-id-example1&gt;&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.adl.account.example1.oauth2.credential&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">dbutils</span><span class="p">.</span><span class="n">secrets</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">scope</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&lt;scope-name&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&lt;key-name-for-service-credential-example1&gt;&quot;</span><span class="p">))</span>
+<span class="n">spark</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.adl.account.example1.oauth2.refresh.url&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;https://login.microsoftonline.com/&lt;directory-id-example1&gt;/oauth2/token&quot;</span><span class="p">)</span>
+
+<span class="n">spark</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.adl.account.example2.oauth2.client.id&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&lt;application-id-example2&gt;&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.adl.account.example2.oauth2.credential&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">dbutils</span><span class="p">.</span><span class="n">secrets</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">scope</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&lt;scope-name&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&lt;key-name-for-service-credential-example2&gt;&quot;</span><span class="p">))</span>
+<span class="n">spark</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.adl.account.example2.oauth2.refresh.url&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;https://login.microsoftonline.com/&lt;directory-id-example2&gt;/oauth2/token&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This also works for the cluster <a class="reference internal" href="../../compute/configure.html#spark-configuration"><span class="std std-ref">Spark configuration</span></a>:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">spark.hadoop.fs.adl.oauth2.access.token.provider.type ClientCredential</span>
+
+<span class="na">spark.hadoop.fs.adl.account.example1.oauth2.client.id &lt;application-id-example1&gt;</span>
+<span class="na">spark.hadoop.fs.adl.account.example1.oauth2.credential &lt;service-credential-example1&gt;</span>
+<span class="na">spark.hadoop.fs.adl.account.example1.oauth2.refresh.url https</span><span class="o">:</span><span class="s">//login.microsoftonline.com/&lt;directory-id-example1&gt;/oauth2/token</span>
+
+<span class="na">spark.hadoop.fs.adl.account.example2.oauth2.client.id &lt;application-id-example2&gt;</span>
+<span class="na">spark.hadoop.fs.adl.account.example2.oauth2.credential &lt;service-credential-example2&gt;</span>
+<span class="na">spark.hadoop.fs.adl.account.example2.oauth2.refresh.url https</span><span class="o">:</span><span class="s">//login.microsoftonline.com/&lt;directory-id-example2&gt;/oauth2/token</span>
+</pre></div>
+</div>
+<p>The following notebook demonstrates how to access Azure Data Lake Storage Gen1 directly and with a mount.</p>
+<div class="embedded-notebook-section section" id="adls-gen1-service-principal-notebook">
+<span id="adls-service-prin-gen1"></span><h3>ADLS Gen1 service principal notebook<a class="headerlink" href="#adls-gen1-service-principal-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/adls-service-prin-gen1.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/adls-service-prin-gen1.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/adls-service-prin-gen1.html"            id="a505cd379f3eef2741db50c279287d3c61f8df39c85fbb0f5b1a03987aa3a744" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

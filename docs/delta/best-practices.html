@@ -1,0 +1,551 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Best practices and recommendations for using Delta Lake on Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Best practices: Delta Lake">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Best practices: Delta Lake &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/delta/best-practices.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/delta/best-practices.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/delta/best-practices.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/delta/best-practices.html" class="notranslate">English</option>
+    <option value="../../ja/delta/best-practices.html" class="notranslate">日本語</option>
+    <option value="../../pt/delta/best-practices.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Best practices: Delta Lake</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="best-practices-delta-lake">
+<span id="best-practices-delta"></span><h1>Best practices: Delta Lake<a class="headerlink" href="#best-practices-delta-lake" title="Permalink to this headline"> </a></h1>
+<p>This article describes best practices when using Delta Lake.</p>
+<p>Databricks recommends using predictive optimization. See <a class="reference internal" href="../optimizations/predictive-optimization.html"><span class="doc">Predictive optimization for Delta Lake</span></a>.</p>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="provide-data-location-hints">
+<h2>Provide data location hints<a class="headerlink" href="#provide-data-location-hints" title="Permalink to this headline"> </a></h2>
+<p>If you expect a column to be commonly used in query predicates and if that column has high cardinality
+(that is, a large number of distinct values), then use <code class="docutils literal notranslate"><span class="pre">Z-ORDER</span> <span class="pre">BY</span></code>. Delta Lake automatically lays out
+the data in the files based on the column values and uses the layout information to skip irrelevant data while querying.</p>
+<p>For details, see <a class="reference internal" href="data-skipping.html"><span class="doc">Data skipping with Z-order indexes for Delta Lake</span></a>.</p>
+</div>
+<div class="section" id="compact-files">
+<span id="delta-compact-files"></span><h2>Compact files<a class="headerlink" href="#compact-files" title="Permalink to this headline"> </a></h2>
+<p>If you continuously write data to a Delta table, it will over time accumulate a large number of files, especially if you add data in small batches. This can have an adverse effect on the efficiency of table reads, and it can also affect the performance of your file system. Ideally, a large number of small files should be rewritten into a smaller number of larger files on a regular basis. This is known as compaction.</p>
+<p>You can compact a table using the <a class="reference internal" href="optimize.html"><span class="doc">OPTIMIZE</span></a> command.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This operation does not remove the old files. To remove them, run the <a class="reference internal" href="vacuum.html"><span class="doc">VACUUM</span></a> command.</p>
+</div>
+</div>
+<div class="section" id="replace-the-content-or-schema-of-a-table">
+<span id="delta-replace-table"></span><h2>Replace the content or schema of a table<a class="headerlink" href="#replace-the-content-or-schema-of-a-table" title="Permalink to this headline"> </a></h2>
+<p>Sometimes you may want to replace a Delta table. For example:</p>
+<ul class="simple">
+<li><p>You discover the data in the table is incorrect and want to replace the content.</p></li>
+<li><p>You want to rewrite the whole table to do incompatible schema changes (such as changing column types).</p></li>
+</ul>
+<p>While you can delete the entire directory of a Delta table and create a new table on the same path, it’s <em>not recommended</em> because:</p>
+<ul class="simple">
+<li><p>Deleting a directory is not efficient. A directory containing very large files can take hours or even days to delete.</p></li>
+<li><p>You lose all of the content in the deleted files; it’s hard to recover if you delete the wrong table.</p></li>
+<li><p>The directory deletion is not atomic. While you are deleting the table a concurrent query reading the table can fail or see a partial table.</p></li>
+</ul>
+<ul class="simple">
+<li><p>You may experience potential consistency issues on S3, which is only eventually consistent.</p></li>
+</ul>
+<p></p>
+<p>If you don’t need to change the table schema, you can <a class="reference internal" href="tutorial.html#delete"><span class="std std-ref">delete</span></a> data from a Delta table and insert your new data, or <a class="reference internal" href="tutorial.html#update"><span class="std std-ref">update</span></a> the table to fix the incorrect values.</p>
+<p>If you want to change the table schema, you can replace the whole table atomically. For example:</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="python">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dataframe</span><span class="o">.</span><span class="n">write</span> \
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;overwrite&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;overwriteSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">&quot;&lt;your-table&gt;&quot;</span><span class="p">)</span> <span class="c1"># Managed table</span>
+
+<span class="n">dataframe</span><span class="o">.</span><span class="n">write</span> \
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;overwrite&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;overwriteSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;your-table-path&gt;&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">&quot;&lt;your-table&gt;&quot;</span><span class="p">)</span> <span class="c1"># External table</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-middle compound" lang="sql">
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">REPLACE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">your</span><span class="o">-</span><span class="k">table</span><span class="o">&gt;</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">DELTA</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="c1">-- Managed table</span>
+<span class="k">REPLACE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">your</span><span class="o">-</span><span class="k">table</span><span class="o">&gt;</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">DELTA</span><span class="w"> </span><span class="k">LOCATION</span><span class="w"> </span><span class="ss">&quot;&lt;your-table-path&gt;&quot;</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="c1">-- External table</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="scala">
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">dataframe</span><span class="p">.</span><span class="n">write</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;delta&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">mode</span><span class="p">(</span><span class="s">&quot;overwrite&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;overwriteSchema&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s">&quot;&lt;your-table&gt;&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1">// Managed table</span>
+
+<span class="n">dataframe</span><span class="p">.</span><span class="n">write</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;delta&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">mode</span><span class="p">(</span><span class="s">&quot;overwrite&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;overwriteSchema&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;path&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&lt;your-table-path&gt;&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s">&quot;&lt;your-table&gt;&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1">// External table</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>There are multiple benefits with this approach:</p>
+<ul class="simple">
+<li><p>Overwriting a table is much faster because it doesn’t need to list the directory recursively or delete any files.</p></li>
+<li><p>The old version of the table still exists. If you delete the wrong table you can easily retrieve the old data using time travel. See <a class="reference internal" href="history.html"><span class="doc">Work with Delta Lake table history</span></a>.</p></li>
+<li><p>It’s an atomic operation. Concurrent queries can still read the table while you are deleting the table.</p></li>
+<li><p>Because of Delta Lake ACID transaction guarantees, if overwriting the table fails, the table will be in its previous state.</p></li>
+</ul>
+<ul class="simple">
+<li><p>You won’t face any consistency issues on S3 because you don’t delete files.</p></li>
+</ul>
+<p></p>
+<p>In addition, if you want to delete old files to save storage costs after overwriting the table, you can use <a class="reference internal" href="vacuum.html"><span class="doc">VACUUM</span></a> to delete them. It’s optimized for file deletion and is usually faster than deleting the entire directory.</p>
+</div>
+<div class="section" id="spark-caching">
+<h2>Spark caching<a class="headerlink" href="#spark-caching" title="Permalink to this headline"> </a></h2>
+<p>Databricks does not recommend that you use <a class="reference internal" href="../optimizations/disk-cache.html#manual-caching"><span class="std std-ref">Spark caching</span></a> for the following reasons:</p>
+<ul class="simple">
+<li><p>You lose any data skipping that can come from additional filters added on top of the cached <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>.</p></li>
+<li><p>The data that gets cached might not be updated if the table is accessed using a different identifier (for example, you do <code class="docutils literal notranslate"><span class="pre">spark.table(x).cache()</span></code> but then write to the table using <code class="docutils literal notranslate"><span class="pre">spark.write.save(/some/path)</span></code>.</p></li>
+</ul>
+</div>
+<div class="section" id="differences-between-delta-lake-and-parquet-on-apache-spark">
+<span id="differences-between-delta-and-parquet-on-as"></span><h2>Differences between Delta Lake and Parquet on Apache Spark<a class="headerlink" href="#differences-between-delta-lake-and-parquet-on-apache-spark" title="Permalink to this headline"> </a></h2>
+<p>Delta Lake handles the following operations automatically. You should never perform these operations manually:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">REFRESH</span> <span class="pre">TABLE</span></code></strong>: Delta tables always return the most up-to-date information, so there is no need to call <code class="docutils literal notranslate"><span class="pre">REFRESH</span> <span class="pre">TABLE</span></code> manually after changes.</p></li>
+<li><p><strong>Add and remove partitions</strong>: Delta Lake automatically tracks the set of partitions present in a table and updates the list as data is added or removed.  As a result, there is no need to run <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">[ADD|DROP]</span> <span class="pre">PARTITION</span></code> or <code class="docutils literal notranslate"><span class="pre">MSCK</span></code>.</p></li>
+<li><p><strong>Load a single partition</strong>: Reading partitions directly is not necessary. For example, you don’t need to run <code class="docutils literal notranslate"><span class="pre">spark.read.format(&quot;parquet&quot;).load(&quot;/data/date=2017-01-01&quot;)</span></code>. Instead, use a <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> clause for data skipping, such as <code class="docutils literal notranslate"><span class="pre">spark.read.table(&quot;&lt;table-name&gt;&quot;).where(&quot;date</span> <span class="pre">=</span> <span class="pre">'2017-01-01'&quot;)</span></code>.</p></li>
+<li><p><strong>Don’t manually modify data files</strong>: Delta Lake uses the transaction log to commit changes to the table atomically. Do not directly modify, add, or delete Parquet data files in a Delta table, because this can lead to lost data or table corruption.</p></li>
+</ul>
+</div>
+<div class="section" id="improve-performance-for-delta-lake-merge">
+<span id="improve-performance-for-delta-merge"></span><h2>Improve performance for Delta Lake merge<a class="headerlink" href="#improve-performance-for-delta-lake-merge" title="Permalink to this headline"> </a></h2>
+<p>You can reduce the time it takes to merge by using the following approaches:</p>
+<ul>
+<li><p><strong>Reduce the search space for matches</strong>: By default, the <code class="docutils literal notranslate"><span class="pre">merge</span></code> operation searches the entire Delta table to find matches in the source table. One way to speed up <code class="docutils literal notranslate"><span class="pre">merge</span></code> is to reduce the search space by adding known constraints in the match condition. For example, suppose you have a table that is partitioned by <code class="docutils literal notranslate"><span class="pre">country</span></code> and <code class="docutils literal notranslate"><span class="pre">date</span></code> and you want to use <code class="docutils literal notranslate"><span class="pre">merge</span></code> to update information for the last day and a specific country. Adding the following condition makes the query faster, as it looks for matches only in the relevant partitions:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">events</span><span class="p">.</span><span class="nb">date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">current_date</span><span class="p">()</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">events</span><span class="p">.</span><span class="n">country</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;USA&#39;</span>
+</pre></div>
+</div>
+<p>Furthermore, this query also reduces the chances of conflicts with other concurrent operations. See <a class="reference internal" href="../optimizations/isolation-level.html"><span class="doc">Isolation levels and write conflicts on Databricks</span></a> for more details.</p>
+</li>
+<li><p><strong>Compact files</strong>: If the data is stored in many small files, reading the data to search for matches can become slow. You can compact small files into larger files to improve read throughput. See <a class="reference internal" href="optimize.html"><span class="doc">Compact data files with optimize on Delta Lake</span></a> for details.</p></li>
+<li><p><strong>Control the shuffle partitions for writes</strong>: The <code class="docutils literal notranslate"><span class="pre">merge</span></code> operation shuffles data multiple times to compute and write the updated data. The number of tasks used to shuffle is controlled by the Spark session configuration <code class="docutils literal notranslate"><span class="pre">spark.sql.shuffle.partitions</span></code>. Setting this parameter not only controls the parallelism but also determines the number of output files. Increasing the value increases parallelism but also generates a larger number of smaller data files.</p></li>
+<li><p><strong>Enable optimized writes</strong>: For partitioned tables, <code class="docutils literal notranslate"><span class="pre">merge</span></code> can produce a much larger number of small files than the number of shuffle partitions. This is because every shuffle task can write multiple files in multiple partitions, and can become a performance bottleneck. You can reduce the number of files by enabling optimized writes. See <a class="reference internal" href="tune-file-size.html#optimized-writes"><span class="std std-ref">Optimized writes for Delta Lake on Databricks</span></a>.</p></li>
+<li><p><strong>Tune file sizes in table</strong>: Databricks can automatically detect if a Delta table has frequent <code class="docutils literal notranslate"><span class="pre">merge</span></code> operations that rewrite files and may choose to reduce the size of rewritten files in anticipation of further file rewrites in the future. See the section on <a class="reference internal" href="tune-file-size.html"><span class="doc">tuning file sizes</span></a> for details.</p></li>
+<li><p><strong>Low Shuffle Merge</strong>: <a class="reference internal" href="../optimizations/low-shuffle-merge.html"><span class="doc">Low Shuffle Merge</span></a> provides an optimized implementation of <code class="docutils literal notranslate"><span class="pre">MERGE</span></code> that provides better performance for most common workloads. In addition, it preserves existing data layout optimizations such as <a class="reference internal" href="data-skipping.html"><span class="doc">Z-ordering</span></a> on unmodified data.</p></li>
+</ul>
+</div>
+<div class="section" id="manage-data-recency">
+<h2>Manage data recency<a class="headerlink" href="#manage-data-recency" title="Permalink to this headline"> </a></h2>
+<p>At the beginning of each query, Delta tables auto-update to the latest version of the table. This process can be observed in notebooks when the command status reports: <code class="docutils literal notranslate"><span class="pre">Updating</span> <span class="pre">the</span> <span class="pre">Delta</span> <span class="pre">table's</span> <span class="pre">state</span></code>. However, when running historical analysis on a table, you may not necessarily need up-to-the-last-minute data, especially for tables where streaming data is being ingested frequently. In these cases, queries can be run on stale snapshots of your Delta table. This approach can lower latency in getting results from queries.</p>
+<p>You can configure tolerance for stale data by setting the Spark session configuration <code class="docutils literal notranslate"><span class="pre">spark.databricks.delta.stalenessLimit</span></code> with a time string value such as <code class="docutils literal notranslate"><span class="pre">1h</span></code> or <code class="docutils literal notranslate"><span class="pre">15m</span></code> (for 1 hour or 15 minutes, respectively). This configuration is session specific, and doesn’t affect other clients accessing the table. If the table state has been updated within the staleness limit, a query against the table returns results without waiting for the latest table update. This setting never prevents your table from updating, and when stale data is returned, the update processes in the background. If the last table update is older than the staleness limit, the query does not return results until the table state update completes.</p>
+</div>
+<div class="section" id="enhanced-checkpoints-for-low-latency-queries">
+<span id="enhanced-checkpoints"></span><h2>Enhanced checkpoints for low-latency queries<a class="headerlink" href="#enhanced-checkpoints-for-low-latency-queries" title="Permalink to this headline"> </a></h2>
+<p>Delta Lake writes <a class="reference external" href="https://github.com/delta-io/delta/blob/master/PROTOCOL.md#checkpoints">checkpoints</a> as an aggregate state of a Delta table at an optimized frequency. These checkpoints serve as the starting point to compute the latest state of the table. Without checkpoints, Delta Lake would have to read a large collection of JSON files (“delta” files) representing commits to the transaction log to compute the state of a table. In addition, the column-level statistics Delta Lake uses to perform <a class="reference internal" href="data-skipping.html"><span class="doc">data skipping</span></a> are stored in the checkpoint.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Delta Lake checkpoints are different than <a class="reference internal" href="../structured-streaming/query-recovery.html"><span class="doc">Structured Streaming checkpoints</span></a>.</p>
+</div>
+<p>Column-level statistics are stored as a struct and a JSON (for backwards compatability). The struct format makes Delta Lake reads much faster, because:</p>
+<ul class="simple">
+<li><p>Delta Lake doesn’t perform expensive JSON parsing to obtain column-level statistics.</p></li>
+<li><p>Parquet column pruning capabilities significantly reduce the I/O required to read the statistics for a column.</p></li>
+</ul>
+<p>The struct format enables a collection of optimizations that reduce the overhead of Delta Lake read operations from seconds to tens of milliseconds, which significantly reduces the latency for short queries.</p>
+</div>
+<div class="section" id="manage-column-level-statistics-in-checkpoints">
+<span id="column-stats"></span><h2>Manage column-level statistics in checkpoints<a class="headerlink" href="#manage-column-level-statistics-in-checkpoints" title="Permalink to this headline"> </a></h2>
+<p>You manage how statistics are written in checkpoints using the table properties <code class="docutils literal notranslate"><span class="pre">delta.checkpoint.writeStatsAsJson</span></code> and <code class="docutils literal notranslate"><span class="pre">delta.checkpoint.writeStatsAsStruct</span></code>. If both table properties are <code class="docutils literal notranslate"><span class="pre">false</span></code>, Delta Lake <em>cannot</em> perform data skipping.</p>
+<ul class="simple">
+<li><p>Batch writes write statistics in both JSON and struct format. <code class="docutils literal notranslate"><span class="pre">delta.checkpoint.writeStatsAsJson</span></code> is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">delta.checkpoint.writeStatsAsStruct</span></code> is undefined by default.</p></li>
+<li><p>Readers use the struct column when available and otherwise fall back to using the JSON column.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Enhanced checkpoints do not break compatibility with open source Delta Lake readers. However, setting <code class="docutils literal notranslate"><span class="pre">delta.checkpoint.writeStatsAsJson</span></code> to <code class="docutils literal notranslate"><span class="pre">false</span></code> may have implications on proprietary Delta Lake readers. Contact your vendors to learn more about performance implications.</p>
+</div>
+</div>
+<div class="section" id="enable-enhanced-checkpoints-for-structured-streaming-queries">
+<span id="enable-enhanced-checkpoints-for-ss-queries"></span><span id="enhanced-ss"></span><h2>Enable enhanced checkpoints for Structured Streaming queries<a class="headerlink" href="#enable-enhanced-checkpoints-for-structured-streaming-queries" title="Permalink to this headline"> </a></h2>
+<p>If your Structured Streaming workloads don’t have low latency requirements (subminute latencies), you can enable enhanced checkpoints by running the following SQL command:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="p">[</span><span class="o">&lt;</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;|</span><span class="n">delta</span><span class="p">.</span><span class="o">`&lt;</span><span class="n">path</span><span class="o">-</span><span class="k">to</span><span class="o">-</span><span class="k">table</span><span class="o">&gt;`</span><span class="p">]</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">TBLPROPERTIES</span>
+<span class="p">(</span><span class="s1">&#39;delta.checkpoint.writeStatsAsStruct&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also improve the checkpoint write latency by setting the following table properties:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="p">[</span><span class="o">&lt;</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;|</span><span class="n">delta</span><span class="p">.</span><span class="o">`&lt;</span><span class="n">path</span><span class="o">-</span><span class="k">to</span><span class="o">-</span><span class="k">table</span><span class="o">&gt;`</span><span class="p">]</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">TBLPROPERTIES</span>
+<span class="p">(</span>
+<span class="w"> </span><span class="s1">&#39;delta.checkpoint.writeStatsAsStruct&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="p">,</span>
+<span class="w"> </span><span class="s1">&#39;delta.checkpoint.writeStatsAsJson&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;false&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>If data skipping is not useful in your application, you can set both properties to false. Then no statistics are collected or written. Databricks does not recommend this configuration.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

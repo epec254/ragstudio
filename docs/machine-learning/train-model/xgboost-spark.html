@@ -1,0 +1,524 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use distributed training for XGBoost models in Databricks using the Python package xgboost.spark." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Distributed training of XGBoost models using xgboost.spark">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Distributed training of XGBoost models using xgboost.spark &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/machine-learning/train-model/xgboost-spark.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/machine-learning/train-model/xgboost-spark.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/machine-learning/train-model/xgboost-spark.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/machine-learning/train-model/xgboost-spark.html" class="notranslate">English</option>
+    <option value="../../../ja/machine-learning/train-model/xgboost-spark.html" class="notranslate">日本語</option>
+    <option value="../../../pt/machine-learning/train-model/xgboost-spark.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Distributed training of XGBoost models using <code class="docutils literal notranslate"><span class="pre">xgboost.spark</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="distributed-training-of-xgboost-models-using-xgboostspark">
+<h1>Distributed training of XGBoost models using <code class="docutils literal notranslate"><span class="pre">xgboost.spark</span></code><a class="headerlink" href="#distributed-training-of-xgboost-models-using-xgboostspark" title="Permalink to this headline"> </a></h1>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<p>The Python package xgboost&gt;=1.7 contains a new module <code class="docutils literal notranslate"><span class="pre">xgboost.spark</span></code>. This module includes the xgboost PySpark estimators <code class="docutils literal notranslate"><span class="pre">xgboost.spark.SparkXGBRegressor</span></code>, <code class="docutils literal notranslate"><span class="pre">xgboost.spark.SparkXGBClassifier</span></code>, and <code class="docutils literal notranslate"><span class="pre">xgboost.spark.SparkXGBRanker</span></code>. These new classes support the inclusion of XGBoost estimators in SparkML Pipelines.  For API details, see the <a class="reference external" href="https://xgboost.readthedocs.io/en/stable/python/python_api.html#module-xgboost.spark">XGBoost python spark API doc</a>.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<p>Databricks Runtime 12.0 ML and above.</p>
+</div>
+<div class="section" id="xgboostspark-parameters">
+<span id="xgboost-spark-parameters"></span><h2><code class="docutils literal notranslate"><span class="pre">xgboost.spark</span></code> parameters<a class="headerlink" href="#xgboostspark-parameters" title="Permalink to this headline"> </a></h2>
+<p>The estimators defined in the <code class="docutils literal notranslate"><span class="pre">xgboost.spark</span></code> module support most of the same parameters and arguments used in standard XGBoost.</p>
+<ul class="simple">
+<li><p>The parameters for the class constructor, <code class="docutils literal notranslate"><span class="pre">fit</span></code> method, and <code class="docutils literal notranslate"><span class="pre">predict</span></code> method are largely identical to those in the <code class="docutils literal notranslate"><span class="pre">xgboost.sklearn</span></code> module.</p></li>
+<li><p>Naming, values, and defaults are mostly identical to those described in <a class="reference external" href="https://xgboost.readthedocs.io/en/stable/parameter.html">XGBoost parameters</a>.</p></li>
+<li><p>Exceptions are a few unsupported parameters (such as <code class="docutils literal notranslate"><span class="pre">gpu_id</span></code>, <code class="docutils literal notranslate"><span class="pre">nthread</span></code>, <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code>, <code class="docutils literal notranslate"><span class="pre">eval_set</span></code>), and  the <code class="docutils literal notranslate"><span class="pre">pyspark</span></code> estimator specific parameters that have been added (such as <code class="docutils literal notranslate"><span class="pre">featuresCol</span></code>, <code class="docutils literal notranslate"><span class="pre">labelCol</span></code>, <code class="docutils literal notranslate"><span class="pre">use_gpu</span></code>, <code class="docutils literal notranslate"><span class="pre">validationIndicatorCol</span></code>). For details, see <a class="reference external" href="https://xgboost.readthedocs.io/en/stable/python/python_api.html#module-xgboost.spark">XGBoost Python Spark API documentation</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="distributed-training">
+<h2>Distributed training<a class="headerlink" href="#distributed-training" title="Permalink to this headline"> </a></h2>
+<p>PySpark estimators defined in the <code class="docutils literal notranslate"><span class="pre">xgboost.spark</span></code> module support distributed XGBoost training using the <code class="docutils literal notranslate"><span class="pre">num_workers</span></code> parameter.
+To use distributed training, create a classifier or regressor and set <code class="docutils literal notranslate"><span class="pre">num_workers</span></code> to the number of concurrent running Spark tasks during distributed training.</p>
+<p>For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">xgboost.spark</span> <span class="kn">import</span> <span class="n">SparkXGBClassifier</span>
+<span class="n">classifier</span> <span class="o">=</span> <span class="n">SparkXGBClassifier</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>You cannot use <code class="docutils literal notranslate"><span class="pre">mlflow.xgboost.autolog</span></code> with distributed XGBoost. To log an xgboost Spark model using MLflow, use <code class="docutils literal notranslate"><span class="pre">mlflow.spark.log_model(spark_xgb_model,</span> <span class="pre">artifact_path)</span></code>.</p></li>
+<li><p>You cannot use distributed XGBoost on a cluster that has autoscaling enabled. New worker nodes that start in this elastic scaling paradigm cannot receive new sets of tasks and remain idle. For instructions to disable autoscaling, see <a class="reference internal" href="../../compute/configure.html#autoscaling"><span class="std std-ref">Enable autoscaling</span></a>.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="enable-optimization-for-training-on-sparse-features-dataset">
+<h2>Enable optimization for training on sparse features dataset<a class="headerlink" href="#enable-optimization-for-training-on-sparse-features-dataset" title="Permalink to this headline"> </a></h2>
+<p>PySpark Estimators defined in <code class="docutils literal notranslate"><span class="pre">xgboost.spark</span></code> module support optimization for training on datasets with sparse features.
+To enable optimization of sparse feature sets, you need to provide a dataset to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method that contains a features column consisting of values of type <code class="docutils literal notranslate"><span class="pre">pyspark.ml.linalg.SparseVector</span></code> and set the estimator parameter <code class="docutils literal notranslate"><span class="pre">enable_sparse_data_optim</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code>. Additionally, you need to set the <code class="docutils literal notranslate"><span class="pre">missing</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
+<p>For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">xgboost.spark</span> <span class="kn">import</span> <span class="n">SparkXGBClassifier</span>
+<span class="n">classifier</span> <span class="o">=</span> <span class="n">SparkXGBClassifier</span><span class="p">(</span><span class="n">enable_sparse_data_optim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">missing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dataset_with_sparse_features_col</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gpu-training">
+<h2>GPU training<a class="headerlink" href="#gpu-training" title="Permalink to this headline"> </a></h2>
+<p>PySpark estimators defined in the <code class="docutils literal notranslate"><span class="pre">xgboost.spark</span></code> module support training on  GPUs. Set the parameter <code class="docutils literal notranslate"><span class="pre">use_gpu</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code> to enable GPU training.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For each Spark task used in XGBoost distributed training, only one GPU is used in training when the <code class="docutils literal notranslate"><span class="pre">use_gpu</span></code> argument is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>. Databricks recommends using the default value of <code class="docutils literal notranslate"><span class="pre">1</span></code> for the Spark cluster configuration <code class="docutils literal notranslate"><span class="pre">spark.task.resource.gpu.amount</span></code>. Otherwise, the additional GPUs allocated to this Spark task are idle.</p>
+</div>
+<p>For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">xgboost.spark</span> <span class="kn">import</span> <span class="n">SparkXGBClassifier</span>
+<span class="n">classifier</span> <span class="o">=</span> <span class="n">SparkXGBClassifier</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">use_gpu</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-notebook">
+<h2>Example notebook<a class="headerlink" href="#example-notebook" title="Permalink to this headline"> </a></h2>
+<p>This notebook shows the use of the Python package <code class="docutils literal notranslate"><span class="pre">xgboost.spark</span></code> with Spark MLlib.</p>
+<div class="embedded-notebook-section section" id="pyspark-xgboost-notebook">
+<span id="xgboost-pyspark-new"></span><h3>PySpark-XGBoost notebook<a class="headerlink" href="#pyspark-xgboost-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/xgboost-pyspark-new.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/xgboost-pyspark-new.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/xgboost-pyspark-new.html"            id="1e7f698e66c9f62ae8eb602d342ef8991b888fb175415480233c55d81a10a23b" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+<div class="section" id="migration-guide-for-the-deprecated-sparkdlxgboost-module">
+<span id="xgboost-migration"></span><h2>Migration guide for the deprecated <code class="docutils literal notranslate"><span class="pre">sparkdl.xgboost</span></code> module<a class="headerlink" href="#migration-guide-for-the-deprecated-sparkdlxgboost-module" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">sparkdl.xgboost</span> <span class="pre">import</span> <span class="pre">XgboostRegressor</span></code> with <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">xgboost.spark</span> <span class="pre">import</span> <span class="pre">SparkXGBRegressor</span></code> and replace <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">sparkdl.xgboost</span> <span class="pre">import</span> <span class="pre">XgboostClassifier</span></code> with <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">xgboost.spark</span> <span class="pre">import</span> <span class="pre">SparkXGBClassifier</span></code>.</p></li>
+<li><p>Change all parameter names in the estimator constructor from camelCase style to snake_case style. For example, change <code class="docutils literal notranslate"><span class="pre">XgboostRegressor(featuresCol=XXX)</span></code> to <code class="docutils literal notranslate"><span class="pre">SparkXGBRegressor(features_col=XXX)</span></code>.</p></li>
+<li><p>The parameters <code class="docutils literal notranslate"><span class="pre">use_external_storage</span></code> and <code class="docutils literal notranslate"><span class="pre">external_storage_precision</span></code> have been removed. <code class="docutils literal notranslate"><span class="pre">xgboost.spark</span></code> estimators use the DMatrix data iteration API to use memory more efficiently. There is no longer a need to use the inefficient external storage mode. For extremely large datasets, Databricks recommends that you increase the <code class="docutils literal notranslate"><span class="pre">num_workers</span></code> parameter, which makes each training task partition the data into smaller, more manageable data partitions.</p></li>
+<li><p>For estimators defined in <code class="docutils literal notranslate"><span class="pre">xgboost.spark</span></code>, setting <code class="docutils literal notranslate"><span class="pre">num_workers=1</span></code> executes model training using a single Spark task. This utilizes the number of CPU cores specified by the Spark cluster configuration setting <code class="docutils literal notranslate"><span class="pre">spark.task.cpus</span></code>, which is 1 by default. If you want to use more CPU cores to train the model, you can either increase <code class="docutils literal notranslate"><span class="pre">num_workers</span></code> or increase <code class="docutils literal notranslate"><span class="pre">spark.task.cpus</span></code>. You cannot set the <code class="docutils literal notranslate"><span class="pre">nthread</span></code> or <code class="docutils literal notranslate"><span class="pre">n_jobs</span></code> parameter for estimators defined in <code class="docutils literal notranslate"><span class="pre">xgboost.spark</span></code>. This behavior is different from the previous behavior of estimators defined in the deprecated <code class="docutils literal notranslate"><span class="pre">sparkdl.xgboost</span></code> package.</p></li>
+</ul>
+<div class="section" id="convert-sparkdlxgboost-model-into-xgboostspark-model">
+<h3>Convert <code class="docutils literal notranslate"><span class="pre">sparkdl.xgboost</span></code> model into <code class="docutils literal notranslate"><span class="pre">xgboost.spark</span></code> model<a class="headerlink" href="#convert-sparkdlxgboost-model-into-xgboostspark-model" title="Permalink to this headline"> </a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">sparkdl.xgboost</span></code> models are saved in a different format than <code class="docutils literal notranslate"><span class="pre">xgboost.spark</span></code> models and have
+<a class="reference internal" href="#xgboost-spark-parameters"><span class="std std-ref">different parameter settings</span></a>. Use the following
+utility function to convert the model:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">convert_sparkdl_model_to_xgboost_spark_model</span><span class="p">(</span>
+  <span class="n">xgboost_spark_estimator_cls</span><span class="p">,</span>
+  <span class="n">sparkdl_xgboost_model</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  :param xgboost_spark_estimator_cls:</span>
+<span class="sd">      `xgboost.spark` estimator class, e.g. `xgboost.spark.SparkXGBRegressor`</span>
+<span class="sd">  :param sparkdl_xgboost_model:</span>
+<span class="sd">      `sparkdl.xgboost` model instance e.g. the instance of</span>
+<span class="sd">       `sparkdl.xgboost.XgboostRegressorModel` type.</span>
+
+<span class="sd">  :return</span>
+<span class="sd">      A `xgboost.spark` model instance</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="nf">convert_param_key</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">xgboost.spark.core</span> <span class="kn">import</span> <span class="n">_inverse_pyspark_param_alias_map</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;baseMarginCol&quot;</span><span class="p">:</span>
+      <span class="k">return</span> <span class="s2">&quot;base_margin_col&quot;</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">_inverse_pyspark_param_alias_map</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">_inverse_pyspark_param_alias_map</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;use_external_storage&#39;</span><span class="p">,</span> <span class="s1">&#39;external_storage_precision&#39;</span><span class="p">,</span> <span class="s1">&#39;nthread&#39;</span><span class="p">,</span> <span class="s1">&#39;n_jobs&#39;</span><span class="p">,</span> <span class="s1">&#39;base_margin_eval_set&#39;</span><span class="p">]:</span>
+      <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">key</span>
+
+  <span class="n">xgboost_spark_params_dict</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">sparkdl_xgboost_model</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;arbitraryParamsDict&quot;</span><span class="p">:</span>
+      <span class="k">continue</span>
+    <span class="k">if</span> <span class="n">sparkdl_xgboost_model</span><span class="o">.</span><span class="n">isDefined</span><span class="p">(</span><span class="n">param</span><span class="p">):</span>
+      <span class="n">xgboost_spark_params_dict</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">sparkdl_xgboost_model</span><span class="o">.</span><span class="n">getOrDefault</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+
+  <span class="n">xgboost_spark_params_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">sparkdl_xgboost_model</span><span class="o">.</span><span class="n">getOrDefault</span><span class="p">(</span><span class="s2">&quot;arbitraryParamsDict&quot;</span><span class="p">))</span>
+
+  <span class="n">xgboost_spark_params_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">convert_param_key</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="n">v</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">xgboost_spark_params_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">convert_param_key</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+  <span class="p">}</span>
+
+  <span class="n">booster</span> <span class="o">=</span> <span class="n">sparkdl_xgboost_model</span><span class="o">.</span><span class="n">get_booster</span><span class="p">()</span>
+  <span class="n">booster_bytes</span> <span class="o">=</span> <span class="n">booster</span><span class="o">.</span><span class="n">save_raw</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+  <span class="n">booster_config</span> <span class="o">=</span> <span class="n">booster</span><span class="o">.</span><span class="n">save_config</span><span class="p">()</span>
+  <span class="n">estimator</span> <span class="o">=</span> <span class="n">xgboost_spark_estimator_cls</span><span class="p">(</span><span class="o">**</span><span class="n">xgboost_spark_params_dict</span><span class="p">)</span>
+  <span class="n">sklearn_model</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">_convert_to_sklearn_model</span><span class="p">(</span><span class="n">booster_bytes</span><span class="p">,</span> <span class="n">booster_config</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">estimator</span><span class="o">.</span><span class="n">_copyValues</span><span class="p">(</span><span class="n">estimator</span><span class="o">.</span><span class="n">_create_pyspark_model</span><span class="p">(</span><span class="n">sklearn_model</span><span class="p">))</span>
+
+<span class="c1"># Example</span>
+<span class="kn">from</span> <span class="nn">xgboost.spark</span> <span class="kn">import</span> <span class="n">SparkXGBRegressor</span>
+
+<span class="n">new_model</span> <span class="o">=</span> <span class="n">convert_sparkdl_model_to_xgboost_spark_model</span><span class="p">(</span>
+  <span class="n">xgboost_spark_estimator_cls</span><span class="o">=</span><span class="n">SparkXGBRegressor</span><span class="p">,</span>
+  <span class="n">sparkdl_xgboost_model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>If you have a <code class="docutils literal notranslate"><span class="pre">pyspark.ml.PipelineModel</span></code> model containing a <code class="docutils literal notranslate"><span class="pre">sparkdl.xgboost</span></code> model as the
+last stage, you can replace the stage of <code class="docutils literal notranslate"><span class="pre">sparkdl.xgboost</span></code> model with
+the converted <code class="docutils literal notranslate"><span class="pre">xgboost.spark</span></code> model.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline_model</span><span class="o">.</span><span class="n">stages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">convert_sparkdl_model_to_xgboost_spark_model</span><span class="p">(</span>
+  <span class="n">xgboost_spark_estimator_cls</span><span class="o">=</span><span class="n">SparkXGBRegressor</span><span class="p">,</span>
+  <span class="n">sparkdl_xgboost_model</span><span class="o">=</span><span class="n">pipeline_model</span><span class="o">.</span><span class="n">stages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

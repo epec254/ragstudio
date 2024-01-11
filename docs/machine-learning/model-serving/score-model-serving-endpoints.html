@@ -1,0 +1,842 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to format scoring requests for your served model, and how to send those requests to the model serving endpoint." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Query serving endpoints using the REST API">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Query serving endpoints using the REST API &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/machine-learning/model-serving/score-model-serving-endpoints.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/machine-learning/model-serving/score-model-serving-endpoints.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/machine-learning/model-serving/score-model-serving-endpoints.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/machine-learning/model-serving/score-model-serving-endpoints.html" class="notranslate">English</option>
+    <option value="../../../ja/machine-learning/model-serving/score-model-serving-endpoints.html" class="notranslate">日本語</option>
+    <option value="../../../pt/machine-learning/model-serving/score-model-serving-endpoints.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Query serving endpoints using the REST API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="query-serving-endpoints-using-the-rest-api">
+<h1>Query serving endpoints using the REST API<a class="headerlink" href="#query-serving-endpoints-using-the-rest-api" title="Permalink to this headline"> </a></h1>
+<p>In this article, you learn how to format scoring requests for your served model, and how to send those requests to the model serving endpoint using the Serving UI or REST API. For more information, see <a class="reference internal" href="index.html"><span class="doc">Model serving with Databricks</span></a>.</p>
+<p>This article includes examples for querying,</p>
+<ul class="simple">
+<li><p>Foundation models, which include:</p>
+<ul>
+<li><p>Third-party foundation models, referred to as <a class="reference internal" href="../../generative-ai/external-models/index.html"><span class="doc">external models</span></a>.</p></li>
+<li><p>State-of-the-art open models made available by <a class="reference internal" href="../foundation-models/index.html"><span class="doc">Foundation Model APIs</span></a>.</p></li>
+<li><p>Curated foundation models on <a class="reference external" href="https://marketplace.databricks.com/">Databricks Marketplace</a>, an open marketplace for sharing third-party data and AI assets.</p></li>
+</ul>
+</li>
+<li><p>Custom models. MLflow models that are installed in Unity Catalog or registered in the workspace model registry.</p></li>
+</ul>
+<p>Databricks Model Serving provides the following options for sending scoring requests to served models:</p>
+<ul class="simple">
+<li><p>The <a class="reference internal" href="#score-ui"><span class="std std-ref">Serving UI</span></a>.</p></li>
+<li><p>REST API. See <a class="reference external" href="https://docs.databricks.com/api/workspace/servingendpoints/query">POST /serving-endpoints/{name}/invocations</a>.</p></li>
+<li><p><a class="reference internal" href="score-serving-endpoints-mlflow.html"><span class="doc">MLflow Deployments SDK</span></a>.</p></li>
+</ul>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>A <a class="reference internal" href="create-manage-serving-endpoints.html"><span class="doc">model serving endpoint</span></a>.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As a security best practice when you authenticate with automated tools, systems, scripts, and apps, Databricks recommends that you use OAuth tokens.</p>
+<p>If you use personal access token authentication, Databricks recommends using personal access tokens belonging to <a class="reference internal" href="../../administration-guide/users-groups/service-principals.html"><span class="doc">service principals</span></a> instead of workspace users. To create tokens for service principals, see <a class="reference internal" href="../../administration-guide/users-groups/service-principals.html#personal-access-tokens"><span class="std std-ref">Manage tokens for a service principal</span></a>.</p>
+</div>
+</div>
+<div class="section" id="custom-model-request-format">
+<h2>Custom model request format<a class="headerlink" href="#custom-model-request-format" title="Permalink to this headline"> </a></h2>
+<p>Requests should be sent by constructing a JSON with one of the supported keys and a JSON object corresponding to the input format. The following is the recommended format.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">dataframe_split</span></code> format is a JSON-serialized Pandas Dataframe in the <code class="docutils literal notranslate"><span class="pre">split</span></code> orientation.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;dataframe_split&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">      </span><span class="nt">&quot;index&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sepal length (cm)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;sepal width (cm)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;petal length (cm)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;petal width (cm)&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="mf">5.1</span><span class="p">,</span><span class="w"> </span><span class="mf">3.5</span><span class="p">,</span><span class="w"> </span><span class="mf">1.4</span><span class="p">,</span><span class="w"> </span><span class="mf">0.2</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mf">4.9</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.4</span><span class="p">,</span><span class="w"> </span><span class="mf">0.2</span><span class="p">]]</span>
+<span class="w">    </span><span class="p">}]</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">dataframe_records</span></code> is JSON-serialized Pandas Dataframe in the <code class="docutils literal notranslate"><span class="pre">records</span></code> orientation. Although a supported format, this use case is less common.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This format does not guarantee the preservation of column ordering, and the <code class="docutils literal notranslate"><span class="pre">split</span></code> format is preferred over the <code class="docutils literal notranslate"><span class="pre">records</span></code> format.</p>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;dataframe_records&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;sepal length (cm)&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">5.1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;sepal width (cm)&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">3.5</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;petal length (cm)&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.4</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;petal width (cm)&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.2</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;sepal length (cm)&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">4.9</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;sepal width (cm)&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;petal length (cm)&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.4</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;petal width (cm)&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.2</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;sepal length (cm)&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">4.7</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;sepal width (cm)&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">3.2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;petal length (cm)&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.3</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;petal width (cm)&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.2</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="tensors-format">
+<h3>Tensors format<a class="headerlink" href="#tensors-format" title="Permalink to this headline"> </a></h3>
+<p>When your model expects tensors, like a TensorFlow or Pytorch model, there are two supported format options for sending requests: <code class="docutils literal notranslate"><span class="pre">instances</span></code> and <code class="docutils literal notranslate"><span class="pre">inputs</span></code>.</p>
+<p>If you have multiple named tensors per row, then you have to have one of each tensor for every row.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">instances</span></code> is a tensors-based format that accepts tensors in row format. Use this format if all the input tensors have the same 0-th dimension. Conceptually, each tensor in the instances list could be joined with the other tensors of the same name in the rest of the list to construct the full input tensor for the model, which would only be possible if all of the tensors have the same 0-th dimension.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="p">{</span><span class="nt">&quot;instances&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>or</p>
+<p>The following example shows how to specify multiple named tensors.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w"> </span><span class="nt">&quot;instances&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;t1&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;t2&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">],</span>
+<span class="w">   </span><span class="nt">&quot;t3&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">]]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;t1&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;b&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;t2&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">],</span>
+<span class="w">   </span><span class="nt">&quot;t3&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">9</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">11</span><span class="p">,</span><span class="w"> </span><span class="mi">12</span><span class="p">]]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w"> </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inputs</span></code> send queries with tensors in columnar format. This request is different because there are actually a different number of tensor instances of <code class="docutils literal notranslate"><span class="pre">t2</span></code> (3) than <code class="docutils literal notranslate"><span class="pre">t1</span></code> and <code class="docutils literal notranslate"><span class="pre">t3</span></code>, so it is not possible to represent this input in the <code class="docutils literal notranslate"><span class="pre">instances</span></code> format.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w"> </span><span class="nt">&quot;inputs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;t1&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;b&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;t2&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">]],</span>
+<span class="w">  </span><span class="nt">&quot;t3&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">]],</span><span class="w"> </span><span class="p">[[</span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">9</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">11</span><span class="p">,</span><span class="w"> </span><span class="mi">12</span><span class="p">]]]</span>
+<span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="custom-model-response-format">
+<h2>Custom model response format<a class="headerlink" href="#custom-model-response-format" title="Permalink to this headline"> </a></h2>
+<p>The response from the endpoint is in the following format. The output from your model is wrapped in a <code class="docutils literal notranslate"><span class="pre">predictions</span></code> key. Concretely, the out is almost always a list, and frequently a list of numbers.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;predictions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="foundation-model-request-examples">
+<h2>Foundation model request examples<a class="headerlink" href="#foundation-model-request-examples" title="Permalink to this headline"> </a></h2>
+<p>The examples in this section show scoring requests and response formats for foundation models. See <a class="reference external" href="https://docs.databricks.com/api/workspace/servingendpoints/query">POST /serving-endpoints/{name}/invocations</a> in the API reference for standard query parameters.</p>
+<div class="section" id="chat-model-request-and-response">
+<h3>Chat model request and response<a class="headerlink" href="#chat-model-request-and-response" title="Permalink to this headline"> </a></h3>
+<p>The following is the expected request format:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">{</span>
+<span class="w">  </span><span class="s2">&quot;messages&quot;</span>:<span class="w"> </span><span class="o">[</span>
+<span class="w">    </span><span class="o">{</span>
+<span class="w">      </span><span class="s2">&quot;role&quot;</span>:<span class="w"> </span><span class="s2">&quot;user&quot;</span>,
+<span class="w">      </span><span class="s2">&quot;content&quot;</span>:<span class="w"> </span><span class="s2">&quot;What is mlflow?&quot;</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">  </span><span class="o">]</span>,
+<span class="w">  </span><span class="s2">&quot;max_tokens&quot;</span>:<span class="w"> </span><span class="m">100</span>,
+<span class="w">  </span><span class="s2">&quot;temperature&quot;</span>:<span class="w"> </span><span class="m">0</span>.1
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The following is the expected response format:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;llama2-70b-chat&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;choices&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">      </span><span class="nt">&quot;index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;finish_reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;usage&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;prompt_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;completion_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;total_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">81</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chat.completion&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;created&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1698824353</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="embeddings-model-request-and-response">
+<h3>Embeddings model request and response<a class="headerlink" href="#embeddings-model-request-and-response" title="Permalink to this headline"> </a></h3>
+<p>The following is the expected request format:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">{</span>
+<span class="w">  </span><span class="s2">&quot;input&quot;</span>:<span class="w"> </span><span class="o">[</span>
+<span class="w">    </span><span class="s2">&quot;embedding text&quot;</span>
+<span class="w">  </span><span class="o">]</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The following is the expected response format:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;list&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;embedding&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;embedding&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text-embedding-ada-002-v2&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;usage&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;prompt_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;total_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="completions-model-request-and-response">
+<h3>Completions model request and response<a class="headerlink" href="#completions-model-request-and-response" title="Permalink to this headline"> </a></h3>
+<p>The following is the expected request format:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">{</span>
+<span class="w">  </span><span class="s2">&quot;prompt&quot;</span>:<span class="w"> </span><span class="s2">&quot;What is mlflow?&quot;</span>,
+<span class="w">  </span><span class="s2">&quot;max_tokens&quot;</span>:<span class="w"> </span><span class="m">100</span>,
+<span class="w">  </span><span class="s2">&quot;temperature&quot;</span>:<span class="w"> </span><span class="m">0</span>.1,
+<span class="w">  </span><span class="s2">&quot;stop&quot;</span>:<span class="w"> </span><span class="o">[</span>
+<span class="w">    </span><span class="s2">&quot;Human:&quot;</span>
+<span class="w">  </span><span class="o">]</span>,
+<span class="w">  </span><span class="s2">&quot;n&quot;</span>:<span class="w"> </span><span class="m">1</span>,
+<span class="w">  </span><span class="s2">&quot;stream&quot;</span>:<span class="w"> </span>false,
+<span class="w">  </span><span class="s2">&quot;extra_params&quot;</span>:<span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;top_p&quot;</span>:<span class="w"> </span><span class="m">0</span>.9
+<span class="w">  </span><span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The following is the expected response format:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cmpl-8FwDGc22M13XMnRuessZ15dG622BH&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text_completion&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;created&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1698809382</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gpt-3.5-turbo-instruct&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;choices&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MLflow is an open-source platform for managing the end-to-end machine learning lifecycle. It provides tools for tracking experiments, managing and deploying models, and collaborating on projects. MLflow also supports various machine learning frameworks and languages, making it easier to work with different tools and environments. It is designed to help data scientists and machine learning engineers streamline their workflows and improve the reproducibility and scalability of their models.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;logprobs&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;finish_reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;stop&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;usage&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;prompt_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;completion_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">83</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;total_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">88</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="send-scoring-requests-with-the-ui">
+<span id="score-ui"></span><h2>Send scoring requests with the UI<a class="headerlink" href="#send-scoring-requests-with-the-ui" title="Permalink to this headline"> </a></h2>
+<p>Sending requests using the UI is the easiest and fastest way to test the model.</p>
+<ol class="arabic simple">
+<li><p>From the <strong>Serving endpoint</strong> page, select <strong>Query endpoint</strong>.</p></li>
+<li><p>Insert the model input data in JSON format and click <strong>Send Request</strong>.</p>
+<ol class="arabic simple">
+<li><p>If the model has been logged with an input example, click <strong>Show Example</strong> to load the input example.</p></li>
+</ol>
+</li>
+</ol>
+</div>
+<div class="section" id="send-scoring-requests-with-the-api">
+<span id="score-rest-api"></span><h2>Send scoring requests with the API<a class="headerlink" href="#send-scoring-requests-with-the-api" title="Permalink to this headline"> </a></h2>
+<p>You can call a model by calling the REST API and score using this URI:</p>
+<p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/serving-endpoints/{endpoint-name}/invocations</span></code></p>
+<p>See <a class="reference internal" href="serve-multiple-models-to-serving-endpoint.html#query"><span class="std std-ref">Query individual models behind an endpoint</span></a> for how to send requests for a specific model to an endpoint that serves multiple models.</p>
+<div class="section" id="scoring-request-for-a-custom-model">
+<h3>Scoring request for a custom model<a class="headerlink" href="#scoring-request-for-a-custom-model" title="Permalink to this headline"> </a></h3>
+<p>To send a scoring request through the REST API, you can use <a class="reference external" href="https://docs.databricks.com/api/workspace/tokenmanagement">standard Databricks authentication</a>. The examples in this guide demonstrate authentication using a Databricks REST API token called <code class="docutils literal notranslate"><span class="pre">DATABRICKS_API_TOKEN</span></code>.</p>
+<p>Given a <code class="docutils literal notranslate"><span class="pre">MODEL_VERSION_URI</span></code> like <code class="docutils literal notranslate"><span class="pre">https://&lt;databricks-instance&gt;/model/iris-classifier/Production/invocations</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;databricks-instance&gt;</span></code> is the <a class="reference internal" href="../../workspace/workspace-details.html#workspace-instance-names-urls-and-ids"><span class="std std-ref">name of your Databricks instance</span></a>, and a Databricks REST API token called <code class="docutils literal notranslate"><span class="pre">DATABRICKS_API_TOKEN</span></code>, the following are example snippets of how to score a served model.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="bash">
+<p class="compound-first">Score a model accepting dataframe records input format.</p>
+<div class="compound-middle highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>token:<span class="nv">$DATABRICKS_API_TOKEN</span><span class="w"> </span><span class="nv">$MODEL_VERSION_URI</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;dataframe_split&quot;: [{</span>
+<span class="s1">     &quot;index&quot;: [0, 1],</span>
+<span class="s1">     &quot;columns&quot;: [&quot;sepal length (cm)&quot;, &quot;sepal width (cm)&quot;, &quot;petal length (cm)&quot;, &quot;petal width (cm)&quot;],</span>
+<span class="s1">     &quot;data&quot;: [[5.1, 3.5, 1.4, 0.2], [4.9, 3.0, 1.4, 0.2]]</span>
+<span class="s1">    }]</span>
+<span class="s1">  }&#39;</span>
+</pre></div>
+</div>
+<p class="compound-middle">Score a model accepting tensor inputs. Tensor inputs should be formatted as described in <a class="reference external" href="https://www.tensorflow.org/tfx/serving/api_rest#request_format_2">TensorFlow Serving’s API docs</a>.</p>
+<div class="compound-last highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>token:<span class="nv">$DATABRICKS_API_TOKEN</span><span class="w"> </span><span class="nv">$MODEL_VERSION_URI</span><span class="w"> </span><span class="se">\</span>
+<span class="w">   </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;inputs&quot;: [[5.1, 3.5, 1.4, 0.2]]}&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-middle compound" lang="python">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="k">def</span> <span class="nf">create_tf_serving_json</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+  <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="n">data</span><span class="o">.</span><span class="n">tolist</span><span class="p">()}</span>
+
+<span class="k">def</span> <span class="nf">score_model</span><span class="p">(</span><span class="n">model_uri</span><span class="p">,</span> <span class="n">databricks_token</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+  <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">databricks_token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="n">data_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;dataframe_records&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">)})</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="k">else</span> <span class="n">create_tf_serving_json</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+  <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">model_uri</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data_json</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Request failed with status </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+
+<span class="c1"># Scoring a model that accepts pandas DataFrames</span>
+<span class="n">data</span> <span class="o">=</span>  <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([{</span>
+  <span class="s2">&quot;sepal_length&quot;</span><span class="p">:</span> <span class="mf">5.1</span><span class="p">,</span>
+  <span class="s2">&quot;sepal_width&quot;</span><span class="p">:</span> <span class="mf">3.5</span><span class="p">,</span>
+  <span class="s2">&quot;petal_length&quot;</span><span class="p">:</span> <span class="mf">1.4</span><span class="p">,</span>
+  <span class="s2">&quot;petal_width&quot;</span><span class="p">:</span> <span class="mf">0.2</span>
+<span class="p">}])</span>
+<span class="n">score_model</span><span class="p">(</span><span class="n">MODEL_VERSION_URI</span><span class="p">,</span> <span class="n">DATABRICKS_API_TOKEN</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Scoring a model that accepts tensors</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([[</span><span class="mf">5.1</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]])</span>
+<span class="n">score_model</span><span class="p">(</span><span class="n">MODEL_VERSION_URI</span><span class="p">,</span> <span class="n">DATABRICKS_API_TOKEN</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="PowerBI">
+<p class="compound-first">You can score a dataset in Power BI Desktop using the following steps:</p>
+<ol class="compound-last arabic">
+<li><p>Open dataset you want to score.</p></li>
+<li><p>Go to Transform Data.</p></li>
+<li><p>Right-click in the left panel and select <strong>Create New Query</strong>.</p></li>
+<li><p>Go to <strong>View &gt; Advanced Editor</strong>.</p></li>
+<li><p>Replace the query body with the code snippet below, after filling in an appropriate <code class="docutils literal notranslate"><span class="pre">DATABRICKS_API_TOKEN</span></code> and <code class="docutils literal notranslate"><span class="pre">MODEL_VERSION_URI</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">dataset</span> <span class="k">as</span> <span class="n">table</span> <span class="p">)</span> <span class="k">as</span> <span class="n">table</span> <span class="o">=&gt;</span>
+<span class="n">let</span>
+  <span class="n">call_predict</span> <span class="o">=</span> <span class="p">(</span><span class="n">dataset</span> <span class="k">as</span> <span class="n">table</span> <span class="p">)</span> <span class="k">as</span> <span class="nb">list</span> <span class="o">=&gt;</span>
+  <span class="n">let</span>
+    <span class="n">apiToken</span> <span class="o">=</span> <span class="n">DATABRICKS_API_TOKEN</span><span class="p">,</span>
+    <span class="n">modelUri</span> <span class="o">=</span> <span class="n">MODEL_VERSION_URI</span><span class="p">,</span>
+    <span class="n">responseList</span> <span class="o">=</span> <span class="n">Json</span><span class="o">.</span><span class="n">Document</span><span class="p">(</span><span class="n">Web</span><span class="o">.</span><span class="n">Contents</span><span class="p">(</span><span class="n">modelUri</span><span class="p">,</span>
+      <span class="p">[</span>
+        <span class="n">Headers</span> <span class="o">=</span> <span class="p">[</span>
+          <span class="c1">#&quot;Content-Type&quot; = &quot;application/json&quot;,</span>
+          <span class="c1">#&quot;Authorization&quot; = Text.Format(&quot;Bearer #{0}&quot;, {apiToken})</span>
+        <span class="p">],</span>
+        <span class="n">Content</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;dataframe_records&quot;</span><span class="p">:</span> <span class="n">Json</span><span class="o">.</span><span class="n">FromValue</span><span class="p">(</span><span class="n">dataset</span><span class="p">)}</span>
+      <span class="p">]</span>
+    <span class="p">))</span>
+  <span class="ow">in</span>
+    <span class="n">responseList</span><span class="p">,</span>
+  <span class="n">predictionList</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">List</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span><span class="n">Table</span><span class="o">.</span><span class="n">Split</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">call_predict</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+  <span class="n">predictionsTable</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">FromList</span><span class="p">(</span><span class="n">predictionList</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="n">x</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;Prediction&quot;</span><span class="p">}),</span>
+  <span class="n">datasetWithPrediction</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">Join</span><span class="p">(</span>
+    <span class="n">Table</span><span class="o">.</span><span class="n">AddIndexColumn</span><span class="p">(</span><span class="n">predictionsTable</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">),</span> <span class="s2">&quot;index&quot;</span><span class="p">,</span>
+    <span class="n">Table</span><span class="o">.</span><span class="n">AddIndexColumn</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">),</span> <span class="s2">&quot;index&quot;</span><span class="p">)</span>
+<span class="ow">in</span>
+  <span class="n">datasetWithPrediction</span>
+</pre></div>
+</div>
+</li>
+<li><p>Name the query with your desired model name.</p></li>
+<li><p>Open the advanced query editor for your dataset and apply the model function.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="section" id="scoring-request-for-foundation-models">
+<span id="-scoring-request-for-foundation-models"></span><h3> Scoring request for foundation models<a class="headerlink" href="#scoring-request-for-foundation-models" title="Permalink to this headline"> </a></h3>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The REST API for querying serving endpoints that serve foundation models is <a class="reference internal" href="../../release-notes/release-types.html"><span class="doc">Experimental</span></a>. The API definition might change.</p>
+</div>
+<p>The following sections show example scoring requests and responses for foundation models.</p>
+<div class="section" id="example-chat-request-and-response">
+<h4>Example: Chat request and response<a class="headerlink" href="#example-chat-request-and-response" title="Permalink to this headline"> </a></h4>
+<p>The following is a chat request for <code class="docutils literal notranslate"><span class="pre">llama-2-70b-chat</span></code> made available by Foundation Model APIs.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span><span class="se">\</span>
+-u<span class="w"> </span>token:<span class="nv">$DATABRICKS_TOKEN</span><span class="w"> </span><span class="se">\</span>
+-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;messages&quot;: [</span>
+<span class="s1">    {</span>
+<span class="s1">      &quot;role&quot;: &quot;system&quot;,</span>
+<span class="s1">      &quot;content&quot;: &quot;You are a helpful assistant. Keep your responses short and concise.&quot;</span>
+<span class="s1">    },</span>
+<span class="s1">    {</span>
+<span class="s1">      &quot;role&quot;: &quot;user&quot;,</span>
+<span class="s1">      &quot;content&quot;: &quot;Hello! What is a fun fact about llamas?&quot;</span>
+<span class="s1">    }</span>
+<span class="s1">  ],</span>
+<span class="s1">  &quot;max_tokens&quot;: 128</span>
+<span class="s1">}&#39;</span><span class="w"> </span><span class="se">\</span>
+https://&lt;workspace_host&gt;.databricks.com/serving-endpoints/databricks-llama-2-70b-chat/invocations<span class="w"> </span><span class="se">\</span>
+</pre></div>
+</div>
+<p>The following is an example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="s2">&quot;chat.completion&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;created&quot;</span><span class="p">:</span><span class="mi">1698916461</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;model&quot;</span><span class="p">:</span><span class="s2">&quot;llama-2-70b-chat-hf&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;choices&quot;</span><span class="p">:[{</span><span class="nt">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;message&quot;</span><span class="p">:{</span>
+<span class="w">                        </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot; Llamas have a unique way of communicating with each other through a series of ear and body postures, as well as a distinctive \&quot;llama language\&quot; that sounds like a mixture of humming and grunting.&quot;</span><span class="p">},</span>
+<span class="w">              </span><span class="nt">&quot;finish_reason&quot;</span><span class="p">:</span><span class="s2">&quot;stop&quot;</span><span class="p">}],</span>
+<span class="w">  </span><span class="nt">&quot;usage&quot;</span><span class="p">:{</span><span class="nt">&quot;prompt_tokens&quot;</span><span class="p">:</span><span class="mi">47</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;completion_tokens&quot;</span><span class="p">:</span><span class="mi">49</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;total_tokens&quot;</span><span class="p">:</span><span class="mi">96</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-completions-request-and-response">
+<h4>Example: Completions request and response<a class="headerlink" href="#example-completions-request-and-response" title="Permalink to this headline"> </a></h4>
+<p>The serving endpoint for this model is <code class="docutils literal notranslate"><span class="pre">databricks-mpt-7b-instruct</span></code>. For the parameters and syntax, see <a class="reference internal" href="../foundation-models/api-reference.html#completion"><span class="std std-ref">Completion task</span></a>.</p>
+<p>The following is an embeddings request for the <code class="docutils literal notranslate"><span class="pre">mpt-7b-instruct</span></code> model made available by Foundation Model APIs.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span><span class="se">\</span>
+<span class="w"> </span>-u<span class="w"> </span>token:<span class="nv">$DATABRICKS_TOKEN</span><span class="w"> </span><span class="se">\</span>
+<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;prompt&quot;: &quot;What is a quoll?&quot;, &quot;max_tokens&quot;: 64}&#39;</span><span class="w"> </span><span class="se">\</span>
+https://&lt;workspace_host&gt;.databricks.com/serving-endpoints/databricks-mpt-7b-instruct/invocations
+</pre></div>
+</div>
+<p>The following is an example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text_completion&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mpt-7b-8k-instruct&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;choices&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot; A quoll is a carnivorous mammal native to Australia. The species is sometimes known as a “marsupial predator.”&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;logprobs&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;finish_reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;stop&quot;</span><span class="p">}],</span>
+<span class="w">  </span><span class="nt">&quot;usage&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;prompt_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">35</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;completion_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">29</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;total_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">64</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-embeddings-request-and-response">
+<h4>Example: Embeddings request and response<a class="headerlink" href="#example-embeddings-request-and-response" title="Permalink to this headline"> </a></h4>
+<p>The following is an embeddings request for the <code class="docutils literal notranslate"><span class="pre">bge-large-en</span></code> model made available by Foundation Model APIs.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span><span class="se">\</span>
+-u<span class="w"> </span>token:<span class="nv">$DATABRICKS_TOKEN</span><span class="w"> </span><span class="se">\</span>
+-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+-d<span class="w">  </span><span class="s1">&#39;{ &quot;input&quot;: &quot;Embed this sentence!&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+https://&lt;workspace_host&gt;.databricks.com/serving-endpoints/databricks-bge-large-en/invocations
+</pre></div>
+</div>
+<p>The following is an example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="s2">&quot;list&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;model&quot;</span><span class="p">:</span><span class="s2">&quot;bge-large-en-v1.5&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;data&quot;</span><span class="p">:[{</span><span class="nt">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="s2">&quot;embedding&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;embedding&quot;</span><span class="p">:[</span><span class="mf">0.0167999267578125</span><span class="p">,</span>
+<span class="w">                       </span><span class="mf">0.01250457763671875</span><span class="p">,</span>
+<span class="w">                       </span><span class="c1">// ...</span>
+<span class="w">                       </span><span class="mf">0.000004649162292480469</span><span class="p">]</span>
+<span class="w">        </span><span class="p">}],</span>
+<span class="w"> </span><span class="nt">&quot;usage&quot;</span><span class="p">:{</span><span class="nt">&quot;prompt_tokens&quot;</span><span class="p">:</span><span class="mi">7</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;total_tokens&quot;</span><span class="p">:</span><span class="mi">7</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p></p>
+</div>
+</div>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../foundation-models/index.html"><span class="doc">Databricks Foundation Model APIs</span></a></p></li>
+<li><p><a class="reference internal" href="../foundation-models/query-foundation-model-apis.html"><span class="doc">How to query Foundation Model APIs with the Python SDK</span></a></p></li>
+<li><p><a class="reference internal" href="../../generative-ai/external-models/index.html"><span class="doc">External models in Databricks Model Serving</span></a></p></li>
+<li><p><a class="reference internal" href="score-serving-endpoints-mlflow.html"><span class="doc">Use MLflow to query serving endpoints</span></a></p></li>
+</ul>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

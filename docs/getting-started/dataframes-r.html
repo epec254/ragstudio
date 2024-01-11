@@ -1,0 +1,969 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to load and transform data using the SparkR SparkDataFrame API in Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Tutorial: Work with SparkR SparkDataFrames on Databricks">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Tutorial: Work with SparkR SparkDataFrames on Databricks &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/getting-started/dataframes-r.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/getting-started/dataframes-r.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/getting-started/dataframes-r.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/getting-started/dataframes-r.html" class="notranslate">English</option>
+    <option value="../../ja/getting-started/dataframes-r.html" class="notranslate">日本語</option>
+    <option value="../../pt/getting-started/dataframes-r.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Tutorial: Work with SparkR SparkDataFrames on Databricks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="tutorial-work-with-sparkr-sparkdataframes-on-databricks">
+<h1>Tutorial: Work with SparkR SparkDataFrames on Databricks<a class="headerlink" href="#tutorial-work-with-sparkr-sparkdataframes-on-databricks" title="Permalink to this headline"> </a></h1>
+<p>This article shows you how to load and transform data using the SparkDataFrame API for SparkR in Databricks.</p>
+<p>You can practice running each of this article’s code examples from a cell within an R <a class="reference internal" href="../notebooks/notebooks-manage.html#create-notebook"><span class="std std-ref">notebook</span></a> that is <a class="reference internal" href="../notebooks/notebook-ui.html#attach"><span class="std std-ref">attached</span></a> to a running <a class="reference internal" href="../compute/configure.html"><span class="doc">cluster</span></a>. Databricks clusters provide the <a class="reference external" href="https://spark.apache.org/docs/latest/sparkr.html">SparkR (R on Spark)</a> package preinstalled, so that you can start working with the <a class="reference external" href="https://spark.apache.org/docs/latest/sparkr.html#sparkdataframe">SparkDataFrame</a> API right away.</p>
+<div class="section" id="what-is-a-sparkdataframe">
+<h2>What is a SparkDataFrame?<a class="headerlink" href="#what-is-a-sparkdataframe" title="Permalink to this headline"> </a></h2>
+<p>A SparkDataFrame is a distributed collection of data organized into named columns. It is conceptually equivalent to a table in a database or a data frame in R. SparkDataFrames can be constructed from a wide array of sources such as structured data files, tables in databases, or existing local R data frames. SparkDataFrames provide a rich set of functions (select columns, filter, join, aggregate) that allow you to solve common data analysis problems efficiently.</p>
+</div>
+<div class="section" id="create-a-sparkdataframe">
+<h2>Create a SparkDataFrame<a class="headerlink" href="#create-a-sparkdataframe" title="Permalink to this headline"> </a></h2>
+<p>Most Apache Spark queries in an R context return a SparkDataFrame. This includes reading from a table, loading data from files, and operations that transform data.</p>
+<p>One way to create a SparkDataFrame is by constructing a list of data and specifying the data’s schema and then passing the data and schema to the <a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/createDataFrame.html">createDataFrame</a> function, as in the following example. Spark uses the term <em>schema</em> to refer to the names and data types of the columns in the SparkDataFrame. You can print the schema by calling the <a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/printSchema.html">printSchema</a> function and print the data by calling the <a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/showDF.html">showDF</a> function.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Databricks also uses the term <em>schema</em> to describe a collection of tables registered to a catalog.</p>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the SparkR package that is already preinstalled on the cluster.</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">SparkR</span><span class="p">)</span>
+<span class="c1"># Get the existing SparkSession that is already initiated on the cluster.</span>
+<span class="nf">sparkR.session</span><span class="p">()</span>
+
+<span class="c1"># Construct a list of sample data. You must use a type suffix</span>
+<span class="c1"># for the integers here or you might get the error</span>
+<span class="c1"># &quot;java.lang.Double is not a valid external type for schema of int.&quot;</span>
+<span class="n">data</span><span class="w">   </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">1L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Raymond&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">2L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Loretta&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">3L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Wayne&quot;</span><span class="p">)</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="c1"># Specify the data&#39;s schema (the columns&#39; names and data types).</span>
+<span class="n">schema</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">structType</span><span class="p">(</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w">   </span><span class="s">&quot;integer&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;string&quot;</span><span class="p">)</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="c1"># Create the SparkDataFrame based on the specified data and schema.</span>
+<span class="n">df</span><span class="w">     </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createDataFrame</span><span class="p">(</span>
+<span class="w">            </span><span class="n">data</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">,</span>
+<span class="w">            </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">schema</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="c1"># Print the SparkDataFrame&#39;s schema.</span>
+<span class="nf">printSchema</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Print the SparkDataFrame&#39;s contents.</span>
+<span class="nf">showDF</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#</span>
+<span class="c1"># root</span>
+<span class="c1">#  |-- id: integer (nullable = true)</span>
+<span class="c1">#  |-- name: string (nullable = true)</span>
+<span class="c1"># +---+-------+</span>
+<span class="c1"># | id|   name|</span>
+<span class="c1"># +---+-------+</span>
+<span class="c1"># |  1|Raymond|</span>
+<span class="c1"># |  2|Loretta|</span>
+<span class="c1"># |  3|  Wayne|</span>
+<span class="c1"># +---+-------+</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>To display the data in a more robust format within a Databricks notebook, you can call the Databricks <code class="docutils literal notranslate"><span class="pre">display</span></code> command instead of the SparkR <code class="docutils literal notranslate"><span class="pre">showDF</span></code> function, for example:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="read-a-table-into-a-sparkdataframe">
+<h2>Read a table into a SparkDataFrame<a class="headerlink" href="#read-a-table-into-a-sparkdataframe" title="Permalink to this headline"> </a></h2>
+<p>Databricks uses Delta Lake for all tables by default. You can load Delta tables into SparkDataFrames by calling the <a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/tableToDF.html">tableToDF</a> function, as in the following example. This example assumes that you already have access to a table in Databricks named <code class="docutils literal notranslate"><span class="pre">diamonds</span></code> in the specified location. If not, change the table’s name and location as needed.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="c1"># df &lt;- tableToDF(&quot;&lt;catalog-name&gt;.&lt;schema-name&gt;.&lt;table-name&gt;&quot;)</span>
+<span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">tableToDF</span><span class="p">(</span><span class="s">&quot;main.default.diamonds&quot;</span><span class="p">)</span>
+
+<span class="w"> </span><span class="nf">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="w"> </span><span class="c1"># Output:</span>
+<span class="w"> </span><span class="c1">#</span>
+<span class="w"> </span><span class="c1"># +-----+---------+...</span>
+<span class="w"> </span><span class="c1"># |carat|      cut|...</span>
+<span class="w"> </span><span class="c1"># +-----+---------+...</span>
+<span class="w"> </span><span class="c1"># | 0.23|    Ideal|...</span>
+<span class="w"> </span><span class="c1"># | 0.21|  Premium|...</span>
+<span class="w"> </span><span class="c1"># ...</span>
+</pre></div>
+</div>
+<p>See also:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../query/formats/index.html"><span class="doc">Data format options</span></a></p></li>
+<li><p><a class="reference internal" href="../connect/external-systems/jdbc.html"><span class="doc">Query databases using JDBC</span></a> and <a class="reference external" href="https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html">JDBC To Other Databases</a></p></li>
+<li><p><a class="reference internal" href="../connect/external-systems/amazon-redshift.html"><span class="doc">Query Amazon Redshift using Databricks</span></a></p></li>
+<li><p><a class="reference internal" href="../connect/external-systems/synapse-analytics.html"><span class="doc">Query data in Azure Synapse Analytics</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="load-data-into-a-sparkdataframe-from-a-file">
+<h2>Load data into a SparkDataFrame from a file<a class="headerlink" href="#load-data-into-a-sparkdataframe-from-a-file" title="Permalink to this headline"> </a></h2>
+<p>You can load data from many supported <a class="reference internal" href="../query/formats/index.html"><span class="doc">file formats</span></a> by calling the <a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/read.df.html">loadDF</a> function. The following example loads the contents of a CSV file and assumes the file exists in the specified path. This example infers the column names and schema based on the file’s contents. The <code class="docutils literal notranslate"><span class="pre">loadDF</span></code> function supports different arguments by file format. For more information, see:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../query/formats/index.html"><span class="doc">Data format options</span></a></p></li>
+<li><p><a class="reference internal" href="../query/formats/csv.html"><span class="doc">Read and write to CSV files</span></a> and <a class="reference external" href="https://spark.apache.org/docs/latest/sql-data-sources-csv.html">CSV Files</a></p></li>
+<li><p><a class="reference internal" href="../query/formats/json.html"><span class="doc">JSON file</span></a> and <a class="reference external" href="https://spark.apache.org/docs/latest/sql-data-sources-json.html">JSON Files</a></p></li>
+<li><p><a class="reference external" href="https://spark.apache.org/docs/latest/sql-data-sources-parquet.html">Parquet Files</a></p></li>
+<li><p><a class="reference internal" href="../query/formats/avro.html"><span class="doc">Avro file</span></a> and <a class="reference external" href="https://spark.apache.org/docs/latest/sql-data-sources-avro.html">Apache Avro Data Source Guide</a></p></li>
+<li><p><a class="reference external" href="https://spark.apache.org/docs/latest/sql-data-sources-text.html">Text Files</a></p></li>
+<li><p><a class="reference internal" href="../query/formats/binary.html"><span class="doc">Binary file</span></a> and <a class="reference external" href="https://spark.apache.org/docs/latest/sql-data-sources-binaryFile.html">Binary File Data Source</a></p></li>
+<li><p><a class="reference internal" href="../query/formats/xml.html"><span class="doc">XML file</span></a></p></li>
+</ul>
+<p>All Apache Spark data sources can be used from SparkR. If you can load data from a data source by using PySpark or Scala, you can also load it by using SparkR. The following example uses the <code class="docutils literal notranslate"><span class="pre">source</span></code> argument’s value of <code class="docutils literal notranslate"><span class="pre">csv</span></code> to load data from a CSV file. To load data from a JSON file instead, you would specify <code class="docutils literal notranslate"><span class="pre">json</span></code>, and so on.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">loadDF</span><span class="p">(</span>
+<span class="w">        </span><span class="n">path</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/FileStore/tables/diamonds.csv&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">source</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;csv&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">header</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">inferSchema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">      </span><span class="p">)</span>
+
+<span class="nf">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#</span>
+<span class="c1"># +-----+---------+...</span>
+<span class="c1"># |carat|      cut|...</span>
+<span class="c1"># +-----+---------+...</span>
+<span class="c1"># | 0.23|    Ideal|...</span>
+<span class="c1"># | 0.21|  Premium|...</span>
+<span class="c1"># ...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="assign-transformation-steps-to-a-sparkdataframe">
+<h2>Assign transformation steps to a SparkDataFrame<a class="headerlink" href="#assign-transformation-steps-to-a-sparkdataframe" title="Permalink to this headline"> </a></h2>
+<p>The results of most Spark transformations return a SparkDataFrame. You can assign these results back to a SparkDataFrame variable, similar to how you might use common table expressions (CTEs), temporary views, or DataFrames in other systems.</p>
+</div>
+<div class="section" id="combine-sparkdataframes-with-join-and-union">
+<h2>Combine SparkDataFrames with join and union<a class="headerlink" href="#combine-sparkdataframes-with-join-and-union" title="Permalink to this headline"> </a></h2>
+<p>SparkDataFrames use standard SQL semantics for join operations. A join returns the combined results of two SparkDataFrames based on the provided matching conditions and join type. The following example calls the <a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/join.html">join</a> function and uses an inner join, which is the default. A call to the <a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/select.html">select</a> function removes the duplicate <code class="docutils literal notranslate"><span class="pre">id</span></code> column from the join’s result:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">dataCustomers</span><span class="w">   </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span>
+<span class="w">                     </span><span class="nf">list</span><span class="p">(</span><span class="m">1L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Raymond&quot;</span><span class="p">),</span>
+<span class="w">                     </span><span class="nf">list</span><span class="p">(</span><span class="m">2L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Loretta&quot;</span><span class="p">),</span>
+<span class="w">                     </span><span class="nf">list</span><span class="p">(</span><span class="m">3L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Wayne&quot;</span><span class="p">)</span>
+<span class="w">                   </span><span class="p">)</span>
+
+<span class="n">schemaCustomers</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">structType</span><span class="p">(</span>
+<span class="w">                     </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w">   </span><span class="s">&quot;integer&quot;</span><span class="p">),</span>
+<span class="w">                     </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;string&quot;</span><span class="p">)</span>
+<span class="w">                   </span><span class="p">)</span>
+
+<span class="n">dataPurchases</span><span class="w">   </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span>
+<span class="w">                     </span><span class="nf">list</span><span class="p">(</span><span class="m">1L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;green&quot;</span><span class="p">,</span><span class="w">  </span><span class="s">&quot;apple&quot;</span><span class="p">),</span>
+<span class="w">                     </span><span class="nf">list</span><span class="p">(</span><span class="m">2L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;purple&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;grape&quot;</span><span class="p">),</span>
+<span class="w">                     </span><span class="nf">list</span><span class="p">(</span><span class="m">3L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;yellow&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;banana&quot;</span><span class="p">)</span>
+<span class="w">                   </span><span class="p">)</span>
+
+<span class="n">schemaPurchases</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">structType</span><span class="p">(</span>
+<span class="w">                     </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w">    </span><span class="s">&quot;integer&quot;</span><span class="p">),</span>
+<span class="w">                     </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;color&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;string&quot;</span><span class="p">),</span>
+<span class="w">                     </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;fruit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;string&quot;</span><span class="p">)</span>
+<span class="w">                   </span><span class="p">)</span>
+
+<span class="n">dfCustomers</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createDataFrame</span><span class="p">(</span>
+<span class="w">                 </span><span class="n">data</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">dataCustomers</span><span class="p">,</span>
+<span class="w">                 </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">schemaCustomers</span>
+<span class="w">               </span><span class="p">)</span>
+
+<span class="n">dfPurchases</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createDataFrame</span><span class="p">(</span>
+<span class="w">                 </span><span class="n">data</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">dataPurchases</span><span class="p">,</span>
+<span class="w">                 </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">schemaPurchases</span>
+<span class="w">               </span><span class="p">)</span>
+
+<span class="n">dfPurchaseHistory</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span>
+<span class="w">                       </span><span class="n">x</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span>
+<span class="w">                               </span><span class="n">x</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">dfCustomers</span><span class="p">,</span>
+<span class="w">                               </span><span class="n">y</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">dfPurchases</span><span class="p">,</span>
+<span class="w">                               </span><span class="n">joinExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dfCustomers</span><span class="o">$</span><span class="n">id</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">dfPurchases</span><span class="o">$</span><span class="n">id</span>
+<span class="w">                             </span><span class="p">),</span>
+<span class="w">                       </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">dfCustomers</span><span class="o">$</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;color&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fruit&quot;</span><span class="p">)</span>
+<span class="w">                     </span><span class="p">)</span>
+
+<span class="nf">display</span><span class="p">(</span><span class="n">dfPurchaseHistory</span><span class="p">)</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#</span>
+<span class="c1"># +---+-------+------+------+</span>
+<span class="c1"># | id|   name| color| fruit|</span>
+<span class="c1"># +---+-------+------+------+</span>
+<span class="c1"># |  1|Raymond| green| apple|</span>
+<span class="c1"># |  2|Loretta|purple| grape|</span>
+<span class="c1"># |  3|  Wayne|yellow|banana|</span>
+<span class="c1"># +---+-------+------+------+</span>
+</pre></div>
+</div>
+<p>You can add the rows of one SparkDataFrame to another by calling the <a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/union.html">union</a> function, as in the following example:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">schema</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">structType</span><span class="p">(</span>
+<span class="w">             </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w">   </span><span class="s">&quot;integer&quot;</span><span class="p">),</span>
+<span class="w">             </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;string&quot;</span><span class="p">)</span>
+<span class="w">           </span><span class="p">)</span>
+
+<span class="n">df1</span><span class="w">     </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createDataFrame</span><span class="p">(</span>
+<span class="w">             </span><span class="n">data</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span>
+<span class="w">                        </span><span class="nf">list</span><span class="p">(</span><span class="m">1L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Raymond&quot;</span><span class="p">),</span>
+<span class="w">                        </span><span class="nf">list</span><span class="p">(</span><span class="m">2L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Loretta&quot;</span><span class="p">),</span>
+<span class="w">                        </span><span class="nf">list</span><span class="p">(</span><span class="m">3L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Wayne&quot;</span><span class="p">)</span>
+<span class="w">                      </span><span class="p">),</span>
+<span class="w">             </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">schema</span>
+<span class="w">           </span><span class="p">)</span>
+
+<span class="n">df2</span><span class="w">     </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createDataFrame</span><span class="p">(</span>
+<span class="w">             </span><span class="n">data</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span>
+<span class="w">                        </span><span class="nf">list</span><span class="p">(</span><span class="m">4L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Terri&quot;</span><span class="p">),</span>
+<span class="w">                        </span><span class="nf">list</span><span class="p">(</span><span class="m">5L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Jason&quot;</span><span class="p">),</span>
+<span class="w">                        </span><span class="nf">list</span><span class="p">(</span><span class="m">6L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Tonya&quot;</span><span class="p">)</span>
+<span class="w">                      </span><span class="p">),</span>
+<span class="w">             </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">schema</span>
+<span class="w">           </span><span class="p">)</span>
+
+<span class="n">dfUnion</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">union</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span><span class="w"> </span><span class="n">df2</span><span class="p">)</span>
+
+<span class="nf">display</span><span class="p">(</span><span class="n">dfUnion</span><span class="p">)</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#</span>
+<span class="c1"># +---+-------+</span>
+<span class="c1"># | id|   name|</span>
+<span class="c1"># +---+-------+</span>
+<span class="c1"># |  1|Raymond|</span>
+<span class="c1"># |  2|Loretta|</span>
+<span class="c1"># |  3|  Wayne|</span>
+<span class="c1"># |  4|  Terri|</span>
+<span class="c1"># |  5|  Jason|</span>
+<span class="c1"># |  6|  Tonya|</span>
+<span class="c1"># +---+-------+</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="filter-rows-in-a-sparkdataframe">
+<h2>Filter rows in a SparkDataFrame<a class="headerlink" href="#filter-rows-in-a-sparkdataframe" title="Permalink to this headline"> </a></h2>
+<p>You can use filtering to select a subset of rows to return or modify in a SparkDataFrame by calling the <a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/filter.html">filter</a> or <a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/filter.html">where</a> functions. There is no difference in performance or syntax, as in the following example:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="w">   </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">1L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Raymond&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">2L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Loretta&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">3L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Wayne&quot;</span><span class="p">)</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="n">schema</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">structType</span><span class="p">(</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w">   </span><span class="s">&quot;integer&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;string&quot;</span><span class="p">)</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="n">df</span><span class="w">     </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createDataFrame</span><span class="p">(</span>
+<span class="w">            </span><span class="n">data</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">,</span>
+<span class="w">            </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">schema</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="n">dfFilter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span>
+<span class="w">              </span><span class="n">x</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">,</span>
+<span class="w">              </span><span class="n">condition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="o">$</span><span class="n">id</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">1</span>
+<span class="w">            </span><span class="p">)</span>
+
+<span class="n">dfWhere</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">where</span><span class="p">(</span>
+<span class="w">              </span><span class="n">x</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">,</span>
+<span class="w">              </span><span class="n">condition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="o">$</span><span class="n">id</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">1</span>
+<span class="w">            </span><span class="p">)</span>
+
+<span class="nf">showDF</span><span class="p">(</span><span class="n">dfFilter</span><span class="p">)</span>
+<span class="nf">showDF</span><span class="p">(</span><span class="n">dfWhere</span><span class="p">)</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#</span>
+<span class="c1"># +---+-------+</span>
+<span class="c1"># | id|   name|</span>
+<span class="c1"># +---+-------+</span>
+<span class="c1"># |  2|Loretta|</span>
+<span class="c1"># |  3|  Wayne|</span>
+<span class="c1"># +---+-------+</span>
+<span class="c1"># +---+-------+</span>
+<span class="c1"># | id|   name|</span>
+<span class="c1"># +---+-------+</span>
+<span class="c1"># |  2|Loretta|</span>
+<span class="c1"># |  3|  Wayne|</span>
+<span class="c1"># +---+-------+</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="select-columns-from-a-sparkdataframe">
+<h2>Select columns from a SparkDataFrame<a class="headerlink" href="#select-columns-from-a-sparkdataframe" title="Permalink to this headline"> </a></h2>
+<p>You can select columns by passing one or more column names to the <a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/select.html">select</a> function, as in the following example:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="w">   </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">1L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Raymond&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;green&quot;</span><span class="p">,</span><span class="w">  </span><span class="s">&quot;apple&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">2L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Loretta&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;purple&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;grape&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">3L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Wayne&quot;</span><span class="p">,</span><span class="w">   </span><span class="s">&quot;yellow&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;banana&quot;</span><span class="p">)</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="n">schema</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">structType</span><span class="p">(</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w">    </span><span class="s">&quot;integer&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w">  </span><span class="s">&quot;string&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;color&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;string&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;fruit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;string&quot;</span><span class="p">)</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="n">df</span><span class="w">     </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createDataFrame</span><span class="p">(</span>
+<span class="w">            </span><span class="n">data</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">,</span>
+<span class="w">            </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">schema</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="n">dfSelect</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span>
+<span class="w">              </span><span class="n">x</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">,</span>
+<span class="w">              </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;color&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">)</span>
+
+<span class="nf">display</span><span class="p">(</span><span class="n">dfSelect</span><span class="p">)</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#</span>
+<span class="c1"># +---+------+</span>
+<span class="c1"># | id| color|</span>
+<span class="c1"># +---+------+</span>
+<span class="c1"># |  1| green|</span>
+<span class="c1"># |  2|purple|</span>
+<span class="c1"># |  3|yellow|</span>
+<span class="c1"># +---+------+</span>
+</pre></div>
+</div>
+<p>You can combine select and filter queries to limit rows and columns returned, as in the following example:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="w">   </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">1L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Raymond&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;green&quot;</span><span class="p">,</span><span class="w">  </span><span class="s">&quot;apple&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">2L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Loretta&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;purple&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;grape&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">3L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Wayne&quot;</span><span class="p">,</span><span class="w">   </span><span class="s">&quot;yellow&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;banana&quot;</span><span class="p">)</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="n">schema</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">structType</span><span class="p">(</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w">    </span><span class="s">&quot;integer&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w">  </span><span class="s">&quot;string&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;color&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;string&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;fruit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;string&quot;</span><span class="p">)</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="n">df</span><span class="w">     </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createDataFrame</span><span class="p">(</span>
+<span class="w">            </span><span class="n">data</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">,</span>
+<span class="w">            </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">schema</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="n">dfFilterSelect</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">x</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span>
+<span class="w">                                  </span><span class="n">x</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fruit&quot;</span><span class="p">)</span>
+<span class="w">                                </span><span class="p">),</span>
+<span class="w">                    </span><span class="n">condition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="o">$</span><span class="n">id</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">1</span>
+<span class="w">                  </span><span class="p">)</span>
+
+<span class="nf">display</span><span class="p">(</span><span class="n">dfFilterSelect</span><span class="p">)</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#</span>
+<span class="c1"># +---+------+</span>
+<span class="c1"># | id| fruit|</span>
+<span class="c1"># +---+------+</span>
+<span class="c1"># |  2| grape|</span>
+<span class="c1"># |  3|banana|</span>
+<span class="c1"># +---+------+</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="save-a-sparkdataframe-to-a-table">
+<h2>Save a SparkDataFrame to a table<a class="headerlink" href="#save-a-sparkdataframe-to-a-table" title="Permalink to this headline"> </a></h2>
+<p>Databricks uses Delta Lake for all tables by default. You can save the contents of a SparkDataFrame to a table in Databricks by calling the <a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/saveAsTable.html">saveAsTable</a> function, as in the following example:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># tableName &lt;- &quot;&lt;catalog-name&gt;.&lt;schema-name&gt;.&lt;table-name&gt;&quot;</span>
+<span class="n">tableName</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s">&quot;main.default.purchasehistory&quot;</span>
+
+<span class="n">data</span><span class="w">   </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">1L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Raymond&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;green&quot;</span><span class="p">,</span><span class="w">  </span><span class="s">&quot;apple&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">2L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Loretta&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;purple&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;grape&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">3L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Wayne&quot;</span><span class="p">,</span><span class="w">   </span><span class="s">&quot;yellow&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;banana&quot;</span><span class="p">)</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="n">schema</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">structType</span><span class="p">(</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w">    </span><span class="s">&quot;integer&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w">  </span><span class="s">&quot;string&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;color&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;string&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;fruit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;string&quot;</span><span class="p">)</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createDataFrame</span><span class="p">(</span>
+<span class="w">        </span><span class="n">data</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">,</span>
+<span class="w">        </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">schema</span>
+<span class="w">      </span><span class="p">)</span>
+
+<span class="nf">saveAsTable</span><span class="p">(</span>
+<span class="w">  </span><span class="n">df</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">,</span>
+<span class="w">  </span><span class="n">tableName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tableName</span>
+<span class="p">)</span>
+
+<span class="c1"># Verify that the table was successfully saved by</span>
+<span class="c1"># displaying the table&#39;s contents.</span>
+<span class="nf">display</span><span class="p">(</span><span class="nf">sql</span><span class="p">(</span><span class="nf">paste0</span><span class="p">(</span><span class="s">&quot;SELECT * FROM &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">tableName</span><span class="p">)))</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#</span>
+<span class="c1"># +---+-------+------+------+</span>
+<span class="c1"># | id|   name| color| fruit|</span>
+<span class="c1"># +---+-------+------+------+</span>
+<span class="c1"># |  1|Raymond| green| apple|</span>
+<span class="c1"># |  2|Loretta|purple| grape|</span>
+<span class="c1"># |  3|  Wayne|yellow|banana|</span>
+<span class="c1"># +---+-------+------+------+</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="write-a-sparkdataframe-to-a-collection-of-files">
+<h2>Write a SparkDataFrame to a collection of files<a class="headerlink" href="#write-a-sparkdataframe-to-a-collection-of-files" title="Permalink to this headline"> </a></h2>
+<p>Most Spark applications are designed to work on large datasets and work in a distributed fashion, and Spark writes out a directory of files rather than a single file. Many data systems are configured to read these directories of files. Databricks recommends using tables instead of file paths for most applications.</p>
+<p>The following example calls the <a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/write.json.html">write.json</a> function to save the contents of a table to a directory. For other file formats, see:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/write.parquet.html">write.parquet</a></p></li>
+<li><p><a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/write.orc.html">write.orc</a></p></li>
+<li><p><a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/write.text.html">write.text</a></p></li>
+</ul>
+<p>See also:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/read.json.html">read.json</a></p></li>
+<li><p><a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/read.parquet.html">read.parquet</a></p></li>
+<li><p><a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/read.orc.html">read.orc</a></p></li>
+<li><p><a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/read.text.html">read.text</a></p></li>
+<li><p><a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/read.jdbc.html">read.jdbc</a></p></li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># tableName &lt;- &quot;&lt;catalog-name&gt;.&lt;schema-name&gt;.&lt;table-name&gt;&quot;</span>
+<span class="n">tableName</span><span class="w">   </span><span class="o">&lt;-</span><span class="w"> </span><span class="s">&quot;main.default.diamonds&quot;</span>
+<span class="n">writeToPath</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">paste0</span><span class="p">(</span><span class="s">&quot;/tmp/&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">tableName</span><span class="p">)</span>
+
+<span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">tableToDF</span><span class="p">(</span><span class="n">tableName</span><span class="p">)</span>
+
+<span class="nf">write.json</span><span class="p">(</span>
+<span class="w">            </span><span class="n">x</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">,</span>
+<span class="w">            </span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">writeToPath</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="c1"># Verify that the JSON was successfully written by</span>
+<span class="c1"># displaying the JSON file&#39;s contents as a SparkDataFrame.</span>
+<span class="n">dfJSON</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read.json</span><span class="p">(</span><span class="n">writeToPath</span><span class="p">)</span>
+
+<span class="nf">display</span><span class="p">(</span><span class="n">dfJSON</span><span class="p">)</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#</span>
+<span class="c1"># +-----+---------+...</span>
+<span class="c1"># |carat|      cut|...</span>
+<span class="c1"># +-----+---------+...</span>
+<span class="c1"># | 0.23|    Ideal|...</span>
+<span class="c1"># | 0.21|  Premium|...</span>
+<span class="c1"># ...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="run-sql-queries">
+<span id="run-sql"></span><h2>Run SQL queries<a class="headerlink" href="#run-sql-queries" title="Permalink to this headline"> </a></h2>
+<p>SparkDataFrames provide a number of options to combine SQL with R.</p>
+<p>The <a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/selectExpr.html">selectExpr</a> function enables you to specify each column as a SQL query, such as in the following example:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="w">   </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">1L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Raymond&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">2L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Loretta&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">3L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Wayne&quot;</span><span class="p">)</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="n">schema</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">structType</span><span class="p">(</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w">   </span><span class="s">&quot;integer&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;string&quot;</span><span class="p">)</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="n">df</span><span class="w">     </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createDataFrame</span><span class="p">(</span>
+<span class="w">            </span><span class="n">data</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">,</span>
+<span class="w">            </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">schema</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="n">dfSelectExpr</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">selectExpr</span><span class="p">(</span>
+<span class="w">                  </span><span class="n">x</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">,</span>
+<span class="w">                  </span><span class="n">expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;(id + 100) as id&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;(upper(name)) as name&quot;</span>
+<span class="w">                </span><span class="p">)</span>
+
+<span class="nf">display</span><span class="p">(</span><span class="n">dfSelectExpr</span><span class="p">)</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#</span>
+<span class="c1"># +---+-------+</span>
+<span class="c1"># | id|   name|</span>
+<span class="c1"># +---+-------+</span>
+<span class="c1"># |101|RAYMOND|</span>
+<span class="c1"># |102|LORETTA|</span>
+<span class="c1"># |103|  WAYNE|</span>
+<span class="c1"># +---+-------+</span>
+</pre></div>
+</div>
+<p>The <a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/column_nonaggregate_functions.html">expr</a> function enables you to use SQL syntax anywhere a column would be specified, as in the following example:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="w">   </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">1L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Raymond&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">2L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Loretta&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">list</span><span class="p">(</span><span class="m">3L</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Wayne&quot;</span><span class="p">)</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="n">schema</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">structType</span><span class="p">(</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w">   </span><span class="s">&quot;integer&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nf">structField</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;string&quot;</span><span class="p">)</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="n">df</span><span class="w">     </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createDataFrame</span><span class="p">(</span>
+<span class="w">            </span><span class="n">data</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">,</span>
+<span class="w">            </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">schema</span>
+<span class="w">          </span><span class="p">)</span>
+
+<span class="n">dfSelect</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span>
+<span class="w">              </span><span class="n">x</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">,</span>
+<span class="w">              </span><span class="n">col</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span>
+<span class="w">                       </span><span class="nf">expr</span><span class="p">(</span><span class="s">&quot;(id * 2) as id&quot;</span><span class="p">),</span>
+<span class="w">                       </span><span class="nf">expr</span><span class="p">(</span><span class="s">&quot;(lower(name)) as name&quot;</span><span class="p">)</span>
+<span class="w">                     </span><span class="p">)</span>
+<span class="w">            </span><span class="p">)</span>
+
+<span class="nf">display</span><span class="p">(</span><span class="n">dfSelect</span><span class="p">)</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#</span>
+<span class="c1"># +---+-------+</span>
+<span class="c1"># | id|   name|</span>
+<span class="c1"># +---+-------+</span>
+<span class="c1"># |  2|raymond|</span>
+<span class="c1"># |  4|loretta|</span>
+<span class="c1"># |  6|  wayne|</span>
+<span class="c1"># +---+-------+</span>
+</pre></div>
+</div>
+<p>You can also call the <a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/sql.html">sql</a> function run arbitrary SQL queries, as in the following example:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sql</span><span class="p">(</span><span class="s">&quot;SELECT carat, cut, color, clarity FROM main.default.diamonds WHERE clarity = &#39;VVS2&#39; LIMIT 2&quot;</span><span class="p">)</span>
+
+<span class="nf">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#</span>
+<span class="c1"># +-----+---------+-----+-------+</span>
+<span class="c1"># |carat|      cut|color|clarity|</span>
+<span class="c1"># +-----+---------+-----+-------+</span>
+<span class="c1"># | 0.24|Very Good|    J|   VVS2|</span>
+<span class="c1"># | 0.23|Very Good|    G|   VVS2|</span>
+<span class="c1"># +-----+---------+-----+-------+</span>
+</pre></div>
+</div>
+<p>You can use string operations to parameterize SQL queries, as in the following example:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">columns_list</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="s">&quot;carat, cut, color, clarity&quot;</span>
+<span class="n">table_name</span><span class="w">    </span><span class="o">&lt;-</span><span class="w"> </span><span class="s">&quot;main.default.diamonds&quot;</span>
+<span class="n">column_name</span><span class="w">   </span><span class="o">&lt;-</span><span class="w"> </span><span class="s">&quot;clarity&quot;</span>
+<span class="n">column_value</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="s">&quot;&#39;VVS2&#39;&quot;</span>
+<span class="n">row_limit</span><span class="w">     </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">2</span>
+
+<span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">sql</span><span class="p">(</span><span class="nf">paste0</span><span class="p">(</span>
+<span class="w">            </span><span class="s">&quot;SELECT &quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">columns_list</span><span class="p">,</span>
+<span class="w">            </span><span class="s">&quot; FROM &quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">table_name</span><span class="p">,</span>
+<span class="w">            </span><span class="s">&quot; WHERE &quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">column_name</span><span class="p">,</span>
+<span class="w">            </span><span class="s">&quot; = &quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">column_value</span><span class="p">,</span>
+<span class="w">            </span><span class="s">&quot; LIMIT &quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">row_limit</span>
+<span class="w">         </span><span class="p">))</span>
+
+<span class="nf">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#</span>
+<span class="c1"># +-----+---------+-----+-------+</span>
+<span class="c1"># |carat|      cut|color|clarity|</span>
+<span class="c1"># +-----+---------+-----+-------+</span>
+<span class="c1"># | 0.24|Very Good|    J|   VVS2|</span>
+<span class="c1"># | 0.23|Very Good|    G|   VVS2|</span>
+<span class="c1"># +-----+---------+-----+-------+</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="next-steps">
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>Read more about <a class="reference internal" href="../sparkr/index.html"><span class="doc">Databricks for R developers</span></a>.</p></li>
+<li><p>Explore the <a class="reference internal" href="../sparkr/overview.html"><span class="doc">SparkR overview</span></a>.</p></li>
+<li><p>Explore <a class="reference internal" href="../sparkr/sparklyr.html"><span class="doc">sparklyr</span></a>, an additional R interface to Apache Spark.</p></li>
+<li><p><a class="reference internal" href="../sparkr/dataframes-tables.html"><span class="doc">Work with DataFrames and tables in R</span></a>.</p></li>
+<li><p>Try the <a class="reference internal" href="../sparkr/index.html#tutorials"><span class="std std-ref">tutorials</span></a>.</p></li>
+<li><p>Explore <a class="reference internal" href="../sparkr/index.html#r-developer-tools"><span class="std std-ref">R developer tools</span></a>.</p></li>
+</ul>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://spark.apache.org/docs/latest/sparkr.html#sparkdataframe">SparkDataFrame introduction</a></p></li>
+<li><p><a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/SparkDataFrame.html">SparkDataFrame reference</a></p></li>
+<li><p><a class="reference external" href="https://spark.apache.org/docs/latest/api/R/reference/index.html">SparkR Function reference</a></p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

@@ -1,0 +1,1239 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use the COPY INTO syntax of the Delta Lake SQL language in Databricks SQL and Databricks Runtime." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="COPY INTO">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>COPY INTO &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/sql/language-manual/delta-copy-into.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/sql/language-manual/delta-copy-into.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/sql/language-manual/delta-copy-into.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/sql/language-manual/delta-copy-into.html" class="notranslate">English</option>
+    <option value="../../../ja/sql/language-manual/delta-copy-into.html" class="notranslate">日本語</option>
+    <option value="../../../pt/sql/language-manual/delta-copy-into.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li><code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="copy-into">
+<h1><code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code><a class="headerlink" href="#copy-into" title="Permalink to this headline"> </a></h1>
+<p><strong>Applies to:</strong> <img alt="check marked yes" src="../../_images/check.png" /> Databricks SQL <img alt="check marked yes" src="../../_images/check.png" /> Databricks Runtime</p>
+<p>Loads data from a file location into a Delta table. This is a retriable and idempotent operation—files in the source location that have already been loaded are skipped. For examples, see <a class="reference internal" href="../../ingestion/copy-into/examples.html"><span class="doc">Common data loading patterns using COPY INTO</span></a>.</p>
+<div class="section" id="syntax">
+<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline"> </a></h2>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">COPY</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">target_table</span>
+<span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="n">source_clause</span><span class="w"> </span><span class="o">|</span>
+<span class="w">         </span><span class="p">(</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">expression_list</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">source_clause</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="err">}</span>
+<span class="w">  </span><span class="n">FILEFORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data_source</span>
+<span class="w">  </span><span class="p">[</span><span class="w"> </span><span class="n">VALIDATE</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">num_rows</span><span class="w"> </span><span class="k">ROWS</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">]</span>
+<span class="w">  </span><span class="p">[</span><span class="w"> </span><span class="n">FILES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">file_name</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">PATTERN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">glob_pattern</span><span class="w"> </span><span class="p">]</span>
+<span class="w">  </span><span class="p">[</span><span class="w"> </span><span class="n">FORMAT_OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="n">data_source_reader_option</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="err">}</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">]</span>
+<span class="w">  </span><span class="p">[</span><span class="w"> </span><span class="n">COPY_OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="n">copy_option</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="err">}</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="p">...]</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">]</span>
+
+<span class="n">source_clause</span>
+<span class="w">  </span><span class="k">source</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="n">CREDENTIAL</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="n">credential_name</span><span class="w"> </span><span class="o">|</span>
+<span class="w">                                 </span><span class="p">(</span><span class="n">temporary_credential_options</span><span class="p">)</span><span class="w"> </span><span class="err">}</span><span class="w"> </span><span class="p">]</span>
+<span class="w">                  </span><span class="p">[</span><span class="w"> </span><span class="n">ENCRYPTION</span><span class="w"> </span><span class="p">(</span><span class="n">encryption_options</span><span class="p">)</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline"> </a></h2>
+<ul>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">target_table</span></code></strong></p>
+<p>Identifies an existing Delta table. The <a class="reference internal" href="sql-ref-names.html#table-name"><span class="std std-ref">target_table</span></a> must not include a <a class="reference internal" href="sql-ref-names.html#table-name"><span class="std std-ref">temporal specification</span></a>.</p>
+<p>If the table name is provided in the form of a location, such as: <code class="docutils literal notranslate"><span class="pre">delta.`/path/to/table`</span> </code>, Unity Catalog can govern access to the locations that are being written to. You can write to an external location by:</p>
+<ul class="simple">
+<li><p>Defining the location as an external location and having <code class="docutils literal notranslate"><span class="pre">WRITE</span> <span class="pre">FILES</span></code> permissions on that external location.</p></li>
+<li><p>Having <code class="docutils literal notranslate"><span class="pre">WRITE</span> <span class="pre">FILES</span></code> permissions on a named storage credential that provide authorization to write to a location using: <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span> <span class="pre">delta.`/some/location`</span> <span class="pre">WITH</span> <span class="pre">(CREDENTIAL</span> <span class="pre">&lt;named-credential&gt;)</span></code></p></li>
+</ul>
+<p>See <a class="reference internal" href="../../connect/unity-catalog/index.html"><span class="doc">Connect to cloud object storage using Unity Catalog</span></a> for more details.</p>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">source</span></code></strong></p>
+<p>The file location to load the data from. Files in this location must have the format specified in <code class="docutils literal notranslate"><span class="pre">FILEFORMAT</span></code>. The location is provided in the form of a URI.</p>
+<p>Access to the source location can be provided through:</p>
+<ul>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">credential_name</span></code></strong></p>
+<p>Optional name of the credential used to access or write to the storage location. You use this credential only if the file location is not included in an <a class="reference internal" href="sql-ref-external-locations.html"><span class="doc">external location</span></a>. See <a class="reference internal" href="sql-ref-names.html#credential-name"><span class="std std-ref">credential_name</span></a>.</p>
+</li>
+<li><p>Inline temporary credentials.</p></li>
+</ul>
+<ul class="simple">
+<li><p>Defining the source location as an external location and having <code class="docutils literal notranslate"><span class="pre">READ</span> <span class="pre">FILES</span></code> permissions on the external location through Unity Catalog.</p></li>
+<li><p>Using a named storage credential with <code class="docutils literal notranslate"><span class="pre">READ</span> <span class="pre">FILES</span></code> permissions that provide authorization to read from a location through Unity Catalog.</p></li>
+</ul>
+<p>You don’t need to provide inline or named credentials if the path is already defined as an external location that you have permissions to use. See <a class="reference internal" href="../../connect/unity-catalog/external-locations.html"><span class="doc">Create an external location</span></a> for more details.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the source file path is a root path, please add a slash (<code class="docutils literal notranslate"><span class="pre">/</span></code>) at the end of the file path, for example, <code class="docutils literal notranslate"><span class="pre">s3://my-bucket/</span></code>.</p>
+</div>
+<p></p>
+<p>Accepted credential options are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">AWS_ACCESS_KEY</span></code>, <code class="docutils literal notranslate"><span class="pre">AWS_SECRET_KEY</span></code>, and <code class="docutils literal notranslate"><span class="pre">AWS_SESSION_TOKEN</span></code> for AWS S3</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AZURE_SAS_TOKEN</span></code> for ADLS Gen2 and Azure Blob Storage</p></li>
+</ul>
+<p>Accepted encryption options are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TYPE</span> <span class="pre">=</span> <span class="pre">'AWS_SSE_C'</span></code>, and <code class="docutils literal notranslate"><span class="pre">MASTER_KEY</span></code> for AWS S3</p></li>
+</ul>
+</li>
+</ul>
+<p>See <a class="reference internal" href="../../ingestion/copy-into/temporary-credentials.html"><span class="doc">Load data using COPY INTO with temporary credentials</span></a>.</p>
+<ul>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">expression_list</span></code></strong></p>
+<p>Selects the specified columns or expressions from the source data before copying into the Delta table. The expressions can be anything you use with <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> statements, including window operations. You can use aggregation expressions only for global aggregates–you cannot <code class="docutils literal notranslate"><span class="pre">GROUP</span> <span class="pre">BY</span></code> on columns with this syntax.</p>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">FILEFORMAT</span> <span class="pre">=</span> <span class="pre">data_source</span></code></strong></p>
+<p>The format of the source files to load. One of <code class="docutils literal notranslate"><span class="pre">CSV</span></code>, <code class="docutils literal notranslate"><span class="pre">JSON</span></code>, <code class="docutils literal notranslate"><span class="pre">AVRO</span></code>, <code class="docutils literal notranslate"><span class="pre">ORC</span></code>, <code class="docutils literal notranslate"><span class="pre">PARQUET</span></code>, <code class="docutils literal notranslate"><span class="pre">TEXT</span></code>, <code class="docutils literal notranslate"><span class="pre">BINARYFILE</span></code>.</p>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">VALIDATE</span></code></strong></p>
+<p><strong>Applies to:</strong> <img alt="check marked yes" src="../../_images/check.png" /> Databricks SQL <img alt="check marked yes" src="../../_images/check.png" /> Databricks Runtime 10.3 and above</p>
+<p>The data that is to be loaded into a table is validated but not written to the table. These validations include:</p>
+<ul class="simple">
+<li><p>Whether the data can be parsed.</p></li>
+<li><p>Whether the schema matches that of the table or if the schema needs to be evolved.</p></li>
+<li><p>Whether all nullability and check constraints are met.</p></li>
+</ul>
+<p>The default is to validate all of the data that is to be loaded. You can provide a number of rows to be validated with the <code class="docutils literal notranslate"><span class="pre">ROWS</span></code> keyword, such as <code class="docutils literal notranslate"><span class="pre">VALIDATE</span> <span class="pre">15</span> <span class="pre">ROWS</span></code>. The <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code> statement returns a preview of the data of 50 rows or less when a number of less than 50 is used with the <code class="docutils literal notranslate"><span class="pre">ROWS</span></code> keyword).</p>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">FILES</span></code></strong></p>
+<p>A list of file names to load, with a limit of 1000 files. Cannot be specified with <code class="docutils literal notranslate"><span class="pre">PATTERN</span></code>.</p>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">PATTERN</span></code></strong></p>
+<p>A glob pattern that identifies the files to load from the source directory. Cannot be specified with <code class="docutils literal notranslate"><span class="pre">FILES</span></code>.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Pattern</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">?</span></code></p></td>
+<td><p>Matches any single character</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">*</span></code></p></td>
+<td><p>Matches zero or more characters</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">[abc]</span></code></p></td>
+<td><p>Matches a single character from character set {a,b,c}.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">[a-z]</span></code></p></td>
+<td><p>Matches a single character from the character range {a…z}.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">[^a]</span></code></p></td>
+<td><p>Matches a single character that is not from character set or range {a}.
+Note that the <code class="docutils literal notranslate"><span class="pre">^</span></code> character must occur immediately to the right of the
+opening bracket.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">{ab,cd}</span></code></p></td>
+<td><p>Matches a string from the string set {ab, cd}.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">{ab,c{de,</span> <span class="pre">fh}}</span></code></p></td>
+<td><p>Matches a string from the string set {ab, cde, cfh}.</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">FORMAT_OPTIONS</span></code></strong></p>
+<p>Options to be passed to the Apache Spark data source reader for the specified format. See <a class="reference internal" href="#format-options"><span class="std std-ref">Format options</span></a> for each file format.</p>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">COPY_OPTIONS</span></code></strong></p>
+<p>Options to control the operation of the <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code> command.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">force</span></code>: boolean, default <code class="docutils literal notranslate"><span class="pre">false</span></code>. If set to <code class="docutils literal notranslate"><span class="pre">true</span></code>, idempotency is disabled and files are loaded regardless of whether they’ve been loaded before.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mergeSchema</span></code>: boolean, default <code class="docutils literal notranslate"><span class="pre">false</span></code>. If set to <code class="docutils literal notranslate"><span class="pre">true</span></code>, the schema can be evolved according to the incoming data.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="invoke-copy-into-concurrently">
+<h2>Invoke <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code> concurrently<a class="headerlink" href="#invoke-copy-into-concurrently" title="Permalink to this headline"> </a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code> supports concurrent invocations against the same table. As long as <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code> is invoked concurrently on <strong>distinct</strong> sets of input files, each invocation should eventually succeed, otherwise you get a transaction conflict. <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code> should not be invoked concurrently to improve performance; a single <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code> command with multiple files typically performs better than running concurrent <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code> commands with a single file each. <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code> can be called concurrently when:</p>
+<ul class="simple">
+<li><p>Multiple data producers don’t have an easy way to coordinate and cannot make a single invocation.</p></li>
+<li><p>When a very large directory can be ingested sub-directory by sub-directory. When ingesting directories with a very large number of files, Databricks recommends using <a class="reference internal" href="../../ingestion/auto-loader/index.html"><span class="doc">Auto Loader</span></a> when possible.</p></li>
+</ul>
+</div>
+<div class="section" id="access-file-metadata">
+<h2>Access file metadata<a class="headerlink" href="#access-file-metadata" title="Permalink to this headline"> </a></h2>
+<p>To learn how to access metadata for file-based data sources, see <a class="reference internal" href="../../ingestion/file-metadata-column.html"><span class="doc">File metadata column</span></a>.</p>
+</div>
+<div class="section" id="format-options">
+<h2>Format options<a class="headerlink" href="#format-options" title="Permalink to this headline"> </a></h2>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#generic-options" id="id1">Generic options</a></p></li>
+<li><p><a class="reference internal" href="#json-options" id="id2"><code class="docutils literal notranslate"><span class="pre">JSON</span></code> options</a></p></li>
+<li><p><a class="reference internal" href="#csv-options" id="id3"><code class="docutils literal notranslate"><span class="pre">CSV</span></code> options</a></p></li>
+<li><p><a class="reference internal" href="#parquet-options" id="id4"><code class="docutils literal notranslate"><span class="pre">PARQUET</span></code> options</a></p></li>
+<li><p><a class="reference internal" href="#avro-options" id="id5"><code class="docutils literal notranslate"><span class="pre">AVRO</span></code> options</a></p></li>
+<li><p><a class="reference internal" href="#binaryfile-options" id="id6"><code class="docutils literal notranslate"><span class="pre">BINARYFILE</span></code> options</a></p></li>
+<li><p><a class="reference internal" href="#text-options" id="id7"><code class="docutils literal notranslate"><span class="pre">TEXT</span></code> options</a></p></li>
+<li><p><a class="reference internal" href="#orc-options" id="id8"><code class="docutils literal notranslate"><span class="pre">ORC</span></code> options</a></p></li>
+</ul>
+</div>
+<div class="section" id="generic-options">
+<h3><a class="toc-backref" href="#id1">Generic options</a><a class="headerlink" href="#generic-options" title="Permalink to this headline"> </a></h3>
+<p>The following options apply to all file formats.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">ignoreCorruptFiles</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to ignore corrupt files. If true, the Spark jobs will continue
+to run when encountering corrupted files and the contents that have been
+read will still be returned.  Observable as <code class="docutils literal notranslate"><span class="pre">numSkippedCorruptFiles</span></code> in the
+<code class="docutils literal notranslate"><span class="pre">operationMetrics</span></code> column of the Delta Lake history. Available in Databricks Runtime 11.0
+and above.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">ignoreMissingFiles</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to ignore missing files. If true, the Spark jobs will continue
+to run when encountering missing files and the contents that
+have been read will still be returned. Available in Databricks Runtime 11.0 and above.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code> (<code class="docutils literal notranslate"><span class="pre">true</span></code> for <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code>)</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">modifiedAfter</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Timestamp</span> <span class="pre">String</span></code>, for example, <code class="docutils literal notranslate"><span class="pre">2021-01-01</span> <span class="pre">00:00:00.000000</span> <span class="pre">UTC+0</span></code></p>
+<p>An optional timestamp to ingest files that have a modification timestamp
+after the provided timestamp.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">modifiedBefore</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Timestamp</span> <span class="pre">String</span></code>, for example, <code class="docutils literal notranslate"><span class="pre">2021-01-01</span> <span class="pre">00:00:00.000000</span> <span class="pre">UTC+0</span></code></p>
+<p>An optional timestamp to ingest files that have a modification timestamp
+before the provided timestamp.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">pathGlobFilter</span></code></strong> or <strong><code class="docutils literal notranslate"><span class="pre">fileNamePattern</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>A potential glob pattern to provide for choosing files. Equivalent to
+<code class="docutils literal notranslate"><span class="pre">PATTERN</span></code> in <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code>. <code class="docutils literal notranslate"><span class="pre">fileNamePattern</span></code> can be used in <code class="docutils literal notranslate"><span class="pre">read_files</span></code>.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">recursiveFileLookup</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to load data recursively within the base directory
+and skip partition inference.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="json-options">
+<h3><a class="toc-backref" href="#id2"><code class="docutils literal notranslate"><span class="pre">JSON</span></code> options</a><a class="headerlink" href="#json-options" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">allowBackslashEscapingAnyCharacter</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to allow backslashes to escape any character that succeeds it.
+If not enabled, only characters that are explicitly listed by the JSON
+specification can be escaped.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">allowComments</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to allow the use of Java, C, and C++ style comments
+(<code class="docutils literal notranslate"><span class="pre">'/'</span></code>, <code class="docutils literal notranslate"><span class="pre">'*'</span></code>, and <code class="docutils literal notranslate"><span class="pre">'//'</span></code> varieties) within parsed content or not.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">allowNonNumericNumbers</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to allow the set of not-a-number (<code class="docutils literal notranslate"><span class="pre">NaN</span></code>) tokens as legal
+floating number values.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">allowNumericLeadingZeros</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to allow integral numbers to start with additional
+(ignorable) zeroes (for example, <code class="docutils literal notranslate"><span class="pre">000001</span></code>).</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">allowSingleQuotes</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to allow use of single quotes (apostrophe,
+character <code class="docutils literal notranslate"><span class="pre">'\'</span></code>) for quoting strings (names and String values).</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">allowUnquotedControlChars</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to allow JSON strings to contain unescaped control
+characters (ASCII characters with value less than 32, including tab and line
+feed characters) or not.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">allowUnquotedFieldNames</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to allow use of unquoted field names (which are allowed
+by JavaScript, but not by the JSON specification).</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">badRecordsPath</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The path to store files for recording the information about bad JSON records.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">columnNameOfCorruptRecord</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The column for storing records that are malformed and cannot be parsed.
+If the <code class="docutils literal notranslate"><span class="pre">mode</span></code> for parsing is set as <code class="docutils literal notranslate"><span class="pre">DROPMALFORMED</span></code>, this column will
+be empty.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">_corrupt_record</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">dateFormat</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The format for parsing date strings.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">yyyy-MM-dd</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">dropFieldIfAllNull</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to ignore columns of all null values or empty arrays and structs
+during schema inference.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">encoding</span></code></strong> or <strong><code class="docutils literal notranslate"><span class="pre">charset</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The name of the encoding of the JSON files. See <code class="docutils literal notranslate"><span class="pre">java.nio.charset.Charset</span></code>
+for list of options. You cannot use <code class="docutils literal notranslate"><span class="pre">UTF-16</span></code> and <code class="docutils literal notranslate"><span class="pre">UTF-32</span></code> when <code class="docutils literal notranslate"><span class="pre">multiline</span></code>
+is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">UTF-8</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">inferTimestamp</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to try and infer timestamp strings as a <code class="docutils literal notranslate"><span class="pre">TimestampType</span></code>. When set to
+<code class="docutils literal notranslate"><span class="pre">true</span></code>, schema inference might take noticeably longer.
+You must enable <code class="docutils literal notranslate"><span class="pre">cloudFiles.inferColumnTypes</span></code> to use with Auto Loader.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">lineSep</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>A string between two consecutive JSON records.</p>
+<p>Default value: None, which covers <code class="docutils literal notranslate"><span class="pre">\r</span></code>, <code class="docutils literal notranslate"><span class="pre">\r\n</span></code>, and <code class="docutils literal notranslate"><span class="pre">\n</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">locale</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>A <code class="docutils literal notranslate"><span class="pre">java.util.Locale</span></code> identifier. Influences default date, timestamp, and
+decimal parsing within the JSON.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">US</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">mode</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>Parser mode around handling malformed records. One of <code class="docutils literal notranslate"><span class="pre">'PERMISSIVE'</span></code>,
+<code class="docutils literal notranslate"><span class="pre">'DROPMALFORMED'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'FAILFAST'</span></code>.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">PERMISSIVE</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">multiLine</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether the JSON records span multiple lines.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">prefersDecimal</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Attempts to infer strings as <code class="docutils literal notranslate"><span class="pre">DecimalType</span></code> instead of float or double type
+when possible. You must also use schema inference, either by enabling
+<code class="docutils literal notranslate"><span class="pre">inferSchema</span></code> or using  <code class="docutils literal notranslate"><span class="pre">cloudFiles.inferColumnTypes</span></code> with Auto Loader.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">primitivesAsString</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to infer primitive types like numbers and booleans as <code class="docutils literal notranslate"><span class="pre">StringType</span></code>.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">readerCaseSensitive</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Specifies the case sensitivity behavior when <code class="docutils literal notranslate"><span class="pre">rescuedDataColumn</span></code> is enabled.
+If true, rescue the data columns whose names differ by case from the schema;
+otherwise, read the data in a case-insensitive manner. Available in Databricks Runtime
+13.3 and above.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">rescuedDataColumn</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>Whether to collect all data that can’t be parsed due to a data type mismatch
+or schema mismatch (including column casing) to a separate column. This
+column is included by default when using Auto Loader. For more details, refer
+to <a class="reference internal" href="../../ingestion/auto-loader/schema.html#rescue"><span class="std std-ref">What is the rescued data column?</span></a>.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">timestampFormat</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The format for parsing timestamp strings.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">timeZone</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">java.time.ZoneId</span></code> to use when parsing timestamps and dates.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="csv-options">
+<h3><a class="toc-backref" href="#id3"><code class="docutils literal notranslate"><span class="pre">CSV</span></code> options</a><a class="headerlink" href="#csv-options" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">badRecordsPath</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The path to store files for recording the information about bad CSV records.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">charToEscapeQuoteEscaping</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Char</span></code></p>
+<p>The character used to escape the character used for escaping quotes.
+For example, for the following record:  <code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">&quot;</span> <span class="pre">a\\&quot;,</span> <span class="pre">b</span> <span class="pre">]</span></code>:</p>
+<ul class="simple">
+<li><p>If the character to escape the <code class="docutils literal notranslate"><span class="pre">'\'</span></code> is undefined, the record won’t be
+parsed. The parser will read characters: <code class="docutils literal notranslate"><span class="pre">[a],[\],[&quot;],[,],[</span> <span class="pre">],[b]</span></code> and throw
+an error because it cannot find a closing quote.</p></li>
+<li><p>If the character to escape the <code class="docutils literal notranslate"><span class="pre">'\'</span></code> is defined as <code class="docutils literal notranslate"><span class="pre">'\'</span></code>, the record will
+be read with 2 values: <code class="docutils literal notranslate"><span class="pre">[a\]</span></code> and <code class="docutils literal notranslate"><span class="pre">[b]</span></code>.</p></li>
+</ul>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">'\0'</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">columnNameOfCorruptRecord</span></code></strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Supported for Auto Loader. Not supported for <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code>.</p>
+</div>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The column for storing records that are malformed and cannot be parsed.
+If the <code class="docutils literal notranslate"><span class="pre">mode</span></code> for parsing is set as <code class="docutils literal notranslate"><span class="pre">DROPMALFORMED</span></code>, this column will
+be empty.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">_corrupt_record</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">comment</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Char</span></code></p>
+<p>Defines the character that represents a line comment when found in the
+beginning of a line of text. Use <code class="docutils literal notranslate"><span class="pre">'\0'</span></code> to disable comment skipping.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">'\u0000'</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">dateFormat</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The format for parsing date strings.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">yyyy-MM-dd</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">emptyValue</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>String representation of an empty value.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">encoding</span></code></strong> or <strong><code class="docutils literal notranslate"><span class="pre">charset</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The name of the encoding of the CSV files. See <code class="docutils literal notranslate"><span class="pre">java.nio.charset.Charset</span></code>
+for the list of options. <code class="docutils literal notranslate"><span class="pre">UTF-16</span></code> and <code class="docutils literal notranslate"><span class="pre">UTF-32</span></code> cannot be used when <code class="docutils literal notranslate"><span class="pre">multiline</span></code>
+is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">UTF-8</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">enforceSchema</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to forcibly apply the specified or inferred schema to the CSV files.
+If the option is enabled, headers of CSV files are ignored. This option is
+ignored by default when using Auto Loader to rescue data and allow schema
+evolution.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">escape</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Char</span></code></p>
+<p>The escape character to use when parsing the data.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">'\'</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">header</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether the CSV files contain a header. Auto Loader assumes that files have
+headers when inferring the schema.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">ignoreLeadingWhiteSpace</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to ignore leading whitespaces for each parsed value.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">ignoreTrailingWhiteSpace</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to ignore trailing whitespaces for each parsed value.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">inferSchema</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to infer the data types of the parsed CSV records or to assume all
+columns are of <code class="docutils literal notranslate"><span class="pre">StringType</span></code>. Requires an additional pass over the data if set
+to <code class="docutils literal notranslate"><span class="pre">true</span></code>. For Auto Loader, use <code class="docutils literal notranslate"><span class="pre">cloudFiles.inferColumnTypes</span></code> instead.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">lineSep</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>A string between two consecutive CSV records.</p>
+<p>Default value: None, which covers <code class="docutils literal notranslate"><span class="pre">\r</span></code>, <code class="docutils literal notranslate"><span class="pre">\r\n</span></code>, and <code class="docutils literal notranslate"><span class="pre">\n</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">locale</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>A <code class="docutils literal notranslate"><span class="pre">java.util.Locale</span></code> identifier. Influences default date, timestamp, and
+decimal parsing within the CSV.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">US</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">maxCharsPerColumn</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Int</span></code></p>
+<p>Maximum number of characters expected from a value to parse. Can be used to
+avoid memory errors. Defaults to <code class="docutils literal notranslate"><span class="pre">-1</span></code>, which means unlimited.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">-1</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">maxColumns</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Int</span></code></p>
+<p>The hard limit of how many columns a record can have.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">20480</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">mergeSchema</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to infer the schema across multiple files and to merge the schema of
+each file. Enabled by default for Auto Loader when inferring the schema.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">mode</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>Parser mode around handling malformed records. One of <code class="docutils literal notranslate"><span class="pre">'PERMISSIVE'</span></code>,
+<code class="docutils literal notranslate"><span class="pre">'DROPMALFORMED'</span></code>, and <code class="docutils literal notranslate"><span class="pre">'FAILFAST'</span></code>.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">PERMISSIVE</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">multiLine</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether the CSV records span multiple lines.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">nanValue</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The string representation of a non-a-number value when parsing <code class="docutils literal notranslate"><span class="pre">FloatType</span></code>
+and <code class="docutils literal notranslate"><span class="pre">DoubleType</span></code> columns.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">&quot;NaN&quot;</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">negativeInf</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The string representation of negative infinity when parsing <code class="docutils literal notranslate"><span class="pre">FloatType</span></code>
+or <code class="docutils literal notranslate"><span class="pre">DoubleType</span></code> columns.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">&quot;-Inf&quot;</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">nullValue</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>String representation of a null value.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">parserCaseSensitive</span></code></strong> (deprecated)</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>While reading files, whether to align columns declared in the header with the
+schema case sensitively. This is <code class="docutils literal notranslate"><span class="pre">true</span></code> by default for Auto Loader. Columns
+that differ by case will be rescued in the <code class="docutils literal notranslate"><span class="pre">rescuedDataColumn</span></code> if enabled.
+This option has been deprecated in favor of <code class="docutils literal notranslate"><span class="pre">readerCaseSensitive</span></code>.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">positiveInf</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The string representation of positive infinity when parsing <code class="docutils literal notranslate"><span class="pre">FloatType</span></code>
+or <code class="docutils literal notranslate"><span class="pre">DoubleType</span></code> columns.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">&quot;Inf&quot;</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">preferDate</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Attempts to infer strings as dates instead of timestamp when possible. You
+must also use schema inference, either by enabling <code class="docutils literal notranslate"><span class="pre">inferSchema</span></code> or using
+<code class="docutils literal notranslate"><span class="pre">cloudFiles.inferColumnTypes</span></code> with Auto Loader.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">quote</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Char</span></code></p>
+<p>The character used for escaping values where the field delimiter is
+part of the value.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">&quot;</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">readerCaseSensitive</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Specifies the case sensitivity behavior when <code class="docutils literal notranslate"><span class="pre">rescuedDataColumn</span></code> is enabled.
+If true, rescue the data columns whose names differ by case from the schema;
+otherwise, read the data in a case-insensitive manner.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">rescuedDataColumn</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>Whether to collect all data that can’t be parsed due to: a data type mismatch,
+and schema mismatch (including column casing) to a separate column. This
+column is included by default when using Auto Loader. For more details refer
+to <a class="reference internal" href="../../ingestion/auto-loader/schema.html#rescue"><span class="std std-ref">What is the rescued data column?</span></a>.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">sep</span></code></strong> or <strong><code class="docutils literal notranslate"><span class="pre">delimiter</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The separator string between columns.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">&quot;,&quot;</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">skipRows</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Int</span></code></p>
+<p>The number of rows from the beginning of the CSV file that should be ignored
+(including commented and empty rows). If <code class="docutils literal notranslate"><span class="pre">header</span></code> is true, the header will be
+the first unskipped and uncommented row.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">0</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">timestampFormat</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The format for parsing timestamp strings.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">timeZone</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">java.time.ZoneId</span></code> to use when parsing timestamps and dates.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">unescapedQuoteHandling</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The strategy for handling unescaped quotes. Allowed options:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">STOP_AT_CLOSING_QUOTE</span></code>: If unescaped quotes are found in the input,
+accumulate the quote character and proceed parsing the value as a quoted
+value, until a closing quote is found.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BACK_TO_DELIMITER</span></code>: If unescaped quotes are found in the input, consider
+the value as an unquoted value. This will make the parser accumulate all
+characters of the current parsed value until the delimiter defined by <code class="docutils literal notranslate"><span class="pre">sep</span></code>
+is found. If no delimiter is found in the value, the parser will continue
+accumulating characters from the input until a delimiter or line ending is
+found.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">STOP_AT_DELIMITER</span></code>: If unescaped quotes are found in the input, consider
+the value as an unquoted value. This will make the parser accumulate all
+characters until the delimiter defined by <code class="docutils literal notranslate"><span class="pre">sep</span></code>, or a line ending is found
+in the input.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SKIP_VALUE</span></code>: If unescaped quotes are found in the input, the content
+parsed for the given value will be skipped (until the next delimiter is
+found) and the value set in <code class="docutils literal notranslate"><span class="pre">nullValue</span></code> will be produced instead.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RAISE_ERROR</span></code>: If unescaped quotes are found in the input, a
+<code class="docutils literal notranslate"><span class="pre">TextParsingException</span></code> will be thrown.</p></li>
+</ul>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">STOP_AT_DELIMITER</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="parquet-options">
+<h3><a class="toc-backref" href="#id4"><code class="docutils literal notranslate"><span class="pre">PARQUET</span></code> options</a><a class="headerlink" href="#parquet-options" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">datetimeRebaseMode</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>Controls the rebasing of the DATE and TIMESTAMP values between Julian and
+Proleptic Gregorian calendars. Allowed values: <code class="docutils literal notranslate"><span class="pre">EXCEPTION</span></code>, <code class="docutils literal notranslate"><span class="pre">LEGACY</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">CORRECTED</span></code>.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">LEGACY</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">int96RebaseMode</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>Controls the rebasing of the INT96 timestamp values between Julian and
+Proleptic Gregorian calendars. Allowed values: <code class="docutils literal notranslate"><span class="pre">EXCEPTION</span></code>, <code class="docutils literal notranslate"><span class="pre">LEGACY</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">CORRECTED</span></code>.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">LEGACY</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">mergeSchema</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to infer the schema across multiple files and to merge the schema
+of each file.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">readerCaseSensitive</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Specifies the case sensitivity behavior when <code class="docutils literal notranslate"><span class="pre">rescuedDataColumn</span></code> is enabled.
+If true, rescue the data columns whose names differ by case from the schema;
+otherwise, read the data in a case-insensitive manner.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">rescuedDataColumn</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>Whether to collect all data that can’t be parsed due to: a data type mismatch,
+and schema mismatch (including column casing) to a separate column. This
+column is included by default when using Auto Loader. For more details refer
+to <a class="reference internal" href="../../ingestion/auto-loader/schema.html#rescue"><span class="std std-ref">What is the rescued data column?</span></a>.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="avro-options">
+<h3><a class="toc-backref" href="#id5"><code class="docutils literal notranslate"><span class="pre">AVRO</span></code> options</a><a class="headerlink" href="#avro-options" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">avroSchema</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>Optional schema provided by a user in Avro format. When reading Avro, this
+option can be set to an evolved schema, which is compatible but different with
+the actual Avro schema. The deserialization schema will be consistent with the
+evolved schema. For example, if you set an evolved schema containing one
+additional column with a default value, the read result will contain the
+new column too.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">datetimeRebaseMode</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>Controls the rebasing of the DATE and TIMESTAMP values between Julian and
+Proleptic Gregorian calendars. Allowed values: <code class="docutils literal notranslate"><span class="pre">EXCEPTION</span></code>, <code class="docutils literal notranslate"><span class="pre">LEGACY</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">CORRECTED</span></code>.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">LEGACY</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">mergeSchema</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to infer the schema across multiple files and to merge the schema
+of each file.
+<code class="docutils literal notranslate"><span class="pre">mergeSchema</span></code> for Avro does not relax data types.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">readerCaseSensitive</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Specifies the case sensitivity behavior when <code class="docutils literal notranslate"><span class="pre">rescuedDataColumn</span></code> is enabled.
+If true, rescue the data columns whose names differ by case from the schema;
+otherwise, read the data in a case-insensitive manner.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">rescuedDataColumn</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>Whether to collect all data that can’t be parsed due to: a data type mismatch,
+and schema mismatch (including column casing) to a separate column. This
+column is included by default when using Auto Loader. For more details refer
+to <a class="reference internal" href="../../ingestion/auto-loader/schema.html#rescue"><span class="std std-ref">What is the rescued data column?</span></a>.</p>
+<p>Default value: None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="binaryfile-options">
+<h3><a class="toc-backref" href="#id6"><code class="docutils literal notranslate"><span class="pre">BINARYFILE</span></code> options</a><a class="headerlink" href="#binaryfile-options" title="Permalink to this headline"> </a></h3>
+<p>Binary files do not have any additional configuration options.</p>
+</div>
+<div class="section" id="text-options">
+<h3><a class="toc-backref" href="#id7"><code class="docutils literal notranslate"><span class="pre">TEXT</span></code> options</a><a class="headerlink" href="#text-options" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">encoding</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>The name of the encoding of the TEXT files. See <code class="docutils literal notranslate"><span class="pre">java.nio.charset.Charset</span></code>
+for list of options.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">UTF-8</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong><code class="docutils literal notranslate"><span class="pre">lineSep</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>A string between two consecutive TEXT records.</p>
+<p>Default value: None, which covers <code class="docutils literal notranslate"><span class="pre">\r</span></code>, <code class="docutils literal notranslate"><span class="pre">\r\n</span></code> and <code class="docutils literal notranslate"><span class="pre">\n</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">wholeText</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to read a file as a single record.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="orc-options">
+<h3><a class="toc-backref" href="#id8"><code class="docutils literal notranslate"><span class="pre">ORC</span></code> options</a><a class="headerlink" href="#orc-options" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong><code class="docutils literal notranslate"><span class="pre">mergeSchema</span></code></strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to infer the schema across multiple files and to merge the schema
+of each file.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="related-articles">
+<h2>Related articles<a class="headerlink" href="#related-articles" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="sql-ref-external-locations.html"><span class="doc">Credentials</span></a></p></li>
+<li><p><a class="reference internal" href="delta-delete-from.html"><span class="doc">DELETE</span></a></p></li>
+<li><p><a class="reference internal" href="sql-ref-syntax-dml-insert-into.html"><span class="doc">INSERT</span></a></p></li>
+<li><p><a class="reference internal" href="delta-merge-into.html"><span class="doc">MERGE</span></a></p></li>
+<li><p><a class="reference internal" href="sql-ref-partition.html#partition"><span class="std std-ref">PARTITION</span></a></p></li>
+<li><p><a class="reference internal" href="sql-ref-syntax-qry-query.html"><span class="doc">query</span></a></p></li>
+<li><p><a class="reference internal" href="delta-update.html"><span class="doc">UPDATE</span></a></p></li>
+<li><p><a class="reference internal" href="../../ingestion/copy-into/index.html"><span class="doc">Get started using COPY INTO to load data</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

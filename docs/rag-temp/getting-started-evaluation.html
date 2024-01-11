@@ -1,0 +1,747 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Evaluating your RAG Application with an Evaluation Set">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Evaluating your RAG Application with an Evaluation Set &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/rag-temp/getting-started-evaluation.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/rag-temp/getting-started-evaluation.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/rag-temp/getting-started-evaluation.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" />
+  <link rel="up" title="Introduction to RAG Studio" href="index.html" />
+  <link rel="next" title="Metrics" href="metrics.html" />
+  <link rel="prev" title="Getting started" href="getting-started-walkthrough.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/rag-temp/getting-started-evaluation.html" class="notranslate">English</option>
+    <option value="../../ja/rag-temp/getting-started-evaluation.html" class="notranslate">日本語</option>
+    <option value="../../pt/rag-temp/getting-started-evaluation.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">RAG Studio</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="getting-started-1.html">Quick start (1): Deploy a RAG app</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started-2.html">Quick start (2): Collecting assessments &amp; viewing metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started-3.html">Quick start (3): Creating Evaluation Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started-4.html">Quick start (4): Creating Evaluation Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started-5.html">Quick start (5): Creating Evaluation Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rag_configyml.html">Concepts: Configuration (rag_config.yml)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environments.html">Concepts: Environments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started-walkthrough.html">Tutorial: Creating your first app</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial: Offline Evaluation &amp; Evaluation Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html">Concepts: Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core_concepts.html">Concepts: RAG Abstractions/Entities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protos.html">  Protos (internal only)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="env-setup-infra.html">Setup: Infrastructure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="env-setup-dev.html">Setup: Dev environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regions.html">Region availability</a></li>
+</ul>
+</li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="January 11, 2024">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+        <li><a href="index.html">Introduction to RAG Studio</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Evaluating your RAG Application with an Evaluation Set</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="evaluating-your-rag-application-with-an-evaluation-set">
+<h1>Evaluating your RAG Application with an Evaluation Set<a class="headerlink" href="#evaluating-your-rag-application-with-an-evaluation-set" title="Permalink to this headline"> </a></h1>
+<p>TODO: Add more context about what an Evaluation Set is and explain the concept.  Talk about what offline evaluation is and the use cases (testing before deployment or during development + generating a set of answers for reviewers to review)</p>
+<p>TODO: Refactor step 3 and 4 to be part of the same flow - they are essentially the same.</p>
+<div class="section" id="step-1-configure-the-metrics">
+<h2>Step 1: Configure the metrics<a class="headerlink" href="#step-1-configure-the-metrics" title="Permalink to this headline"> </a></h2>
+<p>To evaluate your RAG Application, you first need to configure the metrics to use.  While Databricks provides an out the box configuration for metric computation based on our best practices, we suggest you review this configuration to ensure it meets the needs of your use case.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Read the <a class="reference internal" href="metrics.html"><span class="doc">metrics documentation</span></a> to learn more about which metrics are supported by RAG Studio.</p>
+</div>
+<p>By default, all metrics are computed using human-annotated assessments (when these asessments are available in your RAG app’s <code class="docutils literal notranslate"><span class="pre">Asessment</span></code> table or the <code class="docutils literal notranslate"><span class="pre">Evaluation</span> <span class="pre">Set</span></code> used).</p>
+<p>Most metrics can <em>also</em> be computed using LLM-judged asessments.  To use an LLM judge to asess your RAG Application, you need to configure a Model Serving endpoint for each metric:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A small subset of the metrics, such as answer correctness and recall &#64; K, required human-annotated asessments.  TODO: add more on why.</p>
+</div>
+<ol class="arabic">
+<li><p><strong>Option 1</strong> use Open Source models hosted by <a class="reference internal" href="../machine-learning/foundation-models/index.html"><span class="doc">Databricks Foundation Model APIs</span></a></p>
+<ol class="loweralpha simple">
+<li><p>No additional set up is required to use <a class="reference internal" href="../machine-learning/foundation-models/index.html#supported-models"><span class="std std-ref">LLaMa2-70B-Chat</span></a>.</p></li>
+<li><p>In the next step, use <code class="docutils literal notranslate"><span class="pre">databricks-llama-2-70b-chat</span></code> as the <code class="docutils literal notranslate"><span class="pre">endpoint_name</span></code></p></li>
+</ol>
+</li>
+<li><p><strong>Option 2</strong> use an <a class="reference internal" href="../generative-ai/external-models/index.html"><span class="doc">External Model</span></a> such as (Azure) OpenAI.</p>
+<p>To use OpenAI or Azure OpenAI, you need to add your OpenAI secrets using a <a class="reference internal" href="../generative-ai/external-models/index.html"><span class="doc">External models in Databricks Model Serving</span></a>:</p>
+<ol class="loweralpha simple">
+<li><p>Configure a <code class="docutils literal notranslate"><span class="pre">llm/v1/chat</span></code> model - either (Azure) OpenAI <code class="docutils literal notranslate"><span class="pre">gpt-35-turbo</span></code> or <code class="docutils literal notranslate"><span class="pre">gpt-4</span></code></p></li>
+<li><p>Note the <code class="docutils literal notranslate"><span class="pre">endpoint_name</span></code> for use in the next step</p></li>
+</ol>
+</li>
+<li><p>Open the <code class="docutils literal notranslate"><span class="pre">rag_config.yml</span></code> file.</p></li>
+<li><p>For each metric you want to configure with an LLM judge, edit the <code class="docutils literal notranslate"><span class="pre">llm_judges</span></code> section of the metric’s configuration in <code class="docutils literal notranslate"><span class="pre">eval_config</span></code>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">eval_config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metrics</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">precision_at_5</span><span class="w"> </span><span class="c1"># User configured, must be unique, no spaces</span>
+<span class="w">          </span><span class="nt">metric_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">precision_at_k</span><span class="w"> </span><span class="c1"># Must be one of Databricks provided metric names</span>
+<span class="w">          </span><span class="nt">llm_judges</span><span class="p">:</span><span class="w"> </span><span class="c1"># currently, only one judge per metric is supported, but this schema allows for adding support for multiple judges per metric</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">judge_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LLaMa2-70B-Chat</span><span class="w"> </span><span class="c1"># User configured display name</span>
+<span class="w">            </span><span class="nt">endpoint_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">databricks-llama-2-70b-chat</span><span class="w">  </span><span class="c1"># Model Serving endpoint name</span>
+<span class="w">          </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"> </span><span class="c1"># each metric has a set of parameters</span>
+
+<span class="w">        </span><span class="c1"># ...</span>
+<span class="w">        </span><span class="c1"># ... other metrics omitted for clarity ...</span>
+<span class="w">        </span><span class="c1"># ...</span>
+
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">faithfulness</span><span class="w"> </span><span class="c1"># User configured, must be unique, no spaces</span>
+<span class="w">        </span><span class="nt">metric_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">faithfulness</span><span class="w"> </span><span class="c1"># Must be one of Databricks provided metric names</span>
+<span class="w">        </span><span class="nt">llm_judges</span><span class="p">:</span><span class="w"> </span><span class="c1"># currently, only one judge per metric is supported, but this schema allows for adding support for multiple judges per metric</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">judge_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LLaMa2-70B-Chat</span><span class="w"> </span><span class="c1"># User configured display name</span>
+<span class="w">            </span><span class="nt">endpoint_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">databricks-llama-2-70b-chat</span><span class="w"> </span><span class="c1"># Model Serving endpoint name</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>LLM-judged assessments incur cost from using the Model Serving endpoints you configure.</p>
+</div>
+</li>
+<li><p>Optionally, configure the Delta Tables where request logs, assessments, and metric evaluation results are stored.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not configure values, the defaults will be used.</p>
+</div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">global_config</span><span class="p">:</span>
+<span class="w">    </span><span class="c1">########</span>
+<span class="w">    </span><span class="c1"># Required configuration</span>
+<span class="w">    </span><span class="c1">########</span>
+
+<span class="w">    </span><span class="c1"># User provided name of the application.  Only alphanumeric chars, `_`, or `-`; no spaces.</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">databricks-docs-bot</span>
+
+<span class="w">    </span><span class="c1"># ...</span>
+<span class="w">    </span><span class="c1"># ...other required configs omitted for clarity...</span>
+<span class="w">    </span><span class="c1"># ...</span>
+
+<span class="w">    </span><span class="c1">########</span>
+<span class="w">    </span><span class="c1"># Optional configuration</span>
+<span class="w">    </span><span class="c1"># If these parameters are not defined, a value will be generated based on the templates indicated below.</span>
+<span class="w">    </span><span class="c1"># {generated_6digit_id} is consistent between all names and will NOT change when you deploy a new version of the &lt;RAG Application&gt;</span>
+<span class="w">    </span><span class="c1">########</span>
+
+<span class="w">    </span><span class="nt">tables</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># Default: &quot;{name}__requests__{generated_6digit_id}&quot;</span>
+<span class="w">        </span><span class="nt">request_log_table</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;databricks-docs-bot__requests__R6Mek8&quot;</span>
+
+<span class="w">        </span><span class="c1"># Default: &quot;{name}__assessments__{generated_6digit_id}&quot;</span>
+<span class="w">        </span><span class="nt">assessment_log_table</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;databricks-docs-bot__assessments__R6Mek8&quot;</span>
+
+<span class="w">        </span><span class="c1"># Default: &quot;{name}__online_evaluation_results__{generated_6digit_id}&quot;</span>
+<span class="w">        </span><span class="nt">online_evaluation_results_table</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;databricks-docs-bot__online_evaluation_results__R6Mek8&quot;</span>
+
+<span class="w">        </span><span class="c1"># Default: &quot;{name}__offline_evaluation_results__{generated_6digit_id}&quot;</span>
+<span class="w">        </span><span class="nt">offline_evaluation_results_table</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;databricks-docs-bot__offline_evaluation_results__R6Mek8&quot;</span>
+
+<span class="w">    </span><span class="c1"># ...</span>
+<span class="w">    </span><span class="c1"># ...other optional configs omitted for clarity...</span>
+<span class="w">    </span><span class="c1"># ...</span>
+</pre></div>
+</div>
+</li>
+<li><p>Save the configuration and redeploy the RAG Application</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>bundle<span class="w"> </span>deploy<span class="w"> </span>-t<span class="w"> </span>&lt;env_name&gt;
+</pre></div>
+</div>
+</li>
+</ol>
+<p></p>
+</div>
+<div class="section" id="step-2-evaluate-using-an-evaluation-set-without-ground-truth">
+<h2>Step 2: Evaluate using an evaluation set WITHOUT ground truth<a class="headerlink" href="#step-2-evaluate-using-an-evaluation-set-without-ground-truth" title="Permalink to this headline"> </a></h2>
+<p>TODO: talk more about the use case - running a sanity check before you release this OR creating a set of answers for reviewers to review.</p>
+<ol class="arabic">
+<li><p><strong>Follow the steps in <a class="reference external" href="#">TODO</a> to deploy a version of your RAG Application</strong></p>
+<p>Write down the version number to use later in this tutorial.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rag_app_version_number</span> <span class="o">=</span> <span class="mi">4</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Create an <a class="reference external" href="#">Evaluation Set</a></strong></p>
+<p>Format your list of questions as an array of <a class="reference internal" href="../machine-learning/foundation-models/api-reference.html#chatmessage"><span class="std std-ref">ChatMessages</span></a> and save as a Delta Table.</p>
+<p>Why?  To ensure consistency between offline evaluations (such as the evaluation completed in this tutorial) and evaluations with your online traffic (such as <a class="reference external" href="#">Asessments</a> from reviewers or end users), RAG Studio requires that you format your <a class="reference external" href="#">Evaluation Set</a> using the same schema accepted by your application’s Chain.  RAG Studio requires that your Chain accept input as <a class="reference internal" href="../machine-learning/foundation-models/api-reference.html#chatmessage"><span class="std std-ref">OpenAI-formatted ChatMessages</span></a>, and thus, your Evaluation Set must follow the same schema: <a class="reference external" href="#">TOOD add link with more details</a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+    <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;This is a question to ask?&quot;</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">questions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;question 1&#39;</span><span class="p">,</span> <span class="s1">&#39;question 2&#39;</span><span class="p">]</span>
+<span class="n">eval_set_delta_table</span> <span class="o">=</span> <span class="s2">&quot;catalog.schema.eval_set_1&quot;</span>
+<span class="c1"># TODO: insert sample code for turning `questions` into a compatible Spark DF &amp; saving as a Delta Table</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Databricks suggests working with your business stakeholders to generate a set of commonly asked questions.  If this is not possible for your use case, you can <a class="reference external" href="https://mlflow.org/docs/latest/llms/rag/notebooks/question-generation-retrieval-evaluation.html">generate questions based on your chunked documents by prompting a Large Language Model</a>.  When using this approach, Databricks suggest reviewing each generated question for accuracy.</p>
+</div>
+<ul class="simple">
+<li><p><p><strong>🚧 Roadmap 🚧</strong></p>
+ APIs and custom LLMs for generating and reviewing evaluation sets</p></li>
+</ul>
+<p>TODO: include steps to turn ^^ output into the correct format + capture the chunk as part of the evaluation set</p>
+</li>
+<li><p><strong>Run the evaluation</strong></p>
+<ol class="loweralpha">
+<li><p>Open the RAG App’s Databricks Workspace in your browser.</p>
+<ul class="simple">
+<li><p>The URL for your workspace can be found in <code class="docutils literal notranslate"><span class="pre">rag_config.yml</span></code> under <code class="docutils literal notranslate"><span class="pre">workspace_url</span></code></p></li>
+</ul>
+</li>
+<li><p>Open the <code class="docutils literal notranslate"><span class="pre">workspace_folder</span></code> and navigate to the <code class="docutils literal notranslate"><span class="pre">/src/provided_notebooks/</span></code> directory.</p></li>
+<li><p>Open the <code class="docutils literal notranslate"><span class="pre">Run_Evaluation.py</span></code> Notebook and run the below code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: insert necessary code</span>
+
+<span class="n">run_offline_eval</span><span class="p">(</span><span class="n">evaluation_set</span><span class="o">=</span><span class="n">eval_set_delta_table</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">rag_app_version_number</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p><strong>What happens behind the scenes?</strong></p>
+<p>In the background, the Chain version <code class="docutils literal notranslate"><span class="pre">rag_app_version_number</span></code> is run through each row of the <code class="docutils literal notranslate"><span class="pre">eval_set_delta_table</span></code> using an identical compute environment to how your Chain is served. For each row of <code class="docutils literal notranslate"><span class="pre">eval_set_delta_table</span></code>:</p>
+<ul class="simple">
+<li><p>A <a class="reference external" href="#">Trace</a> is written to the <code class="docutils literal notranslate"><span class="pre">request_log_table</span></code> based on that row’s inputs</p></li>
+<li><p>For each metric in the <code class="docutils literal notranslate"><span class="pre">rag_config.yml</span></code> configuration that has an <code class="docutils literal notranslate"><span class="pre">llm_judge</span></code> configured:</p>
+<ul>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">llm_judge</span></code> is run and its generated <a class="reference external" href="#">Assessment</a> is written to the <code class="docutils literal notranslate"><span class="pre">assessment_log_table</span></code></p></li>
+<li><p>The metric’s value, based on the <a class="reference external" href="#">Trace</a> and <a class="reference external" href="#">Assessment</a>, is computed and written to <code class="docutils literal notranslate"><span class="pre">offline_evaluation_results_table</span></code></p></li>
+</ul>
+</li>
+</ul>
+<p></p>
+</li>
+<li><p><strong>View the computed metrics:</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><p><strong>🚧 Roadmap 🚧</strong></p>
+ RAG Studio’s <a class="reference external" href="#">Explorations UI</a> enables you visualize and interact with <a class="reference external" href="#">Metrics</a> in order to identify the subset of queries that are underperforming.  Until this functionality is available, you can interact with the Metrics through Notebook-based visualizations as shown below.</p>
+</div>
+<ol class="loweralpha simple">
+<li><p>Open the RAG App’s Databricks Workspace in your browser.</p>
+<ul class="simple">
+<li><p>The URL for your workspace can be found in <code class="docutils literal notranslate"><span class="pre">rag_config.yml</span></code> under <code class="docutils literal notranslate"><span class="pre">workspace_url</span></code></p></li>
+</ul>
+</li>
+<li><p>Open the <code class="docutils literal notranslate"><span class="pre">workspace_folder</span></code> and navigate to the <code class="docutils literal notranslate"><span class="pre">/src/provided_notebooks/</span></code> directory.</p></li>
+<li><p>Open the <code class="docutils literal notranslate"><span class="pre">Evaluation_Metrics.py</span></code> Notebook</p></li>
+<li><p>In this notebook, you can:</p>
+<ul class="simple">
+<li><p>View graphs for each metric</p></li>
+<li><p>View the underlying data in the <code class="docutils literal notranslate"><span class="pre">offline_evaluation_results_table</span></code> table</p></li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p><strong>View the generated logs and assessments:</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><p><strong>🚧 Roadmap 🚧</strong></p>
+ RAG Studio’s <a class="reference external" href="#">Investigations UI</a> enables you to visualize the resulting <a class="reference external" href="#">Traces</a> and <a class="reference external" href="#">Assessments</a> in a UI.  Until this functionality is available, you can follow <a class="reference external" href="#">INSERT LINK</a> steps to view the <a class="reference external" href="#">Traces</a> in the <a class="reference external" href="#">Review UI</a> or use the below steps to view the <a class="reference external" href="#">Traces</a> and <a class="reference external" href="#">Assessments</a> as Delta Tables.</p>
+</div>
+<ol class="loweralpha simple">
+<li><p>Follow the first 2 steps above to open the <code class="docutils literal notranslate"><span class="pre">/src/provided_notebooks/</span></code> in your <code class="docutils literal notranslate"><span class="pre">workspace_folder</span></code></p></li>
+<li><p>Open the <code class="docutils literal notranslate"><span class="pre">Evaluation_Data.py</span></code> Notebook</p></li>
+<li><p>In this notebook, you can:</p>
+<ul class="simple">
+<li><p>View the underlying data in the <code class="docutils literal notranslate"><span class="pre">request_log_table</span></code> and <code class="docutils literal notranslate"><span class="pre">assessment_log_table</span></code> tables</p></li>
+<li><p>Load the <code class="docutils literal notranslate"><span class="pre">request_log_table</span></code> into the Review UI to visualize the RAG app’s answers as a web-based chat app</p></li>
+</ul>
+</li>
+</ol>
+<p>TODO: Add ^^ those steps</p>
+</li>
+</ol>
+</div>
+<div class="section" id="step-3-reccomended-collect-ground-truth-assessments-for-your-evaluation-set-using-the-review-ui">
+<h2>Step 3: (reccomended) Collect ground truth assessments for your Evaluation Set using the Review UI<a class="headerlink" href="#step-3-reccomended-collect-ground-truth-assessments-for-your-evaluation-set-using-the-review-ui" title="Permalink to this headline"> </a></h2>
+<p>Follow these steps to use the <a class="reference external" href="#">Review UI</a> to generate human-annotated ground truth assessments.</p>
+<ol class="arabic">
+<li><p><strong>Create a <a class="reference external" href="#">Review Set</a> to load the <a class="reference external" href="#">Traces</a> from the above <code class="docutils literal notranslate"><span class="pre">request_log_table</span></code> to the <a class="reference external" href="#">Review UI</a></strong></p>
+<p>A <a class="reference external" href="#">Review Set</a> is a set of <a class="reference external" href="#">Traces</a> that will be displayed to the end users in the <a class="reference external" href="#">Review UI</a>’s chat interface alongside tools to asess the quality of those <a class="reference external" href="#">Traces</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><p><strong>🚧 Roadmap 🚧</strong></p>
+ RAG Studio’s <a class="reference external" href="#">Explorations UI</a> and SDK enable you to quickly load existing <a class="reference external" href="#">Traces</a> for review by expert users.  Until this functionality is available, follow the below steps to manually load <a class="reference external" href="#">Traces</a>.</p>
+</div>
+<ul class="simple">
+<li><p><p><strong>🚧 Roadmap 🚧</strong></p>
+ Support for adding Assessments to the Review Set so the raters have a starting point.</p></li>
+</ul>
+<ol class="loweralpha">
+<li><p>Export the <code class="docutils literal notranslate"><span class="pre">request_log_table</span></code> as <code class="docutils literal notranslate"><span class="pre">traces.jsonl</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: Sample code for doing this</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">instructions.md</span></code></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>To ensure high quality and consistant data from your expert users, Databricks strongly suggests writing simple, clear instructions explaining how you expect experts to rate answers.  RAG Studio provides sample instructions, but we suggest modifying these instructions for your specific use case.</p>
+</div>
+</li>
+<li><p>Copy <code class="docutils literal notranslate"><span class="pre">instructions.md</span></code> and <code class="docutils literal notranslate"><span class="pre">traces.jsonl</span></code> to the <code class="docutils literal notranslate"><span class="pre">src/review_app/{version_number}/</span></code> folder in your IDE.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>TODO: insert warning about mixing traces between versions - what are the consequences?</p>
+</div>
+</li>
+<li><p>Deploy the RAG Application</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>bundle<span class="w"> </span>deploy<span class="w"> </span>-t<span class="w"> </span>&lt;env_name&gt;
+</pre></div>
+</div>
+</li>
+<li><p>Add user permissions
+TODO: pretty this up
+- Browse to MLflow Run
+- Add permissions there</p></li>
+<li><p>Share the URL with your end users</p>
+<p>TODO: WHere is this url displayed to the developer??</p>
+</li>
+</ol>
+</li>
+<li><p><strong>Ask your expert users to use the <a class="reference external" href="#">Review UI</a> to label each question:</strong></p>
+<ul class="simple">
+<li><p>Annotate which answers are correct using thumbs up / down</p></li>
+<li><p>Manually edit incorrect answers to be correct</p></li>
+<li><p>Annotate the relevant and irrelevant retrieved contexts</p></li>
+</ul>
+<p>Review the <a class="reference internal" href="metrics.html"><span class="doc">Metrics</span></a> documentation to ensure you provide the required ground-truth assessment(s) for each Metric.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><p><strong>🚧 Roadmap 🚧</strong></p>
+ the <a class="reference external" href="#">Explorations UI</a> enables you to quickly add human-judged assements into an <a class="reference external" href="#">Evaluation Set</a>.  Before this functionality is available, you can follow the steps below to manually ETL <a class="reference external" href="#">Assessments</a> and <a class="reference external" href="#">Traces</a> into an <a class="reference external" href="#">Evaluation Set</a></p>
+</div>
+</li>
+<li><p><strong>Create a Delta Table containing your <a class="reference external" href="#">Evaluation Set</a>:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Provide input as ChatMessages format - same as without ground truth</span>
+<span class="n">input_messages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+    <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;This is a question to ask?&quot;</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+
+<span class="c1"># Similar to input, RAG Studio requires your outputs to be in the same schema as produced by your Chain.  Since the Chain is required to produce [ChatMessages], you must provide the role=assistant message.</span>
+<span class="c1"># Return in https://docs.databricks.com/en/machine-learning/foundation-models/api-reference.html#chat-response format</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;choices&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;this is the correct answer&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;finish_reason&quot;</span><span class="p">:</span> <span class="s2">&quot;stop&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;object&quot;</span><span class="p">:</span> <span class="s2">&quot;chat.completions&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">retrieved_chunks</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># TODO: Add this schema based on our Assessment schema</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: insert sample code to ETL from Assessments &amp; Traces that exist to an evluation set</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="step-3-alernative-manually-create-a-delta-table-with-ground-truth-assessments-for-your-evaluation-set">
+<h2>Step 3: (alernative) Manually create a Delta Table with ground truth assessments for your Evaluation Set<a class="headerlink" href="#step-3-alernative-manually-create-a-delta-table-with-ground-truth-assessments-for-your-evaluation-set" title="Permalink to this headline"> </a></h2>
+<p>If you prefer to manually generate ground truth asessments or already have existing ground truth assesments that you want to use with RAG Studio, ETL your data into the above <a class="reference external" href="#">Evaluation Set</a> format.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: insert some sample code</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-4-evaluate-using-the-evaluation-set-containing-ground-truth">
+<h2>Step 4: Evaluate using the evaluation set CONTAINING ground truth<a class="headerlink" href="#step-4-evaluate-using-the-evaluation-set-containing-ground-truth" title="Permalink to this headline"> </a></h2>
+<p>TODO: insert introductory paragraph about getting ground truth and differnt approaches e.g - ETLing <a class="reference external" href="#">Assessments</a> from trusted reviewers, etc.  Add some prose about the metrics that can only be computed with ground-truth.</p>
+<ol class="arabic">
+<li><p><strong>If you haven’t already, follow <span class="xref md md-ref">step 2a.1</span> to deploy a version of your RAG Application.</strong></p></li>
+<li><p><strong>If you haven’t already, follow <span class="xref md md-ref">Step 3</span> above to generate an <a class="reference external" href="#">Evaluation Set</a> with human-annotated ground truth assessments.</strong></p></li>
+<li><p><strong>Run the evaluation</strong></p>
+<p>Follow the same step as 2a to run the evaluation. [TODO add bookmark link]</p>
+<p>TODO: Better format this to show that only last bullet is new</p>
+<p>In the background, the Chain version <code class="docutils literal notranslate"><span class="pre">rag_app_version_number</span></code> is run through each row of the <code class="docutils literal notranslate"><span class="pre">eval_set_delta_table</span></code> using an identical compute environment to how your Chain is served. For each row of <code class="docutils literal notranslate"><span class="pre">eval_set_delta_table</span></code>:</p>
+<ul class="simple">
+<li><p>A <a class="reference external" href="#">Trace</a> is written to the <code class="docutils literal notranslate"><span class="pre">request_log_table</span></code> based on that row’s inputs</p></li>
+<li><p>For each metric in the <code class="docutils literal notranslate"><span class="pre">rag_config.yml</span></code> configuration that has an <code class="docutils literal notranslate"><span class="pre">llm_judge</span></code> configured:</p>
+<ul>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">llm_judge</span></code> is run and its generated <a class="reference external" href="#">Assessment</a> is written to the <code class="docutils literal notranslate"><span class="pre">assessment_log_table</span></code></p></li>
+<li><p>The metric’s value, based on the <a class="reference external" href="#">Trace</a> and <a class="reference external" href="#">Assessment</a>, is computed and written to <code class="docutils literal notranslate"><span class="pre">offline_evaluation_results_table</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>NEW STEP</strong> For all metrics in the <code class="docutils literal notranslate"><span class="pre">rag_config.yml</span></code> configuration:</p>
+<ul>
+<li><p>The metric’s value, based on the <a class="reference external" href="#">Trace</a> and <a class="reference external" href="#">Evaluation Set</a> human-annoted ground truth assessment, is computed and written to <code class="docutils literal notranslate"><span class="pre">offline_evaluation_results_table</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>TODO: add a note about what happens if human label is missing - we just don’t compute the human based metric for that row of evaluation set</p>
+</div>
+</li>
+<li><p><strong>View the resulting metrics and logs</strong></p>
+<p>Same as above</p>
+<p>TODO: Call out that the notebook has a parameter where you can toggle between viewing metrics with JUST human judges or JUST llm-judges.</p>
+<p>TODO: Call out the human ground truth will be visible in the Explorations UI.</p>
+</li>
+</ol>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

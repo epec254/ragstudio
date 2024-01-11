@@ -1,0 +1,561 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to proxy Databricks traffic between EC2 instances and another IP address through a NAT gateway." name="description" />
+<meta content="noindex" name="robots" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Proxy traffic through a NAT gateway">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Proxy traffic through a NAT gateway &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/archive/admin-guide/nat-gateway-proxying.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/archive/admin-guide/nat-gateway-proxying.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/archive/admin-guide/nat-gateway-proxying.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/archive/admin-guide/nat-gateway-proxying.html" class="notranslate">English</option>
+    <option value="../../../ja/archive/admin-guide/nat-gateway-proxying.html" class="notranslate">日本語</option>
+    <option value="../../../pt/archive/admin-guide/nat-gateway-proxying.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Proxy traffic through a NAT gateway</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="proxy-traffic-through-a-nat-gateway">
+<h1>Proxy traffic through a NAT gateway<a class="headerlink" href="#proxy-traffic-through-a-nat-gateway" title="Permalink to this headline"> </a></h1>
+<p>This guide illustrates how to configure Databricks to proxy traffic between EC2 instances and another IP address through a NAT gateway. For example, you can point your BI software to a static IP address, which proxies all traffic to a Redshift cluster through a NAT gateway. From the Redshift cluster’s perspective, all instances have a stable public IP address, regardless of the Databricks cluster’s configuration.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To proxy Redshift traffic, the Redshift cluster must be launched with an IPv4 elastic IP. An elastic IP is stable and publicly accessible.</p>
+</div>
+<p>This article walks through allocating a new public subnet in your Databricks VPC, adding a NAT gateway inside the subnet, and updating the default route table to make sure specific traffic goes through the NAT gateway.</p>
+<div class="section" id="create-a-subnet-in-the-databricks-vpc">
+<h2>Create a subnet in the Databricks VPC<a class="headerlink" href="#create-a-subnet-in-the-databricks-vpc" title="Permalink to this headline"> </a></h2>
+<ol class="arabic">
+<li><p>Contact Databricks to retrieve the ID of your Databricks VPC.</p></li>
+<li><p>Log in to your AWS VPC console and select <strong>Subnet</strong> from the left panel.</p></li>
+<li><p>Enter the Databricks VPC ID in the search box to see all subnets included in the Databricks VPC.</p>
+<div class="figure align-default">
+<img alt="Create a subnet" src="../../_images/create-subnet.png" />
+</div>
+<p>By default, Databricks creates one subnet per availability zone (AZ). You must choose an unused CIDR block from the same B-class range, such as <code class="docutils literal notranslate"><span class="pre">a.b.0.0</span></code>. In the example, three CIDR blocks are used: <code class="docutils literal notranslate"><span class="pre">10.29.224.0/19</span></code>, <code class="docutils literal notranslate"><span class="pre">10.29.192.0/19</span></code>, <code class="docutils literal notranslate"><span class="pre">10.29.160.0/19</span></code>.  All IPs in the address range <code class="docutils literal notranslate"><span class="pre">10.29.0.0</span></code> ~ <code class="docutils literal notranslate"><span class="pre">10.29.159.255</span></code> are free.  You can choose a new C-class subnet within that range, such as <code class="docutils literal notranslate"><span class="pre">10.29.100.0/24</span></code>.</p>
+</li>
+<li><p>Click <strong>Create Subnet</strong> and enter the following information:</p>
+<div class="figure align-default">
+<img alt="Create a subnet dialog" src="../../_images/create-subnet-dialog.png" />
+</div>
+<ul class="simple">
+<li><p><strong>Name tag</strong>: the subnet’s name. Databricks recommends using <code class="docutils literal notranslate"><span class="pre">gateway</span></code> as part of the name.</p></li>
+<li><p><strong>VPC</strong>: the Databricks VPC ID.</p></li>
+<li><p><strong>Availability Zone</strong>: at least one availability zone, depending on your availability needs.</p></li>
+<li><p><strong>CIDR block</strong>: an unused CIDR block containing at least one IP address.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Databricks allocates CIDR blocks starting from the top of the B-class range. When you choose the CIDR block for the gateway subnet, Databricks recommends that you use a lower range to avoid future conflict if AWS adds more availability zones to the region.</p></li>
+<li><p>The public subnet needs only a single IP for the NAT gateway.</p></li>
+</ul>
+</div>
+</li>
+<li><p>Click <strong>Yes, Create</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="create-a-nat-gateway-in-the-subnet">
+<h2>Create a NAT gateway in the subnet<a class="headerlink" href="#create-a-nat-gateway-in-the-subnet" title="Permalink to this headline"> </a></h2>
+<ol class="arabic">
+<li><p>Select <strong>NAT gateways</strong> from the AWS VPC console’s left panel, and click <strong>Create NAT gateway</strong>.</p>
+<div class="figure align-default">
+<img alt="Create a NAT gateway" src="../../_images/create-nat-gateway.png" />
+</div>
+</li>
+<li><p>In <strong>Subnet</strong>, select the subnet you just created.</p></li>
+<li><p>Choose any available IP from <strong>Elastic IP Allocation ID</strong>. If there are no available elastic IPs, first create a new elastic IP.</p></li>
+<li><p>Click <strong>Create a NAT gateway</strong>.</p>
+<div class="figure align-default">
+<img alt="NAT gateway created" src="../../_images/create-nat-gateway-success.png" />
+</div>
+</li>
+<li><p>On the success page, click <strong>Edit Route Tables</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="associate-a-route-table-with-the-gateway-subnet">
+<h2>Associate a route table with the gateway subnet<a class="headerlink" href="#associate-a-route-table-with-the-gateway-subnet" title="Permalink to this headline"> </a></h2>
+<ol class="arabic">
+<li><p>Click <strong>Create route table</strong>.</p></li>
+<li><p>In <strong>Name tag</strong>, enter a name for the route table.</p></li>
+<li><p>In <strong>VPC</strong>, select the Databricks VPC ID.</p></li>
+<li><p>Click <strong>Yes, Create</strong>.</p>
+<div class="figure align-default">
+<img alt="Create a route table" src="../../_images/create-route-table.png" />
+</div>
+</li>
+<li><p>Select the newly-created route table from the list.</p></li>
+<li><p>In the <strong>Routes</strong> tab, click <strong>Edit</strong>, then click <strong>Add another route</strong>.</p></li>
+<li><p>Enter <code class="docutils literal notranslate"><span class="pre">0.0.0.0/0</span></code> in <strong>Destination</strong>.</p></li>
+<li><p>In <strong>Target</strong>, choose the Databricks VPC’s internet gateway, which starts with <code class="docutils literal notranslate"><span class="pre">igw=</span></code>.</p></li>
+<li><p>Click <strong>Save</strong>.</p>
+<div class="figure align-default">
+<img alt="Add a route" src="../../_images/add-route.png" />
+</div>
+</li>
+<li><p>Click <strong>Edit</strong> in the <strong>Subnet Associations</strong> tab.</p></li>
+<li><p>Select the NAT gateway’s subnet.</p></li>
+<li><p>Click <strong>Save</strong>. The subnet is now a public subnet, accessible on the internet.</p>
+<div class="figure align-default">
+<img alt="Subnet associations" src="../../_images/subnet-associations.png" />
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="configure-routing-to-an-external-system">
+<h2>Configure routing to an external system<a class="headerlink" href="#configure-routing-to-an-external-system" title="Permalink to this headline"> </a></h2>
+<p>Follow this procedure to forward all traffic between nodes in the VPC and an external system, such as Redshift, through the NAT gateway.</p>
+<ol class="arabic">
+<li><p>In the left panel of the AWS VPC console, select <strong>Route Tables</strong>.</p></li>
+<li><p>Enter the Databricks VPC ID in the search box. The list shows all route tables used by Databricks VPC.</p>
+<ul class="simple">
+<li><p>One of the routes is the gateway route table you just created.</p></li>
+<li><p>The other, labeled <strong>Main</strong>, is the default route table for all other subnets in the VPC.</p></li>
+</ul>
+</li>
+<li><p>Select the <strong>Main</strong> route table.</p></li>
+<li><p>In the <strong>Routes</strong> tab, click <strong>Edit</strong>.</p></li>
+<li><p>In <strong>Destination</strong>, find the elastic IP of the external system. In the image below, the elastic IP is <code class="docutils literal notranslate"><span class="pre">1.2.3.4</span></code>.</p></li>
+<li><p>In <strong>Target</strong>, select the NAT gateway you created earlier. It starts with <code class="docutils literal notranslate"><span class="pre">nat-</span></code>.</p></li>
+<li><p>Click <strong>Save</strong>.</p>
+<div class="figure align-default">
+<img alt="Configure routing" src="../../_images/configure-routing.png" />
+</div>
+</li>
+</ol>
+<p>All traffic between all VPC instances and the elastic IP goes through the NAT gateway. From the point of view of the external system, all nodes have the elastic IP’s address.ame IP address as the NAT gateway’s elastic IP. Internal traffic continues using the VPC’s original routing rules.</p>
+</div>
+<div class="section" id="add-an-s3-endpoint-to-the-vpc">
+<h2>Add an S3 endpoint to the VPC<a class="headerlink" href="#add-an-s3-endpoint-to-the-vpc" title="Permalink to this headline"> </a></h2>
+<p>External traffic that goes through the NAT gateway is subject to additional charges (see <a class="reference external" href="https://aws.amazon.com/vpc/pricing/">Amazon VPC pricing</a>). To reduce both costs and latency, you can store Databricks assets in S3 buckets. Traffic between an elastic IP and a S3 bucket is free.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>VPC endpoints do not support cross-region access. When you access an S3 bucket in a different region, traffic is routed through the NAT gateway.</p>
+</div>
+<ol class="arabic">
+<li><p>In the left panel of the AWS VPC console, select <strong>Endpoints</strong>.</p></li>
+<li><p>Click <strong>Create Endpoint</strong>.</p>
+<div class="figure align-default">
+<img alt="Create endpoint" src="../../_images/add-ep-1.png" />
+</div>
+</li>
+<li><p>In <strong>VPC</strong>, select the Databricks VPC ID.</p></li>
+<li><p>In <strong>Service</strong>, select the only available S3 service.</p></li>
+<li><p>Click <strong>Next Step</strong>.</p>
+<div class="figure align-default">
+<img alt="Next step" src="../../_images/add-ep-2.png" />
+</div>
+</li>
+<li><p>Select the <strong>Main</strong> route table. This associates the S3 endpoint with all private subnets.</p></li>
+<li><p>Click <strong>Create Endpoint</strong>.</p>
+<div class="figure align-default">
+<img alt="Create endpoint" src="../../_images/add-ep-3.png" />
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="verify-subnet-settings">
+<h2>Verify subnet settings<a class="headerlink" href="#verify-subnet-settings" title="Permalink to this headline"> </a></h2>
+<ol class="arabic">
+<li><p>On the <strong>Subnets</strong> page, go to the <strong>Route Table</strong> tab.</p></li>
+<li><p>Enter the Databricks VPC ID into the search box.</p></li>
+<li><p>Verify the following:</p>
+<ul>
+<li><p>The gateway subnet has the <code class="docutils literal notranslate"><span class="pre">0.0.0.0/0</span></code> route set to the VPC’s internet gateway (<code class="docutils literal notranslate"><span class="pre">igw-xxxxxx</span></code>).</p>
+<div class="figure align-default">
+<img alt="Gateway subnet" src="../../_images/verify-1.png" />
+</div>
+</li>
+<li><p>All other subnets have the <code class="docutils literal notranslate"><span class="pre">0.0.0.0/0</span></code> route set to the NAT gateway (<code class="docutils literal notranslate"><span class="pre">nat-xxxxxx</span></code>).</p></li>
+<li><p>If the S3 endpoint is configured correctly, the list includes a route with the target set to <code class="docutils literal notranslate"><span class="pre">vpce-xxxx</span> <span class="pre">&lt;target&gt;</span></code>.</p></li>
+</ul>
+</li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The VPC peering connection to the Databricks control plane VPC (<code class="docutils literal notranslate"><span class="pre">pcx-xxxxx</span></code>) should remain untouched.</p>
+<div class="figure align-default">
+<img alt="VPC peering connection" src="../../_images/verify-2.png" />
+</div>
+</div>
+</div>
+<div class="section" id="create-a-cluster">
+<h2>Create a cluster<a class="headerlink" href="#create-a-cluster" title="Permalink to this headline"> </a></h2>
+<p>To test the new configuration, create a new cluster. It automatically uses the new NAT gateway. After the new cluster becomes ready, verify that it works as expected. Contact Databricks if the new cluster fails to start or if you encounter other issues.</p>
+</div>
+<div class="section" id="disable-the-public-ip-address-on-the-cluster">
+<h2>Disable the public IP address on the cluster<a class="headerlink" href="#disable-the-public-ip-address-on-the-cluster" title="Permalink to this headline"> </a></h2>
+<p>After you verify that the NAT gateway proxy works as intended, you can request removal of public-facing IP addresses on newly-created clusters.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You can’t disable the public IP address on existing AWS instances.</p>
+</div>
+<ol class="arabic simple">
+<li><p>Contact Databricks support and inform them that you would like to disable public IP addresses.</p></li>
+<li><p>After Databricks confirms that the configuration change is complete, terminate all clusters in Databricks.</p></li>
+<li><p>Wait one hour for AWS resources to be cleaned up, or manually terminate the existing instances in the AWS console. If you skip this step, Databricks might reuse existing instances that still have the previously assigned public IP addresses for any new clusters.</p></li>
+<li><p>Log in to your Databricks deployment and create a new cluster. Wait for the cluster to become ready.</p></li>
+</ol>
+<p>To verify that the cluster has no public IP address, go to the AWS EC2 dashboard and check the configuration of the worker instances:</p>
+<div class="figure align-default">
+<img alt="Worker instance addresses" src="../../_images/verify-3.png" />
+</div>
+<p>If the cluster has public IP addresses, or if the cluster does not become ready, contact Databricks.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

@@ -1,0 +1,532 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="This article covers best practices supporting principles of operational excellence on the Databricks lakehouse." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Best practices for operational excellence">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Best practices for operational excellence &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/lakehouse-architecture/operational-excellence/best-practices.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/lakehouse-architecture/operational-excellence/best-practices.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/lakehouse-architecture/operational-excellence/best-practices.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/lakehouse-architecture/operational-excellence/best-practices.html" class="notranslate">English</option>
+    <option value="../../../ja/lakehouse-architecture/operational-excellence/best-practices.html" class="notranslate">日本語</option>
+    <option value="../../../pt/lakehouse-architecture/operational-excellence/best-practices.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Best practices for operational excellence</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="best-practices-for-operational-excellence">
+<h1>Best practices for operational excellence<a class="headerlink" href="#best-practices-for-operational-excellence" title="Permalink to this headline"> </a></h1>
+<p>This article covers best practices of <strong>operational excellence</strong>, organized by architectural principles listed in the following sections.</p>
+<div class="section" id="1-optimize-build-and-release-processes">
+<h2>1. Optimize build and release processes<a class="headerlink" href="#1-optimize-build-and-release-processes" title="Permalink to this headline"> </a></h2>
+<div class="section" id="create-a-dedicated-operations-team-for-the-lakehouse-platform">
+<h3>Create a dedicated operations team for the lakehouse platform<a class="headerlink" href="#create-a-dedicated-operations-team-for-the-lakehouse-platform" title="Permalink to this headline"> </a></h3>
+<p>It is a general best practice to have a platform operations team to enable data teams to work on one or more data platforms. This team is responsible for coming up with blueprints and best practices internally. They provide tooling - for example, for <a class="reference internal" href="#use-infrastructure-as-code-for-deployments-and-maintenance"><span class="std std-ref">infrastructure automation</span></a> and self-service access - and ensure that security and compliance needs are met. This way, the burden of securing platform data is on a central team, so that distributed teams can focus on working with data and producing new insights.</p>
+</div>
+<div class="section" id="use-databricks-repos-to-store-code-in-git">
+<h3>Use Databricks Repos to store code in Git<a class="headerlink" href="#use-databricks-repos-to-store-code-in-git" title="Permalink to this headline"> </a></h3>
+<p>The Databricks Repos feature allows users to store notebooks or other files in a Git repository, providing features like cloning a repository, committing and pushing, pulling, branch management and viewing file diffs. Use Repos for better code visibility and tracking. See <a class="reference internal" href="../../repos/index.html"><span class="doc">Git integration with Databricks Repos</span></a>.</p>
+</div>
+<div class="section" id="standardize-devops-processes-cicd">
+<h3>Standardize DevOps processes (CI/CD)<a class="headerlink" href="#standardize-devops-processes-cicd" title="Permalink to this headline"> </a></h3>
+<p>Continuous integration and continuous delivery (CI/CD) refer to developing and delivering software in short, frequent cycles using automation pipelines. While this is by no means a new process, having been ubiquitous in traditional software engineering for decades, it is becoming an increasingly necessary process for data engineering and data science teams. For data products to be valuable, they must be delivered in a timely manner. Additionally, consumers must have confidence in the validity of outcomes within these products. By automating the building, testing, and deployment of code, development teams can deliver releases more frequently and reliably than manual processes still prevalent across many data engineering and data science teams. See <a class="reference internal" href="../../dev-tools/index-ci-cd.html"><span class="doc">What is CI/CD on Databricks?</span></a>.</p>
+<p>For more information about best practices for code development using Databricks Repos, see <a class="reference internal" href="../../repos/ci-cd-techniques-with-repos.html"><span class="doc">CI/CD techniques with Git and Databricks Repos</span></a>. This, together with the Databricks REST API, allows building automated deployment processes with GitHub Actions, Azure DevOps pipelines, or Jenkins jobs.</p>
+</div>
+<div class="section" id="standardize-in-mlops-processes">
+<h3>Standardize in MLOps processes<a class="headerlink" href="#standardize-in-mlops-processes" title="Permalink to this headline"> </a></h3>
+<p>Building and deploying ML models is complex. There are many options available to achieve this, but little in the way of well-defined standards. As a result, over the past few years, we have seen the emergence of machine learning operations (MLOps). MLOps is a set of processes and automation for managing models, data, and code to improve performance stability and long-term efficiency in ML systems. It covers data preparation, exploratory data analysis (EDA), feature engineering, model training, model validation, deployment, and monitoring. See <a class="reference internal" href="../../machine-learning/mlops/mlops-workflow.html"><span class="doc">MLOps workflows on Databricks</span></a>.</p>
+<ul class="simple">
+<li><p><strong>Always keep your business goals in mind:</strong> Just as the core purpose of ML in a business is to enable data-driven decisions and products, the core purpose of MLOps is to ensure that those data-driven applications remain stable, are kept up to date and continue to have positive impacts on the business. When prioritizing technical work on MLOps, consider the business impact: Does it enable new business use cases? Does it improve data teams’ productivity? Does it reduce operational costs or risks?</p></li>
+<li><p><strong>Manage ML models with a specialized but open tool:</strong> It is recommended to track and manage ML models with MLflow, which has been designed with the ML model lifecycle in mind. See <a class="reference internal" href="../../mlflow/index.html"><span class="doc">MLflow guide</span></a>.</p></li>
+<li><p><strong>Implement MLOps in a modular fashion:</strong> As with any software application, code quality is paramount for an ML application. Modularized code enables testing of individual components and mitigates difficulties with future code refactoring. Define clear steps (like training, evaluation, or deployment), super steps (like training-to-deployment pipeline), and responsibilities to clarify the modular structure of your ML application.</p></li>
+</ul>
+<p>This is described in detail in the Databricks <a class="reference external" href="https://www.databricks.com/p/ebook/the-big-book-of-mlops">MLOps whitepaper</a>.</p>
+</div>
+</div>
+<div class="section" id="2-automate-deployments-and-workloads">
+<h2>2. Automate deployments and workloads<a class="headerlink" href="#2-automate-deployments-and-workloads" title="Permalink to this headline"> </a></h2>
+<div class="section" id="use-infrastructure-as-code-for-deployments-and-maintenance">
+<h3>Use Infrastructure as Code for deployments and maintenance<a class="headerlink" href="#use-infrastructure-as-code-for-deployments-and-maintenance" title="Permalink to this headline"> </a></h3>
+<p>
+HashiCorp Terraform is a popular open source tool for creating safe and predictable cloud infrastructure across several cloud providers. The <a class="reference internal" href="../../dev-tools/terraform/index.html"><span class="doc">Databricks Terraform provider</span></a> manages Databricks workspaces and the associated cloud infrastructure using a flexible, powerful tool. The goal of the Databricks Terraform provider is to support all Databricks REST APIs, supporting automation of the most complicated aspects of deploying and managing your data platforms. The Databricks Terraform provider is the recommended tool to deploy and manage clusters and jobs reliably, provision Databricks workspaces, and configure data access.</p>
+</div>
+<div class="section" id="use-cluster-policies">
+<h3>Use cluster policies<a class="headerlink" href="#use-cluster-policies" title="Permalink to this headline"> </a></h3>
+<p>Databricks workspace admins can control many aspects of the clusters that are spun up, including available instance types, Databricks versions, and the size of instances by using cluster policies. Workspace admins can enforce some Spark configuration settings, and they can configure multiple cluster policies, allowing certain groups of users to create small clusters or single-user clusters, some groups of users to create large clusters and other groups only to use existing clusters. See <a class="reference internal" href="../../administration-guide/clusters/policies.html"><span class="doc">Create and manage compute policies</span></a>.</p>
+</div>
+<div class="section" id="use-automated-workflows-for-jobs">
+<h3>Use automated workflows for jobs<a class="headerlink" href="#use-automated-workflows-for-jobs" title="Permalink to this headline"> </a></h3>
+<ul>
+<li><p><strong>Workflows with jobs (internal orchestration):</strong></p>
+<p>
+We recommend using workflows with jobs to schedule data processing and data analysis tasks on Databricks clusters with scalable resources. Jobs can consist of a single task or a large, multitask workflow with complex dependencies. Databricks manages task orchestration, cluster management, monitoring, and error reporting for all your jobs. You can run your jobs immediately or periodically through an easy-to-use scheduling system. You can implement job tasks using notebooks, JARS, Delta Live Tables pipelines, or Python, Scala, Spark submit, and Java applications. See <a class="reference internal" href="../../workflows/index.html"><span class="doc">Introduction to Databricks Workflows</span></a>.</p>
+</li>
+</ul>
+<ul>
+<li><p><strong>External orchestrators:</strong></p>
+<p>The comprehensive Databricks REST API is used by external orchestrators to orchestrate Databricks assets, notebooks, and jobs. See <a class="reference external" href="https://airflow.apache.org/docs/apache-airflow-providers-databricks/stable/index.html">Apache Airflow</a>.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="use-auto-loader">
+<h3>Use Auto Loader<a class="headerlink" href="#use-auto-loader" title="Permalink to this headline"> </a></h3>
+<p><a class="reference internal" href="../../ingestion/auto-loader/index.html"><span class="doc">Auto Loader</span></a> incrementally and efficiently processes new data files as they arrive in cloud storage. It can ingest many file formats like JSON, CSV, PARQUET, AVRO, ORC, TEXT, and BINARYFILE. With an input folder on the cloud storage, Auto Loader automatically processes new files as they arrive.</p>
+<p>For one-off ingestions, consider using the command COPY INTO instead. See <a class="reference internal" href="../../ingestion/copy-into/index.html"><span class="doc">Get started using COPY INTO to load data</span></a>.</p>
+</div>
+<div class="section" id="use-delta-live-tables">
+<span id="use-dlt"></span><h3>Use Delta Live Tables<a class="headerlink" href="#use-delta-live-tables" title="Permalink to this headline"> </a></h3>
+<p>Delta Live Tables is a declarative framework for building reliable, maintainable, and testable data processing pipelines. You define the transformations to perform on your data and Delta Live Tables manages task orchestration, cluster management, monitoring, data quality, and error handling.</p>
+<p>With Delta Live Tables, easily define end-to-end data pipelines in SQL or Python: Specify the data source, the transformation logic, and the destination state of the data. Delta Live Tables maintains dependencies and automatically determines the infrastructure to run the job in.</p>
+<p>To manage data quality, Delta Live Tables monitors data quality trends over time, preventing bad data from flowing into tables through validation and integrity checks with predefined error policies. See <a class="reference internal" href="../../delta-live-tables/index.html"><span class="doc">What is Delta Live Tables?</span></a>.</p>
+</div>
+<div class="section" id="follow-the-deploy-code-approach-for-ml-workloads">
+<h3>Follow the deploy-code approach for ML workloads<a class="headerlink" href="#follow-the-deploy-code-approach-for-ml-workloads" title="Permalink to this headline"> </a></h3>
+<p>The deploy-code approach follows these steps:</p>
+<ul class="simple">
+<li><p>Training environment: Develop training code and ancillary code.  Then promote the code to staging.</p></li>
+<li><p>Staging environment: Train model on data subset and test ancillary code. Then promote the code to production.</p></li>
+<li><p>Production environment: Train model on prod data and test model. Then deploy the model and ancillary pipelines.</p></li>
+</ul>
+<p>See <a class="reference internal" href="../../machine-learning/mlops/deployment-patterns.html"><span class="doc">Model deployment patterns</span></a>.</p>
+<p>The main advantages of this model are:</p>
+<ul class="simple">
+<li><p>This fits traditional software engineering workflows, using familiar tools like Git and CI/CD systems.</p></li>
+<li><p>Supports automated retraining in a locked-down environment.</p></li>
+<li><p>Only the production environment needs read access to prod training data.</p></li>
+<li><p>Full control over the training environment, which helps to simplify reproducibility.</p></li>
+<li><p>It enables the data science team to use modular code and iterative testing, which helps with coordination and development in larger projects.</p></li>
+</ul>
+<p>This is described in detail in the <a class="reference external" href="https://www.databricks.com/p/ebook/the-big-book-of-mlops">MLOps whitepaper</a>.</p>
+</div>
+<div class="section" id="use-a-model-registry-to-decouple-code-and-model-lifecycle">
+<h3>Use a model registry to decouple code and model lifecycle<a class="headerlink" href="#use-a-model-registry-to-decouple-code-and-model-lifecycle" title="Permalink to this headline"> </a></h3>
+<p>Since model lifecycles do not correspond one-to-one with code lifecycles, it makes sense for model management to have its own service. MLflow and its Model Registry support managing model artifacts directly via UI and APIs. The loose coupling of model artifacts and code provides flexibility to update production models without code changes, streamlining the deployment process in many cases. Model artifacts are secured using MLflow access controls or cloud storage permissions. See <a class="reference internal" href="../../machine-learning/manage-model-lifecycle/index.html"><span class="doc">Manage model lifecycle in Unity Catalog</span></a>.</p>
+</div>
+<div class="section" id="use-mlflow-autologging">
+<h3>Use MLflow Autologging<a class="headerlink" href="#use-mlflow-autologging" title="Permalink to this headline"> </a></h3>
+<p><a class="reference internal" href="../../mlflow/databricks-autologging.html"><span class="doc">Databricks Autologging</span></a> is a no-code solution that extends MLflow automatic logging to deliver automatic experiment tracking for machine learning training sessions on Databricks. Databricks Autologging automatically captures model parameters, metrics, files and lineage information when you train models with training runs recorded as MLflow tracking runs.</p>
+</div>
+<div class="section" id="reuse-the-same-infrastructure-to-manage-ml-pipelines">
+<h3>Reuse the same infrastructure to manage ML pipelines<a class="headerlink" href="#reuse-the-same-infrastructure-to-manage-ml-pipelines" title="Permalink to this headline"> </a></h3>
+<p>ML pipelines should be automated using many of the same techniques as other data pipelines. Use <a class="reference internal" href="../../dev-tools/terraform/index.html"><span class="doc">Databricks Terraform provider</span></a> to automate deployment. ML requires deploying infrastructure such as inference jobs, serving endpoints, and featurization jobs. All ML pipelines can be automated as <a class="reference internal" href="../../workflows/index.html"><span class="doc">Workflows with Jobs</span></a>, and many data-centric ML pipelines can use the more specialized <a class="reference internal" href="../../ingestion/auto-loader/index.html"><span class="doc">Auto Loader</span></a> to ingest images and other data and <a class="reference internal" href="../../delta-live-tables/index.html"><span class="doc">Delta Live Tables</span></a> to compute features or to monitor metrics.</p>
+</div>
+</div>
+<div class="section" id="3-set-up-monitoring-alerting-and-logging">
+<span id="system-monitoring"></span><h2>3. Set up monitoring, alerting, and logging<a class="headerlink" href="#3-set-up-monitoring-alerting-and-logging" title="Permalink to this headline"> </a></h2>
+<div class="section" id="platform-monitoring-using-cloudwatch">
+<h3>Platform monitoring using CloudWatch<a class="headerlink" href="#platform-monitoring-using-cloudwatch" title="Permalink to this headline"> </a></h3>
+<p>Integrating Databricks with <a class="reference external" href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html">CloudWatch</a> enables metrics derived from logs and alerts. <a class="reference external" href="https://aws.amazon.com/about-aws/whats-new/2020/11/amazon-cloudwatch-application-insights-adds-automatic-applications/">CloudWatch Application Insights</a> can help you automatically discover the fields contained in the logs, and <a class="reference external" href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AnalyzingLogData.html">CloudWatch Logs Insights</a> provides a purpose-built query language for faster debugging and analysis.</p>
+<p>See <a class="reference external" href="https://aws.amazon.com/blogs/mt/how-to-monitor-databricks-with-amazon-cloudwatch/">How to Monitor Databricks with Amazon CloudWatch</a>.</p>
+</div>
+<div class="section" id="cluster-monitoring-via-ganglia">
+<h3>Cluster monitoring via Ganglia<a class="headerlink" href="#cluster-monitoring-via-ganglia" title="Permalink to this headline"> </a></h3>
+<p>  To help monitor clusters, Databricks provides access to Ganglia metrics from the cluster details page, and these include GPU metrics. See <a class="reference internal" href="../../compute/clusters-manage.html#metrics-ganglia"><span class="std std-ref">Ganglia metrics</span></a>.</p>
+</div>
+<div class="section" id="sql-warehouse-monitoring">
+<h3>SQL warehouse monitoring<a class="headerlink" href="#sql-warehouse-monitoring" title="Permalink to this headline"> </a></h3>
+<p>Monitoring the SQL warehouse is essential to understand the load profile over time and to manage the SQL warehouse efficiently. With <a class="reference internal" href="../../compute/sql-warehouse/create-sql-warehouse.html#monitor"><span class="std std-ref">SQL warehouse monitoring</span></a>, you can view information, such as the number of queries handled by the warehouse or the number of clusters allocated to the warehouse.</p>
+</div>
+<div class="section" id="auto-loader-monitoring">
+<h3>Auto Loader monitoring<a class="headerlink" href="#auto-loader-monitoring" title="Permalink to this headline"> </a></h3>
+<p>Auto Loader provides a SQL API for inspecting the state of a stream. With SQL functions, you can find metadata about files that have been discovered by an Auto Loader stream. See <a class="reference internal" href="../../ingestion/auto-loader/production.html#monitoring"><span class="std std-ref">Monitoring Auto Loader</span></a>.</p>
+<p>With Apache Spark <a class="reference internal" href="../../structured-streaming/stream-monitoring.html"><span class="doc">Streaming Query Listener</span></a> interface, Auto Loader streams can be further monitored.</p>
+</div>
+<div class="section" id="delta-live-tables-monitoring">
+<span id="dlt-monitoring"></span><h3>Delta Live Tables monitoring<a class="headerlink" href="#delta-live-tables-monitoring" title="Permalink to this headline"> </a></h3>
+<p>
+An event log is created and maintained for every Delta Live Tables pipeline. The event log contains all information related to the pipeline, including audit logs, data quality checks, pipeline progress, and data lineage. You can use the event log to track, understand, and monitor the state of your data pipelines. See <a class="reference internal" href="../../delta-live-tables/observability.html"><span class="doc">Monitor Delta Live Tables pipelines</span></a>.</p>
+</div>
+<div class="section" id="streaming-monitoring">
+<h3>Streaming monitoring<a class="headerlink" href="#streaming-monitoring" title="Permalink to this headline"> </a></h3>
+<p>Streaming is one of the most important data processing techniques for ingestion and analysis. It provides users and developers with low latency and real-time data processing capabilities for analytics and triggering actions. The Databricks Data Intelligence Platform allows you to easily monitor Structured Streaming queries. See <a class="reference internal" href="../../structured-streaming/stream-monitoring.html"><span class="doc">Monitoring Structured Streaming queries on Databricks</span></a>.</p>
+<p>Additional information can be found in the dedicated UI with real-time metrics and statistics. For more information, see <a class="reference external" href="https://databricks.com/blog/2020/07/29/a-look-at-the-new-structured-streaming-ui-in-apache-spark-3-0.html">A look at the new Structured Streaming UI in Apache Spark 3.0</a>.</p>
+</div>
+<div class="section" id="security-monitoring">
+<h3>Security monitoring<a class="headerlink" href="#security-monitoring" title="Permalink to this headline"> </a></h3>
+<p>See <a class="reference internal" href="../security-compliance-and-privacy/best-practices.html#6-monitor-system-security"><span class="std std-ref">Security, compliance &amp; privacy - Security Monitoring</span></a>.</p>
+</div>
+<div class="section" id="cost-monitoring">
+<h3>Cost monitoring<a class="headerlink" href="#cost-monitoring" title="Permalink to this headline"> </a></h3>
+<p>See <a class="reference internal" href="../cost-optimization/best-practices.html#3-monitor-and-control-cost"><span class="std std-ref">Cost Optimization - Monitor and control cost</span></a>.</p>
+</div>
+</div>
+<div class="section" id="4-manage-capacity-and-quotas">
+<h2>4. Manage capacity and quotas<a class="headerlink" href="#4-manage-capacity-and-quotas" title="Permalink to this headline"> </a></h2>
+<div class="section" id="manage-service-limits-and-quotas">
+<h3>Manage service limits and quotas<a class="headerlink" href="#manage-service-limits-and-quotas" title="Permalink to this headline"> </a></h3>
+<p>Every service launched on a cloud will have to take limits into account, such as access rate limits, number of instances, number of users, and memory requirements. For your cloud provider, check <a class="reference external" href="https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html">the cloud limits</a>. Before designing a solution, these limits need to be understood.</p>
+<p>Specifically, for the Databricks platform, there are different types of limits:</p>
+<p><strong>Databricks platform limits:</strong> These are specific limits for Databricks resources. The limits for the overall platform are documented in <a class="reference internal" href="../../resources/limits.html"><span class="doc">Limits</span></a>.</p>
+<p><strong>Unity Catalog limits:</strong> <a class="reference internal" href="../../data-governance/unity-catalog/index.html#quotas"><span class="std std-ref">Unity Catalog Resource Quotas</span></a></p>
+<p><strong>Subscription/account quotas:</strong> Databricks leverages cloud resources for its service. For example, workloads on Databricks run on clusters, for which the Databricks platform starts cloud provider’s virtual machines (VM). Cloud providers set default quotas on how many VMs can be started at the same time. Depending on the need, these quotas may need to be adjusted.</p>
+<p>For further details, see <a class="reference external" href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-resource-limits.html">Amazon EC2 service quotas</a>.</p>
+<p>In a similar way, storage, network, and other cloud services have limitations that need to be understood and factored in.</p>
+</div>
+<div class="section" id="invest-in-capacity-planning">
+<h3>Invest in capacity planning<a class="headerlink" href="#invest-in-capacity-planning" title="Permalink to this headline"> </a></h3>
+<p>
+Plan for fluctuation in the expected load that can occur for several reasons like sudden business changes or even world events. Test variations of load, including unexpected ones, to ensure that your workloads can scale. Ensure all regions can adequately scale to support the total load if a region fails. To be taken into consideration:</p>
+<ul class="simple">
+<li><p>Technology and service limits and limitations of the cloud. See <a class="reference internal" href="#4-manage-capacity-and-quotas"><span class="std std-ref">Manage capacity and quota</span></a>.</p></li>
+<li><p>SLAs when determining the services to use in the design.</p></li>
+<li><p>Cost analysis to determine how much improvement will be realized in the application if costs are increased. Evaluate if the price is worth the investment.</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

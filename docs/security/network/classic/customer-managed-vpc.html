@@ -1,0 +1,830 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to deploy Databricks in your own AWS VPC (Virtual Private Cloud), also known as customer-managed VPC." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Configure a customer-managed VPC">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Configure a customer-managed VPC &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/security/network/classic/customer-managed-vpc.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/security/network/classic/customer-managed-vpc.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/security/network/classic/customer-managed-vpc.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../../en/security/network/classic/customer-managed-vpc.html" class="notranslate">English</option>
+    <option value="../../../../ja/security/network/classic/customer-managed-vpc.html" class="notranslate">日本語</option>
+    <option value="../../../../pt/security/network/classic/customer-managed-vpc.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Configure a customer-managed VPC</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="configure-a-customer-managed-vpc">
+<h1>Configure a customer-managed VPC<a class="headerlink" href="#configure-a-customer-managed-vpc" title="Permalink to this headline"> </a></h1>
+<p></p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This feature requires that your account is on the <a class="reference internal" href="../../../getting-started/overview.html#e2-architecture"><span class="std std-ref">E2 version of the Databricks platform</span></a>. All new Databricks accounts and most existing accounts are now E2.</p>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<ul class="simple">
+<li><p>This article mentions the term <em>compute plane</em>, which is the compute layer of the Databricks platform. In the context of this article, compute plane refers to the classic compute plane in your AWS account. By contrast, the serverless compute plane that supports <a class="reference internal" href="../../../compute/sql-warehouse/serverless.html"><span class="doc">serverless SQL warehouses</span></a> runs in your Databricks account. To learn more, see <a class="reference internal" href="../../../serverless-compute/index.html"><span class="doc">Serverless compute</span></a>.</p></li>
+<li><p>Previously, Databricks referred to the compute plane as the data plane.</p></li>
+</ul>
+</div>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline"> </a></h2>
+<p>By default, clusters are created in a single AWS VPC (Virtual Private Cloud) that Databricks creates and configures in your AWS account. You can optionally create your Databricks workspaces in your own VPC, a feature known as <em>customer-managed VPC</em>. You can use a customer-managed VPC to exercise more control over your network configurations to comply with specific cloud security and governance standards your organization may require.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>To configure your workspace to use <a class="reference internal" href="privatelink.html"><span class="doc">AWS PrivateLink</span></a> for any type of connection, it is required that your workspace use a customer-managed VPC.</p>
+</div>
+<p>A customer-managed VPC is good solution if you have:</p>
+<ul class="simple">
+<li><p>Security policies that prevent PaaS providers from creating VPCs in your own AWS account.</p></li>
+<li><p>An approval process to create a new VPC, in which the VPC is configured and secured in a well-documented way by internal information security or cloud engineering teams.</p></li>
+</ul>
+<p>Benefits include:</p>
+<ul class="simple">
+<li><p><strong>Lower privilege level</strong>: You maintain more control of your own AWS account. And you don’t need to grant Databricks as many permissions via cross-account IAM role as you do for a Databricks-managed VPC. For example, there is no need for permission to create VPCs. This limited set of permissions can make it easier to get approval to use Databricks in your platform stack.</p></li>
+<li><p><strong>Simplified network operations</strong>: Better network space utilization. Optionally configure smaller subnets for a workspace, compared to the default CIDR /16. And there is no need for the complex VPC peering configurations that might be necessary with other solutions.</p></li>
+<li><p><strong>Consolidation of VPCs</strong>: Multiple Databricks workspaces can share a single compute plane VPC, which is often preferred for billing and instance management.</p></li>
+<li><p><strong>Limit outgoing connections</strong>: By default, the compute plane does not limit outgoing connections from Databricks Runtime workers. For workspaces that are configured to use a customer-managed VPC, you can use an egress firewall or proxy appliance to limit outbound traffic to a list of allowed internal or external data sources.</p></li>
+</ul>
+<div class="figure align-default">
+<img alt="Customer-managed VPC" src="../../../_images/customer-managed-vpc.png" />
+</div>
+<p>To take advantage of a customer-managed VPC, you must specify a VPC when you first create the Databricks workspace. You cannot move an existing workspace with a Databricks-managed VPC to use a customer-managed VPC. You can, however, move an existing workspace with a customer-managed VPC from one VPC to another VPC by updating the workspace configuration’s network configuration object. See <a class="reference internal" href="../../../administration-guide/workspace/update-workspace.html"><span class="doc">Update a running or failed workspace</span></a>.</p>
+<p>To deploy a workspace in your own VPC, you must:</p>
+<ol class="arabic">
+<li><p>Create the VPC following the requirements enumerated in <a class="reference internal" href="#vpc-requirements"><span class="std std-ref">VPC requirements</span></a>.</p></li>
+<li><p>Reference your VPC network configuration with Databricks when you create the workspace.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../administration-guide/workspace/create-workspace.html"><span class="doc">Use the account console</span></a> and choose the configuration by name</p></li>
+<li><p><a class="reference internal" href="../../../administration-guide/workspace/create-workspace-api.html"><span class="doc">Use the Account API</span></a> and choose the configuration by its ID</p></li>
+</ul>
+<p>You must provide the VPC ID, subnet IDs, and security group ID when you register the VPC with Databricks.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="vpc-requirements">
+<span id="vpc-requirements"></span><h2>VPC requirements<a class="headerlink" href="#vpc-requirements" title="Permalink to this headline"> </a></h2>
+<p>Your VPC must meet the requirements described in this section in order to host a Databricks workspace.</p>
+<div class="contents local topic" id="requirements">
+<p class="topic-title first">Requirements:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#vpc-region" id="id1">VPC region</a></p></li>
+<li><p><a class="reference internal" href="#vpc-sizing" id="id2">VPC sizing</a></p></li>
+<li><p><a class="reference internal" href="#vpc-ip-address-ranges" id="id3">VPC IP address ranges</a></p></li>
+<li><p><a class="reference internal" href="#dns" id="id4">DNS</a></p></li>
+<li><p><a class="reference internal" href="#subnets" id="id5">Subnets</a></p></li>
+<li><p><a class="reference internal" href="#security-groups" id="id6">Security groups</a></p></li>
+<li><p><a class="reference internal" href="#subnet-level-network-acls" id="id7">Subnet-level network ACLs</a></p></li>
+<li><p><a class="reference internal" href="#aws-privatelink-support" id="id8">AWS PrivateLink support</a></p></li>
+</ul>
+</div>
+<div class="section" id="vpc-region">
+<h3><a class="toc-backref" href="#id1">VPC region</a><a class="headerlink" href="#vpc-region" title="Permalink to this headline"> </a></h3>
+<p>For a list of AWS regions that support customer-managed VPC, see <a class="reference internal" href="../../../resources/supported-regions.html"><span class="doc">Databricks clouds and regions</span></a>.</p>
+</div>
+<div class="section" id="vpc-sizing">
+<h3><a class="toc-backref" href="#id2">VPC sizing</a><a class="headerlink" href="#vpc-sizing" title="Permalink to this headline"> </a></h3>
+<p>You can share one VPC with multiple workspaces in a single AWS account. However, Databricks recommends using unique subnets and security groups for each workspace. Be sure to size your VPC and subnets accordingly. Databricks assigns two IP addresses per node, one for management traffic and one for Apache Spark applications. The total number of instances for each subnet is equal to half the number of IP addresses that are available. Learn more in <a class="reference internal" href="#subnet"><span class="std std-ref">Subnets</span></a>.</p>
+</div>
+<div class="section" id="vpc-ip-address-ranges">
+<h3><a class="toc-backref" href="#id3">VPC IP address ranges</a><a class="headerlink" href="#vpc-ip-address-ranges" title="Permalink to this headline"> </a></h3>
+<p>Databricks doesn’t limit netmasks for the workspace VPC, but each workspace subnet must have a netmask between <code class="docutils literal notranslate"><span class="pre">/17</span></code> and <code class="docutils literal notranslate"><span class="pre">/26</span></code>. This means that if your workspace has two subnets and both have a netmask of <code class="docutils literal notranslate"><span class="pre">/26</span></code>, then the netmask for your workspace VPC must be <code class="docutils literal notranslate"><span class="pre">/25</span></code> or smaller.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If you have configured secondary CIDR blocks for your VPC, make sure that the subnets for the Databricks workspace are configured with the same VPC CIDR block.</p>
+</div>
+</div>
+<div class="section" id="dns">
+<h3><a class="toc-backref" href="#id4">DNS</a><a class="headerlink" href="#dns" title="Permalink to this headline"> </a></h3>
+<p>The VPC must have DNS hostnames and DNS resolution enabled.</p>
+</div>
+<div class="section" id="subnets">
+<span id="subnet"></span><h3><a class="toc-backref" href="#id5">Subnets</a><a class="headerlink" href="#subnets" title="Permalink to this headline"> </a></h3>
+<p>Databricks must have access to at least <em>two subnets for each workspace</em>, with each subnet in a different availability zone. You cannot specify more than one Databricks workspace subnet per Availability Zone in the <a class="reference external" href="https://docs.databricks.com/api/account/networks/create">Create network configuration API call</a>. You can have more than one subnet per availability zone as part of your network setup, but you can choose only one subnet per Availability Zone for the Databricks workspace.</p>
+<p>Databricks assigns two IP addresses per node, one for management traffic and one for Spark applications. The total number of instances for each subnet is equal to half of the number of IP addresses that are available.</p>
+<p>Each subnet must have a netmask between <code class="docutils literal notranslate"><span class="pre">/17</span></code> and <code class="docutils literal notranslate"><span class="pre">/26</span></code>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The subnets that you specify for a customer-managed VPC must be reserved for one Databricks workspace only. You cannot share these subnets with any other resources, including other Databricks workspaces.</p>
+</div>
+<div class="section" id="additional-subnet-requirements">
+<h4>Additional subnet requirements<a class="headerlink" href="#additional-subnet-requirements" title="Permalink to this headline"> </a></h4>
+<ul class="simple">
+<li><p>Subnets must be private.</p></li>
+<li><p>Subnets must have outbound access to the public network using a <a class="reference external" href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html">NAT gateway</a> and <a class="reference external" href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html">internet gateway</a>, or other similar customer-managed appliance infrastructure.</p></li>
+<li><p>The NAT gateway must be set up <a class="reference external" href="https://aws.amazon.com/premiumsupport/knowledge-center/nat-gateway-vpc-private-subnet/">in its own subnet</a> that routes quad-zero (<code class="docutils literal notranslate"><span class="pre">0.0.0.0/0</span></code>) traffic to an <a class="reference external" href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html">internet gateway</a> or other customer-managed appliance infrastructure.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>A workspace using secure cluster connectivity (the default after September 1, 2020) must have outbound access from the VPC to the public network.</p>
+</div>
+</div>
+<div class="section" id="subnet-route-table">
+<h4>Subnet route table<a class="headerlink" href="#subnet-route-table" title="Permalink to this headline"> </a></h4>
+<p>The route table for workspace subnets must have quad-zero (<code class="docutils literal notranslate"><span class="pre">0.0.0.0/0</span></code>) traffic that targets the appropriate network device. If the workspace uses secure cluster connectivity (which is the default for new workspaces after September 1, 2020), quad-zero traffic must target a NAT Gateway or your own managed NAT device or proxy appliance.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Databricks requires subnets to add <code class="docutils literal notranslate"><span class="pre">0.0.0.0/0</span></code> to your allow list. This rule must be prioritized. To control egress traffic, use an egress firewall or proxy appliance to block most traffic but allow the URLs that Databricks needs to connect to. See <a class="reference internal" href="#firewall"><span class="std std-ref">(Optional) Configure a firewall and outbound access</span></a>.</p>
+</div>
+<p>This is a base guideline only. Your configuration requirements may differ. For questions, contact your Databricks account team.</p>
+</div>
+</div>
+<div class="section" id="security-groups">
+<h3><a class="toc-backref" href="#id6">Security groups</a><a class="headerlink" href="#security-groups" title="Permalink to this headline"> </a></h3>
+<p>A Databricks workspace must have access to at least one AWS security group and no more than five security groups. You can reuse existing security groups rather than create new ones. However, Databricks recommends using unique subnets and security groups for each workspace.</p>
+<p>Security groups must have the following rules:</p>
+<p></p>
+<p><strong>Egress (outbound):</strong></p>
+<ul class="simple">
+<li><p>Allow all TCP and UDP access to the workspace security group (for internal traffic)</p></li>
+<li><p>Allow TCP access to <code class="docutils literal notranslate"><span class="pre">0.0.0.0/0</span></code> for these ports:</p>
+<ul>
+<li><p>443: for Databricks infrastructure, cloud data sources, and library repositories</p></li>
+<li><p>3306: for the metastore</p></li>
+<li><p>6666: for secure cluster connectivity. This is only required if you use <a class="reference internal" href="privatelink.html"><span class="doc">PrivateLink</span></a>.</p></li>
+<li><p>2443: Supports FIPS encryption. Only required if you enable the <a class="reference internal" href="../../privacy/security-profile.html"><span class="doc">compliance security profile</span></a>.</p></li>
+<li><p>8443 through 8451: Future extendability. Ensure these <a class="reference internal" href="../../../release-notes/product/2023/august.html#aws-new-egress-ports"><span class="std std-ref">ports are open by January 31, 2024</span></a>.</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Ingress (inbound):</strong> Required for all workspaces (these can be separate rules or combined into one):</p>
+<ul class="simple">
+<li><p>Allow TCP on all ports when traffic source uses the same security group</p></li>
+<li><p>Allow UDP on all ports when traffic source uses the same security group</p></li>
+</ul>
+</div>
+<div class="section" id="subnet-level-network-acls">
+<span id="network-acls"></span><h3><a class="toc-backref" href="#id7">Subnet-level network ACLs</a><a class="headerlink" href="#subnet-level-network-acls" title="Permalink to this headline"> </a></h3>
+<p>Subnet-level network ACLs must not deny ingress or egress to any traffic. Databricks validates for the following rules while creating the workspace:</p>
+<p><strong>Egress (outbound):</strong></p>
+<ul class="simple">
+<li><p>Allow all traffic to the workspace VPC CIDR, for internal traffic</p>
+<ul>
+<li><p>Allow TCP access to <code class="docutils literal notranslate"><span class="pre">0.0.0.0/0</span></code> for these ports:</p>
+<ul>
+<li><p>443: for Databricks infrastructure, cloud data sources, and library repositories</p></li>
+<li><p>3306: for the metastore</p></li>
+<li><p>6666: only required if you use <a class="reference internal" href="privatelink.html"><span class="doc">PrivateLink</span></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If you configure additional <code class="docutils literal notranslate"><span class="pre">ALLOW</span></code> or <code class="docutils literal notranslate"><span class="pre">DENY</span></code> rules for outbound traffic, set the rules required by Databricks to the highest priority (the lowest rule numbers), so that they take precedence.</p>
+</div>
+<p><strong>Ingress (inbound):</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ALLOW</span> <span class="pre">ALL</span> <span class="pre">from</span> <span class="pre">Source</span> <span class="pre">0.0.0.0/0</span></code>. This rule must be prioritized.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Databricks requires subnet-level network ACLs to add <code class="docutils literal notranslate"><span class="pre">0.0.0.0/0</span></code> to your allow list. To control egress traffic, use an egress firewall or proxy appliance to block most traffic but allow the URLs that Databricks needs to connect to. See <a class="reference internal" href="#firewall"><span class="std std-ref">(Optional) Configure a firewall and outbound access</span></a>.</p>
+</div>
+</div>
+<div class="section" id="aws-privatelink-support">
+<span id="privatelink-reqs"></span><h3><a class="toc-backref" href="#id8">AWS PrivateLink support</a><a class="headerlink" href="#aws-privatelink-support" title="Permalink to this headline"> </a></h3>
+<p>If you plan to enabled AWS PrivateLink on the workspace with this VPC:</p>
+<ul class="simple">
+<li><p>On the VPC, ensure that you enable both of the settings <strong>DNS Hostnames</strong> and <strong>DNS resolution</strong>.</p></li>
+<li><p>Review the article <a class="reference internal" href="privatelink.html"><span class="doc">Enable AWS PrivateLink</span></a> for guidance about creating an extra subnet for VPC endpoints (recommended but not required) and creating an extra security group for VPC endpoints.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="create-a-vpc">
+<span id="create-vpc"></span><h2>Create a VPC<a class="headerlink" href="#create-a-vpc" title="Permalink to this headline"> </a></h2>
+<p>To create VPCs you can use various tools:</p>
+<ul class="simple">
+<li><p>AWS console</p></li>
+<li><p>AWS CLI</p></li>
+<li><p><a class="reference internal" href="../../../dev-tools/terraform/index.html"><span class="doc">Terraform</span></a></p></li>
+<li><p><a class="reference internal" href="../../../administration-guide/workspace/templates.html"><span class="doc">AWS Quickstart</span></a> (create a new customer-managed VPC and a new workspace)</p></li>
+</ul>
+<p>To use AWS Console, the basic instructions for creating and configuring a VPC and related objects are listed below. For complete instructions, see the AWS documentation.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>These basic instructions might not apply to all organizations. Your configuration requirements may differ. This section does not cover all possible ways to configure NATs, firewalls, or other network infrastructure. If you have questions, contact your Databricks account team before proceeding.</p>
+</div>
+<ol class="arabic">
+<li><p>Go to the <a class="reference external" href="https://console.aws.amazon.com/vpc/#vpcs:">VPCs page in AWS</a>.</p></li>
+<li><p>See the region picker in the upper-right. If needed, switch to the region for your workspace.</p></li>
+<li><p>In the upper-right corner, click the orange button <strong>Create VPC</strong>.</p>
+<div class="figure align-default">
+<img alt="create new VPC editor" src="../../../_images/customer-managed-vpc-createnew.png" />
+</div>
+</li>
+<li><p>Click <strong>VPC and more</strong>.</p></li>
+<li><p>In the <strong>Name tag auto-generation</strong> type a name for your workspace. Databricks recommends including the region in the name.</p></li>
+<li><p>For VPC address range, optionally change it if desired.</p></li>
+<li><p>For public subnets, click <code class="docutils literal notranslate"><span class="pre">2</span></code>. Those subnets aren’t used directly by your Databricks workspace, but they are required to enable NATs in this editor.</p></li>
+<li><p>For private subnets, click <code class="docutils literal notranslate"><span class="pre">2</span></code> for the minimum for workspace subnets. You can add more if desired.</p>
+<p>Your Databricks workspace needs at least two private subnets. To resize them, for example to share one VPC with multiple workspaces that all need separate subnets, click <strong>Customize subnet CIDR blocks</strong>.</p>
+</li>
+<li><p>For NAT gateways, click <strong>In 1 AZ</strong>.</p></li>
+<li><p>Ensure the following fields at the bottom are enabled: <strong>Enable DNS hostnames</strong> and <strong>Enable DNS resolution</strong>.</p></li>
+<li><p>Click <strong>Create VPC</strong>.</p></li>
+<li><p>When viewing your new VPC, click on the left navigation items to update related settings on the VPC. To make it easier to find related objects, in the <strong>Filter by VPC</strong> field, select your new VPC.</p></li>
+<li><p>Click <strong>Subnets</strong> and what AWS calls the <strong>private</strong> subnets labelled 1 and 2, which are the ones you will use to configure your main workspace subnets. Modify the subnets as specified in <a class="reference internal" href="#vpc-requirements"><span class="std std-ref">VPC requirements</span></a>.</p>
+<p>If you created an extra private subnet for use with PrivateLink, configure private subnet 3 as specified in <a class="reference internal" href="privatelink.html"><span class="doc">Enable AWS PrivateLink</span></a>.</p>
+</li>
+<li><p>Click <strong>Security groups</strong> and modify the security group as specified in <a class="reference internal" href="#security-groups"><span class="std std-ref">Security groups</span></a>.</p>
+<p>If you will use back-end PrivateLink connectivity, create an additional security group with inbound and outbound rules as specified in the PrivateLink article in the section <a class="reference internal" href="privatelink.html#create-vpc"><span class="std std-ref">Step 1: Configure AWS network objects</span></a>.</p>
+</li>
+<li><p>Click <strong>Network ACLs</strong> and modify the network ACLs as specified in <a class="reference internal" href="#network-acls"><span class="std std-ref">Subnet-level network ACLs</span></a>.</p></li>
+<li><p>Choose whether to perform the optional configurations that are specified later in this article.</p></li>
+<li><p>Register your VPC with Databricks to create a network configuration <a class="reference internal" href="../../../administration-guide/account-settings-e2/networks.html"><span class="doc">using the account console</span></a> or by <a class="reference internal" href="../../../administration-guide/workspace/create-workspace-api.html"><span class="doc">using the Account API</span></a>.</p></li>
+</ol>
+</div>
+<div class="section" id="updating-cidrs">
+<span id="update-cidr"></span><h2>Updating CIDRs<a class="headerlink" href="#updating-cidrs" title="Permalink to this headline"> </a></h2>
+<p>You might need to, at a later time, update subnet CIDRs that overlap with original subnets.</p>
+<p>To update the CIDRs and other workspace objects:</p>
+<ol class="arabic">
+<li><p>Terminate all running clusters (and other compute resources) that are running in the subnets that need to be updated.</p></li>
+<li><p>Using the AWS console, delete the subnets to update.</p></li>
+<li><p>Re-create the subnets with updated CIDR ranges.</p></li>
+<li><p>Update the route table association for the two new subnets. You can reuse the ones in each availability zone for existing subnets.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If you skip this step or misconfigure the route tables, cluster may fail to launch.</p>
+</div>
+</li>
+<li><p>Create a new network configuration object with the new subnets.</p></li>
+<li><p>Update the workspace to use this newly created network configuration object</p></li>
+</ol>
+</div>
+<div class="section" id="recommended-configure-regional-endpoints">
+<span id="regional-endpoints"></span><h2>(Recommended) Configure regional endpoints<a class="headerlink" href="#recommended-configure-regional-endpoints" title="Permalink to this headline"> </a></h2>
+<p>If you use a customer-managed VPC (optional) and <a class="reference internal" href="secure-cluster-connectivity.html"><span class="doc">secure cluster connectivity</span></a> (the default as of September 1, 2020), Databricks recommends you configure your VPC to use only regional VPC endpoints to AWS services. Using regional VPC endpoints enables more direct connections to AWS services and reduced cost compared to AWS global endpoints. There are four AWS services that a Databricks workspace with a customer-managed VPC must reach: STS, S3, Kinesis, and RDS.</p>
+<p>The connection from your VPC to the RDS service is required only if you use the default Databricks legacy Hive metastore and does not apply to Unity Catalog metastores. Although there is no VPC endpoint for RDS, instead of using the default Databricks legacy Hive metastore, you can configure your own external metastore. You can implement an external metastore with a <a class="reference internal" href="../../../archive/external-metastores/external-hive-metastore.html"><span class="doc">Hive metastore</span></a> or <a class="reference internal" href="../../../archive/external-metastores/aws-glue-metastore.html"><span class="doc">AWS Glue</span></a>.</p>
+<p>For the other three services, you can create VPC gateway or interface endpoints such that the relevant in-region traffic from clusters could transit over the secure AWS backbone rather than the public network:</p>
+<ul>
+<li><p><strong>S3</strong>: Create a <a class="reference external" href="https://aws.amazon.com/blogs/aws/new-vpc-endpoint-for-amazon-s3">VPC gateway endpoint</a> that is directly accessible from your Databricks cluster subnets. This causes workspace traffic to all in-region S3 buckets to use the endpoint route. To access any cross-region buckets, open up access to S3 global URL <code class="docutils literal notranslate"><span class="pre">s3.amazonaws.com</span></code> in your egress appliance, or route <code class="docutils literal notranslate"><span class="pre">0.0.0.0/0</span></code> to an AWS internet gateway.</p>
+<p>To use <a class="reference internal" href="../../../dbfs/mounts.html"><span class="doc">DBFS mounts</span></a> with regional endpoints enabled:</p>
+<ul class="simple">
+<li><p>You must set up an environment variable in the cluster configuration to set <code class="docutils literal notranslate"><span class="pre">AWS_REGION=&lt;aws-region-code&gt;</span></code>. For example, if your workspace is deployed in the N. Virginia region, set <code class="docutils literal notranslate"><span class="pre">AWS_REGION=us-east-1</span></code>. To enforce it for all clusters, use <a class="reference internal" href="../../../administration-guide/clusters/policies.html"><span class="doc">cluster policies</span></a>.</p></li>
+</ul>
+</li>
+<li><p><strong>STS</strong>: Create a <a class="reference external" href="https://docs.aws.amazon.com/vpc/latest/userguide/vpce-interface.html#create-interface-endpoint">VPC interface endpoint</a> directly accessible from your Databricks cluster subnets. You can create this endpoint in your workspace subnets. Databricks recommends that you use the same security group that was created for your workspace VPC. This configuration causes workspace traffic to STS to use the endpoint route.</p></li>
+<li><p><strong>Kinesis</strong>: Create a <a class="reference external" href="https://docs.aws.amazon.com/vpc/latest/userguide/vpce-interface.html#create-interface-endpoint">VPC interface endpoint</a> directly accessible from your Databricks cluster subnets. You can create this endpoint in your workspace subnets. Databricks recommends that you use the same security group that was created for your workspace VPC. This configuration causes workspace traffic to Kinesis to use the endpoint route. The only exception to this rule is workspaces in the AWS region <code class="docutils literal notranslate"><span class="pre">us-west-1</span></code> because target Kinesis streams in this region are cross-region to the <code class="docutils literal notranslate"><span class="pre">us-west-2</span></code> region.</p></li>
+</ul>
+</div>
+<div class="section" id="optional-configure-a-firewall-and-outbound-access">
+<span id="firewall"></span><h2>(Optional) Configure a firewall and outbound access<a class="headerlink" href="#optional-configure-a-firewall-and-outbound-access" title="Permalink to this headline"> </a></h2>
+<p>If you are using <strong>secure cluster connectivity</strong> (the default as of September 1, 2020), use an egress firewall or proxy appliance to block most traffic but allow the URLs that Databricks needs to connect to:</p>
+<ul class="simple">
+<li><p>If the firewall or proxy appliance is in the same VPC as the Databricks workspace VPC, route the traffic and configure it to allow the following connections.</p></li>
+<li><p>If the firewall or proxy appliance is in a different VPC or an on-premises network, route <code class="docutils literal notranslate"><span class="pre">0.0.0.0/0</span></code> to that VPC or network first and configure the proxy appliance to allow the following connections.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Databricks strongly recommends that you specify destinations as domain names in your egress infrastructure, rather than as IP addresses.</p>
+</div>
+<p>Allow the following outgoing connections. For each connection type, follow the link to get IP addresses or domains for your workspace region.</p>
+<ul>
+<li><p><strong>Databricks web application</strong>: Required. Also used for REST API calls to your workspace.</p>
+<p><a class="reference internal" href="../../../resources/supported-regions.html#webapp"><span class="std std-ref">Webapp addresses</span></a></p>
+</li>
+<li><p><strong>Databricks secure cluster connectivity (SCC) relay</strong>: Required if your workspace uses secure cluster connectivity, which is the default for workspaces in accounts on the <a class="reference internal" href="../../../getting-started/overview.html#e2-architecture"><span class="std std-ref">E2 version of the platform</span></a> as of September 1, 2020.</p>
+<p><a class="reference internal" href="../../../resources/supported-regions.html#scc"><span class="std std-ref">SCC relay addresses</span></a></p>
+</li>
+<li><p><strong>AWS S3 global URL</strong>: Required by Databricks to access the root S3 bucket. Use <code class="docutils literal notranslate"><span class="pre">s3.amazonaws.com:443</span></code>, regardless of region.</p></li>
+<li><p><strong>AWS S3 regional URL</strong>: Optional. If you use S3 buckets that might be in other regions, you must also allow the S3 regional endpoint. Although AWS provides a domain and port for a regional endpoint (<code class="docutils literal notranslate"><span class="pre">s3.&lt;region-name&gt;.amazonaws.com:443</span></code>), Databricks recommends that you instead use a <a class="reference internal" href="#regional-endpoints"><span class="std std-ref">VPC endpoint</span></a> so that this traffic goes through the private tunnel over the AWS network backbone. See <a class="reference internal" href="#regional-endpoints"><span class="std std-ref">(Recommended) Configure regional endpoints</span></a>.</p></li>
+<li><p><strong>AWS STS global URL</strong>: Required. Use the following address and port, regardless of region: <code class="docutils literal notranslate"><span class="pre">sts.amazonaws.com:443</span></code></p></li>
+<li><p><strong>AWS STS regional URL</strong>: Required due to expected switch to regional endpoint. Use a VPC endpoint. See <a class="reference internal" href="#regional-endpoints"><span class="std std-ref">(Recommended) Configure regional endpoints</span></a>.</p></li>
+<li><p><strong>AWS Kinesis regional URL</strong>: Required. The Kinesis endpoint is used to capture logs needed to manage and monitor the software. For the URL for your region, see <a class="reference internal" href="../../../resources/supported-regions.html#kinesis"><span class="std std-ref">Kinesis addresses</span></a>.</p></li>
+<li><p><strong>Table metastore RDS regional URL (by compute plane region)</strong>: Required if your Databricks workspace uses the default Hive metastore.</p>
+<p>The Hive metastore is always in the same region as your compute plane, but it might be in a different region than the control plane.</p>
+<p><a class="reference internal" href="../../../resources/supported-regions.html#rds"><span class="std std-ref">RDS addresses for legacy Hive metastore</span></a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Instead of using the default Hive metastore, you can choose to <a class="reference internal" href="../../../archive/external-metastores/index.html"><span class="doc">implement your own table metastore instance</span></a>, in which case you are responsible for its network routing.</p>
+</div>
+<p></p>
+</li>
+<li><p><strong>Control plane infrastructure</strong>: Required. Used by Databricks for standby Databricks infrastructure to improve the stability of Databricks services.</p>
+<p><a class="reference internal" href="../../../resources/supported-regions.html#control-plane"><span class="std std-ref">Control plane infrastructure addresses</span></a></p>
+</li>
+</ul>
+<p></p>
+<div class="section" id="required-compute-plane-addresses">
+<span id="allow-required-addresses"></span><h3>Required compute plane addresses<a class="headerlink" href="#required-compute-plane-addresses" title="Permalink to this headline"> </a></h3>
+<p>The contents of this section have moved to <a class="reference internal" href="../../../resources/supported-regions.html#ip-domain-aws"><span class="std std-ref">IP addresses and domains</span></a>.</p>
+</div>
+<div class="section" id="troubleshoot-regional-endpoints">
+<h3>Troubleshoot regional endpoints<a class="headerlink" href="#troubleshoot-regional-endpoints" title="Permalink to this headline"> </a></h3>
+<p>If you followed the instructions above and the VPC endpoints do not work as intended, for example, if your data sources are inaccessible or if the traffic is bypassing the endpoints, you can use one of two approaches to add support for the regional endpoints for S3 and STS instead of using VPC endpoints.</p>
+<ol class="arabic">
+<li><p>Add the environment variable <code class="docutils literal notranslate"><span class="pre">AWS_REGION</span></code> in the cluster configuration and set it to your AWS region. To enable it for all clusters, use <a class="reference internal" href="../../../administration-guide/clusters/policies.html"><span class="doc">cluster policies</span></a>. You might have already configured this environment variable to use DBFS mounts.</p></li>
+<li><p>Add the required Apache Spark configuration. Do exactly one of the following approaches:</p>
+<ul>
+<li><p><strong>In each source notebook</strong>:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">scala</span>
+<span class="n">spark</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.s3a.stsAssumeRole.stsEndpoint&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;https://sts.&lt;region&gt;.amazonaws.com&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.s3a.endpoint&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;https://s3.&lt;region&gt;.amazonaws.com&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">python</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;fs.s3a.stsAssumeRole.stsEndpoint&quot;</span><span class="p">,</span> <span class="s2">&quot;https://sts.&lt;region&gt;.amazonaws.com&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;fs.s3a.endpoint&quot;</span><span class="p">,</span> <span class="s2">&quot;https://s3.&lt;region&gt;.amazonaws.com&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><p><em>Alternatively, in the Apache Spark config for the cluster</em>*:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">hadoop</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">s3a</span><span class="o">.</span><span class="n">endpoint</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">s3</span><span class="o">.&lt;</span><span class="n">region</span><span class="o">&gt;.</span><span class="n">amazonaws</span><span class="o">.</span><span class="n">com</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">hadoop</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">s3a</span><span class="o">.</span><span class="n">stsAssumeRole</span><span class="o">.</span><span class="n">stsEndpoint</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">sts</span><span class="o">.&lt;</span><span class="n">region</span><span class="o">&gt;.</span><span class="n">amazonaws</span><span class="o">.</span><span class="n">com</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>If you limit egress from the classic compute plane using a firewall or internet appliance, add these regional endpoint addresses to your allow list.</p></li>
+</ol>
+<p>To set these values for all clusters, configure the values as part of your <a class="reference internal" href="../../../administration-guide/clusters/policies.html"><span class="doc">cluster policy</span></a>.</p>
+</div>
+</div>
+<div class="section" id="optional-access-s3-using-instance-profiles">
+<span id="s3-instance-profiles"></span><h2>(Optional) Access S3 using instance profiles<a class="headerlink" href="#optional-access-s3-using-instance-profiles" title="Permalink to this headline"> </a></h2>
+<p>To access S3 mounts using <a class="reference internal" href="../../../connect/storage/tutorial-s3-instance-profile.html"><span class="doc">instance profiles</span></a>, set the following Spark configurations:</p>
+<ul>
+<li><p>Either <strong>in each source notebook</strong>:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">scala</span>
+<span class="n">spark</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.s3a.stsAssumeRole.stsEndpoint&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;https://sts.&lt;region&gt;.amazonaws.com&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;fs.s3a.endpoint&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;https://s3.&lt;region&gt;.amazonaws.com&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">python</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;fs.s3a.stsAssumeRole.stsEndpoint&quot;</span><span class="p">,</span> <span class="s2">&quot;https://sts.&lt;region&gt;.amazonaws.com&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;fs.s3a.endpoint&quot;</span><span class="p">,</span> <span class="s2">&quot;https://s3.&lt;region&gt;.amazonaws.com&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><p>Or <strong>in the Apache Spark config for the cluster</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">hadoop</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">s3a</span><span class="o">.</span><span class="n">endpoint</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">s3</span><span class="o">.&lt;</span><span class="n">region</span><span class="o">&gt;.</span><span class="n">amazonaws</span><span class="o">.</span><span class="n">com</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">hadoop</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">s3a</span><span class="o">.</span><span class="n">stsAssumeRole</span><span class="o">.</span><span class="n">stsEndpoint</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">sts</span><span class="o">.&lt;</span><span class="n">region</span><span class="o">&gt;.</span><span class="n">amazonaws</span><span class="o">.</span><span class="n">com</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>To set these values for all clusters, configure the values as part of your <a class="reference internal" href="../../../administration-guide/clusters/policies.html"><span class="doc">cluster policy</span></a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>For the S3 service, there are limitations to applying additional regional endpoint configurations at the notebook or cluster level. Notably, access to cross-region S3 access is blocked, even if the global S3 URL is allowed in your egress firewall or proxy. If your Databricks deployment might require cross-region S3 access, it is important that you not apply the Spark configuration at the notebook or cluster level.</p>
+</div>
+</div>
+<div class="section" id="optional-restrict-access-to-s3-buckets">
+<span id="s3-restrict-access"></span><h2>(Optional) Restrict access to S3 buckets<a class="headerlink" href="#optional-restrict-access-to-s3-buckets" title="Permalink to this headline"> </a></h2>
+<p>Most reads from and writes to S3 are self-contained within the compute plane. However, some management operations originate from the control plane, which is managed by Databricks. To limit access to S3 buckets to a specified set of source IP addresses, create an S3 bucket policy. In the bucket policy, include the IP addresses in the <code class="docutils literal notranslate"><span class="pre">aws:SourceIp</span></code> list. If you use a VPC Endpoint, allow access to it by adding it to the policy’s <code class="docutils literal notranslate"><span class="pre">aws:sourceVpce</span></code>.</p>
+<p>For more information about S3 bucket policies, see <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-bucket-policies.html#example-bucket-policies-use-case-3">Limiting access to specific IP addresses</a> in the Amazon S3 documentation. Working <a class="reference internal" href="#example-bucket-policies"><span class="std std-ref">example bucket policies</span></a> are also included in this topic.</p>
+<div class="section" id="requirements-for-bucket-policies">
+<h3>Requirements for bucket policies<a class="headerlink" href="#requirements-for-bucket-policies" title="Permalink to this headline"> </a></h3>
+<p>Your bucket policy must meet these requirements, to ensure that your clusters start correctly and that you can connect to them:</p>
+<ul class="simple">
+<li><p>You must allow access from the <a class="reference internal" href="#required-ips-and-storage-buckets"><span class="std std-ref">control plane NAT IP and VPC IDs for your region</span></a>.</p></li>
+<li><p>You must allow access from the compute plane VPC, by doing one of the following:</p>
+<ul>
+<li><p>(Recommended) Configure a gateway VPC Endpoint in your <a class="reference external" href="/administration-guide/cloud-configurations/aws/customer-managed-vpc.html">Customer-managed VPC</a> and adding it to the <code class="docutils literal notranslate"><span class="pre">aws:sourceVpce</span></code> to the bucket policy, or</p></li>
+<li><p>Add the compute plane NAT IP to the <code class="docutils literal notranslate"><span class="pre">aws:SourceIp</span></code> list.</p></li>
+</ul>
+</li>
+<li><p><strong>When using <a class="reference external" href="https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-s3.html#vpc-endpoints-policies-s3">Endpoint policies for Amazon S3</a></strong>, your policy must include:</p>
+<ul>
+<li><p>Your workspace’s <a class="reference internal" href="../../../administration-guide/account-settings-e2/storage.html"><span class="doc">root storage bucket</span></a>.</p></li>
+<li><p>The required <a class="reference internal" href="#required-ips-and-storage-buckets"><span class="std std-ref">artifact, log, system tables, and shared datasets bucket for your region</span></a>.</p></li>
+</ul>
+</li>
+<li><p><strong>To avoid losing connectivity from within your corporate network</strong>, Databricks recommends always allowing access from at least one known and trusted IP address, such as the public IP of your corporate VPN. This is because Deny conditions apply even within the AWS console.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When deploying a new workspace with S3 bucket policy restrictions, you must allow access to the control plane NAT-IP for a <code class="docutils literal notranslate"><span class="pre">us-west</span></code> region, otherwise the deployment fails. After the workspace is deployed, you can remove the <code class="docutils literal notranslate"><span class="pre">us-west</span></code> info and update the control plane NAT-IP to reflect your region.</p>
+</div>
+</div>
+<div class="section" id="required-ips-and-storage-buckets">
+<h3>Required IPs and storage buckets<a class="headerlink" href="#required-ips-and-storage-buckets" title="Permalink to this headline"> </a></h3>
+<p>For the IP addresses and domains that you need for configuring S3 bucket policies and VPC Endpoint policies to restrict access to your workspace’s S3 buckets, see <a class="reference internal" href="../../../resources/supported-regions.html#s3-bucket-access"><span class="std std-ref">Control plane and storage bucket addresses</span></a>.</p>
+</div>
+<div class="section" id="example-bucket-policies">
+<h3>Example bucket policies<a class="headerlink" href="#example-bucket-policies" title="Permalink to this headline"> </a></h3>
+<p>These examples use placeholder text to indicate where to specify recommended IP addresses and required storage buckets. Review the <a class="reference internal" href="#requirements-for-bucket-policies"><span class="std std-ref">requirements</span></a> to ensure that your clusters start correctly and that you can connect to them.</p>
+<p><strong>Restrict access to the Databricks control plane, compute plane, and trusted IPs:</strong></p>
+<p>This S3 bucket policy uses a Deny condition to selectively allow access from the control plane, NAT gateway, and corporate VPN IP addresses you specify. Replace the placeholder text with values for your environment. You can add any number of IP addresses to the policy. Create one policy per S3 bucket you want to protect.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If you use VPC Endpoints, this policy is not complete. See <a class="reference internal" href="#example-bucket-policy-vpce"><span class="std std-ref">Restrict access to the Databricks control plane, VPC endpoints, and trusted IPs</span></a>.</p>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IPDeny&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3:*&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;arn:aws:s3:::&lt;S3-BUCKET&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;arn:aws:s3:::&lt;S3-BUCKET&gt;/*&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;NotIpAddress&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;aws:SourceIp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;&lt;CONTROL-PLANE-NAT-IP&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;&lt;DATA-PLANE-NAT-IP&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;&lt;CORPORATE-VPN-IP&gt;&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p id="example-bucket-policy-vpce"><strong>Restrict access to the Databricks control plane, VPC endpoints, and trusted IPs:</strong></p>
+<p>If you use a VPC Endpoint to access S3, you must add a second condition to the policy. This condition allows access from your VPC Endpoint by adding it to the <code class="docutils literal notranslate"><span class="pre">aws:sourceVpce</span></code> list.</p>
+<p>This bucket selectively allows access from your VPC Endpoint, and from the control plane and corporate VPN IP addresses you specify.</p>
+<p>When using VPC Endpoints, you can use a VPC Endpoint policy instead of an S3 bucket policy. A VPCE policy must allow access to your root S3 bucket and also to the required <a class="reference internal" href="#required-ips-and-storage-buckets"><span class="std std-ref">artifact, log, and shared datasets bucket for your region</span></a>. You can <a class="reference external" href="https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-access.html#vpc-endpoint-policies">learn about VPC Endpoint policies</a> in the AWS documentation.</p>
+<p>Replace the placeholder text with values for your environment.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IPDeny&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3:*&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;arn:aws:s3:::&lt;S3-BUCKET&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;arn:aws:s3:::&lt;S3-BUCKET&gt;/*&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;NotIpAddressIfExists&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;aws:SourceIp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;&lt;CONTROL-PLANE-NAT-IP&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;&lt;CORPORATE-VPN-IP&gt;&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;StringNotEqualsIfExists&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;aws:sourceVpce&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;VPCE-ID&gt;&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p></p>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

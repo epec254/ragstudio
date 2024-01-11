@@ -1,0 +1,705 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn best practices for setting up data governance and data isolation in Databricks using Unity Catalog and Delta Sharing." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Unity Catalog best practices">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Unity Catalog best practices &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/data-governance/unity-catalog/best-practices.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/data-governance/unity-catalog/best-practices.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/data-governance/unity-catalog/best-practices.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/data-governance/unity-catalog/best-practices.html" class="notranslate">English</option>
+    <option value="../../../ja/data-governance/unity-catalog/best-practices.html" class="notranslate">日本語</option>
+    <option value="../../../pt/data-governance/unity-catalog/best-practices.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Unity Catalog best practices</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="unity-catalog-best-practices">
+<span id="uc-best-practices"></span><h1>Unity Catalog best practices<a class="headerlink" href="#unity-catalog-best-practices" title="Permalink to this headline"> </a></h1>
+<p>This document provides recommendations for using Unity Catalog and Delta Sharing to meet your data governance needs.</p>
+<p>Unity Catalog is a fine-grained governance solution for data and AI on the Databricks platform. It helps simplify security and governance of your data by providing a central place to administer and audit data access. Delta Sharing is a secure data sharing platform that lets you share data in Databricks with users outside your organization. It uses Unity Catalog to manage and audit sharing behavior.</p>
+<div class="section" id="data-governance-and-data-isolation-building-blocks">
+<span id="building-blocks"></span><h2>Data governance and data isolation building blocks<a class="headerlink" href="#data-governance-and-data-isolation-building-blocks" title="Permalink to this headline"> </a></h2>
+<p>To develop a data governance model and a data isolation plan that works for your organization, it helps to understand the primary building blocks that are available to you when you create your data governance solution in Databricks.</p>
+<p>The following diagram illustrates the primary data hierarchy in Unity Catalog (securable objects that are not, strictly speaking, data objects are grayed out).</p>
+<div class="figure align-default">
+<img alt="Unity Catalog object model diagram" src="../../_images/object-model.png" />
+</div>
+<p>The objects in that hierarchy include the following:</p>
+<ul>
+<li><p><strong>Metastore:</strong> A metastore is the top-level container of objects in Unity Catalog. Metastores live at the account level and function as the top of the pyramid in the Databricks data governance model.</p>
+<p>Metastores manage data assets (tables, views, and volumes) and the permissions that govern access to them. Databricks account admins can create one metastore for each region in which they operate, and assign them to multiple Databricks workspaces in the same region. Metastore admins can manage all objects in the metastore. They don’t have direct access to read and write to tables registered in the metastore, but they do have indirect access through their ability to transfer data object ownership.</p>
+<p>Physical storage for any given metastore is, by default, isolated from storage for any other metastore in your account.</p>
+<p>Metastores provide regional isolation but are not intended as units of data isolation. Data isolation should begin at the catalog level.</p>
+</li>
+<li><p><strong>Catalog:</strong> Catalogs are the highest level in the data hierarchy (catalog &gt; schema &gt; table/view/volume) managed by the Unity Catalog metastore. They are intended as the primary unit of data isolation in a typical Databricks data governance model.</p>
+<p>Catalogs represent a logical grouping of schemas, usually bounded by data access requirements. Catalogs often mirror organizational units or software development lifecycle scopes. You may choose, for example, to have a catalog for production data and a catalog for development data, or a catalog for non-customer data and one for sensitive customer data.</p>
+<p>Catalogs can be stored at the metastore level, or you can configure a catalog to be stored separately from the rest of the parent metastore. If your workspace was enabled for Unity Catalog automatically, there is no metastore-level storage, and you must specify a storage location when you create a catalog.</p>
+<p>If the catalog is the primary unit of data isolation in the Databricks data governance model, the <em>workspace</em> is the primary environment for working with data assets. Metastore admins and catalog owners can manage access to catalogs independently of workspaces, or they can bind catalogs to specific workspaces to ensure that certain kinds of data are processed only in those workspaces. You might want separate production and development workspaces, for example, or a separate workspace for processing personal data.</p>
+<p>By default, access permissions for a securable object are inherited by the children of that object, with catalogs at the top of the hierarchy. This makes it easier to set up default access rules for your data and to specify different rules at each level of the hierarchy only where you need them.</p>
+</li>
+<li><p><strong>Schema (Database):</strong> Schemas, also known as databases, are logical groupings of tabular data (tables and views), non-tabular data (volumes), functions, and machine learning models. They give you a way to organize and control access to data that is more granular than catalogs. Typically they represent a single use case, project, or team sandbox.</p>
+<p>Schemas can be stored in the same physical storage as the parent catalog, or you can configure a schema to be stored separately from the rest of the parent catalog.</p>
+<p>Metastore admins, parent catalog owners, and schema owners can manage access to schemas.</p>
+</li>
+<li><p><strong>Tables:</strong> Tables reside in the third layer of Unity Catalog’s three-level namespace. They contains rows of data.</p>
+<p>Unity Catalog lets you create <em>managed tables</em> and <em>external tables</em>.</p>
+<p>For managed tables, Unity Catalog fully manages the lifecycle and file layout. By default, managed tables are stored in the root storage location that you configure when you create a metastore. You can choose instead to isolate storage for managed tables at the catalog or schema levels.</p>
+<p>External tables are tables whose data lifecycle and file layout are managed using your cloud provider and other data platforms, not Unity Catalog. Typically you use external tables to register large amounts of your existing data, or if you also require write access to the data using tools outside of Databricks clusters and Databricks SQL warehouses. Once an external table is registered in a Unity Catalog metastore, you can manage and audit Databricks access to it just like you can with managed tables.</p>
+<p>Parent catalog owners and schema owners can manage access to tables, as can metastore admins (indirectly).</p>
+</li>
+<li><p><strong>Views:</strong> A view is a read-only object derived from one or more tables and views in a metastore.</p></li>
+<li><p><strong>Rows and columns:</strong> Row and column-level access, along with data masking, is granted using either dynamic views or row filters and column masks. Dynamic views are read-only.</p></li>
+<li><p><strong>Volumes:</strong> Volumes reside in the third layer of Unity Catalog’s three-level namespace. They manage non-tabular data. You can use volumes to store, organize, and access files in any format, including structured, semi-structured, and unstructured data. Files in volumes cannot be registered as tables.</p></li>
+</ul>
+<p>Models and functions are securable objects in Unity Catalog, but are not data objects like tables and volumes, and are therefore not covered in this article’s discussion of data isolation and governance. See <a class="reference internal" href="../../mlflow/models-in-uc.html"><span class="doc">Models in Unity Catalog</span></a> and <a class="reference internal" href="../../udf/unity-catalog.html"><span class="doc">User-defined functions (UDFs) in Unity Catalog</span></a>.</p>
+</div>
+<div class="section" id="plan-your-data-isolation-model">
+<h2>Plan your data isolation model<a class="headerlink" href="#plan-your-data-isolation-model" title="Permalink to this headline"> </a></h2>
+<p>When an organization uses a data platform like Databricks, there is often a need to have data isolation boundaries between environments (such as development and production) or between organizational operating units.</p>
+<p>Isolation standards might vary for your organization, but typically they include the following expectations:</p>
+<ul class="simple">
+<li><p>Users can only gain access to data based on specified access rules.</p></li>
+<li><p>Data can be managed only by designated people or teams.</p></li>
+<li><p>Data is physically separated in storage.</p></li>
+<li><p>Data can be accessed only in designated environments.</p></li>
+</ul>
+<p>The need for data isolation can lead to siloed environments that can make both data governance and collaboration unnecessarily difficult. Databricks solves this problem using Unity Catalog, which provides a number of data isolation options while maintaining a unified data governance platform. This section discusses the data isolation options available in Databricks and how to use them, whether you prefer a centralized data governance model or a distributed one.</p>
+<div class="section" id="users-can-only-gain-access-to-data-based-on-specified-access-rules">
+<h3>Users can only gain access to data based on specified access rules<a class="headerlink" href="#users-can-only-gain-access-to-data-based-on-specified-access-rules" title="Permalink to this headline"> </a></h3>
+<p>Most organizations have strict requirements around data access based on internal or regulatory requirements. Typical examples of data that must be kept secure include employee salary information or credit card payment information. Access to this type of information is typically tightly controlled and audited periodically. Unity Catalog provides you with granular control over data assets within the catalog to meet these industry standards. With the controls that Unity Catalog provides, users can see and query only the data that they are entitled to see and query.</p>
+</div>
+<div class="section" id="data-can-be-managed-only-by-designated-people-or-teams">
+<h3>Data can be managed only by designated people or teams<a class="headerlink" href="#data-can-be-managed-only-by-designated-people-or-teams" title="Permalink to this headline"> </a></h3>
+<p>Unity Catalog gives you the ability to choose between centralized and distributed governance models.</p>
+<p>In the centralized governance model, your governance administrators are owners of the metastore and can take ownership of any object and grant and revoke permissions.</p>
+<p>In a distributed governance model, the catalog or a set of catalogs is the data domain. The owner of that catalog can create and own all assets and manage governance within that domain. The owners of any given domain can operate independently of the owners of other domains.</p>
+<p>Regardless of whether you choose the metastore or catalogs as your data domain, Databricks strongly recommends that you set a group as the metastore admin or catalog owner.</p>
+<div class="figure align-default">
+<img alt="Unity Catalog ownership and access" src="../../_images/ownership.png" />
+</div>
+</div>
+<div class="section" id="data-is-physically-separated-in-storage">
+<span id="physically-separate"></span><h3>Data is physically separated in storage<a class="headerlink" href="#data-is-physically-separated-in-storage" title="Permalink to this headline"> </a></h3>
+<p>An organization can require that data of certain types be stored within specific accounts or buckets in their cloud tenant.</p>
+<p>Unity Catalog gives the ability to configure storage locations at the metastore, catalog, or schema level to satisfy such requirements.</p>
+<p>For example, let’s say your organization has a company compliance policy that requires production data relating to human resources to reside in the bucket s3://mycompany-hr-prod. In Unity Catalog, you can achieve this requirement by setting a location on a catalog level, creating a catalog called, for example <code class="docutils literal notranslate"><span class="pre">hr_prod</span></code>, and assigning the location s3://mycompany-hr-prod/unity-catalog to it. This means that managed tables or volumes created in the <code class="docutils literal notranslate"><span class="pre">hr_prod</span></code> catalog (for example, using <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span> <span class="pre">hr_prod.default.table</span> <span class="pre">…</span></code>) store their data in s3://mycompany-hr-prod/unity-catalog. Optionally, you can choose to provide schema-level locations to organize data within the <code class="docutils literal notranslate"><span class="pre">hr_prod</span> <span class="pre">catalog</span></code> at a more granular level.</p>
+<p>If such a storage isolation is not required, you can set a storage location at the metastore level. The result is that this location serves as a default location for storing managed tables and volumes across catalogs and schemas in the metastore.</p>
+<p>The system evaluates the hierarchy of storage locations from schema to catalog to metastore.</p>
+<p>For example, if a table <code class="docutils literal notranslate"><span class="pre">myCatalog.mySchema.myTable</span></code> is created in <code class="docutils literal notranslate"><span class="pre">my-region-metastore</span></code>, the table storage location is determined according to the following rule:</p>
+<ol class="arabic simple">
+<li><p>If a location has been provided for <code class="docutils literal notranslate"><span class="pre">mySchema</span></code>, it will be stored there.</p></li>
+<li><p>If not, and a location has been provided on <code class="docutils literal notranslate"><span class="pre">myCatalog</span></code>, it will be stored there.</p></li>
+<li><p>Finally, if no location has been provided on <code class="docutils literal notranslate"><span class="pre">myCatalog</span></code>, it will be stored in the location associated with the <code class="docutils literal notranslate"><span class="pre">my-region-metastore</span></code>.</p></li>
+</ol>
+<div class="figure align-default">
+<img alt="Unity Catalog storage hierarchy" src="../../_images/managed-storage.png" />
+</div>
+</div>
+<div class="section" id="data-can-be-accessed-only-in-designated-environments">
+<h3>Data can be accessed only in designated environments<a class="headerlink" href="#data-can-be-accessed-only-in-designated-environments" title="Permalink to this headline"> </a></h3>
+<p>Organizational and compliance requirements often specify that you keep certain data, like personal data, accessible only in certain environments. You may also want to keep production data isolated from development environments or ensure that certain data sets and domains are never joined together.</p>
+<p>In Databricks, the workspace is the primary data processing environment, and catalogs are the primary data domain. Unity Catalog lets metastore admins and catalog owners assign, or “bind,” catalogs to workspaces. These environment-aware bindings give you the ability to ensure that only certain catalogs are available within a workspace, regardless of the specific privileges on data objects granted to a user.</p>
+<p>Now let’s take a deeper look at the process of setting up Unity Catalog to meet your needs.</p>
+</div>
+</div>
+<div class="section" id="configure-a-unity-catalog-metastore">
+<span id="configure-a-uc-metastore"></span><h2>Configure a Unity Catalog metastore<a class="headerlink" href="#configure-a-unity-catalog-metastore" title="Permalink to this headline"> </a></h2>
+<p>A metastore is the top-level container of objects in Unity Catalog. Metastores manage data assets (tables, views, and volumes) as well as other securable objects managed by Unity Catalog. For the complete list of securable objects, see <a class="reference internal" href="manage-privileges/privileges.html#securable-objects"><span class="std std-ref">Securable objects in Unity Catalog</span></a>.</p>
+<p>This section provides tips for creating and configuring metastores. If your workspace was automatically enabled for Unity Catalog, you do not need to create a metastore, but the information presented in this section might still be useful. See <a class="reference internal" href="get-started.html#enablement"><span class="std std-ref">Automatic enablement of Unity Catalog</span></a>.</p>
+<p>Tips for configuring metastores:</p>
+<ul>
+<li><p>You should set up one metastore for each region in which you have Databricks workspaces.</p>
+<p>Every workspace attached to a single regional metastore has access to the data managed by the metastore. If you want to share data between metastores, use <a class="reference internal" href="#delta-sharing"><span class="std std-ref">Delta Sharing</span></a>.</p>
+</li>
+<li><p>Each metastore can be configured with a managed storage location (also called root storage) in your cloud tenant that can be used to store managed tables and managed volumes.</p>
+<p>If you choose to create a metastore-level managed location, you must ensure that no users have direct access to it (that is, through the cloud account that contains it). Giving access to this storage location could allow a user to bypass access controls in a Unity Catalog metastore and disrupt auditability. For these reasons, your metastore managed storage should be a dedicated bucket. You should not reuse a bucket that is also your DBFS root file system or has previously been a DBFS root file system.</p>
+<p>You also have the option of defining managed storage at the catalog and schema levels, overriding the metastore’s root storage location. In most scenarios, Databricks recommends storing managed data at the catalog level.</p>
+</li>
+<li><p>You should understand the privileges of workspace admins in workspaces that are enabled for Unity Catalog, and review your existing workspace admin assignments.</p>
+<p>Workspace admins can manage operations for their workspace including adding users and service principals, creating clusters, and delegating other users to be workspace admins. If your workspace was enabled for Unity Catalog automatically, workspace admins have the ability to create catalogs and many other Unity Catalog objects by default. See <a class="reference internal" href="manage-privileges/admin-privileges.html#workspace-admins-auto"><span class="std std-ref">Workspace admin privileges when workspaces are enabled for Unity Catalog automatically</span></a></p>
+<p>Workspace admins also have the ability to perform workspace management tasks such as managing job ownership and viewing notebooks, which may give indirect access to data registered in Unity Catalog. Workspace admin is a privileged role that you should distribute carefully.</p>
+<p>If you use workspaces to isolate user data access, you might want to use workspace-catalog bindings. Workspace-catalog bindings enable you to limit catalog access by workspace boundaries. For example, you can ensure that workspace admins and users can only access production data in <code class="docutils literal notranslate"><span class="pre">prod_catalog</span></code> from a production workspace environment, <code class="docutils literal notranslate"><span class="pre">prod_workspace</span></code>. The default is to share the catalog with all workspaces attached to the current metastore. See <a class="reference internal" href="create-catalogs.html#catalog-binding"><span class="std std-ref">(Optional) Assign a catalog to specific workspaces</span></a>.</p>
+<p>If your workspace was enabled for Unity Catalog automatically, the pre-provisioned workspace catalog is bound to your workspace by default.</p>
+</li>
+</ul>
+<p>See <a class="reference internal" href="create-metastore.html"><span class="doc">Create a Unity Catalog metastore</span></a>.</p>
+</div>
+<div class="section" id="configure-external-locations-and-storage-credentials">
+<h2>Configure external locations and storage credentials<a class="headerlink" href="#configure-external-locations-and-storage-credentials" title="Permalink to this headline"> </a></h2>
+<p><em>External locations</em> allow Unity Catalog to read and write data on your cloud tenant on behalf of users. External locations are defined as a path to cloud storage, combined with a <em>storage credential</em> that can be used to access that location.</p>
+<p>You can use external locations to register external tables and external volumes in Unity Catalog. The content of these entities is physically located on a sub-path in an external location that is referenced when a user creates the volume or the table.</p>
+<p>A <em>storage credential</em> encapsulates a long-term cloud credential that provides access to cloud storage. For example, in AWS you can configure an IAM role to access S3 buckets.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>External locations, by combining storage credentials and storage paths, provide strong control and auditability of storage access. To prevent users from bypassing the access control provided by Unity Catalog, you should ensure that you limit the number of users with direct access to any bucket that is being used as an external location. For the same reason, you should not mount storage accounts to DBFS if they are also being used as external locations. Databricks recommends that you migrate mounts on cloud storage locations to external locations in Unity Catalog using <a class="reference internal" href="../../catalog-explorer/index.html"><span class="doc">Catalog Explorer</span></a>.</p>
+</div>
+<p>For a list of best practices for managing external locations, see <a class="reference internal" href="#manage-external"><span class="std std-ref">Manage external locations, external tables, and external volumes</span></a>. See also <a class="reference internal" href="../../connect/unity-catalog/external-locations.html"><span class="doc">Create an external location</span></a>.</p>
+</div>
+<div class="section" id="organize-your-data">
+<span id="organize-data"></span><h2>Organize your data<a class="headerlink" href="#organize-your-data" title="Permalink to this headline"> </a></h2>
+<p>Databricks recommends using catalogs to provide segregation across your organization’s information architecture. Often this means that catalogs correspond to a software development environment scope, team, or business unit. If you use workspaces as a data isolation tool—for example, using different workspaces for production and development environments, or a specific workspace for working with highly sensitive data, you can also bind a catalog to specific workspaces. This ensures that all processing of specified data is handled in the appropriate workspace. See <a class="reference internal" href="create-catalogs.html#catalog-binding"><span class="std std-ref">(Optional) Assign a catalog to specific workspaces</span></a>.</p>
+<div class="figure align-default">
+<img alt="Unity Catalog catalogs" src="../../_images/uc-catalogs.png" />
+</div>
+<p>A schema (also called a database) is the second layer of Unity Catalog’s three-level namespace and organizes tables, views, and volumes. You can use schemas to organize and define permissions for your assets.</p>
+<p>Objects governed by Unity Catalog can be <em>managed</em> or <em>external</em>:</p>
+<ul>
+<li><p><strong>Managed objects</strong> are the default way to create data objects in Unity Catalog.</p>
+<p>Unity Catalog manages the lifecycle and file layout for these securables. You should not use tools outside of Databricks to manipulate files in managed tables or volumes directly.</p>
+<p>Managed tables and volumes are stored in <em>managed storage</em>, which can exist at the metastore, catalog, or schema level for any given table or volume. See <a class="reference internal" href="#physically-separate"><span class="std std-ref">Data is physically separated in storage</span></a>.</p>
+<p>Managed tables and volumes are a convenient solution when you want to provision a governed location for your content without the overhead of creating and managing external locations and storage credentials.</p>
+<p>Managed tables always use the <a class="reference internal" href="../../delta/index.html"><span class="doc">Delta</span></a> table format.</p>
+</li>
+<li><p><strong>External objects</strong> are securables whose data lifecycle and file layout are not managed by Unity Catalog.</p>
+<p>External volumes and tables are registered on an external location to provide access to large numbers of files that already exist in cloud storage without requiring data copy activity. Use external objects when you have files that are produced by other systems and want them staged for access from within Databricks, or when tools outside of Databricks require direct access to these files.</p>
+<p>External tables support Delta Lake and many other data formats, including Parquet, JSON, and CSV. Both managed and external volumes can be used to access and store files of arbitrary formats: data can be structured, semi-structured, or unstructured.</p>
+</li>
+</ul>
+<p>For more information about creating tables and volumes, see <a class="reference internal" href="create-tables.html"><span class="doc">Create tables</span></a> and <a class="reference internal" href="../../connect/unity-catalog/volumes.html"><span class="doc">Create and work with volumes</span></a>.</p>
+</div>
+<div class="section" id="manage-external-locations-external-tables-and-external-volumes">
+<span id="manage-external"></span><h2>Manage external locations, external tables, and external volumes<a class="headerlink" href="#manage-external-locations-external-tables-and-external-volumes" title="Permalink to this headline"> </a></h2>
+<p>The diagram below represents the filesystem hierarchy of a single cloud storage bucket, with four external locations that share one storage credential.</p>
+<div class="figure align-default">
+<img alt="External locations" src="../../_images/external-locations.png" />
+</div>
+<p>Once you have external locations configured in Unity Catalog, you can create external tables and volumes on directories inside the external locations. You can then use Unity Catalog to manage user and group access to these tables and volumes. This allows you to provide specific users or groups access to specific directories and files in the cloud storage bucket.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When you define a volume, you can no longer access any paths that overlap the volume location using external locations in the Catalog Explorer or cloud URIs.</p>
+</div>
+<div class="section" id="recommendations-for-using-external-locations">
+<h3>Recommendations for using external locations<a class="headerlink" href="#recommendations-for-using-external-locations" title="Permalink to this headline"> </a></h3>
+<p>Recommendations for granting permissions on external locations:</p>
+<ul>
+<li><p>Grant the ability to create external locations only to an administrator who is tasked with setting up connections between Unity Catalog and cloud storage, or to trusted data engineers.</p>
+<p>External locations provide access from within Unity Catalog to a broadly encompassing location in cloud storage—for example, an entire bucket or container (s3://mybucket) or a broad subpath (s3://mybucket/alotofdata). The intention is that a cloud administrator can be involved in setting up a few external locations and then delegate the responsibility of managing those locations to a Databricks administrator in your organization. The Databricks administrator can then further organize the external location into areas with more granular permissions by registering external volumes or external tables at specific prefixes under the external location.</p>
+<p>Because external locations are so encompassing, Databricks recommends giving the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">LOCATION</span></code> permission only to an administrator who is tasked with setting up connections between Unity Catalog and cloud storage, or to trusted data engineers. To provide other users with more granular access, Databricks recommends registering external tables or volumes on top of external locations and granting users access to data using volumes or tables. Since tables and volumes are children of a catalog and schema, catalog or schema administrators have the ultimate control over access permissions.</p>
+</li>
+<li><p>Don’t grant general <code class="docutils literal notranslate"><span class="pre">READ</span> <span class="pre">FILES</span></code> or <code class="docutils literal notranslate"><span class="pre">WRITE</span> <span class="pre">FILES</span></code> permissions on external locations to end users.</p>
+<p>With the availability of volumes, users shouldn’t use external locations for anything but creating tables, volumes, or managed locations. They should not use external locations for path-based access for data science or other non-tabular data use cases.</p>
+<p>Volumes provide support for working with files using SQL commands, dbutils, Spark APIs, REST APIs, Terraform, and a user interface for browsing, uploading, and downloading files. Moreover, volumes offer a FUSE mount that is accessible on the local file system under <code class="docutils literal notranslate"><span class="pre">/Volumes/&lt;catalog_name&gt;/&lt;schema_name&gt;/&lt;volume_name&gt;/</span></code>. The FUSE mount allows data scientists and ML engineers to access files as if they were in a local filesystem, as required by many machine learning or operating system libraries.</p>
+<p>If you must grant direct access to files in an external location (for exploring files in cloud storage before a user creates an external table or volume, for example), you can grant <code class="docutils literal notranslate"><span class="pre">READ</span> <span class="pre">FILES</span></code>. Use cases for granting <code class="docutils literal notranslate"><span class="pre">WRITE</span> <span class="pre">FILES</span></code> are rare.</p>
+</li>
+</ul>
+<p>You should use external locations to do the following:</p>
+<ul class="simple">
+<li><p>Register external tables and volumes using the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">VOLUME</span></code> or <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> commands.</p></li>
+<li><p>Explore existing files in cloud storage before you create an external table or volume at a specific prefix. The <code class="docutils literal notranslate"><span class="pre">READ</span> <span class="pre">FILES</span></code> privilege is a precondition.</p></li>
+<li><p>Register a location as managed storage for catalogs and schemas instead of the metastore root bucket. The <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">MANAGED</span> <span class="pre">STORAGE</span></code> privilege is a precondition.</p></li>
+</ul>
+<p>More recommendations for using external locations:</p>
+<ul>
+<li><p>Avoid path overlap conflicts: never create external volumes or tables at the root of an external location.</p>
+<p>If you do create external volumes or tables at the external location root, you can’t create any additional external volumes or tables on the external location. Instead, create external volumes or tables on a sub-directory inside the external location.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="recommendations-for-using-external-volumes">
+<h3>Recommendations for using external volumes<a class="headerlink" href="#recommendations-for-using-external-volumes" title="Permalink to this headline"> </a></h3>
+<p>You should use external volumes to do the following:</p>
+<ul class="simple">
+<li><p>Register landing areas for raw data produced by external systems to support its processing in the early stages of ETL pipelines and other data engineering activities.</p></li>
+<li><p>Register staging locations for ingestion, for example, using Auto Loader, <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code>, or CTAS (<code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span> <span class="pre">AS</span></code>) statements.</p></li>
+<li><p>Provide file storage locations for data scientists, data analysts, and machine learning engineers to use as parts of their exploratory data analysis and other data science tasks, when managed volumes are not an option.</p></li>
+<li><p>Give Databricks users access to arbitrary files produced and deposited in cloud storage by other systems, for example, large collections of unstructured data (such as image, audio, video, and PDF files) captured by surveillance systems or IoT devices, or library files (JARs and Python wheels) exported from local dependency management systems or CI/CD pipelines.</p></li>
+<li><p>Store operational data, such as logging or checkpointing files, when managed volumes are not an option.</p></li>
+</ul>
+<p>More recommendations for using external volumes:</p>
+<ul class="simple">
+<li><p>Databricks recommends that you create external volumes from one external location within one schema.</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For ingestion use cases in which the data is copied to another location—for example using Auto Loader or <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code>—use external volumes. Use external tables when you want to query data in place as a table, with no copy involved.</p>
+</div>
+</div>
+<div class="section" id="recommendations-for-using-external-tables">
+<h3>Recommendations for using external tables<a class="headerlink" href="#recommendations-for-using-external-tables" title="Permalink to this headline"> </a></h3>
+<p>You should use external tables to support normal querying patterns on top of data stored in cloud storage, when creating managed tables is not an option.</p>
+<p>More recommendations for using external tables:</p>
+<ul class="simple">
+<li><p>Databricks recommends that you create external tables from one external location within one schema.</p></li>
+<li><p>Databricks strongly recommends against registering a table as an external table in more than one metastore due to the risk of consistency issues. For example, a change to the schema in one metastore will not register in the second metastore. Use Delta Sharing for sharing data between metastores. See <a class="reference internal" href="#delta-sharing"><span class="std std-ref">Share data securely using Delta Sharing</span></a>.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="configure-access-control">
+<h2>Configure access control<a class="headerlink" href="#configure-access-control" title="Permalink to this headline"> </a></h2>
+<p>Each securable object in Unity Catalog has an owner. The principal that creates an object becomes its initial owner. An object’s owner has all privileges on the object, such as SELECT and MODIFY on a table, as well as the permission to grant privileges on the securable object to other principals. Only owners of a securable object have the permission to grant privileges on that object to other principals. Therefore, it is best practice to configure ownership on all objects to the <strong>group</strong> responsible for administration of grants on the object. Both the owner and metastore admins can transfer ownership of a securable object to a group. Additionally, if the object is contained within a catalog (like a table or view), the catalog and schema owner can change the ownership of the object.</p>
+<p>Securable objects in Unity Catalog are hierarchical and privileges are inherited downward. This means that granting a privilege on a catalog or schema automatically grants the privilege to all current and future objects within the catalog or schema. For more information, see <a class="reference internal" href="manage-privileges/privileges.html#inheritance"><span class="std std-ref">Inheritance model</span></a>.</p>
+<p>In order to read data from a table or view a user must have the following privileges:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SELECT</span></code> on the table or view</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> on the schema that owns the table</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> on the catalog that owns the schema</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> enables the grantee to traverse the catalog in order to access its child objects and <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> enables the grantee to traverse the schema in order to access its child objects. For example, to select data from a table, users need to have the <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> privilege on that table and the <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> privilege on its parent catalog, along with the <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> privilege on its parent schema. Therefore, you can use this privilege to restrict access to sections of your data namespace to specific groups. A common scenario is to set up a schema per team where only that team has <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> and <code class="docutils literal notranslate"><span class="pre">CREATE</span></code> on the schema. This means that any tables produced by team members can only be shared within the team.</p>
+<p>You can secure access to a table using the following SQL syntax:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">GRANT</span><span class="w"> </span><span class="n">USE</span><span class="w"> </span><span class="k">CATALOG</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">CATALOG</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">catalog_name</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">group_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="n">USE</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">catalog_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="k">schema_name</span><span class="w"> </span><span class="o">&gt;</span>
+<span class="k">TO</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">group_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">GRANT</span>
+<span class="k">SELECT</span>
+<span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">catalog_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="k">schema_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">TO</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">group_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>You can secure access to columns using a dynamic view in a secondary schema as shown in the following SQL syntax:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">catalog_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="k">schema_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="n">view_name</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="k">as</span>
+<span class="k">SELECT</span>
+<span class="w">  </span><span class="n">id</span><span class="p">,</span>
+<span class="w">  </span><span class="k">CASE</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="n">is_account_group_member</span><span class="p">(</span><span class="o">&lt;</span><span class="w"> </span><span class="n">group_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="k">ELSE</span><span class="w"> </span><span class="s1">&#39;REDACTED&#39;</span><span class="w"> </span><span class="k">END</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">email</span><span class="p">,</span>
+<span class="w">  </span><span class="n">country</span><span class="p">,</span>
+<span class="w">  </span><span class="n">product</span><span class="p">,</span>
+<span class="w">  </span><span class="n">total</span>
+<span class="k">FROM</span>
+<span class="w">  </span><span class="o">&lt;</span><span class="w"> </span><span class="k">catalog_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="k">schema_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="n">USE</span><span class="w"> </span><span class="k">CATALOG</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">CATALOG</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">catalog_name</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">group_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="n">USE</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">catalog_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="k">schema_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="n">view_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">TO</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">group_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">GRANT</span>
+<span class="k">SELECT</span>
+<span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">catalog_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="k">schema_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="n">view_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">TO</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">group_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>You can secure access to rows using a dynamic view in a secondary schema as shown in the following SQL syntax:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">catalog_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="k">schema_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="n">view_name</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="k">as</span>
+<span class="k">SELECT</span>
+<span class="w">  </span><span class="o">*</span>
+<span class="k">FROM</span>
+<span class="w">  </span><span class="o">&lt;</span><span class="w"> </span><span class="k">catalog_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="k">schema_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">&gt;</span>
+<span class="k">WHERE</span>
+<span class="w">  </span><span class="k">CASE</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="n">is_account_group_member</span><span class="p">(</span><span class="n">managers</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="k">TRUE</span><span class="w"> </span><span class="k">ELSE</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">1000000</span><span class="w"> </span><span class="k">END</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="n">USE</span><span class="w"> </span><span class="k">CATALOG</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">CATALOG</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">catalog_name</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">group_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="n">USE</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">catalog_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="k">schema_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">TO</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">group_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">GRANT</span>
+<span class="k">SELECT</span>
+<span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">catalog_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="k">schema_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">TO</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">group_name</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>You can also grant users secure access to tables using row filters and columns masks. For more information, see <a class="reference internal" href="row-and-column-filters.html"><span class="doc">Filter sensitive table data using row filters and column masks</span></a>.</p>
+<p>For more information on all privileges in Unity Catalog, see <a class="reference internal" href="manage-privileges/index.html"><span class="doc">Manage privileges in Unity Catalog</span></a>.</p>
+</div>
+<div class="section" id="manage-cluster-configurations">
+<h2>Manage cluster configurations<a class="headerlink" href="#manage-cluster-configurations" title="Permalink to this headline"> </a></h2>
+<p>Databricks recommends using cluster policies to limit the ability to configure clusters based on a set of rules. Cluster policies let you restrict access to only create clusters which are Unity Catalog-enabled. Using cluster policies reduces available choices, which will greatly simplify the cluster creation process for users and ensure that they are able to access data seamlessly. Cluster policies also enable you to control cost by limiting per cluster maximum cost.</p>
+<p>To ensure the integrity of access controls and enforce strong isolation guarantees, Unity Catalog imposes security requirements on compute resources. For this reason, Unity Catalog introduces the concept of a cluster’s access mode. Unity Catalog is secure by default; if a cluster is not configured with an appropriate access mode, the cluster can’t access data in Unity Catalog. See <a class="reference internal" href="index.html#cluster-security-mode"><span class="std std-ref">Supported compute and cluster access modes for Unity Catalog</span></a>.</p>
+<p>Databricks recommends using the shared access mode when sharing a cluster and the Single User access mode for automated jobs and machine learning workloads.</p>
+<p>The JSON below provides a policy definition for a cluster with the shared access mode:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;spark_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;regex&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1[0-1]\\.[0-9]*\\.x-scala.*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;defaultValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.4.x-scala2.12&quot;</span>
+<span class="p">},</span>
+<span class="nt">&quot;access_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fixed&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USER_ISOLATION&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;hidden&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The JSON below provides a policy definition for an automated job cluster with the Single User access mode:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;spark_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;regex&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1[0-1]\\.[0-9].*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;defaultValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.4.x-scala2.12&quot;</span>
+<span class="p">},</span>
+<span class="nt">&quot;access_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fixed&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SINGLE_USER&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;hidden&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">},</span>
+<span class="nt">&quot;single_user_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;regex&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;hidden&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="audit-access">
+<h2>Audit access<a class="headerlink" href="#audit-access" title="Permalink to this headline"> </a></h2>
+<p>A complete data governance solution requires auditing access to data and providing alerting and monitoring capabilities. Unity Catalog captures an audit log of actions performed against the metastore and these logs are delivered as part of Databricks audit logs.</p>
+<p>You can access your account’s audit logs using <a class="reference internal" href="../../administration-guide/system-tables/index.html"><span class="doc">system tables</span></a>. For more information on the audit log system table, see <a class="reference internal" href="../../administration-guide/system-tables/audit-logs.html"><span class="doc">Audit log system table reference</span></a>.</p>
+<p>See <a class="reference external" href="https://www.databricks.com/blog/2022/05/02/monitoring-your-databricks-lakehouse-platform-with-audit-logs.html">Monitoring Your Databricks Data Intelligence Platform with Audit Logs</a> for details on how to get complete visibility into critical events relating to your Databricks Data Intelligence Platform.</p>
+</div>
+<div class="section" id="share-data-securely-using-delta-sharing">
+<span id="share-data-securely-using-ds"></span><span id="delta-sharing"></span><h2>Share data securely using Delta Sharing<a class="headerlink" href="#share-data-securely-using-delta-sharing" title="Permalink to this headline"> </a></h2>
+<p><a class="reference internal" href="../../data-sharing/index.html"><span class="doc">Delta Sharing</span></a> is an open protocol developed by Databricks for secure data sharing with other organizations or other departments within your organization, regardless of which computing platforms they use. When Delta Sharing is enabled on a metastore, Unity Catalog runs a Delta Sharing server.</p>
+<p>To share data between metastores, you can leverage <a class="reference internal" href="../../data-sharing/index.html#d-to-d"><span class="std std-ref">Databricks-to-Databricks Delta Sharing</span></a>. This allows you to register tables from metastores in different regions. These tables will appear as read-only objects in the consuming metastore. These tables can be granted access like any other object within Unity Catalog.</p>
+<p>When you use Databricks-to-Databricks Delta Sharing to share between metastores, keep in mind that access control is limited to one metastore. If a securable object, like a table, has grants on it and that resource is shared to an intra-account metastore, then the grants from the source will not apply to the destination share. The destination share will have to set its own grants.</p>
+</div>
+<div class="section" id="learn-more">
+<h2>Learn more<a class="headerlink" href="#learn-more" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="get-started.html"><span class="doc">Set up and manage Unity Catalog</span></a></p></li>
+<li><p><a class="reference internal" href="../../data-sharing/index.html"><span class="doc">Share data securely using Delta Sharing</span></a></p></li>
+<li><p><a class="reference internal" href="migrate.html"><span class="doc">Upgrade tables and views to Unity Catalog</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

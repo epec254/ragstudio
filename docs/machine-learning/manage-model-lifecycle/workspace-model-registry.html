@@ -1,0 +1,964 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to manage the lifecycle of MLflow Models in the Workspace Model Registry." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Manage model lifecycle using the Workspace Model Registry">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Manage model lifecycle using the Workspace Model Registry &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/machine-learning/manage-model-lifecycle/workspace-model-registry.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/machine-learning/manage-model-lifecycle/workspace-model-registry.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/machine-learning/manage-model-lifecycle/workspace-model-registry.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/machine-learning/manage-model-lifecycle/workspace-model-registry.html" class="notranslate">English</option>
+    <option value="../../../ja/machine-learning/manage-model-lifecycle/workspace-model-registry.html" class="notranslate">日本語</option>
+    <option value="../../../pt/machine-learning/manage-model-lifecycle/workspace-model-registry.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Manage model lifecycle using the Workspace Model Registry</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="manage-model-lifecycle-using-the-workspace-model-registry">
+<h1>Manage model lifecycle using the Workspace Model Registry<a class="headerlink" href="#manage-model-lifecycle-using-the-workspace-model-registry" title="Permalink to this headline"> </a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This documentation covers the Workspace Model Registry. If your workspace is enabled for Unity Catalog, do not use the procedures on this page. Instead, see <a class="reference internal" href="index.html"><span class="doc">Models in Unity Catalog</span></a>.</p>
+<p>Workspace Model Registry will be deprecated in the future. For guidance on how to upgrade from the Workspace Model Registry to Unity Catalog, see <a class="reference internal" href="index.html#migrate-models-to-uc"><span class="std std-ref">Migrate workflows and models to Unity Catalog</span></a>.</p>
+<p>Starting in November 2023, Databricks <a class="reference internal" href="../../data-governance/unity-catalog/get-started.html#enablement"><span class="std std-ref">automatically enabled</span></a> Unity Catalog for new workspaces. In such workspaces, on clusters running Databricks Runtime 13.3 LTS and above, models are automatically created in and loaded from Unity Catalog. To use the Workspace Model Registry in this case, you must explicitly target it by running <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">mlflow;</span> <span class="pre">mlflow.set_registry_uri(&quot;databricks&quot;)</span></code> at the start of your workload. For other Databricks Runtime versions, there is no change in behavior.</p>
+</div>
+<p>This article describes how to use the Workspace Model Registry as part of your machine learning workflow to manage the full lifecycle of ML models. The Workspace Model Registry is a Databricks-provided, hosted version of the MLflow Model Registry.</p>
+<p>The Workspace Model Registry provides:</p>
+<ul class="simple">
+<li><p>Chronological model lineage (which MLflow experiment and run produced the model at a given time).</p></li>
+<li><p><a class="reference internal" href="../model-serving/index.html"><span class="doc">Model Serving</span></a>.</p></li>
+<li><p>Model versioning.</p></li>
+<li><p>Stage transitions (for example, from staging to production or archived).</p></li>
+<li><p><a class="reference internal" href="../../mlflow/model-registry-webhooks.html"><span class="doc">Webhooks</span></a> so you can automatically trigger actions based on registry events.</p></li>
+<li><p>Email notifications of model events.</p></li>
+</ul>
+<p>You can also create and view model descriptions and leave comments.</p>
+<p>This article includes instructions for both the Workspace Model Registry UI and the Workspace Model Registry API.</p>
+<p>For an overview of Workspace Model Registry concepts, see <a class="reference internal" href="../../mlflow/index.html"><span class="doc">MLflow guide</span></a>.</p>
+<div class="section" id="create-or-register-a-model">
+<h2>Create or register a model<a class="headerlink" href="#create-or-register-a-model" title="Permalink to this headline"> </a></h2>
+<p>You can create or register a model using the UI, or <a class="reference internal" href="#register-model-api"><span class="std std-ref">register a model using the API</span></a>.</p>
+<div class="section" id="create-or-register-a-model-using-the-ui">
+<h3>Create or register a model using the UI<a class="headerlink" href="#create-or-register-a-model-using-the-ui" title="Permalink to this headline"> </a></h3>
+<p>There are two ways to register a model in the Workspace Model Registry. You can register an existing model that has been logged to MLflow, or you can create and register a new, empty model and then assign a previously logged model to it.</p>
+<div class="section" id="register-an-existing-logged-model-from-a-notebook">
+<span id="register-existing-model"></span><h4>Register an existing logged model from a notebook<a class="headerlink" href="#register-an-existing-logged-model-from-a-notebook" title="Permalink to this headline"> </a></h4>
+<ol class="arabic">
+<li><p>In the Workspace, identify the MLflow run containing the model you want to register.</p>
+<ol class="loweralpha">
+<li><p>Click the <strong>Experiment</strong> icon <img alt="Experiment icon" src="../../_images/experiment.png" /> in the notebook’s right sidebar.</p>
+<div class="figure align-default">
+<img alt="Notebook toolbar" src="../../_images/notebook-toolbar.png" />
+</div>
+</li>
+<li><p>In the Experiment Runs sidebar, click the <img alt="External Link" src="../../_images/external-link.png" /> icon next to the date of the run. The MLflow Run page displays. This page shows details of the run including parameters, metrics, tags, and list of artifacts.</p></li>
+</ol>
+</li>
+<li><p>In the Artifacts section, click the directory named <strong>xxx-model</strong>.</p>
+<div class="figure align-default">
+<img alt="Register model" src="../../_images/register-model.png" />
+</div>
+</li>
+<li><p>Click the <strong>Register Model</strong> button at the far right.</p></li>
+<li><p>In the dialog, click in the <strong>Model</strong> box and do one of the following:</p>
+<ul class="simple">
+<li><p>Select <strong>Create New Model</strong> from the drop-down menu. The <strong>Model Name</strong> field appears. Enter a model name, for example <code class="docutils literal notranslate"><span class="pre">scikit-learn-power-forecasting</span></code>.</p></li>
+<li><p>Select an existing model from the drop-down menu.</p></li>
+</ul>
+<div class="figure align-default">
+<img alt="Create new model" src="../../_images/create-model.png" />
+</div>
+</li>
+<li><p>Click <strong>Register</strong>.</p>
+<ul class="simple">
+<li><p>If you selected <strong>Create New Model</strong>, this registers a model named <code class="docutils literal notranslate"><span class="pre">scikit-learn-power-forecasting</span></code>, copies the model into a secure location managed by the Workspace Model Registry, and creates a new version of the model.</p></li>
+<li><p>If you selected an existing model, this registers a new version of the selected model.</p></li>
+</ul>
+<p>After a few moments, the <strong>Register Model</strong> button changes to a link to the new registered model version.</p>
+<div class="figure align-default">
+<img alt="Select newly created model" src="../../_images/registered-model-version.png" />
+</div>
+</li>
+<li><p>Click the link to open the new model version in the Workspace Model Registry UI. You can also find the model in the Workspace Model Registry by clicking <img alt="Models Icon" src="../../_images/models-icon.png" /> <strong>Models</strong>  in the sidebar.</p></li>
+</ol>
+</div>
+<div class="section" id="create-a-new-registered-model-and-assign-a-logged-model-to-it">
+<h4>Create a new registered model and assign a logged model to it<a class="headerlink" href="#create-a-new-registered-model-and-assign-a-logged-model-to-it" title="Permalink to this headline"> </a></h4>
+<p>You can use the Create Model button on the registered models page to create a new, empty model and then assign a logged model to it. Follow these steps:</p>
+<ol class="arabic">
+<li><p>On the registered models page, click <strong>Create Model</strong>. Enter a name for the model and click <strong>Create</strong>.</p></li>
+<li><p>Follow Steps 1 through 3 in <a class="reference internal" href="#register-an-existing-logged-model-from-a-notebook"><span class="std std-ref">Register an existing logged model from a notebook</span></a>.</p></li>
+<li><p>In the Register Model dialog, select the name of the model you created in Step 1 and click <strong>Register</strong>. This registers a model with the name you created, copies the model into a secure location managed by the Workspace Model Registry, and creates a model version: <code class="docutils literal notranslate"><span class="pre">Version</span> <span class="pre">1</span></code>.</p>
+<p>After a few moments, the MLflow Run UI replaces the Register Model button with a link to the new registered model version. You can now select the model from the <strong>Model</strong> drop-down list in the Register Model dialog on the <strong>Experiment Runs</strong> page. You can also register new versions of the model by specifying its name in API commands like <a class="reference external" href="https://mlflow.org/docs/latest/rest-api.html#create-modelversion">Create ModelVersion</a>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="register-a-model-using-the-api">
+<span id="register-model-api"></span><h3>Register a model using the API<a class="headerlink" href="#register-a-model-using-the-api" title="Permalink to this headline"> </a></h3>
+<p>There are three programmatic ways to register a model in the Workspace Model Registry. All methods copy the model into a secure location managed by the Workspace Model Registry.</p>
+<ul>
+<li><p>To log a model and register it with the specified name during an MLflow experiment, use the <code class="docutils literal notranslate"><span class="pre">mlflow.&lt;model-flavor&gt;.log_model(...)</span></code> method. If a registered model with the name doesn’t exist, the method registers a new model, creates Version 1, and returns a <code class="docutils literal notranslate"><span class="pre">ModelVersion</span></code> MLflow object. If a registered model with the name exists already, the method creates a new model version and returns the version object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">start_run</span><span class="p">(</span><span class="n">run_name</span><span class="o">=&lt;</span><span class="n">run</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">)</span> <span class="k">as</span> <span class="n">run</span><span class="p">:</span>
+  <span class="o">...</span>
+  <span class="n">mlflow</span><span class="o">.&lt;</span><span class="n">model</span><span class="o">-</span><span class="n">flavor</span><span class="o">&gt;.</span><span class="n">log_model</span><span class="p">(</span><span class="o">&lt;</span><span class="n">model</span><span class="o">-</span><span class="n">flavor</span><span class="o">&gt;=&lt;</span><span class="n">model</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="n">artifact_path</span><span class="o">=</span><span class="s2">&quot;&lt;model-path&gt;&quot;</span><span class="p">,</span>
+    <span class="n">registered_model_name</span><span class="o">=</span><span class="s2">&quot;&lt;model-name&gt;&quot;</span>
+  <span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>To register a model with the specified name after all your experiment runs complete and you have decided which model is most suitable to add to the registry, use the <code class="docutils literal notranslate"><span class="pre">mlflow.register_model()</span></code> method. For this method, you need the run ID for the <code class="docutils literal notranslate"><span class="pre">mlruns:URI</span></code> argument. If a registered model with the name doesn’t exist, the method registers a new model, creates Version 1, and returns a <code class="docutils literal notranslate"><span class="pre">ModelVersion</span></code> MLflow object. If a registered model with the name exists already, the method creates a new model version and returns the version object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">=</span><span class="n">mlflow</span><span class="o">.</span><span class="n">register_model</span><span class="p">(</span><span class="s2">&quot;runs:&lt;model-path&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;model-name&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>To create a new registered model with the specified name, use the MLflow Client API <code class="docutils literal notranslate"><span class="pre">create_registered_model()</span></code> method. If the model name exists, this method throws an <code class="docutils literal notranslate"><span class="pre">MLflowException</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_registered_model</span><span class="p">(</span><span class="s2">&quot;&lt;model-name&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>You can also register a model with the <a class="reference internal" href="../../dev-tools/terraform/index.html"><span class="doc">Databricks Terraform provider</span></a> and <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mlflow_model">databricks_mlflow_model</a>.</p>
+</div>
+</div>
+<div class="section" id="view-models-in-the-ui">
+<h2>View models in the UI<a class="headerlink" href="#view-models-in-the-ui" title="Permalink to this headline"> </a></h2>
+<div class="section" id="registered-models-page">
+<h3>Registered models page<a class="headerlink" href="#registered-models-page" title="Permalink to this headline"> </a></h3>
+<p>The registered models page displays when you click <img alt="Models Icon" src="../../_images/models-icon.png" /> <strong>Models</strong> in the sidebar. This page shows all of the models in the registry.</p>
+<p>You can <a class="reference internal" href="#create-a-new-registered-model-and-assign-a-logged-model-to-it"><span class="std std-ref">create a new model</span></a> from this page.</p>
+<p>Also from this page, workspace administrators can <a class="reference internal" href="../../mlflow/models-acl.html"><span class="doc">set permissions for all models in the Workspace Model Registry</span></a>.</p>
+<div class="figure align-default">
+<img alt="Registered models" src="../../_images/registered-models.png" />
+</div>
+</div>
+<div class="section" id="registered-model-page">
+<h3>Registered model page<a class="headerlink" href="#registered-model-page" title="Permalink to this headline"> </a></h3>
+<p>To display the registered model page for a model, click a model name in the registered models page. The registered model page shows information about the selected model and a table with information about each version of the model. From this page, you can also:</p>
+<ul class="simple">
+<li><p>Set up <a class="reference internal" href="../model-serving/index.html"><span class="doc">Model Serving</span></a>.</p></li>
+<li><p><a class="reference internal" href="#use-model-for-inference"><span class="std std-ref">Automatically generate a notebook to use the model for inference</span></a>.</p></li>
+<li><p><a class="reference internal" href="#email-notification"><span class="std std-ref">Configure email notifications</span></a>.</p></li>
+<li><p><a class="reference internal" href="#compare-model-versions"><span class="std std-ref">Compare model versions</span></a>.</p></li>
+<li><p><a class="reference internal" href="../../mlflow/models-acl.html"><span class="doc">Set permissions for the model</span></a>.</p></li>
+<li><p><a class="reference internal" href="#delete-a-model-or-model-version"><span class="std std-ref">Delete a model</span></a>.</p></li>
+</ul>
+<div class="figure align-default">
+<img alt="Registered model" src="../../_images/registered-model1.png" />
+</div>
+</div>
+<div class="section" id="model-version-page">
+<h3>Model version page<a class="headerlink" href="#model-version-page" title="Permalink to this headline"> </a></h3>
+<p>To view the model version page, do one of the following:</p>
+<ul class="simple">
+<li><p>Click a version name in the <strong>Latest Version</strong> column on the registered models page.</p></li>
+<li><p>Click a version name in the <strong>Version</strong> column in the registered model page.</p></li>
+</ul>
+<p>This page displays information about a specific version of a registered model and also provides a link to the source run (the version of the notebook that was run to create the model). From this page, you can also:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#use-model-for-inference"><span class="std std-ref">Automatically generate a notebook to use the model for inference</span></a>.</p></li>
+<li><p><a class="reference internal" href="#delete-a-model-or-model-version"><span class="std std-ref">Delete a model</span></a>.</p></li>
+</ul>
+<div class="figure align-default">
+<img alt="Model version" src="../../_images/model-version1.png" />
+</div>
+</div>
+</div>
+<div class="section" id="control-access-to-models">
+<h2>Control access to models<a class="headerlink" href="#control-access-to-models" title="Permalink to this headline"> </a></h2>
+<p>To learn how to control access to models registered in the Workspace Model Registry, see <a class="reference internal" href="../../mlflow/models-acl.html"><span class="doc">Share MLflow Models</span></a>.</p>
+</div>
+<div class="section" id="transition-a-model-stage">
+<span id="transition-model-stage"></span><h2>Transition a model stage<a class="headerlink" href="#transition-a-model-stage" title="Permalink to this headline"> </a></h2>
+<p>A model version has one of the following stages: <strong>None</strong>, <strong>Staging</strong>, <strong>Production</strong>, or <strong>Archived</strong>. The <strong>Staging</strong> stage is meant for model testing and validating, while the <strong>Production</strong> stage is for model versions that have completed the testing or review processes and have been deployed to applications for live scoring. An Archived model version is assumed to be inactive, at which point you can consider <a class="reference internal" href="#delete-a-model-or-model-version"><span class="std std-ref">deleting it</span></a>. Different versions of a model can be in different stages.</p>
+<p>A user with appropriate <a class="reference internal" href="../../mlflow/models-acl.html"><span class="doc">permission</span></a> can transition a model version between stages. If you have permission to transition a model version to a particular stage, you can make the transition directly. If you do not have permission, you can request a stage transition and a user that has permission to transition model versions can <a class="reference internal" href="#str"><span class="std std-ref">approve, reject, or cancel the request</span></a>.</p>
+<p>You can transition a model stage using the UI or <a class="reference internal" href="#transition-stage-api"><span class="std std-ref">using the API</span></a>.</p>
+<div class="section" id="transition-a-model-stage-using-the-ui">
+<h3>Transition a model stage using the UI<a class="headerlink" href="#transition-a-model-stage-using-the-ui" title="Permalink to this headline"> </a></h3>
+<p>Follow these instructions to transition a model’s stage.</p>
+<ol class="arabic">
+<li><p>To display the list of available model stages and your available options, in a model version page, click the drop down next to <strong>Stage:</strong> and request or select a transition to another stage.</p>
+<div class="figure align-default">
+<img alt="Stage transition options" src="../../_images/stage-options.png" />
+</div>
+</li>
+<li><p>Enter an optional comment and click <strong>OK</strong>.</p></li>
+</ol>
+<div class="section" id="transition-a-model-version-to-the-production-stage">
+<h4>Transition a model version to the Production stage<a class="headerlink" href="#transition-a-model-version-to-the-production-stage" title="Permalink to this headline"> </a></h4>
+<p>After testing and validation, you can transition or request a transition to the Production stage.</p>
+<p>Workspace Model Registry allows more than one version of the registered model in each stage. If you want to have only one version in Production, you can transition all versions of the model currently in Production to Archived by checking <strong>Transition existing Production model versions to Archived</strong>.</p>
+</div>
+<div class="section" id="approve-reject-or-cancel-a-model-version-stage-transition-request">
+<span id="str"></span><h4>Approve, reject, or cancel a model version stage transition request<a class="headerlink" href="#approve-reject-or-cancel-a-model-version-stage-transition-request" title="Permalink to this headline"> </a></h4>
+<p>A user without stage transition permission can request a stage transition. The request appears in the <strong>Pending Requests</strong> section in the model version page:</p>
+<div class="figure align-default">
+<img alt="Transition to production" src="../../_images/handle-transition-request.png" />
+</div>
+<p>To approve, reject, or cancel a stage transition request, click the <strong>Approve</strong>, <strong>Reject</strong>, or <strong>Cancel</strong> link.</p>
+<p>The creator of a transition request can also cancel the request.</p>
+</div>
+<div class="section" id="view-model-version-activities">
+<h4>View model version activities<a class="headerlink" href="#view-model-version-activities" title="Permalink to this headline"> </a></h4>
+<p>To view all the transitions requested, approved, pending, and applied to a model version, go to the Activities section. This record of activities provides a lineage of the model’s lifecycle for auditing or inspection.</p>
+</div>
+</div>
+<div class="section" id="transition-a-model-stage-using-the-api">
+<span id="transition-stage-api"></span><h3>Transition a model stage using the API<a class="headerlink" href="#transition-a-model-stage-using-the-api" title="Permalink to this headline"> </a></h3>
+<p>Users with appropriate <a class="reference internal" href="../../mlflow/models-acl.html"><span class="doc">permissions</span></a> can transition a model version to a new stage.</p>
+<p>To update a model version stage to a new stage, use the MLflow Client API <code class="docutils literal notranslate"><span class="pre">transition_model_version_stage()</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+  <span class="n">client</span><span class="o">.</span><span class="n">transition_model_version_stage</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&lt;model-name&gt;&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=&lt;</span><span class="n">model</span><span class="o">-</span><span class="n">version</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="n">stage</span><span class="o">=</span><span class="s2">&quot;&lt;stage&gt;&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&lt;description&gt;&quot;</span>
+  <span class="p">)</span>
+</pre></div>
+</div>
+<p>The accepted values for <code class="docutils literal notranslate"><span class="pre">&lt;stage&gt;</span></code> are: <code class="docutils literal notranslate"><span class="pre">&quot;Staging&quot;|&quot;staging&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;Archived&quot;|&quot;archived&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;Production&quot;|&quot;production&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;None&quot;|&quot;none&quot;</span></code>.</p>
+</div>
+</div>
+<div class="section" id="use-model-for-inference">
+<span id="generate-inference-nb"></span><h2>Use model for inference<a class="headerlink" href="#use-model-for-inference" title="Permalink to this headline"> </a></h2>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<p>After a model is registered in the Workspace Model Registry, you can automatically generate a notebook to use the model for batch or streaming inference. Alternatively, you can create an endpoint to use the model for real-time serving with <a class="reference internal" href="../model-serving/index.html"><span class="doc">Model Serving</span></a>.</p>
+<p>In the upper-right corner of the <a class="reference internal" href="../../mlflow/model-registry.html#registered-model-page"><span class="std std-ref">registered model page</span></a> or the <a class="reference internal" href="../../mlflow/model-registry.html#model-version-page"><span class="std std-ref">model version page</span></a>, click <img alt="use model button" src="../../_images/use-model-for-inference.png" />. The Configure model inference dialog appears, which allows you to configure batch, streaming, or real-time inference.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Anaconda Inc. updated their <a class="reference external" href="https://www.anaconda.com/terms-of-service">terms of service</a> for anaconda.org channels. Based on the new terms of service you may require a commercial license if you rely on Anaconda’s packaging and distribution. See <a class="reference external" href="https://www.anaconda.com/blog/anaconda-commercial-edition-faq">Anaconda Commercial Edition FAQ</a> for more information. Your use of any Anaconda channels is governed by their terms of service.</p>
+<p>MLflow models logged before <a class="reference external" href="https://mlflow.org/news/2021/06/18/1.18.0-release/index.html">v1.18</a> (Databricks Runtime 8.3 ML or earlier) were by default logged with the conda <code class="docutils literal notranslate"><span class="pre">defaults</span></code> channel (<a class="reference external" href="https://repo.anaconda.com/pkgs/">https://repo.anaconda.com/pkgs/</a>) as a dependency. Because of this license change, Databricks has stopped the use of the <code class="docutils literal notranslate"><span class="pre">defaults</span></code> channel for models logged using MLflow v1.18 and above. The default channel logged is now <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code>, which points at the community managed <a class="reference external" href="https://conda-forge.org/">https://conda-forge.org/</a>.</p>
+<p>If you logged a model before MLflow v1.18 without excluding the <code class="docutils literal notranslate"><span class="pre">defaults</span></code> channel from the conda environment for the model, that model may have a dependency on the <code class="docutils literal notranslate"><span class="pre">defaults</span></code> channel that you may not have intended.
+To manually confirm whether a model has this dependency, you can examine <code class="docutils literal notranslate"><span class="pre">channel</span></code> value in the <code class="docutils literal notranslate"><span class="pre">conda.yaml</span></code> file that is packaged with the logged model. For example, a model’s <code class="docutils literal notranslate"><span class="pre">conda.yaml</span></code> with a <code class="docutils literal notranslate"><span class="pre">defaults</span></code> channel dependency may look like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">channels</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defaults</span>
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python=3.8.8</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pip</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mlflow</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scikit-learn==0.23.2</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cloudpickle==1.6.0</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mlflow-env</span>
+</pre></div>
+</div>
+<p>Because Databricks can not determine whether your use of the Anaconda repository to interact with your models is permitted under your relationship with Anaconda, Databricks is not forcing its customers to make any changes. If your use of the Anaconda.com repo through the use of Databricks is permitted under Anaconda’s terms, you do not need to take any action.</p>
+<p>If you would like to change the channel used in a model’s environment, you can re-register the model to the Workspace model registry with a new <code class="docutils literal notranslate"><span class="pre">conda.yaml</span></code>. You can do this by specifying the channel in the <code class="docutils literal notranslate"><span class="pre">conda_env</span></code> parameter of <code class="docutils literal notranslate"><span class="pre">log_model()</span></code>.</p>
+<p>For more information on the <code class="docutils literal notranslate"><span class="pre">log_model()</span></code> API, see the MLflow documentation for the model flavor you are working with, for example, <a class="reference external" href="https://www.mlflow.org/docs/latest/python_api/mlflow.sklearn.html#mlflow.sklearn.log_model">log_model for scikit-learn</a>.</p>
+<p>For more information on <code class="docutils literal notranslate"><span class="pre">conda.yaml</span></code> files, see the <a class="reference external" href="https://www.mlflow.org/docs/latest/models.html#additional-logged-files">MLflow documentation</a>.</p>
+</div>
+<div class="figure align-default">
+<img alt="Configure model inference dialog" src="../../_images/configure-model-inference.png" />
+</div>
+<div class="section" id="configure-batch-inference">
+<h3>Configure batch inference<a class="headerlink" href="#configure-batch-inference" title="Permalink to this headline"> </a></h3>
+<p>When you follow these steps to create a batch inference notebook, the notebook is saved in your user folder under the <code class="docutils literal notranslate"><span class="pre">Batch-Inference</span></code> folder in a folder with the model’s name. You can edit the notebook as needed.</p>
+<ol class="arabic">
+<li><p>Click the <strong>Batch inference</strong> tab.</p></li>
+<li><p>From the <strong>Model version</strong> drop-down, select the model version to use. The first two items in the drop-down are the current Production and Staging version of the model (if they exist). When you select one of these options, the notebook automatically uses the Production or Staging version as of the time it is run. You do not need to update the notebook as you continue to develop the model.</p></li>
+<li><p>Click the <strong>Browse</strong> button next to <strong>Input table</strong>. The <strong>Select input data</strong> dialog appears. If necessary, you can change the cluster in the <strong>Compute</strong> drop-down.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For Unity Catalog enabled workspaces, the <strong>Select input data</strong> dialog allows you to select from three levels, <code class="docutils literal notranslate"><span class="pre">&lt;catalog-name&gt;.&lt;database-name&gt;.&lt;table-name&gt;</span></code>.</p>
+</div>
+</li>
+<li><p>Select the table containing the input data for the model, and click <strong>Select</strong>. The generated notebook automatically imports this data and sends it to the model. You can edit the generated notebook if the data requires any transformations before it is input to the model.</p></li>
+<li><p>Predictions are saved in a folder in the directory <code class="docutils literal notranslate"><span class="pre">dbfs:/FileStore/batch-inference</span></code>. By default, predictions are saved in a folder with the same name as the model. Each run of the generated notebook writes a new file to this directory with the timestamp appended to the name. You can also choose not to include the timestamp and to overwrite the file with subsequent runs of the notebook; instructions are provided in the generated notebook.</p>
+<p>You can change the folder where the predictions are saved by typing a new folder name into the <strong>Output table location</strong> field or by clicking the folder icon to browse the directory and select a different folder.</p>
+<p>To save predictions to a location in Unity Catalog, you must edit the notebook. For an example notebook that shows how to train a machine-learning model that uses data in Unity Catalog and write the results back to Unity Catalog, see <a class="reference internal" href="../../data-governance/unity-catalog/machine-learning.html"><span class="doc">Train and register machine learning models with Unity Catalog</span></a>.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="configure-streaming-inference-using-delta-live-tables">
+<span id="streaming-inference"></span><h3>Configure streaming inference using Delta Live Tables<a class="headerlink" href="#configure-streaming-inference-using-delta-live-tables" title="Permalink to this headline"> </a></h3>
+<p>When you follow these steps to create a streaming inference notebook, the notebook is saved in your user folder under the <code class="docutils literal notranslate"><span class="pre">DLT-Inference</span></code> folder in a folder with the model’s name. You can edit the notebook as needed.</p>
+<ol class="arabic">
+<li><p>Click the <strong>Streaming (Delta Live Tables)</strong> tab.</p></li>
+<li><p>From the <strong>Model version</strong> drop-down, select the model version to use. The first two items in the drop-down are the current Production and Staging version of the model (if they exist). When you select one of these options, the notebook automatically uses the Production or Staging version as of the time it is run. You do not need to update the notebook as you continue to develop the model.</p></li>
+<li><p>Click the <strong>Browse</strong> button next to <strong>Input table</strong>. The <strong>Select input data</strong> dialog appears. If necessary, you can change the cluster in the <strong>Compute</strong> drop-down.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For Unity Catalog enabled workspaces, the <strong>Select input data</strong> dialog allows you to select from three levels, <code class="docutils literal notranslate"><span class="pre">&lt;catalog-name&gt;.&lt;database-name&gt;.&lt;table-name&gt;</span></code>.</p>
+</div>
+</li>
+<li><p>Select the table containing the input data for the model, and click <strong>Select</strong>. The generated notebook creates a data transform that uses the input table as a source and integrates the MLflow <a class="reference external" href="https://mlflow.org/docs/latest/models.html#export-a-python-function-model-as-an-apache-spark-udf">PySpark inference UDF</a> to perform model predictions. You can edit the generated notebook if the data requires any additional transformations before or after the model is applied.</p></li>
+<li><p>Provide the output Delta Live Table name. The notebook creates a live table with the given name and uses it to store the model predictions. You can modify the generated notebook to customize the target dataset as needed - for example: define a streaming live table as output, add schema information or data quality constraints.</p></li>
+<li><p>You can then either create a new Delta Live Tables pipeline with this notebook or add it to an existing pipeline as an additional notebook library.</p></li>
+</ol>
+</div>
+<div class="section" id="configure-real-time-inference">
+<span id="configure-streaming-inference-using-delta-live-tables"></span><h3>Configure real-time inference<a class="headerlink" href="#configure-real-time-inference" title="Permalink to this headline"> </a></h3>
+<p> <a class="reference internal" href="../model-serving/index.html"><span class="doc">Model Serving</span></a> exposes your MLflow machine learning models as scalable REST API endpoints. To create a Model Serving endpoint, see <a class="reference internal" href="../model-serving/create-manage-serving-endpoints.html"><span class="doc">Create and configure model serving endpoints</span></a>.</p>
+</div>
+<div class="section" id="provide-feedback">
+<h3>Provide feedback<a class="headerlink" href="#provide-feedback" title="Permalink to this headline"> </a></h3>
+<p>This feature is in preview, and we would love to get your feedback. To provide feedback, click <code class="docutils literal notranslate"><span class="pre">Provide</span> <span class="pre">Feedback</span></code> in the Configure model inference dialog.</p>
+</div>
+</div>
+<div class="section" id="compare-model-versions">
+<h2>Compare model versions<a class="headerlink" href="#compare-model-versions" title="Permalink to this headline"> </a></h2>
+<p>You can compare model versions in the Workspace Model Registry.</p>
+<ol class="arabic simple">
+<li><p>On the <a class="reference internal" href="../../mlflow/model-registry.html#registered-model-page"><span class="std std-ref">registered model page</span></a>, select two or more model versions by clicking in the checkbox to the left of the model version.</p></li>
+<li><p>Click <strong>Compare</strong>.</p></li>
+<li><p>The Comparing <code class="docutils literal notranslate"><span class="pre">&lt;N&gt;</span></code> Versions screen appears, showing a table that compares the parameters, schema, and metrics of the selected model versions. At the bottom of the screen, you can select the type of plot (scatter, contour, or parallel coordinates) and the parameters or metrics to plot.</p></li>
+</ol>
+</div>
+<div class="section" id="control-notification-preferences">
+<span id="email-notification"></span><h2>Control notification preferences<a class="headerlink" href="#control-notification-preferences" title="Permalink to this headline"> </a></h2>
+<p>You can configure Workspace Model Registry to notify you by email about activity on registered models and model versions that you specify.</p>
+<p>On the registered model page, the <strong>Notify me about</strong> menu shows three options:</p>
+<div class="figure align-default">
+<img alt="Email notifications menu" src="../../_images/email-notifications-menu.png" />
+</div>
+<ul class="simple">
+<li><p><strong>All new activity</strong>: Send email notifications about all activity on all model versions of this model. If you created the registered model, this setting is the default.</p></li>
+<li><p><strong>Activity on versions I follow</strong>: Send email notifications only about model versions you follow. With this selection, you receive notifications for all model versions that you follow; you cannot turn off notifications for a specific model version.</p></li>
+<li><p><strong>Mute notifications</strong>: Do not send email notifications about activity on this registered model.</p></li>
+</ul>
+<p>The following events trigger an email notification:</p>
+<ul class="simple">
+<li><p>Creation of a new model version</p></li>
+<li><p>Request for a stage transition</p></li>
+<li><p>Stage transition</p></li>
+<li><p>New comments</p></li>
+</ul>
+<p>You are automatically subscribed to model notifications when you do any of the following:</p>
+<ul class="simple">
+<li><p>Comment on that model version</p></li>
+<li><p>Transition a model version’s stage</p></li>
+<li><p>Make a transition request for the model’s stage</p></li>
+</ul>
+<p>To see if you are following a model version, look at the Follow Status field on the <a class="reference internal" href="../../mlflow/model-registry.html#model-version-page"><span class="std std-ref">model version page</span></a>, or at the table of model versions on the <a class="reference internal" href="../../mlflow/model-registry.html#registered-model-page"><span class="std std-ref">registered model page</span></a>.</p>
+<div class="section" id="turn-off-all-email-notifications">
+<h3>Turn off all email notifications<a class="headerlink" href="#turn-off-all-email-notifications" title="Permalink to this headline"> </a></h3>
+<p>You can turn off email notifications in the Workspace Model Registry Settings tab of the User Settings menu:</p>
+<ol class="arabic simple">
+<li><p>Click your username in the upper-right corner of the Databricks workspace, and select <strong>User Settings</strong> from the drop-down menu.</p></li>
+<li><p>In the <strong>Settings</strong> sidebar, select <strong>Notifications</strong>.</p></li>
+<li><p>Turn off <strong>Model Registry email notifications</strong>.</p></li>
+</ol>
+<p>An account admin can turn off email notifications for the entire organization in the <a class="reference internal" href="../../administration-guide/index.html#admin-settings"><span class="std std-ref">admin settings page</span></a>.</p>
+</div>
+<div class="section" id="maximum-number-of-emails-sent">
+<h3>Maximum number of emails sent<a class="headerlink" href="#maximum-number-of-emails-sent" title="Permalink to this headline"> </a></h3>
+<p>Workspace Model Registry limits the number of emails sent to each user per day per activity. For example, if you receive 20 emails in one day about new model versions created for a registered model, Workspace Model Registry sends an email noting that the daily limit has been reached, and no additional emails about that event are sent until the next day.</p>
+<p>To increase the limit of the number of emails allowed, contact your Databricks account team.</p>
+</div>
+</div>
+<div class="section" id="webhooks">
+<h2>Webhooks<a class="headerlink" href="#webhooks" title="Permalink to this headline"> </a></h2>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<p><a class="reference internal" href="../../mlflow/model-registry-webhooks.html"><span class="doc">Webhooks</span></a> enable you to listen for Workspace Model Registry events so your integrations can automatically trigger actions. You can use webhooks to automate and integrate your machine learning pipeline with existing CI/CD tools and workflows. For example, you can trigger CI builds when a new model version is created or notify your team members through Slack each time a model transition to production is requested.</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="annotate-a-model-or-model-version">
+<h2>Annotate a model or model version<a class="headerlink" href="#annotate-a-model-or-model-version" title="Permalink to this headline"> </a></h2>
+<p>You can provide information about a model or model version by annotating it. For example, you may want to include an overview of the problem or information about the methodology and algorithm used.</p>
+<div class="section" id="annotate-a-model-or-model-version-using-the-ui">
+<h3>Annotate a model or model version using the UI<a class="headerlink" href="#annotate-a-model-or-model-version-using-the-ui" title="Permalink to this headline"> </a></h3>
+<p>The Databricks UI provides several ways to annotate models and model versions. You can add text information using a description or comments, and you can add <a class="reference internal" href="#search-for-a-model"><span class="std std-ref">searchable key-value tags</span></a>. Descriptions and tags are available for models and model versions; comments are only available for model versions.</p>
+<ul class="simple">
+<li><p>Descriptions are intended to provide information about the model.</p></li>
+<li><p>Comments provide a way to maintain an ongoing discussion about activities on a model version.</p></li>
+<li><p>Tags let you customize model metadata to make it easier to find specific models.</p></li>
+</ul>
+<div class="section" id="add-or-update-the-description-for-a-model-or-model-version">
+<h4>Add or update the description for a model or model version<a class="headerlink" href="#add-or-update-the-description-for-a-model-or-model-version" title="Permalink to this headline"> </a></h4>
+<ol class="arabic">
+<li><p>From the <a class="reference internal" href="../../mlflow/model-registry.html#registered-model-page"><span class="std std-ref">registered model</span></a> or <a class="reference internal" href="../../mlflow/model-registry.html#model-version-page"><span class="std std-ref">model version</span></a> page, click <strong>Edit</strong> next to <strong>Description</strong>. An edit window appears.</p></li>
+<li><p>Enter or edit the description in the edit window.</p></li>
+<li><p>Click <strong>Save</strong> to save your changes or <strong>Cancel</strong> to close the window.</p>
+<p>If you entered a description of a model version, the description appears in the <strong>Description</strong> column in the table on the <a class="reference internal" href="../../mlflow/model-registry.html#registered-model-page"><span class="std std-ref">registered model page</span></a>. The column displays a maximum of 32 characters or one line of text, whichever is shorter.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="add-comments-for-a-model-version">
+<h4>Add comments for a model version<a class="headerlink" href="#add-comments-for-a-model-version" title="Permalink to this headline"> </a></h4>
+<ol class="arabic simple">
+<li><p>Scroll down the <a class="reference internal" href="../../mlflow/model-registry.html#model-version-page"><span class="std std-ref">model version</span></a> page and click the down arrow next to <strong>Activities</strong>.</p></li>
+<li><p>Type your comment in the edit window and click <strong>Add Comment</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="add-tags-for-a-model-or-model-version">
+<h4>Add tags for a model or model version<a class="headerlink" href="#add-tags-for-a-model-or-model-version" title="Permalink to this headline"> </a></h4>
+<ol class="arabic">
+<li><p>From the <a class="reference internal" href="../../mlflow/model-registry.html#registered-model-page"><span class="std std-ref">registered model</span></a> or <a class="reference internal" href="../../mlflow/model-registry.html#model-version-page"><span class="std std-ref">model version</span></a> page, click <img alt="Tag icon" src="../../_images/tags1.png" /> if it is not already open. The tags table appears.</p>
+<div class="figure align-default">
+<img alt="tag table" src="../../_images/tags-open.png" />
+</div>
+</li>
+<li><p>Click in the <strong>Name</strong> and <strong>Value</strong> fields and type the key and value for your tag.</p></li>
+<li><p>Click <strong>Add</strong>.</p>
+<div class="figure align-default">
+<img alt="add tag" src="../../_images/tag-add.png" />
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="edit-or-delete-tags-for-a-model-or-model-version">
+<h4>Edit or delete tags for a model or model version<a class="headerlink" href="#edit-or-delete-tags-for-a-model-or-model-version" title="Permalink to this headline"> </a></h4>
+<p>To edit or delete an existing tag, use the icons in the <strong>Actions</strong> column.</p>
+<div class="figure align-default">
+<img alt="tag actions" src="../../_images/tag-edit-or-delete.png" />
+</div>
+</div>
+</div>
+<div class="section" id="annotate-a-model-version-using-the-api">
+<h3>Annotate a model version using the API<a class="headerlink" href="#annotate-a-model-version-using-the-api" title="Permalink to this headline"> </a></h3>
+<p>To update a model version description, use the MLflow Client API <code class="docutils literal notranslate"><span class="pre">update_model_version()</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">update_model_version</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&lt;model-name&gt;&quot;</span><span class="p">,</span>
+  <span class="n">version</span><span class="o">=&lt;</span><span class="n">model</span><span class="o">-</span><span class="n">version</span><span class="o">&gt;</span><span class="p">,</span>
+  <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&lt;description&gt;&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>To set or update a tag for a registered model or model version, use the MLflow Client API <a class="reference external" href="https://www.mlflow.org/docs/latest/python_api/mlflow.tracking.html#mlflow.tracking.MlflowClient.set_registered_model_tag">`set_registered_model_tag()`</a>) or <a class="reference external" href="https://www.mlflow.org/docs/latest/python_api/mlflow.tracking.html#mlflow.tracking.MlflowClient.set_model_version_tag">`set_model_version_tag()`</a> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">set_registered_model_tag</span><span class="p">()(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&lt;model-name&gt;&quot;</span><span class="p">,</span>
+  <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&lt;key-value&gt;&quot;</span><span class="p">,</span>
+  <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;&lt;tag-value&gt;&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">set_model_version_tag</span><span class="p">()(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&lt;model-name&gt;&quot;</span><span class="p">,</span>
+  <span class="n">version</span><span class="o">=&lt;</span><span class="n">model</span><span class="o">-</span><span class="n">version</span><span class="o">&gt;</span><span class="p">,</span>
+  <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&lt;key-value&gt;&quot;</span><span class="p">,</span>
+  <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;&lt;tag-value&gt;&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="rename-a-model-api-only">
+<h2>Rename a model (API only)<a class="headerlink" href="#rename-a-model-api-only" title="Permalink to this headline"> </a></h2>
+<p>To rename a registered model, use the MLflow Client API <code class="docutils literal notranslate"><span class="pre">rename_registered_model()</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">=</span><span class="n">MlflowClient</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">rename_registered_model</span><span class="p">(</span><span class="s2">&quot;&lt;model-name&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;new-model-name&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can rename a registered model only if it has no versions, or all versions are in the None or Archived stage.</p>
+</div>
+</div>
+<div class="section" id="search-for-a-model">
+<h2>Search for a model<a class="headerlink" href="#search-for-a-model" title="Permalink to this headline"> </a></h2>
+<p>You can search for models in the Workspace Model Registry using the UI or the API.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When you search for a model, only models for which you have at least <strong>Can Read</strong> permissions are returned.</p>
+</div>
+<div class="section" id="search-for-a-model-using-the-ui">
+<h3>Search for a model using the UI<a class="headerlink" href="#search-for-a-model-using-the-ui" title="Permalink to this headline"> </a></h3>
+<p>To display registered models, click <img alt="Models Icon" src="../../_images/models-icon.png" /> <strong>Models</strong>  in the sidebar.</p>
+<p>To search for a specific model, enter text in the search box. You can enter the name of a model or any part of the name:</p>
+<div class="figure align-default">
+<img alt="Registered models search" src="../../_images/registered-models.png" />
+</div>
+<p>You can also search on tags. Enter tags in this format: <code class="docutils literal notranslate"><span class="pre">tags.&lt;key&gt;=&lt;value&gt;</span></code>.  To search for multiple tags, use the <code class="docutils literal notranslate"><span class="pre">AND</span></code> operator.</p>
+<div class="figure align-default">
+<img alt="Tag-based search" src="../../_images/search-with-tags.png" />
+</div>
+<p>You can search on both the model name and tags using the <a class="reference external" href="https://www.mlflow.org/docs/latest/search-runs.html#syntax">MLflow search syntax</a>. For example:</p>
+<div class="figure align-default">
+<img alt="Name and tag-based search" src="../../_images/model-search-name-and-tag.png" />
+</div>
+</div>
+<div class="section" id="search-for-a-model-using-the-api">
+<h3>Search for a model using the API<a class="headerlink" href="#search-for-a-model-using-the-api" title="Permalink to this headline"> </a></h3>
+<p>You can search for registered models in the Workspace Model Registry with the MLflow Client API method <a class="reference external" href="https://mlflow.org/docs/latest/python_api/mlflow.client.html#mlflow.client.MlflowClient.search_registered_models">search_registered_models()</a></p>
+<p>If you have <a class="reference internal" href="#annotate-a-model-version-using-the-api"><span class="std std-ref">set tags</span></a> on your models, you can also search by those tags with <code class="docutils literal notranslate"><span class="pre">search_registered_models()</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Find registered models with a specific tag value&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">search_registered_models</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tags.`&lt;key-value&gt;`=&#39;&lt;tag-value&gt;&#39;&quot;</span><span class="p">):</span>
+  <span class="n">pprint</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also search for a specific model name and list its version details using MLflow Client API <code class="docutils literal notranslate"><span class="pre">search_model_versions()</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+
+<span class="n">client</span><span class="o">=</span><span class="n">MlflowClient</span><span class="p">()</span>
+<span class="p">[</span><span class="n">pprint</span><span class="p">(</span><span class="n">mv</span><span class="p">)</span> <span class="k">for</span> <span class="n">mv</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">search_model_versions</span><span class="p">(</span><span class="s2">&quot;name=&#39;&lt;model-name&gt;&#39;&quot;</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>This outputs:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">{   &#39;creation_timestamp&#39;: 1582671933246,</span>
+<span class="go">    &#39;current_stage&#39;: &#39;Production&#39;,</span>
+<span class="go">    &#39;description&#39;: &#39;A random forest model containing 100 decision trees &#39;</span>
+<span class="go">                   &#39;trained in scikit-learn&#39;,</span>
+<span class="go">    &#39;last_updated_timestamp&#39;: 1582671960712,</span>
+<span class="go">    &#39;name&#39;: &#39;sk-learn-random-forest-reg-model&#39;,</span>
+<span class="go">    &#39;run_id&#39;: &#39;ae2cc01346de45f79a44a320aab1797b&#39;,</span>
+<span class="go">    &#39;source&#39;: &#39;./mlruns/0/ae2cc01346de45f79a44a320aab1797b/artifacts/sklearn-model&#39;,</span>
+<span class="go">    &#39;status&#39;: &#39;READY&#39;,</span>
+<span class="go">    &#39;status_message&#39;: None,</span>
+<span class="go">    &#39;user_id&#39;: None,</span>
+<span class="go">    &#39;version&#39;: 1 }</span>
+
+<span class="go">{   &#39;creation_timestamp&#39;: 1582671960628,</span>
+<span class="go">    &#39;current_stage&#39;: &#39;None&#39;,</span>
+<span class="go">    &#39;description&#39;: None,</span>
+<span class="go">    &#39;last_updated_timestamp&#39;: 1582671960628,</span>
+<span class="go">    &#39;name&#39;: &#39;sk-learn-random-forest-reg-model&#39;,</span>
+<span class="go">    &#39;run_id&#39;: &#39;d994f18d09c64c148e62a785052e6723&#39;,</span>
+<span class="go">    &#39;source&#39;: &#39;./mlruns/0/d994f18d09c64c148e62a785052e6723/artifacts/sklearn-model&#39;,</span>
+<span class="go">    &#39;status&#39;: &#39;READY&#39;,</span>
+<span class="go">    &#39;status_message&#39;: None,</span>
+<span class="go">    &#39;user_id&#39;: None,</span>
+<span class="go">    &#39;version&#39;: 2 }</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="delete-a-model-or-model-version">
+<h2>Delete a model or model version<a class="headerlink" href="#delete-a-model-or-model-version" title="Permalink to this headline"> </a></h2>
+<p>You can delete a model using the UI or the API.</p>
+<div class="section" id="delete-a-model-version-or-model-using-the-ui">
+<h3>Delete a model version or model using the UI<a class="headerlink" href="#delete-a-model-version-or-model-using-the-ui" title="Permalink to this headline"> </a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>You cannot undo this action. You can transition a model version to the Archived stage rather than deleting it from the registry. When you delete a model, all model artifacts stored by the Workspace Model Registry and all the metadata associated with the registered model are deleted.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can only delete models and model versions in the None or Archived stage. If a registered model has versions in the Staging or Production stage, you must transition them to either the None or Archived stage before deleting the model.</p>
+</div>
+<p>To delete a model version:</p>
+<ol class="arabic simple">
+<li><p>Click <img alt="Models Icon" src="../../_images/models-icon.png" /> <strong>Models</strong> in the sidebar.</p></li>
+<li><p>Click a model name.</p></li>
+<li><p>Click a model version.</p></li>
+<li><p>Click <img alt="Delete model version" src="../../_images/three-button-icon.png" /> at the upper right corner of the screen and select <strong>Delete</strong> from the drop-down menu.</p></li>
+</ol>
+<p>To delete a model:</p>
+<ol class="arabic simple">
+<li><p>Click <img alt="Models Icon" src="../../_images/models-icon.png" /> <strong>Models</strong>  in the sidebar.</p></li>
+<li><p>Click a model name.</p></li>
+<li><p>Click <img alt="Delete model" src="../../_images/three-button-icon.png" /> at the upper right corner of the screen and select <strong>Delete</strong> from the drop-down menu.</p></li>
+</ol>
+</div>
+<div class="section" id="delete-a-model-version-or-model-using-the-api">
+<h3>Delete a model version or model using the API<a class="headerlink" href="#delete-a-model-version-or-model-using-the-api" title="Permalink to this headline"> </a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>You cannot undo this action. You can transition a model version to the Archived stage rather than deleting it from the registry. When you delete a model, all model artifacts stored by the Workspace Model Registry and all the metadata associated with the registered model are deleted.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can only delete models and model versions in the None or Archived stage. If a registered model has versions in the Staging or Production stage, you must transition them to either the None or Archived stage before deleting the model.</p>
+</div>
+<div class="section" id="delete-a-model-version">
+<h4>Delete a model version<a class="headerlink" href="#delete-a-model-version" title="Permalink to this headline"> </a></h4>
+<p>To delete a model version, use the MLflow Client API <code class="docutils literal notranslate"><span class="pre">delete_model_version()</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Delete versions 1,2, and 3 of the model</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+<span class="n">versions</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">version</span> <span class="ow">in</span> <span class="n">versions</span><span class="p">:</span>
+  <span class="n">client</span><span class="o">.</span><span class="n">delete_model_version</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;&lt;model-name&gt;&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="delete-a-model">
+<h4>Delete a model<a class="headerlink" href="#delete-a-model" title="Permalink to this headline"> </a></h4>
+<p>To delete a model, use the MLflow Client API <code class="docutils literal notranslate"><span class="pre">delete_registered_model()</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">delete_registered_model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;&lt;model-name&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="share-models-across-workspaces">
+<span id="delete-a-model-or-model-version"></span><h2>Share models across workspaces<a class="headerlink" href="#share-models-across-workspaces" title="Permalink to this headline"> </a></h2>
+<p>Databricks recommends using <a class="reference internal" href="index.html"><span class="doc">Models in Unity Catalog</span></a> to share models across workspaces. Unity Catalog provides out-of-the-box support for cross-workspace model access, governance, and audit logging.</p>
+<p>However, if using the workspace model registry, you can also <a class="reference internal" href="multiple-workspaces.html"><span class="doc">share models across multiple workspaces</span></a> with some setup. For example, you can develop and log a model in your own workspace and then access it from another workspace using a remote Workspace model registry. This is useful when multiple teams share access to models. You can create multiple workspaces and use and manage models across these environments.</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="copy-mlflow-objects-between-workspaces">
+<h2>Copy MLflow objects between workspaces<a class="headerlink" href="#copy-mlflow-objects-between-workspaces" title="Permalink to this headline"> </a></h2>
+<p>To import or export MLflow objects to or from your Databricks workspace, you can use the community-driven open source project <a class="reference external" href="https://github.com/mlflow/mlflow-export-import#why-use-mlflow-export-import">MLflow Export-Import</a> to migrate MLflow experiments, models, and runs between workspaces.</p>
+<p>With these tools, you can:</p>
+<ul class="simple">
+<li><p>Share and collaborate with other data scientists in the same or another tracking server. For example, you can clone an experiment from another user into your workspace.</p></li>
+<li><p>Copy a model from one workspace to another, such as from a development to a production workspace.</p></li>
+<li><p>Copy MLflow experiments and runs from your local tracking server to your Databricks workspace.</p></li>
+<li><p>Back up mission critical experiments and models to another Databricks workspace.</p></li>
+</ul>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline"> </a></h2>
+<p>This example illustrates how to use the Workspace Model Registry to build a machine learning application.</p>
+<p><a class="reference internal" href="../../mlflow/workspace-model-registry-example.html"><span class="doc">Workspace Model Registry example</span></a></p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

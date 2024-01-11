@@ -1,0 +1,687 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="This article provides details on configuring pipeline settings for Delta Live Tables" name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Configure pipeline settings for Delta Live Tables">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Configure pipeline settings for Delta Live Tables &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/delta-live-tables/settings.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/delta-live-tables/settings.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/delta-live-tables/settings.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/delta-live-tables/settings.html" class="notranslate">English</option>
+    <option value="../../ja/delta-live-tables/settings.html" class="notranslate">日本語</option>
+    <option value="../../pt/delta-live-tables/settings.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Configure pipeline settings for Delta Live Tables</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="configure-pipeline-settings-for-delta-live-tables">
+<span id="configure-pipeline-settings-for-dlt"></span><h1>Configure pipeline settings for Delta Live Tables<a class="headerlink" href="#configure-pipeline-settings-for-delta-live-tables" title="Permalink to this headline"> </a></h1>
+<p>This article provides details on configuring pipeline settings for Delta Live Tables. Delta Live Tables provides a user interface for configuring and editing pipeline settings. The UI also provides an option to display and edit settings in JSON.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can configure most settings with either the UI or a JSON specification. Some advanced options are only available using the JSON configuration.</p>
+</div>
+<p>Databricks recommends familiarizing yourself with Delta Live Tables settings using the UI. If necessary, you can directly edit the JSON configuration in the workspace. JSON configuration files are also useful when deploying pipelines to new environments or when using the <a class="reference internal" href="../archive/dev-tools/cli/dlt-cli.html"><span class="doc">CLI</span></a> or <a class="reference internal" href="api-guide.html"><span class="doc">REST API</span></a>.</p>
+<p>For a full reference to the Delta Live Tables JSON configuration settings, see <a class="reference internal" href="properties.html#config-settings"><span class="std std-ref">Delta Live Tables pipeline configurations</span></a>.</p>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="choose-a-product-edition">
+<span id="editions"></span><h2>Choose a product edition<a class="headerlink" href="#choose-a-product-edition" title="Permalink to this headline"> </a></h2>
+<p>Select the Delta Live Tables product edition with the features best suited for your pipeline requirements. The following product editions are available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Core</span></code> to run streaming ingest workloads. Select the <code class="docutils literal notranslate"><span class="pre">Core</span></code> edition if your pipeline doesn’t require advanced features such as change data capture (CDC) or Delta Live Tables expectations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Pro</span></code> to run streaming ingest and CDC workloads. The <code class="docutils literal notranslate"><span class="pre">Pro</span></code> product edition supports all of the <code class="docutils literal notranslate"><span class="pre">Core</span></code> features, plus support for workloads that require updating tables based on changes in source data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Advanced</span></code> to run streaming ingest workloads, CDC workloads, and workloads that require expectations. The <code class="docutils literal notranslate"><span class="pre">Advanced</span></code> product edition supports the features of the <code class="docutils literal notranslate"><span class="pre">Core</span></code> and <code class="docutils literal notranslate"><span class="pre">Pro</span></code> editions, and also supports enforcement of data quality constraints with Delta Live Tables expectations.</p></li>
+</ul>
+<p>You can select the product edition when you create or edit a pipeline. You can select a different edition for each pipeline. See the <a class="reference external" href="https://www.databricks.com/product/pricing/delta-live">Delta Live Tables product page</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If your pipeline includes features not supported by the selected product edition, for example, expectations, you will receive an error message with the reason for the error. You can then edit the pipeline to select the appropriate edition.</p>
+</div>
+</div>
+<div class="section" id="choose-a-pipeline-mode">
+<h2>Choose a pipeline mode<a class="headerlink" href="#choose-a-pipeline-mode" title="Permalink to this headline"> </a></h2>
+<p>You can update your pipeline continuously or with manual triggers based on the pipeline mode. See <a class="reference internal" href="updates.html#continuous-triggered"><span class="std std-ref">Continuous vs. triggered pipeline execution</span></a>.</p>
+</div>
+<div class="section" id="select-a-cluster-policy">
+<span id="cluster-policy"></span><h2>Select a cluster policy<a class="headerlink" href="#select-a-cluster-policy" title="Permalink to this headline"> </a></h2>
+<p>Users must have permissions to deploy compute to configure and update Delta Live Tables pipelines. Workspace admins can configure cluster policies to provide users with access to compute resources for Delta Live Tables. See <a class="reference internal" href="../administration-guide/clusters/policy-definition.html#dlt"><span class="std std-ref">Define limits on Delta Live Tables pipeline compute</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li><p>Cluster policies are optional. Check with your workspace administrator if you lack compute privileges required for Delta Live Tables.</p></li>
+<li><p>To ensure that cluster policy default values are correctly applied, set the <code class="docutils literal notranslate"><span class="pre">apply_policy_default_values</span></code> value to <code class="docutils literal notranslate"><span class="pre">true</span></code> in the <a class="reference internal" href="#cluster-config"><span class="std std-ref">cluster configurations</span></a> in your pipeline configuration:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;clusters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;apply_cluster_policy_defaults&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="configure-source-code-libraries">
+<span id="libraries"></span><h2>Configure source code libraries<a class="headerlink" href="#configure-source-code-libraries" title="Permalink to this headline"> </a></h2>
+<p>You can use the file selector in the Delta Live Tables UI to configure the source code defining your pipeline. Pipeline source code is defined in Databricks notebooks or in SQL or Python scripts stored in workspace files. When you create or edit your pipeline, you can add one or more notebooks or workspace files or a combination of notebooks and workspace files.</p>
+<p>Because Delta Live Tables automatically analyzes dataset dependencies to construct the processing graph for your pipeline, you can add source code libraries in any order.</p>
+<p>You can also modify the JSON file to include Delta Live Tables source code defined in SQL and Python scripts stored in workspace files. The following example includes notebooks and workspace files from Databricks Repos:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Example pipeline 3&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;storage&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dbfs:/pipeline-examples/storage-location/example3&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;libraries&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;notebook&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/example-notebook_1&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;notebook&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/example-notebook_2&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;file&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Repos/&lt;user-name&gt;@databricks.com/Apply_Changes_Into/apply_changes_into.sql&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;file&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Repos/&lt;user-name&gt;@databricks.com/Apply_Changes_Into/apply_changes_into.py&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="specify-a-storage-location">
+<h2>Specify a storage location<a class="headerlink" href="#specify-a-storage-location" title="Permalink to this headline"> </a></h2>
+<p>You can specify a storage location for a pipeline that publishes to the Hive metastore. The primary motivation for specifying a location is to control the object storage location for data written by your pipeline.</p>
+<p>Because all tables, data, checkpoints, and metadata for Delta Live Tables pipelines are fully managed by Delta Live Tables, most interaction with Delta Live Tables datasets happens through tables registered to the Hive metastore or Unity Catalog.</p>
+</div>
+<div class="section" id="specify-a-target-schema-for-pipeline-output-tables">
+<h2>Specify a target schema for pipeline output tables<a class="headerlink" href="#specify-a-target-schema-for-pipeline-output-tables" title="Permalink to this headline"> </a></h2>
+<p>While optional, you should specify a target to publish tables created by your pipeline anytime you move beyond development and testing for a new pipeline. Publishing a pipeline to a target makes datasets available for querying elsewhere in your Databricks environment. See <a class="reference internal" href="publish.html"><span class="doc">Publish data from Delta Live Tables pipelines to the Hive metastore</span></a> or <a class="reference internal" href="unity-catalog.html"><span class="doc">Use Unity Catalog with your Delta Live Tables pipelines</span></a>.</p>
+</div>
+<div class="section" id="configure-your-compute-settings">
+<span id="cluster-config"></span><h2>Configure your compute settings<a class="headerlink" href="#configure-your-compute-settings" title="Permalink to this headline"> </a></h2>
+<p>Each Delta Live Tables pipeline has two associated clusters:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">updates</span></code> cluster processes pipeline updates.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">maintenance</span></code> cluster runs daily maintenance tasks.</p></li>
+</ul>
+<p>The configuration used by these clusters is determined by the <code class="docutils literal notranslate"><span class="pre">clusters</span></code> attribute specified in your pipeline settings.</p>
+<p>You can add compute settings that apply to only a specific type of cluster by using cluster labels. There are three labels you can use when configuring pipeline clusters:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The cluster label setting can be omitted if you are defining only one cluster configuration. The <code class="docutils literal notranslate"><span class="pre">default</span></code> label is applied to cluster configurations if no setting for the label is provided. The cluster label setting is required only if you need to customize settings for different cluster types.</p>
+</div>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">default</span></code> label defines compute settings to apply to both the <code class="docutils literal notranslate"><span class="pre">updates</span></code> and <code class="docutils literal notranslate"><span class="pre">maintenance</span></code> clusters. Applying the same settings to both clusters improves the reliability of maintenance runs by ensuring that required configurations, for example, data access credentials for a storage location, are applied to the maintenance cluster.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">maintenance</span></code> label defines compute settings to apply to only the <code class="docutils literal notranslate"><span class="pre">maintenance</span></code> cluster. You can also use the <code class="docutils literal notranslate"><span class="pre">maintenance</span></code> label to override settings configured by the <code class="docutils literal notranslate"><span class="pre">default</span></code> label.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">updates</span></code> label defines settings to apply to only the <code class="docutils literal notranslate"><span class="pre">updates</span></code> cluster. Use the <code class="docutils literal notranslate"><span class="pre">updates</span></code> label to configure settings that should not be applied to the <code class="docutils literal notranslate"><span class="pre">maintenance</span></code> cluster.</p></li>
+</ul>
+<p>Settings defined using the <code class="docutils literal notranslate"><span class="pre">default</span></code> and <code class="docutils literal notranslate"><span class="pre">updates</span></code> labels are merged to create the final configuration for the <code class="docutils literal notranslate"><span class="pre">updates</span></code> cluster. If the same setting is defined using both <code class="docutils literal notranslate"><span class="pre">default</span></code> and <code class="docutils literal notranslate"><span class="pre">updates</span></code> labels, the setting defined with the <code class="docutils literal notranslate"><span class="pre">updates</span></code> label overrides the setting defined with the <code class="docutils literal notranslate"><span class="pre">default</span></code> label.</p>
+<p>The following example defines a Spark configuration parameter that is added only to the configuration for the <code class="docutils literal notranslate"><span class="pre">updates</span></code> cluster:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;clusters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;autoscale&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;min_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ENHANCED&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;updates&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;spark_conf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;value&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Delta Live Tables provides similar options for cluster settings as other compute on Databricks. Like other pipeline settings, you can modify the JSON configuration for clusters to specify options not present in the UI. See <a class="reference internal" href="../compute/index.html"><span class="doc">Compute</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Because the Delta Live Tables runtime manages the lifecycle of pipeline clusters and runs a custom version of Databricks Runtime, you cannot manually set some cluster settings in a pipeline configuration, such as the Spark version or cluster names. See <a class="reference internal" href="properties.html#non-settable-attrs"><span class="std std-ref">Cluster attributes that are not user settable</span></a>.</p></li>
+<li><p>You can configure Delta Live Tables pipelines to leverage Photon. See <a class="reference internal" href="../compute/photon.html"><span class="doc">What is Photon?</span></a>.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="select-instance-types-to-run-a-pipeline">
+<span id="configure-instance-types"></span><h2>Select instance types to run a pipeline<a class="headerlink" href="#select-instance-types-to-run-a-pipeline" title="Permalink to this headline"> </a></h2>
+<p>By default, Delta Live Tables selects the instance types for the driver and worker nodes that run your pipeline, but you can also manually configure the instance types. For example, you might want to select instance types to improve pipeline performance or address memory issues when running your pipeline. You can configure instance types when you <a class="reference external" href="https://docs.databricks.com/api/workspace/pipelines/create">create</a> or <a class="reference external" href="https://docs.databricks.com/api/workspace/pipelines/update">edit</a> a pipeline with the REST API, or in the Delta Live Tables UI.</p>
+<p>To configure instance types when you create or edit a pipeline in the Delta Live Tables UI:</p>
+<ol class="arabic simple">
+<li><p>Click the <strong>Settings</strong> button.</p></li>
+<li><p>On the <strong>Pipeline settings</strong> page, click the <strong>JSON</strong> button.</p></li>
+<li><p>Enter the instance type configurations in the cluster configuration:</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To avoid assigning unnecessary resources to the <code class="docutils literal notranslate"><span class="pre">maintenance</span></code> cluster, this example uses the <code class="docutils literal notranslate"><span class="pre">updates</span></code> label to set the instance types for only the <code class="docutils literal notranslate"><span class="pre">updates</span></code> cluster. To assign the instance types to both <code class="docutils literal notranslate"><span class="pre">updates</span></code> and <code class="docutils literal notranslate"><span class="pre">maintenance</span></code> clusters, use the <code class="docutils literal notranslate"><span class="pre">default</span></code> label or omit the setting for the label. The <code class="docutils literal notranslate"><span class="pre">default</span></code> label is applied to pipeline cluster configurations if no setting for the label is provided. See <a class="reference internal" href="#cluster-config"><span class="std std-ref">Configure your compute settings</span></a>.</p>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;clusters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;updates&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;node_type_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;r6i.xlarge&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;driver_node_type_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;i3.large&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;...&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-autoscaling-to-increase-efficiency-and-reduce-resource-usage">
+<span id="use-autoscaling"></span><h2>Use autoscaling to increase efficiency and reduce resource usage<a class="headerlink" href="#use-autoscaling-to-increase-efficiency-and-reduce-resource-usage" title="Permalink to this headline"> </a></h2>
+<p>Use <a class="reference internal" href="auto-scaling.html"><span class="doc">Enhanced Autoscaling</span></a> to optimize the cluster utilization of your pipelines. Enhanced Autoscaling adds additional resources only if the system determines those resources will increase pipeline processing speed. Resources are freed when no longer needed, and clusters are shut down as soon as all pipeline updates are complete.</p>
+<p>Use the following guidelines when configuring Enhanced Autoscaling for production pipelines:</p>
+<ul class="simple">
+<li><p>Leave the <code class="docutils literal notranslate"><span class="pre">Min</span> <span class="pre">workers</span></code> setting at the default.</p></li>
+<li><p>Set the <code class="docutils literal notranslate"><span class="pre">Max</span> <span class="pre">workers</span></code> setting to a value based on budget and pipeline priority.</p></li>
+</ul>
+</div>
+<div class="section" id="delay-compute-shutdown">
+<h2>Delay compute shutdown<a class="headerlink" href="#delay-compute-shutdown" title="Permalink to this headline"> </a></h2>
+<p>Because a Delta Live Tables cluster automatically shuts down when not in use, referencing a cluster policy that sets <code class="docutils literal notranslate"><span class="pre">autotermination_minutes</span></code> in your cluster configuration results in an error. To control cluster shutdown behavior, you can use development or production mode or use the <code class="docutils literal notranslate"><span class="pre">pipelines.clusterShutdown.delay</span></code> setting in the pipeline configuration. The following example sets the <code class="docutils literal notranslate"><span class="pre">pipelines.clusterShutdown.delay</span></code> value to 60 seconds:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;configuration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;pipelines.clusterShutdown.delay&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;60s&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>When <code class="docutils literal notranslate"><span class="pre">production</span></code> mode is enabled, the default value for <code class="docutils literal notranslate"><span class="pre">pipelines.clusterShutdown.delay</span></code> is <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">seconds</span></code>. When <code class="docutils literal notranslate"><span class="pre">development</span></code> mode is enabled, the default value is <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">hours</span></code>.</p>
+</div>
+<div class="section" id="create-a-single-node-cluster">
+<h2>Create a single node cluster<a class="headerlink" href="#create-a-single-node-cluster" title="Permalink to this headline"> </a></h2>
+<p>If you set <code class="docutils literal notranslate"><span class="pre">num_workers</span></code> to 0 in cluster settings, the cluster is created as a <a class="reference internal" href="../compute/single-node.html"><span class="doc">Single Node cluster</span></a>. Configuring an autoscaling cluster and setting <code class="docutils literal notranslate"><span class="pre">min_workers</span></code> to 0 and <code class="docutils literal notranslate"><span class="pre">max_workers</span></code> to 0 also creates a Single Node cluster.</p>
+<p>If you configure an autoscaling cluster and set only <code class="docutils literal notranslate"><span class="pre">min_workers</span></code> to 0, then the cluster is not created as a Single Node cluster. The cluster has at least one active worker at all times until terminated.</p>
+<p>An example cluster configuration to create a Single Node cluster in Delta Live Tables:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;clusters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;num_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="configure-cluster-tags">
+<h2>Configure cluster tags<a class="headerlink" href="#configure-cluster-tags" title="Permalink to this headline"> </a></h2>
+<p>You can use <a class="reference internal" href="../compute/configure.html#tags"><span class="std std-ref">cluster tags</span></a> to monitor usage for your pipeline clusters. Add cluster tags in the Delta Live Tables UI when you create or edit a pipeline, or by editing the JSON settings for your pipeline clusters.</p>
+</div>
+<div class="section" id="cloud-storage-configuration">
+<span id="configure-cloud-storage"></span><h2>Cloud storage configuration<a class="headerlink" href="#cloud-storage-configuration" title="Permalink to this headline"> </a></h2>
+<p>You use AWS instance profiles to configure access to <a class="reference internal" href="../connect/storage/tutorial-s3-instance-profile.html"><span class="doc">S3 storage in AWS</span></a>. To add an instance profile in the Delta Live Tables UI, click <strong>Advanced</strong> when you create or edit a pipeline and select an instance profile in the <strong>Instance profile</strong> drop-down menu.</p>
+<p>You can also configure an AWS instance profile by editing the JSON settings for your pipeline clusters when you <a class="reference internal" href="api-guide.html#dlt-create-pipeline"><span class="std std-ref">create</span></a> or <a class="reference internal" href="api-guide.html#dlt-edit-pipeline"><span class="std std-ref">edit</span></a> a pipeline with the Delta Live Tables API or in the Delta Live Tables UI:</p>
+<ol class="arabic simple">
+<li><p>On the <strong>Pipeline details</strong> page for your pipeline, click the <strong>Settings</strong> button. The <strong>Pipeline settings</strong> page appears.</p></li>
+<li><p>Click the <strong>JSON</strong> button.</p></li>
+<li><p>Enter the instance profile configuration in the <code class="docutils literal notranslate"><span class="pre">aws_attributes.instance_profile_arn</span></code> field in the cluster configuration:</p></li>
+</ol>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;clusters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;aws_attributes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;instance_profile_arn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:...&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You can also configure instance profiles when you create cluster policies for your Delta Live Tables pipelines. For an example, see the <a class="reference external" href="https://kb.databricks.com/clusters/set-instance-profile-arn-optional-policy">knowledge base</a>.</p>
+</div>
+<div class="section" id="parameterize-pipelines">
+<h2>Parameterize pipelines<a class="headerlink" href="#parameterize-pipelines" title="Permalink to this headline"> </a></h2>
+<p>The Python and SQL code that defines your datasets can be parameterized by the pipeline’s settings. Parameterization enables the following use cases:</p>
+<ul class="simple">
+<li><p>Separating long paths and other variables from your code.</p></li>
+<li><p>Reducing the amount of data processed in development or staging environments to speed up testing.</p></li>
+<li><p>Reusing the same transformation logic to process from multiple data sources.</p></li>
+</ul>
+<p>The following example uses the <code class="docutils literal notranslate"><span class="pre">startDate</span></code> configuration value to limit the development pipeline to a subset of the input data:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">REFRESH</span><span class="w"> </span><span class="n">LIVE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">customer_events</span>
+<span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">sourceTable</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="nb">date</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="s1">&#39;${mypipeline.startDate}&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@dlt</span><span class="o">.</span><span class="n">table</span>
+<span class="k">def</span> <span class="nf">customer_events</span><span class="p">():</span>
+  <span class="n">start_date</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mypipeline.startDate&quot;</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">read</span><span class="p">(</span><span class="s2">&quot;sourceTable&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">start_date</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Data Ingest - DEV&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;configuration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;mypipeline.startDate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2021-01-02&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Data Ingest - PROD&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;configuration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;mypipeline.startDate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2010-01-02&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="pipelines-trigger-interval">
+<span id="trigger-interval"></span><h2>Pipelines trigger interval<a class="headerlink" href="#pipelines-trigger-interval" title="Permalink to this headline"> </a></h2>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">pipelines.trigger.interval</span></code> to control the trigger interval for a flow updating a table or an entire pipeline. Because a triggered pipeline processes each table only once, the <code class="docutils literal notranslate"><span class="pre">pipelines.trigger.interval</span></code> is used only with continuous pipelines.</p>
+<p>Databricks recommends setting <code class="docutils literal notranslate"><span class="pre">pipelines.trigger.interval</span></code> on individual tables because of different defaults for streaming versus batch queries. Set the value on a pipeline only when your processing requires controlling updates for the entire pipeline graph.</p>
+<p>You set <code class="docutils literal notranslate"><span class="pre">pipelines.trigger.interval</span></code> on a table using <code class="docutils literal notranslate"><span class="pre">spark_conf</span></code> in Python, or <code class="docutils literal notranslate"><span class="pre">SET</span></code> in SQL:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@dlt</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
+  <span class="n">spark_conf</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pipelines.trigger.interval&quot;</span> <span class="p">:</span> <span class="s2">&quot;10 seconds&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="o">&lt;</span><span class="n">function</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">(</span><span class="o">&lt;</span><span class="n">query</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">pipelines</span><span class="p">.</span><span class="k">trigger</span><span class="p">.</span><span class="nb">interval</span><span class="o">=</span><span class="mi">10</span><span class="w"> </span><span class="n">seconds</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">REFRESH</span><span class="w"> </span><span class="n">LIVE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">TABLE_NAME</span>
+<span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="p">...</span>
+</pre></div>
+</div>
+<p>To set <code class="docutils literal notranslate"><span class="pre">pipelines.trigger.interval</span></code> on a pipeline, add it to the <code class="docutils literal notranslate"><span class="pre">configuration</span></code> object in the pipeline settings:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;configuration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;pipelines.trigger.interval&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10 seconds&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="allow-non-admin-users-to-view-the-driver-logs-from-a-unity-catalog-enabled-pipeline">
+<span id="allow-non-admin-users-to-view-the-driver-logs-from-a-uc-enabled-pipeline"></span><span id="driver-log-permissions"></span><h2>Allow non-admin users to view the driver logs from a Unity Catalog-enabled pipeline<a class="headerlink" href="#allow-non-admin-users-to-view-the-driver-logs-from-a-unity-catalog-enabled-pipeline" title="Permalink to this headline"> </a></h2>
+<p>By default, only the pipeline owner and workspace admins have permission to view the driver logs from the cluster that runs a Unity Catalog-enabled pipeline. You can enable access to the driver logs for any user with <a class="reference internal" href="../security/auth-authz/access-control/dlt-acl.html#permissions-overview"><span class="std std-ref">Can Manage, Can View, or Can Run permissions</span></a> by adding the following Spark configuration parameter to the <code class="docutils literal notranslate"><span class="pre">configuration</span></code> object in the pipeline settings:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;configuration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;spark.databricks.acl.needAdminPermissionToViewLogs&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;false&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-email-notifications-for-pipeline-events">
+<span id="email-notifications"></span><h2>Add email notifications for pipeline events<a class="headerlink" href="#add-email-notifications-for-pipeline-events" title="Permalink to this headline"> </a></h2>
+<p>You can configure one or more email addresses to receive notifications when the following occurs:</p>
+<ul class="simple">
+<li><p>A pipeline update completes successfully.</p></li>
+<li><p>A pipeline update fails, either with a retryable or a non-retryable error. Select this option to receive a notification for all pipeline failures.</p></li>
+<li><p>A pipeline update fails with a non-retryable (fatal) error. Select this option to receive a notification only when a non-retryable error occurs.</p></li>
+<li><p>A single data flow fails.</p></li>
+</ul>
+<p>To configure email notifications when you <a class="reference internal" href="tutorial-pipelines.html#create-pipeline"><span class="std std-ref">create</span></a> or edit a pipeline:</p>
+<ol class="arabic simple">
+<li><p>Click <strong>Add notification</strong>.</p></li>
+<li><p>Enter one or more email addresses to receive notifications.</p></li>
+<li><p>Click the check box for each notification type to send to the configured email addresses.</p></li>
+<li><p>Click <strong>Add notification</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="control-tombstone-management-for-scd-type-1-queries">
+<span id="cdc"></span><h2>Control tombstone management for SCD type 1 queries<a class="headerlink" href="#control-tombstone-management-for-scd-type-1-queries" title="Permalink to this headline"> </a></h2>
+<p>The following settings can be used to control the behavior of tombstone management for <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> events during SCD type 1 processing:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">pipelines.applyChanges.tombstoneGCThresholdInSeconds</span></code></strong>: Set this value to match the highest expected interval, in seconds, between out-of-order data. The default is 172800 seconds (2 days).</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">pipelines.applyChanges.tombstoneGCFrequencyInSeconds</span></code></strong>: This setting controls how frequently, in seconds, tombstones are checked for cleanup. The default is 1800 seconds (30 minutes).</p></li>
+</ul>
+<p>See <a class="reference internal" href="cdc.html"><span class="doc">Simplified change data capture with the APPLY CHANGES API in Delta Live Tables</span></a>.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

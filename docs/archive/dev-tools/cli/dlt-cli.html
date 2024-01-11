@@ -1,0 +1,640 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use the Databricks Delta Live Tables command-line interface." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Delta Live Tables CLI (legacy)">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Delta Live Tables CLI (legacy) &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/archive/dev-tools/cli/dlt-cli.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/archive/dev-tools/cli/dlt-cli.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/archive/dev-tools/cli/dlt-cli.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../../en/archive/dev-tools/cli/dlt-cli.html" class="notranslate">English</option>
+    <option value="../../../../ja/archive/dev-tools/cli/dlt-cli.html" class="notranslate">日本語</option>
+    <option value="../../../../pt/archive/dev-tools/cli/dlt-cli.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Delta Live Tables CLI (legacy)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="delta-live-tables-cli-legacy">
+<span id="dlt-cli-legacy"></span><h1>Delta Live Tables CLI (legacy)<a class="headerlink" href="#delta-live-tables-cli-legacy" title="Permalink to this headline"> </a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This documentation has been retired and might not be updated.</p>
+<p>This information applies to legacy Databricks CLI versions 0.18 and below. Databricks recommends that you use newer Databricks CLI version 0.205 or above instead. See <a class="reference internal" href="../../../dev-tools/cli/index.html"><span class="doc">What is the Databricks CLI?</span></a>. To find your version of the Databricks CLI, run <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">-v</span></code>.</p>
+<p>To migrate from Databricks CLI version 0.18 or below to Databricks CLI version 0.205 or above, see <a class="reference internal" href="../../../dev-tools/cli/migrate.html"><span class="doc">Databricks CLI migration</span></a>.</p>
+</div>
+<p>You run Databricks Delta Live Tables CLI subcommands by appending them to <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">pipelines</span></code>. These subcommands call the <a class="reference internal" href="../../../delta-live-tables/api-guide.html"><span class="doc">Delta Live Tables API</span></a>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>pipelines<span class="w"> </span>-h
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Usage: databricks pipelines [OPTIONS] COMMAND [ARGS]...
+
+  Utility to interact with Databricks Delta Live Tables Pipelines.
+
+Options:
+  -v, --version   0.18.0
+  --debug         Debug Mode. Shows full stack trace on error.
+  --profile TEXT  CLI connection profile to use. The default profile is
+                  &quot;DEFAULT&quot;.
+
+  -h, --help      Show this message and exit.
+
+Commands:
+  create  Creates a pipeline.
+  delete  Deletes the pipeline and cancels any active updates.
+  deploy  [Deprecated] This command is deprecated, use create and edit
+          commands instead.  Creates or edits a pipeline specified by the
+          pipeline settings.
+
+  edit    Edits a pipeline.
+  get     Gets a pipeline&#39;s current settings and status.
+  list    Lists all pipelines and their statuses.
+  reset   [Deprecated] Use the &quot;start --full-refresh&quot; command instead. Resets
+          a pipeline so that data can be reprocessed from the beginning.
+
+  run     [Deprecated] Use the &quot;start&quot; command instead. Starts a pipeline
+          update.
+
+  start   Starts a pipeline update.
+  stop    Stops the pipeline by cancelling any active update.
+</pre></div>
+</div>
+<div class="section" id="create-a-pipeline">
+<h2>Create a pipeline<a class="headerlink" href="#create-a-pipeline" title="Permalink to this headline"> </a></h2>
+<p>To display usage documentation, run <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">pipelines</span> <span class="pre">create</span> <span class="pre">--help</span></code>.</p>
+<div class="section" id="usage">
+<h3>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"> </a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>pipelines<span class="w"> </span>create<span class="w"> </span>--settings<span class="w"> </span>create-pipeline.json
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">create-pipeline.json</span></code>:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Wikipedia pipeline (SQL)&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;storage&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/username/data&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;clusters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;autoscale&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;min_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;max_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;libraries&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;notebook&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/username/Delta Live Tables quickstart (SQL)&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wikipedia_analysis&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;continuous&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Successfully created pipeline: https://&lt;databricks-instance&gt;/#joblist/pipelines/4ee6b5c2-7017-11ec-90d6-0242ac120003 with ID: 4ee6b5c2-7017-11ec-90d6-0242ac120003.</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="edit-a-pipeline">
+<h2>Edit a pipeline<a class="headerlink" href="#edit-a-pipeline" title="Permalink to this headline"> </a></h2>
+<p>To display usage documentation, run <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">pipelines</span> <span class="pre">edit</span> <span class="pre">--help</span></code>.</p>
+<div class="section" id="usage">
+<span id="usage-1"></span><h3>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"> </a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>pipelines<span class="w"> </span>edit<span class="w"> </span>--settings<span class="w"> </span>edit-pipeline.json
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">edit-pipeline.json</span></code>:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4ee6b5c2-7017-11ec-90d6-0242ac120003&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Wikipedia pipeline (SQL)&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;storage&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/username/data&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;clusters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;autoscale&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;min_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;max_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;libraries&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;notebook&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/username/Delta Live Tables quickstart (SQL)&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wikipedia_quickstart_data&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;continuous&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Successfully edited pipeline settings: https://&lt;databricks-instance&gt;/#joblist/pipelines/4ee6b5c2-7017-11ec-90d6-0242ac120003.</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="delete-a-pipeline">
+<h2>Delete a pipeline<a class="headerlink" href="#delete-a-pipeline" title="Permalink to this headline"> </a></h2>
+<p>To display usage documentation, run <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">pipelines</span> <span class="pre">delete</span> <span class="pre">--help</span></code>.</p>
+<div class="section" id="usage">
+<span id="usage-2"></span><h3>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"> </a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>pipelines<span class="w"> </span>delete<span class="w"> </span>--pipeline-id<span class="w"> </span>4ee6b5c2-7017-11ec-90d6-0242ac120003
+</pre></div>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Pipeline 4ee6b5c2-7017-11ec-90d6-0242ac120003 deleted</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="get-information-about-a-pipeline">
+<h2>Get information about a pipeline<a class="headerlink" href="#get-information-about-a-pipeline" title="Permalink to this headline"> </a></h2>
+<p>To display usage documentation, run <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">pipelines</span> <span class="pre">get</span> <span class="pre">--help</span></code>.</p>
+<div class="section" id="usage">
+<span id="usage-3"></span><h3>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"> </a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>pipelines<span class="w"> </span>get<span class="w"> </span>--pipeline-id<span class="w"> </span>4ee6b5c2-7017-11ec-90d6-0242ac120003
+</pre></div>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;pipeline_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4ee6b5c2-7017-11ec-90d6-0242ac120003&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;spec&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4ee6b5c2-7017-11ec-90d6-0242ac120003&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Wikipedia pipeline (SQL)&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;storage&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/username/data&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;clusters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;autoscale&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;min_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;max_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;libraries&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;notebook&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/username/Delta Live Tables quickstart (SQL)&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wikipedia_analysis&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;continuous&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IDLE&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Wikipedia pipeline (SQL)&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;creator_user_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;username@databricks.com&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;last_modified&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1641600056265</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="list-all-pipelines-and-information-on-their-status">
+<h2>List all pipelines and information on their status<a class="headerlink" href="#list-all-pipelines-and-information-on-their-status" title="Permalink to this headline"> </a></h2>
+<p>To display usage documentation, run <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">pipelines</span> <span class="pre">list</span> <span class="pre">--help</span></code>.</p>
+<div class="section" id="usage">
+<span id="usage-4"></span><h3>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"> </a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>pipelines<span class="w"> </span>list
+</pre></div>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;pipeline_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;8a93e1b4-7024-11ec-90d6-0242ac120003&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IDLE&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Retail sales pipeline (SQL)&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;latest_updates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;update_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;9df03924-7024-11ec-90d6-0242ac120003&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;creation_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2021-10-29T16:18:57.982Z&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;update_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a57e601c-7024-11ec-90d6-0242ac120003&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;creation_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2021-10-28T18:19:30.371Z&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;creator_user_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user@databricks.com&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;pipeline_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;b46e2670-7024-11ec-90d6-0242ac120003&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IDLE&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DLT quickstart (Python)&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;latest_updates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;update_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bcd8fa2e-7024-11ec-90d6-0242ac120003&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;creation_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2021-12-16T18:19:25.827Z&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;update_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;c2c7a2c8-7024-11ec-90d6-0242ac120003&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;creation_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2021-10-29T22:22:32.586Z&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;update_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;c88d2818-7024-11ec-90d6-0242ac120003&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;creation_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2021-10-29T22:16:18.258Z&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;creator_user_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user@databricks.com&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="start-a-pipeline-update">
+<h2>Start a pipeline update<a class="headerlink" href="#start-a-pipeline-update" title="Permalink to this headline"> </a></h2>
+<p>To display usage documentation, run <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">pipelines</span> <span class="pre">start</span> <span class="pre">--help</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>pipelines<span class="w"> </span>start<span class="w"> </span>--pipeline-id<span class="w"> </span>4ee6b5c2-7017-11ec-90d6-0242ac120003
+</pre></div>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Started an update c6462e2e-beb7-4c24-a9d3-962eaa19781b for pipeline 4ee6b5c2-7017-11ec-90d6-0242ac120003.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="start-a-pipeline-update-with-full-refresh">
+<h2>Start a pipeline update with full refresh<a class="headerlink" href="#start-a-pipeline-update-with-full-refresh" title="Permalink to this headline"> </a></h2>
+<p>To display usage documentation, run <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">pipelines</span> <span class="pre">start</span> <span class="pre">--help</span></code>.</p>
+<div class="section" id="usage">
+<span id="usage-5"></span><h3>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"> </a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>pipelines<span class="w"> </span>start<span class="w"> </span>--pipeline-id<span class="w"> </span>4ee6b5c2-7017-11ec-90d6-0242ac120003<span class="w"> </span>--full-refresh
+</pre></div>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Started an update ed885d3d-4fc0-44fd-b5dd-59471c789327 with full refresh for pipeline 4ee6b5c2-7017-11ec-90d6-0242ac120003.</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="stop-a-pipeline-update">
+<h2>Stop a pipeline update<a class="headerlink" href="#stop-a-pipeline-update" title="Permalink to this headline"> </a></h2>
+<p>To display usage documentation, run <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">pipelines</span> <span class="pre">stop</span> <span class="pre">--help</span></code>.</p>
+<div class="section" id="usage">
+<span id="usage-6"></span><h3>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"> </a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>pipelines<span class="w"> </span>stop<span class="w"> </span>--pipeline-id<span class="w"> </span>4ee6b5c2-7017-11ec-90d6-0242ac120003
+</pre></div>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Stopped pipeline 4ee6b5c2-7017-11ec-90d6-0242ac120003.</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

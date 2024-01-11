@@ -1,0 +1,984 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to train ML models using Databricks AutoML with the Python API. The API provides functions to start classification, regression, and forecasting AutoML runs." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Train ML models with Databricks AutoML Python API">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Train ML models with Databricks AutoML Python API &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/machine-learning/automl/train-ml-model-automl-api.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/machine-learning/automl/train-ml-model-automl-api.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/machine-learning/automl/train-ml-model-automl-api.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/machine-learning/automl/train-ml-model-automl-api.html" class="notranslate">English</option>
+    <option value="../../../ja/machine-learning/automl/train-ml-model-automl-api.html" class="notranslate">日本語</option>
+    <option value="../../../pt/machine-learning/automl/train-ml-model-automl-api.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Train ML models with Databricks AutoML Python API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="train-ml-models-with-databricks-automl-python-api">
+<h1>Train ML models with Databricks AutoML Python API<a class="headerlink" href="#train-ml-models-with-databricks-automl-python-api" title="Permalink to this headline"> </a></h1>
+<p>This article demonstrates how to train a model with Databricks AutoML using the API. Learn more about <a class="reference internal" href="index.html"><span class="doc">What is AutoML?</span></a>.
+The Python API provides functions to start classification, regression, and forecasting AutoML runs. Each function call trains a set of models and generates a trial notebook for each model.</p>
+<p>The following steps describe generally how to set up an AutoML experiment using the API:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="../../notebooks/notebooks-manage.html#create-a-notebook"><span class="std std-ref">Create a notebook</span></a> and attach it to a cluster running Databricks Runtime ML.</p></li>
+<li><p>Identify which table you want to use from your existing data source or <a class="reference internal" href="../../archive/legacy/data-tab.html#import-data"><span class="std std-ref">upload a data file to DBFS</span></a> and create a table.</p></li>
+<li><p>To start an AutoML run, pass the table name to the appropriate API specification: <a class="reference internal" href="#classification"><span class="std std-ref">classification</span></a>, <a class="reference internal" href="#regression"><span class="std std-ref">regression</span></a>, or <a class="reference internal" href="#forecasting"><span class="std std-ref">forecasting</span></a>.</p></li>
+<li><p>When the AutoML run begins, an MLflow experiment URL appears in the console. Use this URL to monitor the progress of the run. Refresh the MLflow experiment to see the trials as they are completed.</p></li>
+<li><p>After the AutoML run completes:</p>
+<ul class="simple">
+<li><p>Use the links in the output summary to navigate to the MLflow experiment or to the notebook that generated the best results.</p></li>
+<li><p>Use the link to the data exploration notebook to get some insights into the data passed to AutoML. You can also attach this notebook to the same cluster and re-run the notebook to reproduce the results or do additional data analysis.</p></li>
+<li><p>Use the summary object returned from the AutoML call to explore more details about the trials or to load a model trained by a given trial. Learn more about the <a class="reference internal" href="#return"><span class="std std-ref">AutoMLSummary object</span></a>.</p></li>
+<li><p>Clone any generated notebook from the trials and re-run the notebook by attaching it to the same cluster to reproduce the results. You can also make necessary edits and re-run them to train additional models and log them to the same experiment.</p></li>
+</ul>
+</li>
+</ol>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<p>See <a class="reference internal" href="index.html#requirement"><span class="std std-ref">Requirements</span></a> for AutoML experiments.</p>
+</div>
+<div class="section" id="classification-specification">
+<span id="classification"></span><h2>Classification specification<a class="headerlink" href="#classification-specification" title="Permalink to this headline"> </a></h2>
+<p>The following code example configures an AutoML run for training a classification model. For additional parameters to further customize your AutoML run see <a class="reference internal" href="#classification-regression"><span class="std std-ref">Classification and regression parameters</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">max_trials</span></code> parameter is deprecated in Databricks Runtime 10.4 ML and is not supported in Databricks Runtime 11.0 ML and above. Use <code class="docutils literal notranslate"><span class="pre">timeout_minutes</span></code> to control the duration of an AutoML run.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">databricks</span><span class="o">.</span><span class="n">automl</span><span class="o">.</span><span class="n">classify</span><span class="p">(</span>
+  <span class="n">dataset</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pyspark</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pyspark</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+  <span class="o">*</span><span class="p">,</span>
+  <span class="n">target_col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+  <span class="n">data_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">exclude_cols</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>                      <span class="c1"># &lt;DBR&gt; 10.3 ML and above</span>
+  <span class="n">exclude_frameworks</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>                   <span class="c1"># &lt;DBR&gt; 10.3 ML and above</span>
+  <span class="n">experiment_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>                             <span class="c1"># &lt;DBR&gt; 10.4 LTS ML and above</span>
+  <span class="n">experiment_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>                            <span class="c1"># &lt;DBR&gt; 12.1 ML and above</span>
+  <span class="n">feature_store_lookups</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>               <span class="c1"># &lt;DBR&gt; 11.3 LTS ML and above</span>
+  <span class="n">imputers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># &lt;DBR&gt; 10.4 LTS ML and above</span>
+  <span class="n">max_trials</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>                                 <span class="c1"># &lt;DBR&gt; 10.5 ML and below</span>
+  <span class="n">pos_label</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>                 <span class="c1"># &lt;DBR&gt; 11.1 ML and above</span>
+  <span class="n">primary_metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;f1&quot;</span><span class="p">,</span>
+  <span class="n">time_col</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">timeout_minutes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AutoMLSummary</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="regression-specification">
+<span id="regression"></span><h2>Regression specification<a class="headerlink" href="#regression-specification" title="Permalink to this headline"> </a></h2>
+<p>The following code example configures an AutoML run for training a regression model. For additional parameters to further customize your AutoML run see <a class="reference internal" href="#classification-regression"><span class="std std-ref">Classification and regression parameters</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">max_trials</span></code> parameter is deprecated in Databricks Runtime 10.4 ML and is not supported in Databricks Runtime 11.0 ML and above. Use <code class="docutils literal notranslate"><span class="pre">timeout_minutes</span></code> to control the duration of an AutoML run.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">databricks</span><span class="o">.</span><span class="n">automl</span><span class="o">.</span><span class="n">regress</span><span class="p">(</span>
+  <span class="n">dataset</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pyspark</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pyspark</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+  <span class="o">*</span><span class="p">,</span>
+  <span class="n">target_col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+  <span class="n">data_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">exclude_cols</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>                      <span class="c1"># &lt;DBR&gt; 10.3 ML and above</span>
+  <span class="n">exclude_frameworks</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>                   <span class="c1"># &lt;DBR&gt; 10.3 ML and above</span>
+  <span class="n">experiment_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>                             <span class="c1"># &lt;DBR&gt; 10.4 LTS ML and above</span>
+  <span class="n">experiment_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>                            <span class="c1"># &lt;DBR&gt; 12.1 ML and above</span>
+  <span class="n">feature_store_lookups</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>               <span class="c1"># &lt;DBR&gt; 11.3 LTS ML and above</span>
+  <span class="n">imputers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># &lt;DBR&gt; 10.4 LTS ML and above</span>
+  <span class="n">max_trials</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>                                 <span class="c1"># &lt;DBR&gt; 10.5 ML and below</span>
+  <span class="n">primary_metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;r2&quot;</span><span class="p">,</span>
+  <span class="n">time_col</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">timeout_minutes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AutoMLSummary</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="forecasting-specification">
+<span id="forecasting"></span><h2>Forecasting specification<a class="headerlink" href="#forecasting-specification" title="Permalink to this headline"> </a></h2>
+<p>The following code example configures an AutoML run for training a forecasting model. For additional detail about parameters for your AutoML run see <a class="reference internal" href="#forecast-parameters"><span class="std std-ref">Forecasting parameters</span></a>.
+To use Auto-ARIMA, the time series must have a regular frequency (that is, the interval between any two points must be the same throughout the time series). The frequency must match the frequency unit specified in the API call. AutoML handles missing time steps by filling in those values with the previous value.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">databricks</span><span class="o">.</span><span class="n">automl</span><span class="o">.</span><span class="n">forecast</span><span class="p">(</span>
+  <span class="n">dataset</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pyspark</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pyspark</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+  <span class="o">*</span><span class="p">,</span>
+  <span class="n">target_col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+  <span class="n">time_col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+  <span class="n">country_code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;US&quot;</span><span class="p">,</span>                                         <span class="c1"># &lt;DBR&gt; 12.0 ML and above</span>
+  <span class="n">data_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">exclude_frameworks</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">experiment_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">experiment_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>                            <span class="c1"># &lt;DBR&gt; 12.1 ML and above</span>
+  <span class="n">feature_store_lookups</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>               <span class="c1"># &lt;DBR&gt; 12.2 LTS ML and above</span>
+  <span class="n">frequency</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
+  <span class="n">horizon</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">identity_col</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">output_database</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>                            <span class="c1"># &lt;DBR&gt; 10.5 ML and above</span>
+  <span class="n">primary_metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;smape&quot;</span><span class="p">,</span>
+  <span class="n">timeout_minutes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AutoMLSummary</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="classification-and-regression-parameters">
+<span id="classification-regression"></span><h2>Classification and regression parameters<a class="headerlink" href="#classification-and-regression-parameters" title="Permalink to this headline"> </a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For classification and regression problems only, you can:</p>
+<ul class="simple">
+<li><p>Specify which columns to include in training.</p></li>
+<li><p>Select custom imputation methods.</p></li>
+</ul>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 65%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>dataset</p></td>
+<td><p>str
+pandas.DataFrame
+pyspark.DataFrame
+pyspark.sql.DataFrame</p></td>
+<td><p>Input table name or DataFrame that contains training features
+and target.</p>
+<p>Table name can be in format “..” or “.” for non Unity Catalog tables</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>target_col</p></td>
+<td><p>str</p></td>
+<td><p>Column name for the target label.</p></td>
+</tr>
+<tr class="row-even"><td><p>data_dir</p></td>
+<td><p>str of format
+<code class="docutils literal notranslate"><span class="pre">dbfs:/&lt;folder-name&gt;</span></code></p></td>
+<td><p>(Optional) DBFS path used to store the training dataset. This path is
+visible to both driver and worker nodes. If empty, AutoML saves the
+training dataset as an MLflow artifact.</p></td>
+</tr>
+<tr class="row-odd"><td><p>exclude_cols</p></td>
+<td><p>List[str]</p></td>
+<td><p>(Optional) List of columns to ignore during AutoML calculations.</p>
+<p> Default: []</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>exclude_
+frameworks</p></td>
+<td><p>List[str]</p></td>
+<td><p>(Optional) List of algorithm frameworks that AutoML should not
+consider as it develops models. Possible values: empty list,
+or one or more of “sklearn”, “lightgbm”, “xgboost”.</p>
+<p>Default: [] (all frameworks are considered)</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>experiment_dir</p></td>
+<td><p>str</p></td>
+<td><p>(Optional) Path to the directory in the workspace to save the
+generated notebooks and experiments.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">/Users/&lt;username&gt;/databricks_automl/</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p>experiment_name</p></td>
+<td><p>str</p></td>
+<td><p>(Optional) Name for the MLflow experiment that AutoML creates.</p>
+<p>Default: Name is automatically generated.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>feature_store_
+lookups</p></td>
+<td><p>List[Dict]</p></td>
+<td><p>(Optional) List of dictionaries that represent features from Feature
+Store for data augmentation. Valid keys in each dictionary are:</p>
+<ul class="simple">
+<li><p>table_name (str): Required. Name of the feature table.</p></li>
+<li><p>lookup_key (list or str): Required. Column name(s) to use as
+key when joining the feature table with the data passed in the
+<code class="docutils literal notranslate"><span class="pre">dataset</span></code> param. The order of the column names must match the order
+of the primary keys of the feature table.</p></li>
+<li><p>timestamp_lookup_key (str): Required if the specified table
+is a <a class="reference internal" href="../feature-store/time-series.html"><span class="doc">time series feature table</span></a>.
+The column name to use when performing point-in-time lookup on the
+feature table with the data passed in the <code class="docutils literal notranslate"><span class="pre">dataset</span></code> param.</p></li>
+</ul>
+<p>Default: []</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>imputers</p></td>
+<td><p>Dict[str, Union[str,
+Dict[str, Any]]]</p></td>
+<td><p>(Optional) Dictionary where each key is a column name, and each value
+is a string or dictionary describing the imputation strategy. If
+specified as a string, the value must be one of “mean”, “median”,
+or “most_frequent”. To impute with a known value, specify the value
+as a dictionary
+<code class="docutils literal notranslate"><span class="pre">{&quot;strategy&quot;:</span> <span class="pre">&quot;constant&quot;,</span> <span class="pre">&quot;fill_value&quot;:</span> <span class="pre">&lt;desired</span> <span class="pre">value&gt;}</span></code>.
+You can also specify string options as dictionaries, for example
+{“strategy”: “mean”}.</p>
+<p>If no imputation strategy is provided for a column, AutoML selects
+a default strategy based on column type and content. If you specify a
+non-default imputation method, AutoML does not perform
+<a class="reference internal" href="how-automl-works.html#semantic-detection"><span class="std std-ref">semantic type detection</span></a>.</p>
+<p>Default: {}</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>max_trials</p></td>
+<td><p>int</p></td>
+<td><p>(Optional) Maximum number of trials to run.</p>
+<p>This parameter is available in Databricks Runtime 10.5 ML and below, but is
+deprecated starting in Databricks Runtime 10.3 ML. In Databricks Runtime 11.0 ML and above, this
+parameter is not supported.</p>
+<p>Default: 20</p>
+<p>If timeout_minutes=None, AutoML runs the maximum number of trials.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>pos_label</p></td>
+<td><p>Union[int, bool, str]</p></td>
+<td><p>(Classification only) The positive class. This is useful for
+calculating metrics such as precision and recall. Should only be
+specified for binary classification problems.</p></td>
+</tr>
+<tr class="row-odd"><td><p>primary_metric</p></td>
+<td><p>str</p></td>
+<td><p>Metric used to evaluate and rank model performance.</p>
+<p>Supported metrics for regression: “r2” (default), “mae”, “rmse”, “mse”</p>
+<p>Supported metrics for classification: “f1” (default), “log_loss”,
+“precision”, “accuracy”, “roc_auc”</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>time_col</p></td>
+<td><p>str</p></td>
+<td><p>Available in Databricks Runtime 10.1 ML and above.</p>
+<p>(Optional) Column name for a time column.</p>
+<p>If provided, AutoML tries to split the dataset into training,
+validation, and test sets chronologically, using the earliest points
+as training data and the latest points as a test set.</p>
+<p>Accepted column types are timestamp and integer. With Databricks Runtime 10.2 ML
+and above, string columns are also supported.
+If column type is string, AutoML tries to convert it to timestamp
+using semantic detection. If the conversion fails, the AutoML run
+fails.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>timeout_minutes</p></td>
+<td><p>int</p></td>
+<td><p>(Optional) Maximum time to wait for AutoML trials to complete.
+Longer timeouts allow AutoML to run more trials and
+identify a model with better accuracy.</p>
+<p>Default: None (no time limit)</p>
+<p>Minimum value: 5 minutes</p>
+<p>An error is reported if the timeout is too short to allow at least
+one trial to complete.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="forecasting-parameters">
+<span id="forecast-parameters"></span><h2>Forecasting parameters<a class="headerlink" href="#forecasting-parameters" title="Permalink to this headline"> </a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 65%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>dataset</p></td>
+<td><p>str</p>
+<p>pandas.DataFrame
+pyspark.DataFrame
+pyspark.sql.DataFrame</p>
+</td>
+<td><p>Input table name or DataFrame that contains training features
+and target.</p>
+<p>Table name can be in format “..” or “.” for non Unity Catalog tables</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>target_col</p></td>
+<td><p>str</p></td>
+<td><p>Column name for the target label.</p></td>
+</tr>
+<tr class="row-even"><td><p>time_col</p></td>
+<td><p>str</p></td>
+<td><p>Name of the time column for forecasting.</p></td>
+</tr>
+<tr class="row-odd"><td><p>frequency</p></td>
+<td><p>str</p></td>
+<td><p>Frequency of the time series for forecasting.
+This is the period with which events are expected to occur.
+The default setting is “D” or daily data. Be sure to change the
+setting if your data has a different frequency.</p>
+<p>Possible values:</p>
+<p>“W” (weeks)</p>
+<p>“D” / “days” / “day”</p>
+<p>“hours” / “hour” / “hr” / “h”</p>
+<p>“m” / “minute” / “min” / “minutes” / “T”</p>
+<p>“S” / “seconds” / “sec” / “second”</p>
+<p>The following are only available with Databricks Runtime 12.0 ML and above:</p>
+<p>“M” / “month” / “months”</p>
+<p>“Q” / “quarter” / “quarters”</p>
+<p>“Y” / “year” / “years”</p>
+<p>Default: “D”</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>horizon</p></td>
+<td><p>int</p></td>
+<td><p>Number of periods into the future for which forecasts
+should be returned.
+The units are the time series frequency.
+Default: 1</p></td>
+</tr>
+<tr class="row-odd"><td><p>data_dir</p></td>
+<td><p>str of format
+<code class="docutils literal notranslate"><span class="pre">dbfs:/&lt;folder-name&gt;</span></code></p></td>
+<td><p>(Optional) DBFS path used to store the training dataset. This path is
+visible to both driver and worker nodes. If empty, AutoML saves the
+training dataset as an MLflow artifact.</p></td>
+</tr>
+<tr class="row-even"><td><p>exclude_
+frameworks</p></td>
+<td><p>List[str]</p></td>
+<td><p>(Optional) List of algorithm frameworks that AutoML should not
+consider as it develops models. Possible values: empty list, or one
+or more of “prophet”, “arima”.
+Default: [] (all frameworks are considered)</p></td>
+</tr>
+<tr class="row-odd"><td><p>experiment_dir</p></td>
+<td><p>str</p></td>
+<td><p>(Optional) Path to the directory in the workspace to save the
+generated notebooks and experiments.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">/Users/&lt;username&gt;/databricks_automl/</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p>experiment_name</p></td>
+<td><p>str</p></td>
+<td><p>(Optional) Name for the MLflow experiment that AutoML creates.</p>
+<p>Default: Name is automatically generated.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>feature_store_
+lookups</p></td>
+<td><p>List[Dict]</p></td>
+<td><p>(Optional) List of dictionaries that represent features from Feature
+Store for data augmentation. Valid keys in each dictionary are:</p>
+<ul class="simple">
+<li><p>table_name (str): Required. Name of the feature table.</p></li>
+<li><p>lookup_key (list or str): Required. Column name(s) to use as
+key when joining the feature table with the data passed in the
+<code class="docutils literal notranslate"><span class="pre">dataset</span></code> param. The order of the column names must match the order
+of the primary keys of the feature table.</p></li>
+<li><p>timestamp_lookup_key (str): Required if the specified table
+is a <a class="reference internal" href="../feature-store/time-series.html"><span class="doc">time series feature table</span></a>.
+The column name to use when performing point-in-time lookup on the
+feature table with the data passed in the <code class="docutils literal notranslate"><span class="pre">dataset</span></code> param.</p></li>
+</ul>
+<p>Default: []</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>identity_col</p></td>
+<td><p>Union[str, list]</p></td>
+<td><p>(Optional) Column(s) that identify the time series for multi-series
+forecasting. AutoML groups by these column(s) and the time column
+for forecasting.</p></td>
+</tr>
+<tr class="row-odd"><td><p>output_database</p></td>
+<td><p>str</p></td>
+<td><p>(Optional) If provided, AutoML saves predictions of the best model to
+a new table in the specified database.</p>
+<p>Default: Predictions are not saved.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>primary_metric</p></td>
+<td><p>str</p></td>
+<td><p>Metric used to evaluate and rank model performance.
+Supported metrics: “smape”(default) “mse”, “rmse”, “mae”, or “mdape”.</p></td>
+</tr>
+<tr class="row-odd"><td><p>timeout_minutes</p></td>
+<td><p>int</p></td>
+<td><p>(Optional) Maximum time to wait for AutoML trials to complete.
+Longer timeouts allow AutoML to run more trials and
+identify a model with better accuracy.</p>
+<p>Default: None (no time limit)</p>
+<p>Minimum value: 5 minutes</p>
+<p>An error is reported if the timeout is too short to allow at least
+one trial to complete.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>country_code</p></td>
+<td><p>str</p></td>
+<td><p>Available in Databricks Runtime 12.0 ML and above. Only supported by the Prophet
+forecasting model.</p>
+<p>(Optional) Two-letter country code that indicates which country’s
+holidays the forecasting model should use.
+To ignore holidays, set this parameter to an empty string (“”).
+<a class="reference external" href="https://pypi.org/project/holidays/">Supported countries</a>.</p>
+<p>Default: US (United States holidays).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="returns">
+<span id="return"></span><h2>Returns<a class="headerlink" href="#returns" title="Permalink to this headline"> </a></h2>
+<div class="section" id="automlsummary">
+<h3><code class="docutils literal notranslate"><span class="pre">AutoMLSummary</span></code><a class="headerlink" href="#automlsummary" title="Permalink to this headline"> </a></h3>
+<p>Summary object for an AutoML run that describes the metrics, parameters, and other details for each of the trials. You also use this object to load the model trained by a specific trial.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 21%" />
+<col style="width: 64%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>experiment</p></td>
+<td><p>mlflow.entities.Experiment</p></td>
+<td><p>The MLflow experiment used to log the trials.</p></td>
+</tr>
+<tr class="row-odd"><td><p>trials</p></td>
+<td><p>List[TrialInfo]</p></td>
+<td><p>A list containing information about all the trials that were run.</p></td>
+</tr>
+<tr class="row-even"><td><p>best_trial</p></td>
+<td><p>TrialInfo</p></td>
+<td><p>Info about the trial that resulted in the best weighted score for the primary metric.</p></td>
+</tr>
+<tr class="row-odd"><td><p>metric_distribution</p></td>
+<td><p>str</p></td>
+<td><p>The distribution of weighted scores for the primary metric across all trials.</p></td>
+</tr>
+<tr class="row-even"><td><p>output_table_name</p></td>
+<td><p>str</p></td>
+<td><p>Used with forecasting only and only if output_database is provided.
+Name of the table in output_database containing the model’s predictions.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="trialinfo">
+<span id="trial-info"></span><h3><code class="docutils literal notranslate"><span class="pre">TrialInfo</span></code><a class="headerlink" href="#trialinfo" title="Permalink to this headline"> </a></h3>
+<p>Summary object for each individual trial.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 23%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>notebook_path</p></td>
+<td><p>Optional[str]</p></td>
+<td><p>The path to the generated notebook for this trial in the
+workspace.
+For classification and regression, this value is set only for the
+best trial, while all other trials have the value set to <code class="docutils literal notranslate"><span class="pre">None</span></code>.
+For forecasting, this value is present for all trials</p></td>
+</tr>
+<tr class="row-odd"><td><p>notebook_url</p></td>
+<td><p>Optional[str]</p></td>
+<td><p>The URL of the generated notebook for this trial.
+For classification and regression, this value is set only for the
+best trial, while all other trials have the value set to <code class="docutils literal notranslate"><span class="pre">None</span></code>.
+For forecasting, this value present for all trials</p></td>
+</tr>
+<tr class="row-even"><td><p>artifact_uri</p></td>
+<td><p>Optional[str]</p></td>
+<td><p>The MLflow artifact URI for the generated notebook.</p></td>
+</tr>
+<tr class="row-odd"><td><p>mlflow_run_id</p></td>
+<td><p>str</p></td>
+<td><p>The MLflow run ID associated with this trial run.</p></td>
+</tr>
+<tr class="row-even"><td><p>metrics</p></td>
+<td><p>Dict[str, float]</p></td>
+<td><p>The metrics logged in MLflow for this trial.</p></td>
+</tr>
+<tr class="row-odd"><td><p>params</p></td>
+<td><p>Dict[str, str]</p></td>
+<td><p>The parameters logged in MLflow that were used for this trial.</p></td>
+</tr>
+<tr class="row-even"><td><p>model_path</p></td>
+<td><p>str</p></td>
+<td><p>The MLflow artifact URL of the model trained in this trial.</p></td>
+</tr>
+<tr class="row-odd"><td><p>model_description</p></td>
+<td><p>str</p></td>
+<td><p>Short description of the model and the hyperparameters used for
+training this model.</p></td>
+</tr>
+<tr class="row-even"><td><p>duration</p></td>
+<td><p>str</p></td>
+<td><p>Training duration in minutes.</p></td>
+</tr>
+<tr class="row-odd"><td><p>preprocessors</p></td>
+<td><p>str</p></td>
+<td><p>Description of the preprocessors run before training the model.</p></td>
+</tr>
+<tr class="row-even"><td><p>evaluation_metric_score</p></td>
+<td><p>float</p></td>
+<td><p>Score of primary metric, evaluated for the validation dataset.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 79%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>load_model()</p></td>
+<td><p>Load the model generated in this trial, logged as an MLflow artifact.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="import-a-notebook">
+<span id="import-notebook"></span><h2>Import a notebook<a class="headerlink" href="#import-a-notebook" title="Permalink to this headline"> </a></h2>
+<p>To import a notebook that has been saved as an MLflow artifact, use the <code class="docutils literal notranslate"><span class="pre">databricks.automl.import_notebook</span></code> Python API.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">import_notebook</span><span class="p">(</span><span class="n">artifact_uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImportNotebookResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Import a trial notebook, saved as an MLflow artifact, into the workspace.</span>
+
+<span class="sd">    :param artifact_uri: The URI of the MLflow artifact that contains the trial notebook.</span>
+<span class="sd">    :param path: The path in the Databricks workspace where the notebook should be imported. This must be an absolute path. The directory will be created if it does not exist.</span>
+<span class="sd">    :param overwrite: Whether to overwrite the notebook if it already exists. It is `False` by default.</span>
+
+<span class="sd">    :return: ImportNotebookResult contains two fields, `path` and `url`, referring to the imported notebook</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>A usage example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">summary</span> <span class="o">=</span> <span class="n">databricks</span><span class="o">.</span><span class="n">automl</span><span class="o">.</span><span class="n">classify</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">databricks</span><span class="o">.</span><span class="n">automl</span><span class="o">.</span><span class="n">import_notebook</span><span class="p">(</span><span class="n">summary</span><span class="o">.</span><span class="n">trials</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">artifact_uri</span><span class="p">,</span> <span class="s2">&quot;/Users/you@yourcompany.com/path/to/directory&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="register-and-deploy-a-model">
+<h2>Register and deploy a model<a class="headerlink" href="#register-and-deploy-a-model" title="Permalink to this headline"> </a></h2>
+<p>You can register and deploy your AutoML trained model just like any registered model in the MLflow model registry, see <a class="reference internal" href="../../mlflow/models.html"><span class="doc">Log, load, register, and deploy MLflow models</span></a>.</p>
+<div class="section" id="no-module-named-pandascoreindexesnumeric">
+<h3>No module named ‘pandas.core.indexes.numeric<a class="headerlink" href="#no-module-named-pandascoreindexesnumeric" title="Permalink to this headline"> </a></h3>
+<p>When serving a model built using AutoML with Model Serving, you may get the error: <code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">module</span> <span class="pre">named</span> <span class="pre">'pandas.core.indexes.numeric</span></code>.</p>
+<p>This is due to an incompatible <code class="docutils literal notranslate"><span class="pre">pandas</span></code> version between AutoML and the model serving endpoint environment. You can resolve this error by running the <a class="reference external" href="../../_extras/documents/add-pandas-dependency.py">add-pandas-dependency.py script</a>. The script edits the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> and <code class="docutils literal notranslate"><span class="pre">conda.yaml</span></code> for your logged model to include the appropriate <code class="docutils literal notranslate"><span class="pre">pandas</span></code> dependency version: <code class="docutils literal notranslate"><span class="pre">pandas==1.5.3</span></code>.</p>
+<ol class="arabic simple">
+<li><p>Modify the script to include  the <code class="docutils literal notranslate"><span class="pre">run_id</span></code> of the MLflow run where your model was logged.</p></li>
+<li><p>Re-registering the model to the MLflow model registry.</p></li>
+<li><p>Try serving the new version of the MLflow model.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="notebook-examples">
+<h2>Notebook examples<a class="headerlink" href="#notebook-examples" title="Permalink to this headline"> </a></h2>
+<p>Review these notebooks to get started with AutoML.</p>
+<p>The following notebook shows how to do classification with AutoML.</p>
+<div class="embedded-notebook-section section" id="automl-classification-example-notebook">
+<span id="automl-classification-example"></span><h3>AutoML classification example notebook<a class="headerlink" href="#automl-classification-example-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/machine-learning/automl-classification-example.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/machine-learning/automl-classification-example.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/machine-learning/automl-classification-example.html"            id="97704d577d3d797a77dd264875c3db930cc0a9a14f81dbefdf8ac269324a62cf" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+<p>The following notebook shows how to do regression with AutoML.</p>
+<div class="embedded-notebook-section section" id="automl-regression-example-notebook">
+<span id="automl-regression-example"></span><h3>AutoML regression example notebook<a class="headerlink" href="#automl-regression-example-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/machine-learning/automl-regression-example.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/machine-learning/automl-regression-example.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/machine-learning/automl-regression-example.html"            id="c40574f4562a50fdf4782332a0ebd2f4fbe0fc06d5cecf7858d811a041d34d53" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+<p>The following notebook shows how to do forecasting with AutoML.</p>
+<div class="embedded-notebook-section section" id="automl-forecasting-example-notebook">
+<span id="automl-forecasting-example"></span><h3>AutoML forecasting example notebook<a class="headerlink" href="#automl-forecasting-example-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/machine-learning/automl-forecasting-example.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/machine-learning/automl-forecasting-example.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/machine-learning/automl-forecasting-example.html"            id="8b7383a6a395693f88f75b739ee42e0d19aeb48221c3dcddfa2afd0cdf9cc352" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+<p>The following notebook shows how to train an ML model with AutoML and Feature Store feature tables.</p>
+<div class="embedded-notebook-section section" id="automl-experiment-with-feature-store-example-notebook">
+<span id="automl-feature-store-example"></span><h3>AutoML experiment with Feature Store example notebook<a class="headerlink" href="#automl-experiment-with-feature-store-example-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/machine-learning/automl-feature-store-example.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/machine-learning/automl-feature-store-example.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/machine-learning/automl-feature-store-example.html"            id="d81782ebbd627b43aa9af20a4800539049952c793315c9ed775487e3585ce4fc" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+<span class="target" id="register-deploy-automl"></span></div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

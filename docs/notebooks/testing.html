@@ -1,0 +1,997 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to apply techniques and frameworks for unit testing code functions for your Databricks notebooks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Unit testing for notebooks">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Unit testing for notebooks &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/notebooks/testing.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/notebooks/testing.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/notebooks/testing.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/notebooks/testing.html" class="notranslate">English</option>
+    <option value="../../ja/notebooks/testing.html" class="notranslate">日本語</option>
+    <option value="../../pt/notebooks/testing.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Unit testing for notebooks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="unit-testing-for-notebooks">
+<h1>Unit testing for notebooks<a class="headerlink" href="#unit-testing-for-notebooks" title="Permalink to this headline"> </a></h1>
+<p>You can use <em>unit testing</em> to help improve the quality and consistency of your notebooks’ code. Unit testing is an approach to testing self-contained units of code, such as functions, early and often. This helps you find problems with your code faster, uncover mistaken assumptions about your code sooner, and streamline your overall coding efforts.</p>
+<p>This article is an introduction to basic <a class="reference external" href="https://en.wikipedia.org/wiki/Unit_testing">unit testing</a> with functions. Advanced concepts such as unit testing classes and interfaces, as well as the use of <a class="reference external" href="https://en.wikipedia.org/wiki/Method_stub">stubs</a>, <a class="reference external" href="https://en.wikipedia.org/wiki/Mock_object">mocks</a>, and <a class="reference external" href="https://en.wikipedia.org/wiki/Test_harness">test harnesses</a>, while also supported when unit testing for notebooks, are outside the scope of this article. This article also does not cover other kinds of testing methods, such as <a class="reference external" href="https://en.wikipedia.org/wiki/Integration_testing">integration testing</a>, <a class="reference external" href="https://en.wikipedia.org/wiki/System_testing">system testing</a>, <a class="reference external" href="https://en.wikipedia.org/wiki/Acceptance_testing">acceptance testing</a>, or <a class="reference external" href="https://en.wikipedia.org/wiki/Non-functional_testing">non-functional testing</a> methods such as <a class="reference external" href="https://en.wikipedia.org/wiki/Software_performance_testing">performance testing</a> or <a class="reference external" href="https://en.wikipedia.org/wiki/Usability_testing">usability testing</a>.</p>
+<p>This article demonstrates the following:</p>
+<ul class="simple">
+<li><p>How to organize functions and their unit tests.</p></li>
+<li><p>How to write functions in Python, R, Scala, as well as user-defined functions in SQL, that are well-designed to be unit tested.</p></li>
+<li><p>How to call these functions from Python, R, Scala, and SQL notebooks.</p></li>
+<li><p>How to write unit tests in Python, R, and Scala by using the popular test frameworks <a class="reference external" href="https://docs.pytest.org">pytest</a> for Python, <a class="reference external" href="https://testthat.r-lib.org">testthat</a> for R, and <a class="reference external" href="https://docs.pytest.org">ScalaTest</a> for Scala. Also how to write SQL that unit tests SQL user-defined functions (SQL UDFs).</p></li>
+<li><p>How to run these unit tests from Python, R, Scala, and SQL notebooks.</p></li>
+</ul>
+<div class="section" id="organize-functions-and-unit-tests">
+<h2>Organize functions and unit tests<a class="headerlink" href="#organize-functions-and-unit-tests" title="Permalink to this headline"> </a></h2>
+<div class="toctree-wrapper compound">
+</div>
+<p>There are a few common approaches for organizing your functions and their unit tests with notebooks. Each approach has its benefits and challenges.</p>
+<p>For Python, R, and Scala notebooks, common approaches include the following:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="test-notebooks.html#separate-test-code-from-the-notebook"><span class="std std-ref">Store functions and their unit tests outside of notebooks.</span></a>.</p>
+<ul>
+<li><p>Benefits: You can call these functions with and outside of notebooks. Test frameworks are better designed to run tests outside of notebooks.</p></li>
+<li><p>Challenges: This approach is not supported for Scala notebooks. This approach requires <a class="reference internal" href="../repos/index.html"><span class="doc">Databricks Repos</span></a>. This approach also increases the number of files to track and maintain.</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="test-notebooks.html#separate-test-code-from-the-notebook"><span class="std std-ref">Store functions in one notebook and their unit tests in a separate notebook.</span></a>.</p>
+<ul>
+<li><p>Benefits: These functions are easier to reuse across notebooks.</p></li>
+<li><p>Challenges: The number of notebooks to track and maintain increases. These functions cannot be used outside of notebooks. These functions can also be more difficult to test outside of notebooks.</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="test-notebooks.html"><span class="doc">Store functions and their unit tests within the same notebook.</span></a>.</p>
+<ul>
+<li><p>Benefits: Functions and their unit tests are stored within a single notebook for easier tracking and maintenance.</p></li>
+<li><p>Challenges: These functions can be more difficult to reuse across notebooks. These functions cannot be used outside of notebooks. These functions can also be more difficult to test outside of notebooks.</p></li>
+</ul>
+</li>
+</ul>
+<p>For Python and R notebooks, Databricks recommends storing functions and their unit tests outside of notebooks. For Scala notebooks, Databricks recommends including functions in one notebook and their unit tests in a separate notebook.</p>
+<p>For SQL notebooks, Databricks recommends that you store functions as SQL user-defined functions (SQL UDFs) in your schemas (also known as databases). You can then call these SQL UDFs and their unit tests from SQL notebooks.</p>
+</div>
+<div class="section" id="write-functions">
+<h2>Write functions<a class="headerlink" href="#write-functions" title="Permalink to this headline"> </a></h2>
+<p>This section describes a simple set of example functions that determine the following:</p>
+<ul class="simple">
+<li><p>Whether a table exists in a database.</p></li>
+<li><p>Whether a column exists in a table.</p></li>
+<li><p>How many rows exist in a column for a value within that column.</p></li>
+</ul>
+<p>These functions are intended to be simple, so that you can focus on the unit testing details in this article rather than focus on the functions themselves.</p>
+<p>To get the best unit testing results, a function should return a single predictable outcome and be of a single data type. For example, to check whether something exists, the function should return a boolean value of true or false. To return the number of rows that exist, the function should return a non-negative, whole number. It should not, in the first example, return either false if something does not exist or the thing itself if it does exist. Likewise, for the second example, it should not return either the number of rows that exist or false if no rows exist.</p>
+<p>You can add these functions to an existing Databricks workspace as follows, in Python, R, Scala, or SQL.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Python">
+<p class="compound-first">The following code assumes you have <a class="reference internal" href="../repos/repos-setup.html"><span class="doc">Set up Databricks Repos</span></a>, <a class="reference internal" href="../repos/git-operations-with-repos.html"><span class="doc">added a repo</span></a>, and have the repo open in your Databricks workspace.</p>
+<p class="compound-middle"><a class="reference internal" href="../files/workspace-basics.html#create-a-new-file"><span class="std std-ref">Create a file</span></a> named <code class="docutils literal notranslate"><span class="pre">myfunctions.py</span></code> within the repo, and add the following contents to the file. Other examples in this article expect this file to be named <code class="docutils literal notranslate"><span class="pre">myfunctions.py</span></code>. You can use different names for your own files.</p>
+<div class="compound-last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyspark</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">col</span>
+
+<span class="c1"># Because this file is not a Databricks notebook, you</span>
+<span class="c1"># must create a Spark session. Databricks notebooks</span>
+<span class="c1"># create a Spark session for you by default.</span>
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span> \
+                    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s1">&#39;integrity-tests&#39;</span><span class="p">)</span> \
+                    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+
+<span class="c1"># Does the specified table exist in the specified database?</span>
+<span class="k">def</span> <span class="nf">tableExists</span><span class="p">(</span><span class="n">tableName</span><span class="p">,</span> <span class="n">dbName</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">tableExists</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dbName</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">tableName</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Does the specified column exist in the given DataFrame?</span>
+<span class="k">def</span> <span class="nf">columnExists</span><span class="p">(</span><span class="n">dataFrame</span><span class="p">,</span> <span class="n">columnName</span><span class="p">):</span>
+  <span class="k">if</span> <span class="n">columnName</span> <span class="ow">in</span> <span class="n">dataFrame</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">True</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">False</span>
+
+<span class="c1"># How many rows are there for the specified value in the specified column</span>
+<span class="c1"># in the given DataFrame?</span>
+<span class="k">def</span> <span class="nf">numRowsInColumnForValue</span><span class="p">(</span><span class="n">dataFrame</span><span class="p">,</span> <span class="n">columnName</span><span class="p">,</span> <span class="n">columnValue</span><span class="p">):</span>
+  <span class="n">df</span> <span class="o">=</span> <span class="n">dataFrame</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="n">columnName</span><span class="p">)</span> <span class="o">==</span> <span class="n">columnValue</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-middle compound" lang="R">
+<p class="compound-first">The following code assumes you have <a class="reference internal" href="../repos/repos-setup.html"><span class="doc">Set up Databricks Repos</span></a>, <a class="reference internal" href="../repos/git-operations-with-repos.html"><span class="doc">added a repo</span></a>, and have the repo open in your Databricks workspace.</p>
+<p class="compound-middle"><a class="reference internal" href="../files/workspace-basics.html#create-a-new-file"><span class="std std-ref">Create a file</span></a> named <code class="docutils literal notranslate"><span class="pre">myfunctions.r</span></code> within the repo, and add the following contents to the file. Other examples in this article expect this file to be named <code class="docutils literal notranslate"><span class="pre">myfunctions.r</span></code>. You can use different names for your own files.</p>
+<div class="compound-last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">library</span><span class="p">(</span><span class="n">SparkR</span><span class="p">)</span>
+
+<span class="c1"># Does the specified table exist in the specified database?</span>
+<span class="n">table_exists</span> <span class="o">&lt;-</span> <span class="n">function</span><span class="p">(</span><span class="n">table_name</span><span class="p">,</span> <span class="n">db_name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">tableExists</span><span class="p">(</span><span class="n">paste</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="c1"># Does the specified column exist in the given DataFrame?</span>
+<span class="n">column_exists</span> <span class="o">&lt;-</span> <span class="n">function</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">column_name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">column_name</span> <span class="o">%</span><span class="ow">in</span><span class="o">%</span> <span class="n">colnames</span><span class="p">(</span><span class="n">dataframe</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># How many rows are there for the specified value in the specified column</span>
+<span class="c1"># in the given DataFrame?</span>
+<span class="n">num_rows_in_column_for_value</span> <span class="o">&lt;-</span> <span class="n">function</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">column_name</span><span class="p">,</span> <span class="n">column_value</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">df</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">[[</span><span class="n">column_name</span><span class="p">]]</span> <span class="o">==</span> <span class="n">column_value</span><span class="p">)</span>
+
+  <span class="n">count</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-middle compound" lang="Scala">
+<p class="compound-first">Create a <a class="reference internal" href="notebooks-manage.html#create-a-notebook"><span class="std std-ref">Scala notebook</span></a> named <code class="docutils literal notranslate"><span class="pre">myfunctions</span></code> with the following contents. Other examples in this article expect this notebook to be named <code class="docutils literal notranslate"><span class="pre">myfunctions</span></code>. You can use different names for your own notebooks.</p>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nc">DataFrame</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">functions</span><span class="p">.</span><span class="n">col</span>
+
+<span class="c1">// Does the specified table exist in the specified database?</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">tableExists</span><span class="p">(</span><span class="n">tableName</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">dbName</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">Boolean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">catalog</span><span class="p">.</span><span class="n">tableExists</span><span class="p">(</span><span class="n">dbName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;.&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tableName</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// Does the specified column exist in the given DataFrame?</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">columnExists</span><span class="p">(</span><span class="n">dataFrame</span><span class="p">:</span><span class="w"> </span><span class="nc">DataFrame</span><span class="p">,</span><span class="w"> </span><span class="n">columnName</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">Boolean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">nameOfColumn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+
+<span class="w">  </span><span class="k">for</span><span class="p">(</span><span class="n">nameOfColumn</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">dataFrame</span><span class="p">.</span><span class="n">columns</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nameOfColumn</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">columnName</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+
+<span class="c1">// How many rows are there for the specified value in the specified column</span>
+<span class="c1">// in the given DataFrame?</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">numRowsInColumnForValue</span><span class="p">(</span><span class="n">dataFrame</span><span class="p">:</span><span class="w"> </span><span class="nc">DataFrame</span><span class="p">,</span><span class="w"> </span><span class="n">columnName</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">columnValue</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">Long</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataFrame</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="n">columnName</span><span class="p">)</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="n">columnValue</span><span class="p">)</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">df</span><span class="p">.</span><span class="n">count</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="SQL">
+<p class="compound-first">The following code assumes you have the third-party sample dataset <a class="reference internal" href="../discover/databricks-datasets.html"><span class="doc">diamonds</span></a> within a schema named <code class="docutils literal notranslate"><span class="pre">default</span></code> within a catalog named <code class="docutils literal notranslate"><span class="pre">main</span></code> that is accessible from your Databricks workspace. If the catalog or schema that you want to use has a different name, then change one or both of the following <code class="docutils literal notranslate"><span class="pre">USE</span></code> statements to match.</p>
+<p class="compound-middle">Create a <a class="reference internal" href="notebooks-manage.html#create-a-notebook"><span class="std std-ref">SQL notebook</span></a> and add the following contents to this new notebook. Then <a class="reference internal" href="notebook-ui.html#attach"><span class="std std-ref">attach</span></a> the notebook to a cluster and <a class="reference internal" href="run-notebook.html"><span class="doc">run</span></a> the notebook to add the following SQL UDFs to the specified catalog and schema.</p>
+<div class="compound-middle admonition note">
+<p class="admonition-title">Note</p>
+<p>The SQL UDFs <code class="docutils literal notranslate"><span class="pre">table_exists</span></code> and <code class="docutils literal notranslate"><span class="pre">column_exists</span></code> work only with Unity Catalog. SQL UDF support for Unity Catalog is in <a class="reference internal" href="../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<div class="compound-last highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">USE</span><span class="w"> </span><span class="k">CATALOG</span><span class="w"> </span><span class="n">main</span><span class="p">;</span>
+<span class="n">USE</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">table_exists</span><span class="p">(</span><span class="k">catalog_name</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">                                        </span><span class="n">db_name</span><span class="w">      </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">                                        </span><span class="k">table_name</span><span class="w">   </span><span class="n">STRING</span><span class="p">)</span>
+<span class="w">  </span><span class="k">RETURNS</span><span class="w"> </span><span class="nb">BOOLEAN</span>
+<span class="w">  </span><span class="k">RETURN</span><span class="w"> </span><span class="k">if</span><span class="p">(</span>
+<span class="w">    </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">system</span><span class="p">.</span><span class="n">information_schema</span><span class="p">.</span><span class="n">tables</span>
+<span class="w">     </span><span class="k">WHERE</span><span class="w"> </span><span class="n">table_catalog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table_exists</span><span class="p">.</span><span class="k">catalog_name</span>
+<span class="w">       </span><span class="k">AND</span><span class="w"> </span><span class="n">table_schema</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">table_exists</span><span class="p">.</span><span class="n">db_name</span>
+<span class="w">       </span><span class="k">AND</span><span class="w"> </span><span class="k">table_name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">table_exists</span><span class="p">.</span><span class="k">table_name</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="k">true</span><span class="p">,</span>
+<span class="w">    </span><span class="k">false</span>
+<span class="w">  </span><span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">column_exists</span><span class="p">(</span><span class="k">catalog_name</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">db_name</span><span class="w">      </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">                                         </span><span class="k">table_name</span><span class="w">   </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">                                         </span><span class="k">column_name</span><span class="w">  </span><span class="n">STRING</span><span class="p">)</span>
+<span class="w">  </span><span class="k">RETURNS</span><span class="w"> </span><span class="nb">BOOLEAN</span>
+<span class="w">  </span><span class="k">RETURN</span><span class="w"> </span><span class="k">if</span><span class="p">(</span>
+<span class="w">    </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">system</span><span class="p">.</span><span class="n">information_schema</span><span class="p">.</span><span class="n">columns</span>
+<span class="w">     </span><span class="k">WHERE</span><span class="w"> </span><span class="n">table_catalog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">column_exists</span><span class="p">.</span><span class="k">catalog_name</span>
+<span class="w">       </span><span class="k">AND</span><span class="w"> </span><span class="n">table_schema</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">column_exists</span><span class="p">.</span><span class="n">db_name</span>
+<span class="w">       </span><span class="k">AND</span><span class="w"> </span><span class="k">table_name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">column_exists</span><span class="p">.</span><span class="k">table_name</span>
+<span class="w">       </span><span class="k">AND</span><span class="w"> </span><span class="k">column_name</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">column_exists</span><span class="p">.</span><span class="k">column_name</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="k">true</span><span class="p">,</span>
+<span class="w">    </span><span class="k">false</span>
+<span class="w">  </span><span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">num_rows_for_clarity_in_diamonds</span><span class="p">(</span><span class="n">clarity_value</span><span class="w"> </span><span class="n">STRING</span><span class="p">)</span>
+<span class="w">  </span><span class="k">RETURNS</span><span class="w"> </span><span class="nb">BIGINT</span>
+<span class="w">  </span><span class="k">RETURN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="w">         </span><span class="k">FROM</span><span class="w"> </span><span class="n">main</span><span class="p">.</span><span class="k">default</span><span class="p">.</span><span class="n">diamonds</span>
+<span class="w">         </span><span class="k">WHERE</span><span class="w"> </span><span class="n">clarity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">clarity_value</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="call-functions">
+<h2>Call functions<a class="headerlink" href="#call-functions" title="Permalink to this headline"> </a></h2>
+<p>This section describes code that calls the preceding functions. You could use these functions, for example, to count the number of rows in table where a specified value exists within a specfied column. However, you would want to check whether the table actually exists, and whether the column actually exists in that table, before you proceed. The following code checks for these conditions.</p>
+<p>If you added the functions from the preceding section to your Databricks workspace, you can call these functions from your workspace as follows.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Python">
+<p class="compound-first"><a class="reference internal" href="notebooks-manage.html"><span class="doc">Create a Python notebook</span></a> in the same folder as the preceding <code class="docutils literal notranslate"><span class="pre">myfunctions.py</span></code> file in your repo, and add the following contents to the notebook. Change the variable values for the table name, the schema (database) name, the column name, and the column value as needed. Then <a class="reference internal" href="notebook-ui.html#attach"><span class="std std-ref">attach</span></a> the notebook to a cluster and <a class="reference internal" href="run-notebook.html"><span class="doc">run</span></a> the notebook to see the results.</p>
+<div class="compound-last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">myfunctions</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">tableName</span>   <span class="o">=</span> <span class="s2">&quot;diamonds&quot;</span>
+<span class="n">dbName</span>      <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
+<span class="n">columnName</span>  <span class="o">=</span> <span class="s2">&quot;clarity&quot;</span>
+<span class="n">columnValue</span> <span class="o">=</span> <span class="s2">&quot;VVS2&quot;</span>
+
+<span class="c1"># If the table exists in the specified database...</span>
+<span class="k">if</span> <span class="n">tableExists</span><span class="p">(</span><span class="n">tableName</span><span class="p">,</span> <span class="n">dbName</span><span class="p">):</span>
+
+  <span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SELECT * FROM </span><span class="si">{</span><span class="n">dbName</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">tableName</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+  <span class="c1"># And the specified column exists in that table...</span>
+  <span class="k">if</span> <span class="n">columnExists</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">columnName</span><span class="p">):</span>
+    <span class="c1"># Then report the number of rows for the specified value in that column.</span>
+    <span class="n">numRows</span> <span class="o">=</span> <span class="n">numRowsInColumnForValue</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">columnName</span><span class="p">,</span> <span class="n">columnValue</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There are </span><span class="si">{</span><span class="n">numRows</span><span class="si">}</span><span class="s2"> rows in &#39;</span><span class="si">{</span><span class="n">tableName</span><span class="si">}</span><span class="s2">&#39; where &#39;</span><span class="si">{</span><span class="n">columnName</span><span class="si">}</span><span class="s2">&#39; equals &#39;</span><span class="si">{</span><span class="n">columnValue</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Column &#39;</span><span class="si">{</span><span class="n">columnName</span><span class="si">}</span><span class="s2">&#39; does not exist in table &#39;</span><span class="si">{</span><span class="n">tableName</span><span class="si">}</span><span class="s2">&#39; in schema (database) &#39;</span><span class="si">{</span><span class="n">dbName</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Table &#39;</span><span class="si">{</span><span class="n">tableName</span><span class="si">}</span><span class="s2">&#39; does not exist in schema (database) &#39;</span><span class="si">{</span><span class="n">dbName</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+<div class="compound-middle compound" lang="R">
+<p class="compound-first"><a class="reference internal" href="notebooks-manage.html"><span class="doc">Create an R notebook</span></a> in the same folder as the preceding <code class="docutils literal notranslate"><span class="pre">myfunctions.r</span></code> file in your repo, and add the following contents to the notebook. Change the variable values for the table name, the schema (database) name, the column name, and the column value as needed. Then <a class="reference internal" href="notebook-ui.html#attach"><span class="std std-ref">attach</span></a> the notebook to a cluster and <a class="reference internal" href="run-notebook.html"><span class="doc">run</span></a> the notebook to see the results.</p>
+<div class="compound-last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">library</span><span class="p">(</span><span class="n">SparkR</span><span class="p">)</span>
+<span class="n">source</span><span class="p">(</span><span class="s2">&quot;myfunctions.r&quot;</span><span class="p">)</span>
+
+<span class="n">table_name</span>   <span class="o">&lt;-</span> <span class="s2">&quot;diamonds&quot;</span>
+<span class="n">db_name</span>      <span class="o">&lt;-</span> <span class="s2">&quot;default&quot;</span>
+<span class="n">column_name</span>  <span class="o">&lt;-</span> <span class="s2">&quot;clarity&quot;</span>
+<span class="n">column_value</span> <span class="o">&lt;-</span> <span class="s2">&quot;VVS2&quot;</span>
+
+<span class="c1"># If the table exists in the specified database...</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">table_exists</span><span class="p">(</span><span class="n">table_name</span><span class="p">,</span> <span class="n">db_name</span><span class="p">))</span> <span class="p">{</span>
+
+  <span class="n">df</span> <span class="o">=</span> <span class="n">sql</span><span class="p">(</span><span class="n">paste</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM &quot;</span><span class="p">,</span> <span class="n">db_name</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+
+  <span class="c1"># And the specified column exists in that table...</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">column_exists</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column_name</span><span class="p">))</span> <span class="p">{</span>
+    <span class="c1"># Then report the number of rows for the specified value in that column.</span>
+    <span class="n">num_rows</span> <span class="o">=</span> <span class="n">num_rows_in_column_for_value</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column_name</span><span class="p">,</span> <span class="n">column_value</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">paste</span><span class="p">(</span><span class="s2">&quot;There are &quot;</span><span class="p">,</span> <span class="n">num_rows</span><span class="p">,</span> <span class="s2">&quot; rows in table &#39;&quot;</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="s2">&quot;&#39; where &#39;&quot;</span><span class="p">,</span> <span class="n">column_name</span><span class="p">,</span> <span class="s2">&quot;&#39; equals &#39;&quot;</span><span class="p">,</span> <span class="n">column_value</span><span class="p">,</span> <span class="s2">&quot;&#39;.&quot;</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">))</span> 
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">paste</span><span class="p">(</span><span class="s2">&quot;Column &#39;&quot;</span><span class="p">,</span> <span class="n">column_name</span><span class="p">,</span> <span class="s2">&quot;&#39; does not exist in table &#39;&quot;</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="s2">&quot;&#39; in schema (database) &#39;&quot;</span><span class="p">,</span> <span class="n">db_name</span><span class="p">,</span> <span class="s2">&quot;&#39;.&quot;</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+  <span class="p">}</span>
+
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">paste</span><span class="p">(</span><span class="s2">&quot;Table &#39;&quot;</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="s2">&quot;&#39; does not exist in schema (database) &#39;&quot;</span><span class="p">,</span> <span class="n">db_name</span><span class="p">,</span> <span class="s2">&quot;&#39;.&quot;</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-middle compound" lang="Scala">
+<p class="compound-first">Create another Scala notebook in the same folder as the preceding <code class="docutils literal notranslate"><span class="pre">myfunctions</span></code> Scala notebook, and add the following contents to this new notebook.</p>
+<p class="compound-middle">In this new notebook’s first cell, add the following code, which calls the <a class="reference internal" href="notebook-workflows.html#run"><span class="std std-ref">%run</span></a> magic. This magic makes the contents of the <code class="docutils literal notranslate"><span class="pre">myfunctions</span></code> notebook available to your new notebook.</p>
+<div class="compound-middle highlight-text notranslate"><div class="highlight"><pre><span></span>%run ./myfunctions
+</pre></div>
+</div>
+<p class="compound-middle">In this new notebook’s second cell, add the following code. Change the variable values for the table name, the schema (database) name, the column name, and the column value as needed. Then <a class="reference internal" href="notebook-ui.html#attach"><span class="std std-ref">attach</span></a> the notebook to a cluster and <a class="reference internal" href="run-notebook.html"><span class="doc">run</span></a> the notebook to see the results.</p>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="n">tableName</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;diamonds&quot;</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">dbName</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;default&quot;</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">columnName</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;clarity&quot;</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">columnValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;VVS2&quot;</span>
+
+<span class="c1">// If the table exists in the specified database...</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tableExists</span><span class="p">(</span><span class="n">tableName</span><span class="p">,</span><span class="w"> </span><span class="n">dbName</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">sql</span><span class="p">(</span><span class="s">&quot;SELECT * FROM &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dbName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;.&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tableName</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// And the specified column exists in that table...</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">columnExists</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">columnName</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Then report the number of rows for the specified value in that column.</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">numRows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numRowsInColumnForValue</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">columnName</span><span class="p">,</span><span class="w"> </span><span class="n">columnValue</span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;There are &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">numRows</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; rows in &#39;&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tableName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;&#39; where &#39;&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">columnName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;&#39; equals &#39;&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">columnValue</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;&#39;.&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Column &#39;&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">columnName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;&#39; does not exist in table &#39;&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tableName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;&#39; in database &#39;&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dbName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;&#39;.&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Table &#39;&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tableName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;&#39; does not exist in database &#39;&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dbName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;&#39;.&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="SQL">
+<p class="compound-first">Add the following code to a new cell in the preceding notebook or to a cell in a separate notebook. Change the schema or catalog names if necessary to match yours, and then run this cell to see the results.</p>
+<div class="compound-last highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="k">CASE</span>
+<span class="c1">-- If the table exists in the specified catalog and schema...</span>
+<span class="k">WHEN</span>
+<span class="w">  </span><span class="n">table_exists</span><span class="p">(</span><span class="ss">&quot;main&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;default&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;diamonds&quot;</span><span class="p">)</span>
+<span class="k">THEN</span>
+<span class="w">  </span><span class="c1">-- And the specified column exists in that table...</span>
+<span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">CASE</span>
+<span class="w">   </span><span class="k">WHEN</span>
+<span class="w">     </span><span class="n">column_exists</span><span class="p">(</span><span class="ss">&quot;main&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;default&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;diamonds&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;clarity&quot;</span><span class="p">)</span>
+<span class="w">   </span><span class="k">THEN</span>
+<span class="w">     </span><span class="c1">-- Then report the number of rows for the specified value in that column.</span>
+<span class="w">     </span><span class="n">printf</span><span class="p">(</span><span class="ss">&quot;There are %d rows in table &#39;main.default.diamonds&#39; where &#39;clarity&#39; equals &#39;VVS2&#39;.&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">num_rows_for_clarity_in_diamonds</span><span class="p">(</span><span class="ss">&quot;VVS2&quot;</span><span class="p">))</span>
+<span class="w">   </span><span class="k">ELSE</span>
+<span class="w">     </span><span class="n">printf</span><span class="p">(</span><span class="ss">&quot;Column &#39;clarity&#39; does not exist in table &#39;main.default.diamonds&#39;.&quot;</span><span class="p">)</span>
+<span class="w">   </span><span class="k">END</span><span class="p">)</span>
+<span class="k">ELSE</span>
+<span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="ss">&quot;Table &#39;main.default.diamonds&#39; does not exist.&quot;</span><span class="p">)</span>
+<span class="k">END</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="write-unit-tests">
+<h2>Write unit tests<a class="headerlink" href="#write-unit-tests" title="Permalink to this headline"> </a></h2>
+<p>This section describes code that tests each of the functions that are described toward the beginning of this article. If you make any changes to functions in the future, you can use unit tests to determine whether those functions still work as you expect them to.</p>
+<p>If you added the functions toward the beginning of this article to your Databricks workspace, you can add unit tests for these functions to your workspace as follows.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Python">
+<p class="compound-first">Create another file named <code class="docutils literal notranslate"><span class="pre">test_myfunctions.py</span></code> in the same folder as the preceding <code class="docutils literal notranslate"><span class="pre">myfunctions.py</span></code> file in your repo, and add the following contents to the file. By default, <code class="docutils literal notranslate"><span class="pre">pytest</span></code> looks for <code class="docutils literal notranslate"><span class="pre">.py</span></code> files whose names start with <code class="docutils literal notranslate"><span class="pre">test_</span></code> (or end with <code class="docutils literal notranslate"><span class="pre">_test</span></code>) to test. Similarly, by default, <code class="docutils literal notranslate"><span class="pre">pytest</span></code> looks inside of these files for functions whose names start with <code class="docutils literal notranslate"><span class="pre">test_</span></code> to test.</p>
+<p class="compound-middle">In general, it is a best practice to <em>not</em> run unit tests against functions that work with data in production. This is especially important for functions that add, remove, or otherwise change data. To protect your production data from being compromised by your unit tests in unexpected ways, you should run unit tests against non-production data. One common approach is to create fake data that is as close as possible to the production data. The following code example creates fake data for the unit tests to run against.</p>
+<div class="compound-last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">pyspark</span>
+<span class="kn">from</span> <span class="nn">myfunctions</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">StructType</span><span class="p">,</span> <span class="n">StructField</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">,</span> <span class="n">FloatType</span><span class="p">,</span> <span class="n">StringType</span>
+
+<span class="n">tableName</span>    <span class="o">=</span> <span class="s2">&quot;diamonds&quot;</span>
+<span class="n">dbName</span>       <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
+<span class="n">columnName</span>   <span class="o">=</span> <span class="s2">&quot;clarity&quot;</span>
+<span class="n">columnValue</span>  <span class="o">=</span> <span class="s2">&quot;SI2&quot;</span>
+
+<span class="c1"># Because this file is not a Databricks notebook, you</span>
+<span class="c1"># must create a Spark session. Databricks notebooks</span>
+<span class="c1"># create a Spark session for you by default.</span>
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span> \
+                    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s1">&#39;integrity-tests&#39;</span><span class="p">)</span> \
+                    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+
+<span class="c1"># Create fake data for the unit tests to run against.</span>
+<span class="c1"># In general, it is a best practice to not run unit tests</span>
+<span class="c1"># against functions that work with data in production.</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">([</span> \
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;_c0&quot;</span><span class="p">,</span>     <span class="n">IntegerType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span> \
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;carat&quot;</span><span class="p">,</span>   <span class="n">FloatType</span><span class="p">(),</span>   <span class="kc">True</span><span class="p">),</span> \
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;cut&quot;</span><span class="p">,</span>     <span class="n">StringType</span><span class="p">(),</span>  <span class="kc">True</span><span class="p">),</span> \
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;color&quot;</span><span class="p">,</span>   <span class="n">StringType</span><span class="p">(),</span>  <span class="kc">True</span><span class="p">),</span> \
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;clarity&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">(),</span>  <span class="kc">True</span><span class="p">),</span> \
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;depth&quot;</span><span class="p">,</span>   <span class="n">FloatType</span><span class="p">(),</span>   <span class="kc">True</span><span class="p">),</span> \
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;table&quot;</span><span class="p">,</span>   <span class="n">IntegerType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span> \
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">,</span>   <span class="n">IntegerType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span> \
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>       <span class="n">FloatType</span><span class="p">(),</span>   <span class="kc">True</span><span class="p">),</span> \
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>       <span class="n">FloatType</span><span class="p">(),</span>   <span class="kc">True</span><span class="p">),</span> \
+  <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">,</span>       <span class="n">FloatType</span><span class="p">(),</span>   <span class="kc">True</span><span class="p">),</span> \
+<span class="p">])</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.23</span><span class="p">,</span> <span class="s2">&quot;Ideal&quot;</span><span class="p">,</span>   <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;SI2&quot;</span><span class="p">,</span> <span class="mf">61.5</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">326</span><span class="p">,</span> <span class="mf">3.95</span><span class="p">,</span> <span class="mf">3.98</span><span class="p">,</span> <span class="mf">2.43</span> <span class="p">),</span> \
+         <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.21</span><span class="p">,</span> <span class="s2">&quot;Premium&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;SI1&quot;</span><span class="p">,</span> <span class="mf">59.8</span><span class="p">,</span> <span class="mi">61</span><span class="p">,</span> <span class="mi">326</span><span class="p">,</span> <span class="mf">3.89</span><span class="p">,</span> <span class="mf">3.84</span><span class="p">,</span> <span class="mf">2.31</span> <span class="p">)</span> <span class="p">]</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>
+
+<span class="c1"># Does the table exist?</span>
+<span class="k">def</span> <span class="nf">test_tableExists</span><span class="p">():</span>
+  <span class="k">assert</span> <span class="n">tableExists</span><span class="p">(</span><span class="n">tableName</span><span class="p">,</span> <span class="n">dbName</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
+
+<span class="c1"># Does the column exist?</span>
+<span class="k">def</span> <span class="nf">test_columnExists</span><span class="p">():</span>
+  <span class="k">assert</span> <span class="n">columnExists</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">columnName</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
+
+<span class="c1"># Is there at least one row for the value in the specified column?</span>
+<span class="k">def</span> <span class="nf">test_numRowsInColumnForValue</span><span class="p">():</span>
+  <span class="k">assert</span> <span class="n">numRowsInColumnForValue</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">columnName</span><span class="p">,</span> <span class="n">columnValue</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-middle compound" lang="R">
+<p class="compound-first">Create another file named <code class="docutils literal notranslate"><span class="pre">test_myfunctions.r</span></code> in the same folder as the preceding <code class="docutils literal notranslate"><span class="pre">myfunctions.r</span></code> file in your repo, and add the following contents to the file. By default, <code class="docutils literal notranslate"><span class="pre">testthat</span></code> looks for <code class="docutils literal notranslate"><span class="pre">.r</span></code> files whose names start with <code class="docutils literal notranslate"><span class="pre">test</span></code> to test.</p>
+<p class="compound-middle">In general, it is a best practice to <em>not</em> run unit tests against functions that work with data in production. This is especially important for functions that add, remove, or otherwise change data. To protect your production data from being compromised by your unit tests in unexpected ways, you should run unit tests against non-production data. One common approach is to create fake data that is as close as possible to the production data. The following code example creates fake data for the unit tests to run against.</p>
+<div class="compound-last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">library</span><span class="p">(</span><span class="n">testthat</span><span class="p">)</span>
+<span class="n">source</span><span class="p">(</span><span class="s2">&quot;myfunctions.r&quot;</span><span class="p">)</span>
+
+<span class="n">table_name</span>   <span class="o">&lt;-</span> <span class="s2">&quot;diamonds&quot;</span>
+<span class="n">db_name</span>      <span class="o">&lt;-</span> <span class="s2">&quot;default&quot;</span>
+<span class="n">column_name</span>  <span class="o">&lt;-</span> <span class="s2">&quot;clarity&quot;</span>
+<span class="n">column_value</span> <span class="o">&lt;-</span> <span class="s2">&quot;SI2&quot;</span>
+
+<span class="c1"># Create fake data for the unit tests to run against.</span>
+<span class="c1"># In general, it is a best practice to not run unit tests</span>
+<span class="c1"># against functions that work with data in production.</span>
+<span class="n">schema</span> <span class="o">&lt;-</span> <span class="n">structType</span><span class="p">(</span>
+  <span class="n">structField</span><span class="p">(</span><span class="s2">&quot;_c0&quot;</span><span class="p">,</span>     <span class="s2">&quot;integer&quot;</span><span class="p">),</span>
+  <span class="n">structField</span><span class="p">(</span><span class="s2">&quot;carat&quot;</span><span class="p">,</span>   <span class="s2">&quot;float&quot;</span><span class="p">),</span>
+  <span class="n">structField</span><span class="p">(</span><span class="s2">&quot;cut&quot;</span><span class="p">,</span>     <span class="s2">&quot;string&quot;</span><span class="p">),</span>
+  <span class="n">structField</span><span class="p">(</span><span class="s2">&quot;color&quot;</span><span class="p">,</span>   <span class="s2">&quot;string&quot;</span><span class="p">),</span>
+  <span class="n">structField</span><span class="p">(</span><span class="s2">&quot;clarity&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">),</span>
+  <span class="n">structField</span><span class="p">(</span><span class="s2">&quot;depth&quot;</span><span class="p">,</span>   <span class="s2">&quot;float&quot;</span><span class="p">),</span>
+  <span class="n">structField</span><span class="p">(</span><span class="s2">&quot;table&quot;</span><span class="p">,</span>   <span class="s2">&quot;integer&quot;</span><span class="p">),</span>
+  <span class="n">structField</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">,</span>   <span class="s2">&quot;integer&quot;</span><span class="p">),</span>
+  <span class="n">structField</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>       <span class="s2">&quot;float&quot;</span><span class="p">),</span>
+  <span class="n">structField</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>       <span class="s2">&quot;float&quot;</span><span class="p">),</span>
+  <span class="n">structField</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">,</span>       <span class="s2">&quot;float&quot;</span><span class="p">))</span>
+
+<span class="n">data</span> <span class="o">&lt;-</span> <span class="nb">list</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="k">as</span><span class="o">.</span><span class="n">integer</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mf">0.23</span><span class="p">,</span> <span class="s2">&quot;Ideal&quot;</span><span class="p">,</span>   <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;SI2&quot;</span><span class="p">,</span> <span class="mf">61.5</span><span class="p">,</span> <span class="k">as</span><span class="o">.</span><span class="n">integer</span><span class="p">(</span><span class="mi">55</span><span class="p">),</span> <span class="k">as</span><span class="o">.</span><span class="n">integer</span><span class="p">(</span><span class="mi">326</span><span class="p">),</span> <span class="mf">3.95</span><span class="p">,</span> <span class="mf">3.98</span><span class="p">,</span> <span class="mf">2.43</span><span class="p">),</span>
+             <span class="nb">list</span><span class="p">(</span><span class="k">as</span><span class="o">.</span><span class="n">integer</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mf">0.21</span><span class="p">,</span> <span class="s2">&quot;Premium&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;SI1&quot;</span><span class="p">,</span> <span class="mf">59.8</span><span class="p">,</span> <span class="k">as</span><span class="o">.</span><span class="n">integer</span><span class="p">(</span><span class="mi">61</span><span class="p">),</span> <span class="k">as</span><span class="o">.</span><span class="n">integer</span><span class="p">(</span><span class="mi">326</span><span class="p">),</span> <span class="mf">3.89</span><span class="p">,</span> <span class="mf">3.84</span><span class="p">,</span> <span class="mf">2.31</span><span class="p">))</span>
+
+<span class="n">df</span> <span class="o">&lt;-</span> <span class="n">createDataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>
+
+<span class="c1"># Does the table exist?</span>
+<span class="n">test_that</span> <span class="p">(</span><span class="s2">&quot;The table exists.&quot;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="n">expect_true</span><span class="p">(</span><span class="n">table_exists</span><span class="p">(</span><span class="n">table_name</span><span class="p">,</span> <span class="n">db_name</span><span class="p">))</span>
+<span class="p">})</span>
+
+<span class="c1"># Does the column exist?</span>
+<span class="n">test_that</span> <span class="p">(</span><span class="s2">&quot;The column exists in the table.&quot;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="n">expect_true</span><span class="p">(</span><span class="n">column_exists</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column_name</span><span class="p">))</span>
+<span class="p">})</span>
+
+<span class="c1"># Is there at least one row for the value in the specified column?</span>
+<span class="n">test_that</span> <span class="p">(</span><span class="s2">&quot;There is at least one row in the query result.&quot;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="n">expect_true</span><span class="p">(</span><span class="n">num_rows_in_column_for_value</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column_name</span><span class="p">,</span> <span class="n">column_value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-middle compound" lang="Scala">
+<p class="compound-first">Create another Scala notebook in the same folder as the preceding <code class="docutils literal notranslate"><span class="pre">myfunctions</span></code> Scala notebook, and add the following contents to this new notebook.</p>
+<p class="compound-middle">In the new notebook’s first cell, add the following code, which calls the <code class="docutils literal notranslate"><span class="pre">%run</span></code> magic. This magic makes the contents of the <code class="docutils literal notranslate"><span class="pre">myfunctions</span></code> notebook available to your new notebook.</p>
+<div class="compound-middle highlight-text notranslate"><div class="highlight"><pre><span></span>%run ./myfunctions
+</pre></div>
+</div>
+<p class="compound-middle">In the second cell, add the following code. This code defines your unit tests and specifies how to run them.</p>
+<p class="compound-middle">In general, it is a best practice to <em>not</em> run unit tests against functions that work with data in production. This is especially important for functions that add, remove, or otherwise change data. To protect your production data from being compromised by your unit tests in unexpected ways, you should run unit tests against non-production data. One common approach is to create fake data that is as close as possible to the production data. The following code example creates fake data for the unit tests to run against.</p>
+<div class="compound-middle highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">scalatest</span><span class="p">.</span><span class="n">_</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">types</span><span class="p">.{</span><span class="nc">StructType</span><span class="p">,</span><span class="w"> </span><span class="nc">StructField</span><span class="p">,</span><span class="w"> </span><span class="nc">IntegerType</span><span class="p">,</span><span class="w"> </span><span class="nc">FloatType</span><span class="p">,</span><span class="w"> </span><span class="nc">StringType</span><span class="p">}</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">scala</span><span class="p">.</span><span class="nn">collection</span><span class="p">.</span><span class="nc">JavaConverters</span><span class="p">.</span><span class="n">_</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DataTests</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nc">AsyncFunSuite</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">tableName</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;diamonds&quot;</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">dbName</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;default&quot;</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">columnName</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;clarity&quot;</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">columnValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;SI2&quot;</span>
+
+<span class="w">  </span><span class="c1">// Create fake data for the unit tests to run against.</span>
+<span class="w">  </span><span class="c1">// In general, it is a best practice to not run unit tests</span>
+<span class="w">  </span><span class="c1">// against functions that work with data in production.</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">StructType</span><span class="p">(</span><span class="nc">Array</span><span class="p">(</span>
+<span class="w">                 </span><span class="nc">StructField</span><span class="p">(</span><span class="s">&quot;_c0&quot;</span><span class="p">,</span><span class="w">     </span><span class="nc">IntegerType</span><span class="p">),</span>
+<span class="w">                 </span><span class="nc">StructField</span><span class="p">(</span><span class="s">&quot;carat&quot;</span><span class="p">,</span><span class="w">   </span><span class="nc">FloatType</span><span class="p">),</span>
+<span class="w">                 </span><span class="nc">StructField</span><span class="p">(</span><span class="s">&quot;cut&quot;</span><span class="p">,</span><span class="w">     </span><span class="nc">StringType</span><span class="p">),</span>
+<span class="w">                 </span><span class="nc">StructField</span><span class="p">(</span><span class="s">&quot;color&quot;</span><span class="p">,</span><span class="w">   </span><span class="nc">StringType</span><span class="p">),</span>
+<span class="w">                 </span><span class="nc">StructField</span><span class="p">(</span><span class="s">&quot;clarity&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">StringType</span><span class="p">),</span>
+<span class="w">                 </span><span class="nc">StructField</span><span class="p">(</span><span class="s">&quot;depth&quot;</span><span class="p">,</span><span class="w">   </span><span class="nc">FloatType</span><span class="p">),</span>
+<span class="w">                 </span><span class="nc">StructField</span><span class="p">(</span><span class="s">&quot;table&quot;</span><span class="p">,</span><span class="w">   </span><span class="nc">IntegerType</span><span class="p">),</span>
+<span class="w">                 </span><span class="nc">StructField</span><span class="p">(</span><span class="s">&quot;price&quot;</span><span class="p">,</span><span class="w">   </span><span class="nc">IntegerType</span><span class="p">),</span>
+<span class="w">                 </span><span class="nc">StructField</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">,</span><span class="w">       </span><span class="nc">FloatType</span><span class="p">),</span>
+<span class="w">                 </span><span class="nc">StructField</span><span class="p">(</span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w">       </span><span class="nc">FloatType</span><span class="p">),</span>
+<span class="w">                 </span><span class="nc">StructField</span><span class="p">(</span><span class="s">&quot;z&quot;</span><span class="p">,</span><span class="w">       </span><span class="nc">FloatType</span><span class="p">)</span>
+<span class="w">               </span><span class="p">))</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">                  </span><span class="nc">Row</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mf">0.23</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Ideal&quot;</span><span class="p">,</span><span class="w">   </span><span class="s">&quot;E&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;SI2&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">61.5</span><span class="p">,</span><span class="w"> </span><span class="mi">55</span><span class="p">,</span><span class="w"> </span><span class="mi">326</span><span class="p">,</span><span class="w"> </span><span class="mf">3.95</span><span class="p">,</span><span class="w"> </span><span class="mf">3.98</span><span class="p">,</span><span class="w"> </span><span class="mf">2.43</span><span class="p">),</span>
+<span class="w">                  </span><span class="nc">Row</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mf">0.21</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Premium&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;E&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;SI1&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">59.8</span><span class="p">,</span><span class="w"> </span><span class="mi">61</span><span class="p">,</span><span class="w"> </span><span class="mi">326</span><span class="p">,</span><span class="w"> </span><span class="mf">3.89</span><span class="p">,</span><span class="w"> </span><span class="mf">3.84</span><span class="p">,</span><span class="w"> </span><span class="mf">2.31</span><span class="p">)</span>
+<span class="w">                </span><span class="p">).</span><span class="n">asJava</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">schema</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// Does the table exist?</span>
+<span class="w">  </span><span class="n">test</span><span class="p">(</span><span class="s">&quot;The table exists&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">assert</span><span class="p">(</span><span class="n">tableExists</span><span class="p">(</span><span class="n">tableName</span><span class="p">,</span><span class="w"> </span><span class="n">dbName</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Does the column exist?</span>
+<span class="w">  </span><span class="n">test</span><span class="p">(</span><span class="s">&quot;The column exists&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">assert</span><span class="p">(</span><span class="n">columnExists</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">columnName</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Is there at least one row for the value in the specified column?</span>
+<span class="w">  </span><span class="n">test</span><span class="p">(</span><span class="s">&quot;There is at least one matching row&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">assert</span><span class="p">(</span><span class="n">numRowsInColumnForValue</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">columnName</span><span class="p">,</span><span class="w"> </span><span class="n">columnValue</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">nocolor</span><span class="p">.</span><span class="n">nodurations</span><span class="p">.</span><span class="n">nostacks</span><span class="p">.</span><span class="n">stats</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="nc">DataTests</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last admonition note">
+<p class="admonition-title">Note</p>
+<p>This code example uses the <code class="docutils literal notranslate"><span class="pre">FunSuite</span></code> style of testing in ScalaTest. For other available testing styles, see <a class="reference external" href="https://www.scalatest.org/user_guide/selecting_a_style">Selecting testing styles for your project</a>.</p>
+</div>
+</div>
+<div class="compound-last compound" lang="SQL">
+<p class="compound-first">Before you add unit tests, you should be aware that in general, it is a best practice to <em>not</em> run unit tests against functions that work with data in production. This is especially important for functions that add, remove, or otherwise change data. To protect your production data from being compromised by your unit tests in unexpected ways, you should run unit tests against non-production data. One common approach is to run unit tests against <a class="reference internal" href="../lakehouse/data-objects.html#view"><span class="std std-ref">views</span></a> instead of tables.</p>
+<p class="compound-middle">To create a view, you can call the <a class="reference internal" href="../sql/language-manual/sql-ref-syntax-ddl-create-view.html"><span class="doc">CREATE VIEW</span></a> command from a new cell in either the preceding notebook or a separate notebook. The following example assumes that you have an existing table named <code class="docutils literal notranslate"><span class="pre">diamonds</span></code> within a schema (database) named <code class="docutils literal notranslate"><span class="pre">default</span></code> within a catalog named <code class="docutils literal notranslate"><span class="pre">main</span></code>. Change these names to match your own as needed, and then run only that cell.</p>
+<div class="compound-middle highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">USE</span><span class="w"> </span><span class="k">CATALOG</span><span class="w"> </span><span class="n">main</span><span class="p">;</span>
+<span class="n">USE</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">view_diamonds</span><span class="w"> </span><span class="k">AS</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">diamonds</span><span class="p">;</span>
+</pre></div>
+</div>
+<p class="compound-middle">After you create the view, add each of the following <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> statements to its own new cell in the preceding notebook or to its own new cell in a separate notebook. Change the names to match your own as needed.</p>
+<div class="compound-last highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">table_exists</span><span class="p">(</span><span class="ss">&quot;main&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;default&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;view_diamonds&quot;</span><span class="p">),</span>
+<span class="w">          </span><span class="n">printf</span><span class="p">(</span><span class="ss">&quot;PASS: The table &#39;main.default.view_diamonds&#39; exists.&quot;</span><span class="p">),</span>
+<span class="w">          </span><span class="n">printf</span><span class="p">(</span><span class="ss">&quot;FAIL: The table &#39;main.default.view_diamonds&#39; does not exist.&quot;</span><span class="p">));</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">column_exists</span><span class="p">(</span><span class="ss">&quot;main&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;default&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;view_diamonds&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;clarity&quot;</span><span class="p">),</span>
+<span class="w">          </span><span class="n">printf</span><span class="p">(</span><span class="ss">&quot;PASS: The column &#39;clarity&#39; exists in the table &#39;main.default.view_diamonds&#39;.&quot;</span><span class="p">),</span>
+<span class="w">          </span><span class="n">printf</span><span class="p">(</span><span class="ss">&quot;FAIL: The column &#39;clarity&#39; does not exists in the table &#39;main.default.view_diamonds&#39;.&quot;</span><span class="p">));</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">num_rows_for_clarity_in_diamonds</span><span class="p">(</span><span class="ss">&quot;VVS2&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">          </span><span class="n">printf</span><span class="p">(</span><span class="ss">&quot;PASS: The table &#39;main.default.view_diamonds&#39; has at least one row where the column &#39;clarity&#39; equals &#39;VVS2&#39;.&quot;</span><span class="p">),</span>
+<span class="w">          </span><span class="n">printf</span><span class="p">(</span><span class="ss">&quot;FAIL: The table &#39;main.default.view_diamonds&#39; does not have at least one row where the column &#39;clarity&#39; equals &#39;VVS2&#39;.&quot;</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="run-unit-tests">
+<h2>Run unit tests<a class="headerlink" href="#run-unit-tests" title="Permalink to this headline"> </a></h2>
+<p>This section describes how to run the unit tests that you coded in the preceding section. When you run the unit tests, you get results showing which unit tests passed and failed.</p>
+<p>If you added the unit tests from the preceding section to your Databricks workspace, you can run these unit tests from your workspace. You can run these unit tests either <a class="reference internal" href="run-notebook.html"><span class="doc">manually</span></a> or <a class="reference internal" href="schedule-notebook-jobs.html"><span class="doc">on a schedule</span></a>.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Python">
+<p class="compound-first">Create a Python notebook in the same folder as the preceding <code class="docutils literal notranslate"><span class="pre">test_myfunctions.py</span></code> file in your repo, and add the following contents.</p>
+<p class="compound-middle">In the new notebook’s first cell, add the following code, and then run the cell, which calls the <code class="docutils literal notranslate"><span class="pre">%pip</span></code> magic. This magic installs <code class="docutils literal notranslate"><span class="pre">pytest</span></code>.</p>
+<div class="compound-middle highlight-text notranslate"><div class="highlight"><pre><span></span>%pip install pytest
+</pre></div>
+</div>
+<p class="compound-middle">In the second cell, add the following code, replace <code class="docutils literal notranslate"><span class="pre">&lt;my-repo-name&gt;</span></code> with the folder name for your repo, and then run the cell. Results show which unit tests passed and failed.</p>
+<div class="compound-last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">repo_name</span> <span class="o">=</span> <span class="s2">&quot;&lt;my-repo-name&gt;&quot;</span>
+
+<span class="c1"># Get the path to this notebook, for example &quot;/Workspace/Repos/{username}/{repo-name}&quot;.</span>
+<span class="n">notebook_path</span> <span class="o">=</span> <span class="n">dbutils</span><span class="o">.</span><span class="n">notebook</span><span class="o">.</span><span class="n">entry_point</span><span class="o">.</span><span class="n">getDbutils</span><span class="p">()</span><span class="o">.</span><span class="n">notebook</span><span class="p">()</span><span class="o">.</span><span class="n">getContext</span><span class="p">()</span><span class="o">.</span><span class="n">notebookPath</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+
+<span class="c1"># Get the repo&#39;s root directory name.</span>
+<span class="n">repo_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">notebook_path</span><span class="p">))</span>
+
+<span class="c1"># Prepare to run pytest from the repo.</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/Workspace/</span><span class="si">{</span><span class="n">repo_root</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">repo_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+
+<span class="c1"># Skip writing pyc files on a readonly filesystem.</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">dont_write_bytecode</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># Run pytest.</span>
+<span class="n">retcode</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">main</span><span class="p">([</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="s2">&quot;no:cacheprovider&quot;</span><span class="p">])</span>
+
+<span class="c1"># Fail the cell execution if there are any test failures.</span>
+<span class="k">assert</span> <span class="n">retcode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;The pytest invocation failed. See the log for details.&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-middle compound" lang="R">
+<p class="compound-first">Create an R notebook in the same folder as the preceding <code class="docutils literal notranslate"><span class="pre">test_myfunctions.r</span></code> file in your repo, and add the following contents.</p>
+<p class="compound-middle">In the first cell, add the following code, and then run the cell, which calls the <code class="docutils literal notranslate"><span class="pre">install.packages</span></code> function. This function installs <code class="docutils literal notranslate"><span class="pre">testthat</span></code>.</p>
+<div class="compound-middle highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">install.packages</span><span class="p">(</span><span class="s">&quot;testthat&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="compound-middle">In the second cell, add the following code, and then run the cell. Results show which unit tests passed and failed.</p>
+<div class="compound-last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">library</span><span class="p">(</span><span class="n">testthat</span><span class="p">)</span>
+<span class="n">source</span><span class="p">(</span><span class="s2">&quot;myfunctions.r&quot;</span><span class="p">)</span>
+
+<span class="n">test_dir</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">reporter</span> <span class="o">=</span> <span class="s2">&quot;tap&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-middle compound" lang="Scala">
+<p>Run the first and then second cells in the notebook from the preceding section. Results show which unit tests passed and failed.</p>
+</div>
+<div class="compound-last compound" lang="SQL">
+<p class="compound-first">Run each of the three cells in the notebook from the preceding section. Results show whether each unit test passed or failed.</p>
+<p class="compound-middle">If you no longer need the view after you run your unit tests, you can delete the view. To delete this view, you can add the following code to a new cell within one of the preceding notebooks and then run only that cell.</p>
+<div class="compound-last highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">view_diamonds</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can view the results of your notebook runs (including unit test results) in your cluster’s <a class="reference internal" href="../compute/clusters-manage.html#driver-logs"><span class="std std-ref">driver logs</span></a>. You can also specify a location for your cluster’s <a class="reference internal" href="../compute/configure.html#cluster-log-delivery"><span class="std std-ref">log delivery</span></a>.</p>
+<p>You can set up a continuous integration and continuous delivery or deployment (CI/CD) system, such as GitHub Actions, to automatically run your unit tests whenever your code changes. For an example, see the coverage of GitHub Actions in <a class="reference internal" href="best-practices.html"><span class="doc">Software engineering best practices for notebooks</span></a>.</p>
+</div>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline"> </a></h2>
+<div class="section" id="pytest">
+<h3>pytest<a class="headerlink" href="#pytest" title="Permalink to this headline"> </a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.pytest.org">pytest homepage</a></p></li>
+<li><p><a class="reference external" href="https://docs.pytest.org/en/7.1.x/how-to/index.html">pytest how-to guides</a></p></li>
+<li><p><a class="reference external" href="https://docs.pytest.org/en/7.1.x/reference/index.html">pytest reference guides</a></p></li>
+<li><p><a class="reference internal" href="best-practices.html"><span class="doc">Software engineering best practices for notebooks</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="testthat">
+<h3>testthat<a class="headerlink" href="#testthat" title="Permalink to this headline"> </a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://testthat.r-lib.org/">testthat homepage</a></p></li>
+<li><p><a class="reference external" href="https://testthat.r-lib.org/reference/index.html">testthat function reference</a></p></li>
+</ul>
+</div>
+<div class="section" id="scalatest">
+<h3>ScalaTest<a class="headerlink" href="#scalatest" title="Permalink to this headline"> </a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.scalatest.org">ScalaTest homepage</a></p></li>
+<li><p><a class="reference external" href="https://www.scalatest.org/user_guide">ScalaTest User Guide</a></p></li>
+<li><p><a class="reference external" href="https://www.scalatest.org/scaladoc">ScalaTest’s Scaladoc documentation</a></p></li>
+</ul>
+</div>
+<div class="section" id="sql">
+<h3>SQL<a class="headerlink" href="#sql" title="Permalink to this headline"> </a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="../sql/language-manual/sql-ref-syntax-ddl-create-sql-function.html"><span class="doc">CREATE FUNCTION (SQL and Python)</span></a></p></li>
+<li><p><a class="reference internal" href="../sql/language-manual/sql-ref-syntax-ddl-create-view.html"><span class="doc">CREATE VIEW</span></a></p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

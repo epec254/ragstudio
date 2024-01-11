@@ -1,0 +1,787 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Manual or automatic table schema updates to add, rename, or drop columns with Delta Lake." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Update Delta Lake table schema">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Update Delta Lake table schema &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/delta/update-schema.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/delta/update-schema.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/delta/update-schema.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/delta/update-schema.html" class="notranslate">English</option>
+    <option value="../../ja/delta/update-schema.html" class="notranslate">日本語</option>
+    <option value="../../pt/delta/update-schema.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Update Delta Lake table schema</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="update-delta-lake-table-schema">
+<span id="update-delta-table-schema"></span><h1>Update Delta Lake table schema<a class="headerlink" href="#update-delta-lake-table-schema" title="Permalink to this headline"> </a></h1>
+<p>Delta Lake lets you update the schema of a table. The following types of changes are supported:</p>
+<ul class="simple">
+<li><p>Adding new columns (at arbitrary positions)</p></li>
+<li><p>Reordering existing columns</p></li>
+<li><p>Renaming existing columns</p></li>
+</ul>
+<p>You can make these changes explicitly using DDL or implicitly using DML.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>When you update a Delta table schema, streams that read from that table terminate. If you want the stream to continue you must restart it.</p>
+<p>For recommended methods, see <a class="reference internal" href="../structured-streaming/production.html"><span class="doc">Production considerations for Structured Streaming</span></a>.</p>
+</div>
+<div class="section" id="explicitly-update-schema-to-add-columns">
+<h2>Explicitly update schema to add columns<a class="headerlink" href="#explicitly-update-schema-to-add-columns" title="Permalink to this headline"> </a></h2>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="n">COLUMNS</span><span class="w"> </span><span class="p">(</span><span class="n">col_name</span><span class="w"> </span><span class="n">data_type</span><span class="w"> </span><span class="p">[</span><span class="k">COMMENT</span><span class="w"> </span><span class="n">col_comment</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="k">FIRST</span><span class="o">|</span><span class="k">AFTER</span><span class="w"> </span><span class="n">colA_name</span><span class="p">],</span><span class="w"> </span><span class="p">...)</span>
+</pre></div>
+</div>
+<p>By default, nullability is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+<p>To add a column to a nested field, use:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="n">COLUMNS</span><span class="w"> </span><span class="p">(</span><span class="n">col_name</span><span class="p">.</span><span class="n">nested_col_name</span><span class="w"> </span><span class="n">data_type</span><span class="w"> </span><span class="p">[</span><span class="k">COMMENT</span><span class="w"> </span><span class="n">col_comment</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="k">FIRST</span><span class="o">|</span><span class="k">AFTER</span><span class="w"> </span><span class="n">colA_name</span><span class="p">],</span><span class="w"> </span><span class="p">...)</span>
+</pre></div>
+</div>
+<p>For example, if the schema before running <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">boxes</span> <span class="pre">ADD</span> <span class="pre">COLUMNS</span> <span class="pre">(colB.nested</span> <span class="pre">STRING</span> <span class="pre">AFTER</span> <span class="pre">field1)</span></code> is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">root</span>
+<span class="o">|</span> <span class="o">-</span> <span class="n">colA</span>
+<span class="o">|</span> <span class="o">-</span> <span class="n">colB</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">field1</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">field2</span>
+</pre></div>
+</div>
+<p>the schema after is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">root</span>
+<span class="o">|</span> <span class="o">-</span> <span class="n">colA</span>
+<span class="o">|</span> <span class="o">-</span> <span class="n">colB</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">field1</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">nested</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">field2</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Adding nested columns is supported only for structs. Arrays and maps are not supported.</p>
+</div>
+</div>
+<div class="section" id="explicitly-update-schema-to-change-column-comment-or-ordering">
+<h2>Explicitly update schema to change column comment or ordering<a class="headerlink" href="#explicitly-update-schema-to-change-column-comment-or-ordering" title="Permalink to this headline"> </a></h2>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="p">[</span><span class="k">COLUMN</span><span class="p">]</span><span class="w"> </span><span class="n">col_name</span><span class="w"> </span><span class="p">(</span><span class="k">COMMENT</span><span class="w"> </span><span class="n">col_comment</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">FIRST</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">AFTER</span><span class="w"> </span><span class="n">colA_name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To change a column in a nested field, use:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="p">[</span><span class="k">COLUMN</span><span class="p">]</span><span class="w"> </span><span class="n">col_name</span><span class="p">.</span><span class="n">nested_col_name</span><span class="w"> </span><span class="p">(</span><span class="k">COMMENT</span><span class="w"> </span><span class="n">col_comment</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">FIRST</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">AFTER</span><span class="w"> </span><span class="n">colA_name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For example, if the schema before running <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">boxes</span> <span class="pre">ALTER</span> <span class="pre">COLUMN</span> <span class="pre">colB.field2</span> <span class="pre">FIRST</span></code> is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">root</span>
+<span class="o">|</span> <span class="o">-</span> <span class="n">colA</span>
+<span class="o">|</span> <span class="o">-</span> <span class="n">colB</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">field1</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">field2</span>
+</pre></div>
+</div>
+<p>the schema after is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">root</span>
+<span class="o">|</span> <span class="o">-</span> <span class="n">colA</span>
+<span class="o">|</span> <span class="o">-</span> <span class="n">colB</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">field2</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">field1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explicitly-update-schema-to-replace-columns">
+<h2>Explicitly update schema to replace columns<a class="headerlink" href="#explicitly-update-schema-to-replace-columns" title="Permalink to this headline"> </a></h2>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="n">COLUMNS</span><span class="w"> </span><span class="p">(</span><span class="n">col_name1</span><span class="w"> </span><span class="n">col_type1</span><span class="w"> </span><span class="p">[</span><span class="k">COMMENT</span><span class="w"> </span><span class="n">col_comment1</span><span class="p">],</span><span class="w"> </span><span class="p">...)</span>
+</pre></div>
+</div>
+<p>For example, when running the following DDL:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">boxes</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="n">COLUMNS</span><span class="w"> </span><span class="p">(</span><span class="n">colC</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span><span class="w"> </span><span class="n">colB</span><span class="w"> </span><span class="n">STRUCT</span><span class="o">&lt;</span><span class="n">field2</span><span class="p">:</span><span class="n">STRING</span><span class="p">,</span><span class="w"> </span><span class="n">nested</span><span class="p">:</span><span class="n">STRING</span><span class="p">,</span><span class="w"> </span><span class="n">field1</span><span class="p">:</span><span class="n">STRING</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">colA</span><span class="w"> </span><span class="n">STRING</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>if the schema before is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">root</span>
+<span class="o">|</span> <span class="o">-</span> <span class="n">colA</span>
+<span class="o">|</span> <span class="o">-</span> <span class="n">colB</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">field1</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">field2</span>
+</pre></div>
+</div>
+<p>the schema after is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">root</span>
+<span class="o">|</span> <span class="o">-</span> <span class="n">colC</span>
+<span class="o">|</span> <span class="o">-</span> <span class="n">colB</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">field2</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">nested</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">field1</span>
+<span class="o">|</span> <span class="o">-</span> <span class="n">colA</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explicitly-update-schema-to-rename-columns">
+<span id="rename-columns"></span><h2>Explicitly update schema to rename columns<a class="headerlink" href="#explicitly-update-schema-to-rename-columns" title="Permalink to this headline"> </a></h2>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This feature is available in Databricks Runtime 10.2 and above.</p>
+</div>
+<p>To rename columns without rewriting any of the columns’ existing data, you must enable column mapping for the table. See <a class="reference internal" href="delta-column-mapping.html"><span class="doc">Rename and drop columns with Delta Lake column mapping</span></a>.</p>
+<p>To rename a column:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">RENAME</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">old_col_name</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">new_col_name</span>
+</pre></div>
+</div>
+<p>To rename a nested field:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">RENAME</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">col_name</span><span class="p">.</span><span class="n">old_nested_field</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">new_nested_field</span>
+</pre></div>
+</div>
+<p>For example, when you run the following command:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">boxes</span><span class="w"> </span><span class="k">RENAME</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">colB</span><span class="p">.</span><span class="n">field1</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">field001</span>
+</pre></div>
+</div>
+<p>If the schema before is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">root</span>
+<span class="o">|</span> <span class="o">-</span> <span class="n">colA</span>
+<span class="o">|</span> <span class="o">-</span> <span class="n">colB</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">field1</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">field2</span>
+</pre></div>
+</div>
+<p>Then the schema after is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">root</span>
+<span class="o">|</span> <span class="o">-</span> <span class="n">colA</span>
+<span class="o">|</span> <span class="o">-</span> <span class="n">colB</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">field001</span>
+<span class="o">|</span> <span class="o">+-</span><span class="n">field2</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="delta-column-mapping.html"><span class="doc">Rename and drop columns with Delta Lake column mapping</span></a>.</p>
+</div>
+<div class="section" id="explicitly-update-schema-to-drop-columns">
+<span id="drop-columns"></span><h2>Explicitly update schema to drop columns<a class="headerlink" href="#explicitly-update-schema-to-drop-columns" title="Permalink to this headline"> </a></h2>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This feature is available in Databricks Runtime 11.0 and above.</p>
+</div>
+<p>To drop columns as a metadata-only operation without rewriting any data files, you must enable column mapping for the table. See <a class="reference internal" href="delta-column-mapping.html"><span class="doc">Rename and drop columns with Delta Lake column mapping</span></a>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Dropping a column from metadata does not delete the underlying data for the column in files. To purge the dropped column data, you can use <a class="reference internal" href="../sql/language-manual/delta-reorg-table.html"><span class="doc">REORG TABLE</span></a> to rewrite files. You can then use <a class="reference internal" href="../sql/language-manual/delta-vacuum.html"><span class="doc">VACUUM</span></a> to physically delete the files that contain the dropped column data.</p>
+</div>
+<p>To drop a column:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">col_name</span>
+</pre></div>
+</div>
+<p>To drop multiple columns:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="n">COLUMNS</span><span class="w"> </span><span class="p">(</span><span class="n">col_name_1</span><span class="p">,</span><span class="w"> </span><span class="n">col_name_2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explicitly-update-schema-to-change-column-type-or-name">
+<span id="change-column-type"></span><h2>Explicitly update schema to change column type or name<a class="headerlink" href="#explicitly-update-schema-to-change-column-type-or-name" title="Permalink to this headline"> </a></h2>
+<p>You can change a column’s type or name or drop a column by rewriting the table. To do this, use the <code class="docutils literal notranslate"><span class="pre">overwriteSchema</span></code> option.</p>
+<p>The following example shows changing a column type:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;birthDate&quot;</span><span class="p">,</span> <span class="n">col</span><span class="p">(</span><span class="s2">&quot;birthDate&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">))</span>
+  <span class="o">.</span><span class="n">write</span>
+  <span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;overwrite&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;overwriteSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The following example shows changing a column name:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s2">&quot;dateOfBirth&quot;</span><span class="p">,</span> <span class="s2">&quot;birthDate&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">write</span>
+  <span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;overwrite&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;overwriteSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-columns-with-automatic-schema-update">
+<h2>Add columns with automatic schema update<a class="headerlink" href="#add-columns-with-automatic-schema-update" title="Permalink to this headline"> </a></h2>
+<p>Columns that are present in the DataFrame but missing from the table are automatically added as part of a write transaction when:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">write</span></code> or <code class="docutils literal notranslate"><span class="pre">writeStream</span></code> have <code class="docutils literal notranslate"><span class="pre">.option(&quot;mergeSchema&quot;,</span> <span class="pre">&quot;true&quot;)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spark.databricks.delta.schema.autoMerge.enabled</span></code> is <code class="docutils literal notranslate"><span class="pre">true</span></code></p></li>
+</ul>
+<p>When both options are specified, the option from the <code class="docutils literal notranslate"><span class="pre">DataFrameWriter</span></code> takes precedence. The added columns are appended to the end of the struct they are present in. Case is preserved when appending a new column.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mergeSchema</span></code>  cannot be used with <code class="docutils literal notranslate"><span class="pre">INSERT</span> <span class="pre">INTO</span></code> or <code class="docutils literal notranslate"><span class="pre">.write.insertInto()</span></code>.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="automatic-schema-evolution-for-delta-lake-merge">
+<span id="automatic-schema-evolution-for-delta-merge"></span><span id="merge-schema-evolution"></span><h2>Automatic schema evolution for Delta Lake merge<a class="headerlink" href="#automatic-schema-evolution-for-delta-lake-merge" title="Permalink to this headline"> </a></h2>
+<p>Schema evolution allows users to resolve schema mismatches between the target and source table in merge. It handles the following two cases:</p>
+<ol class="arabic simple">
+<li><p>A column in the source table is not present in the target table. The new column is added to the target schema, and its values are inserted or updated using the source values.</p></li>
+<li><p>A column in the target table is not present in the source table. The target schema is left unchanged; the values in the additional target column are either left unchanged (for <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>) or set to <code class="docutils literal notranslate"><span class="pre">NULL</span></code> (for <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>).</p></li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>To use schema evolution, you must set the Spark session configuration`spark.databricks.delta.schema.autoMerge.enabled` to <code class="docutils literal notranslate"><span class="pre">true</span></code> before you run the <code class="docutils literal notranslate"><span class="pre">merge</span></code> command.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>In Databricks Runtime 12.2 and above, columns present in the source table can be specified by name in insert or update actions. In Databricks Runtime 12.1 and below, only <code class="docutils literal notranslate"><span class="pre">INSERT</span> <span class="pre">*</span></code> or <code class="docutils literal notranslate"><span class="pre">UPDATE</span> <span class="pre">SET</span> <span class="pre">*</span></code> actions can be used for schema evolution with merge.</p></li>
+</ul>
+</div>
+<p>Here are a few examples of the effects of <code class="docutils literal notranslate"><span class="pre">merge</span></code> operation with and without schema evolution.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Columns</p></th>
+<th class="head"><p>Query (in SQL)</p></th>
+<th class="head"><p>Behavior without schema evolution (default)</p></th>
+<th class="head"><p>Behavior with schema evolution</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Target columns: <code class="docutils literal notranslate"><span class="pre">key,</span> <span class="pre">value</span></code></p>
+<p>Source columns: <code class="docutils literal notranslate"><span class="pre">key,</span> <span class="pre">value,</span> <span class="pre">new_value</span></code></p>
+</td>
+<td><div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">MERGE</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">target_table</span><span class="w"> </span><span class="n">t</span>
+<span class="k">USING</span><span class="w"> </span><span class="n">source_table</span><span class="w"> </span><span class="n">s</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="k">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="k">key</span>
+<span class="k">WHEN</span><span class="w"> </span><span class="n">MATCHED</span>
+<span class="w">  </span><span class="k">THEN</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="o">*</span>
+<span class="k">WHEN</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="n">MATCHED</span>
+<span class="w">  </span><span class="k">THEN</span><span class="w"> </span><span class="k">INSERT</span><span class="w"> </span><span class="o">*</span>
+</pre></div>
+</div>
+</td>
+<td><p>The table schema remains unchanged; only columns <code class="docutils literal notranslate"><span class="pre">key</span></code>, <code class="docutils literal notranslate"><span class="pre">value</span></code> are updated/inserted.</p></td>
+<td><p>The table schema is changed to <code class="docutils literal notranslate"><span class="pre">(key,</span> <span class="pre">value,</span> <span class="pre">new_value)</span></code>. Existing records with matches are updated with the <code class="docutils literal notranslate"><span class="pre">value</span></code> and <code class="docutils literal notranslate"><span class="pre">new_value</span></code> in the source. New rows are inserted with the schema <code class="docutils literal notranslate"><span class="pre">(key,</span> <span class="pre">value,</span> <span class="pre">new_value)</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Target columns: <code class="docutils literal notranslate"><span class="pre">key,</span> <span class="pre">old_value</span></code></p>
+<p>Source columns: <code class="docutils literal notranslate"><span class="pre">key,</span> <span class="pre">new_value</span></code></p>
+</td>
+<td><div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">MERGE</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">target_table</span><span class="w"> </span><span class="n">t</span>
+<span class="k">USING</span><span class="w"> </span><span class="n">source_table</span><span class="w"> </span><span class="n">s</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="k">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="k">key</span>
+<span class="k">WHEN</span><span class="w"> </span><span class="n">MATCHED</span>
+<span class="w">  </span><span class="k">THEN</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="o">*</span>
+<span class="k">WHEN</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="n">MATCHED</span>
+<span class="w">  </span><span class="k">THEN</span><span class="w"> </span><span class="k">INSERT</span><span class="w"> </span><span class="o">*</span>
+</pre></div>
+</div>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">UPDATE</span></code> and <code class="docutils literal notranslate"><span class="pre">INSERT</span></code> actions throw an error because the target column <code class="docutils literal notranslate"><span class="pre">old_value</span></code> is not in the source.</p></td>
+<td><p>The table schema is changed to <code class="docutils literal notranslate"><span class="pre">(key,</span> <span class="pre">old_value,</span> <span class="pre">new_value)</span></code>. Existing records with matches are updated with the <code class="docutils literal notranslate"><span class="pre">new_value</span></code> in the source leaving <code class="docutils literal notranslate"><span class="pre">old_value</span></code> unchanged. New records are inserted with the specified <code class="docutils literal notranslate"><span class="pre">key</span></code>, <code class="docutils literal notranslate"><span class="pre">new_value</span></code>, and <code class="docutils literal notranslate"><span class="pre">NULL</span></code> for the <code class="docutils literal notranslate"><span class="pre">old_value</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p>Target columns: <code class="docutils literal notranslate"><span class="pre">key,</span> <span class="pre">old_value</span></code></p>
+<p>Source columns: <code class="docutils literal notranslate"><span class="pre">key,</span> <span class="pre">new_value</span></code></p>
+</td>
+<td><div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">MERGE</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">target_table</span><span class="w"> </span><span class="n">t</span>
+<span class="k">USING</span><span class="w"> </span><span class="n">source_table</span><span class="w"> </span><span class="n">s</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="k">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="k">key</span>
+<span class="k">WHEN</span><span class="w"> </span><span class="n">MATCHED</span>
+<span class="w">  </span><span class="k">THEN</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">new_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">new_value</span>
+</pre></div>
+</div>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">UPDATE</span></code> throws an error because column <code class="docutils literal notranslate"><span class="pre">new_value</span></code> does not exist in the target table.</p></td>
+<td><p>The table schema is changed to <code class="docutils literal notranslate"><span class="pre">(key,</span> <span class="pre">old_value,</span> <span class="pre">new_value)</span></code>. Existing records with matches are updated with the <code class="docutils literal notranslate"><span class="pre">new_value</span></code> in the source leaving <code class="docutils literal notranslate"><span class="pre">old_value</span></code> unchanged, and unmatched records have <code class="docutils literal notranslate"><span class="pre">NULL</span></code> entered for <code class="docutils literal notranslate"><span class="pre">new_value</span></code>. See note <a class="reference internal" href="#1"><span class="std std-ref">(1)</span></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Target columns: <code class="docutils literal notranslate"><span class="pre">key,</span> <span class="pre">old_value</span></code></p>
+<p>Source columns: <code class="docutils literal notranslate"><span class="pre">key,</span> <span class="pre">new_value</span></code></p>
+</td>
+<td><div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">MERGE</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">target_table</span><span class="w"> </span><span class="n">t</span>
+<span class="k">USING</span><span class="w"> </span><span class="n">source_table</span><span class="w"> </span><span class="n">s</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="k">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="k">key</span>
+<span class="k">WHEN</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="n">MATCHED</span>
+<span class="w">  </span><span class="k">THEN</span><span class="w"> </span><span class="k">INSERT</span><span class="w"> </span><span class="p">(</span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="n">new_value</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">new_value</span><span class="p">)</span>
+</pre></div>
+</div>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">INSERT</span></code> throws an error because column <code class="docutils literal notranslate"><span class="pre">new_value</span></code> does not exist in the target table.</p></td>
+<td><p>The table schema is changed to <code class="docutils literal notranslate"><span class="pre">(key,</span> <span class="pre">old_value,</span> <span class="pre">new_value)</span></code>. New records are inserted with the specified <code class="docutils literal notranslate"><span class="pre">key</span></code>, <code class="docutils literal notranslate"><span class="pre">new_value</span></code>, and <code class="docutils literal notranslate"><span class="pre">NULL</span></code> for the <code class="docutils literal notranslate"><span class="pre">old_value</span></code>. Existing records have <code class="docutils literal notranslate"><span class="pre">NULL</span></code> entered for <code class="docutils literal notranslate"><span class="pre">new_value</span></code> leaving <code class="docutils literal notranslate"><span class="pre">old_value</span></code> unchanged. See note <a class="reference internal" href="#1"><span class="std std-ref">(1)</span></a>.</p></td>
+</tr>
+</tbody>
+</table>
+<p id="1"><strong>(1)</strong> This behavior is available in Databricks Runtime 12.2 and above; Databricks Runtime 12.1 and below error in this condition.</p>
+</div>
+<div class="section" id="exclude-columns-with-delta-lake-merge">
+<span id="exclude-columns-with-delta-merge"></span><h2>Exclude columns with Delta Lake merge<a class="headerlink" href="#exclude-columns-with-delta-lake-merge" title="Permalink to this headline"> </a></h2>
+<p>In Databricks Runtime 12.0 and above, you can use <code class="docutils literal notranslate"><span class="pre">EXCEPT</span></code> clauses in merge conditions to explicitly exclude columns. The behavior of the <code class="docutils literal notranslate"><span class="pre">EXCEPT</span></code> keyword varies depending on whether or not schema evolution is enabled.</p>
+<p>With schema evolution disabled, the <code class="docutils literal notranslate"><span class="pre">EXCEPT</span></code> keyword applies to the list of columns in the target table and allows excluding columns from <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code> or <code class="docutils literal notranslate"><span class="pre">INSERT</span></code> actions. Excluded columns are set to <code class="docutils literal notranslate"><span class="pre">null</span></code>.</p>
+<p>With schema evolution enabled, the <code class="docutils literal notranslate"><span class="pre">EXCEPT</span></code> keyword applies to the list of columns in the source table and allows excluding columns from schema evolution. A new column in the source that is not present in the target is not added to the target schema if it is listed in the <code class="docutils literal notranslate"><span class="pre">EXCEPT</span></code> clause. Excluded columns that are already present in the target are set to <code class="docutils literal notranslate"><span class="pre">null</span></code>.</p>
+<p>The following examples demonstrate this syntax:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Columns</p></th>
+<th class="head"><p>Query (in SQL)</p></th>
+<th class="head"><p>Behavior without schema evolution (default)</p></th>
+<th class="head"><p>Behavior with schema evolution</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Target columns: <code class="docutils literal notranslate"><span class="pre">id,</span> <span class="pre">title,</span> <span class="pre">last_updated</span></code></p>
+<p>Source columns: <code class="docutils literal notranslate"><span class="pre">id,</span> <span class="pre">title,</span> <span class="pre">review,</span> <span class="pre">last_updated</span></code></p>
+</td>
+<td><div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">MERGE</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="n">t</span>
+<span class="k">USING</span><span class="w"> </span><span class="k">source</span><span class="w"> </span><span class="n">s</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">id</span>
+<span class="k">WHEN</span><span class="w"> </span><span class="n">MATCHED</span>
+<span class="w">  </span><span class="k">THEN</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">last_updated</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">current_date</span><span class="p">()</span>
+<span class="k">WHEN</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="n">MATCHED</span>
+<span class="w">  </span><span class="k">THEN</span><span class="w"> </span><span class="k">INSERT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">EXCEPT</span><span class="w"> </span><span class="p">(</span><span class="n">last_updated</span><span class="p">)</span>
+</pre></div>
+</div>
+</td>
+<td><p>Matched rows are updated by setting the <code class="docutils literal notranslate"><span class="pre">last_updated</span></code> field to the current date. New rows are inserted using values for <code class="docutils literal notranslate"><span class="pre">id</span></code> and <code class="docutils literal notranslate"><span class="pre">title</span></code>. The excluded field <code class="docutils literal notranslate"><span class="pre">last_updated</span></code> is set to <code class="docutils literal notranslate"><span class="pre">null</span></code>. The field <code class="docutils literal notranslate"><span class="pre">review</span></code> is ignored because it is not in the target.</p></td>
+<td><p>Matched rows are updated by setting the <code class="docutils literal notranslate"><span class="pre">last_updated</span></code> field to the current date. Schema is evolved to add the field <code class="docutils literal notranslate"><span class="pre">review</span></code>. New rows are inserted using all source fields except <code class="docutils literal notranslate"><span class="pre">last_updated</span></code> which is set to <code class="docutils literal notranslate"><span class="pre">null</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Target columns: <code class="docutils literal notranslate"><span class="pre">id,</span> <span class="pre">title,</span> <span class="pre">last_updated</span></code></p>
+<p>Source columns: <code class="docutils literal notranslate"><span class="pre">id,</span> <span class="pre">title,</span> <span class="pre">review,</span> <span class="pre">internal_count</span></code></p>
+</td>
+<td><div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">MERGE</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="n">t</span>
+<span class="k">USING</span><span class="w"> </span><span class="k">source</span><span class="w"> </span><span class="n">s</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">id</span>
+<span class="k">WHEN</span><span class="w"> </span><span class="n">MATCHED</span>
+<span class="w">  </span><span class="k">THEN</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">last_updated</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">current_date</span><span class="p">()</span>
+<span class="k">WHEN</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="n">MATCHED</span>
+<span class="w">  </span><span class="k">THEN</span><span class="w"> </span><span class="k">INSERT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">EXCEPT</span><span class="w"> </span><span class="p">(</span><span class="n">last_updated</span><span class="p">,</span><span class="w"> </span><span class="n">internal_count</span><span class="p">)</span>
+</pre></div>
+</div>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">INSERT</span></code> throws an error because column <code class="docutils literal notranslate"><span class="pre">internal_count</span></code> does not exist in the target table.</p></td>
+<td><p>Matched rows are updated by setting the <code class="docutils literal notranslate"><span class="pre">last_updated</span></code> field to the current date. The <code class="docutils literal notranslate"><span class="pre">review</span></code> field is added to the target table, but the <code class="docutils literal notranslate"><span class="pre">internal_count</span></code> field is ignored. New rows inserted have <code class="docutils literal notranslate"><span class="pre">last_updated</span></code> set to <code class="docutils literal notranslate"><span class="pre">null</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="automatic-schema-evolution-for-arrays-of-structs">
+<span id="arrays-of-structs"></span><h2>Automatic schema evolution for arrays of structs<a class="headerlink" href="#automatic-schema-evolution-for-arrays-of-structs" title="Permalink to this headline"> </a></h2>
+<p>Delta <code class="docutils literal notranslate"><span class="pre">MERGE</span> <span class="pre">INTO</span></code> supports resolving struct fields by name and evolving schemas for arrays of structs. With schema evolution enabled, target table schemas will evolve for arrays of structs, which also works with any nested structs inside of arrays.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In Databricks Runtime 12.2 and above, struct fields present in the source table can be specified by name in insert or update commands. In Databricks Runtime 12.1 and below, only <code class="docutils literal notranslate"><span class="pre">INSERT</span> <span class="pre">*</span></code> or <code class="docutils literal notranslate"><span class="pre">UPDATE</span> <span class="pre">SET</span> <span class="pre">*</span></code> commands can be used for schema evolution with merge.</p>
+</div>
+<p>Here are a few examples of the effects of merge operations with and without schema evolution for arrays of structs.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Source schema</p></th>
+<th class="head"><p>Target schema</p></th>
+<th class="head"><p>Behavior without schema evolution (default)</p></th>
+<th class="head"><p>Behavior with schema evolution</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>array&lt;struct&lt;b: string, a: string&gt;&gt;</p></td>
+<td><p>array&lt;struct&lt;a: int, b: int&gt;&gt;</p></td>
+<td><p>The table schema remains unchanged. Columns will be resolved by name and updated or inserted.</p></td>
+<td><p>The table schema remains unchanged. Columns will be resolved by name and updated or inserted.</p></td>
+</tr>
+<tr class="row-odd"><td><p>array&lt;struct&lt;a: int, c: string, d: string&gt;&gt;</p></td>
+<td><p>array&lt;struct&lt;a: string, b: string&gt;&gt;</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">update</span></code> and <code class="docutils literal notranslate"><span class="pre">insert</span></code> throw errors because <code class="docutils literal notranslate"><span class="pre">c</span></code> and <code class="docutils literal notranslate"><span class="pre">d</span></code> do not exist in the target table.</p></td>
+<td><p>The table schema is changed to array&lt;struct&lt;a: string, b: string, c: string, d: string&gt;&gt;. <code class="docutils literal notranslate"><span class="pre">c</span></code> and <code class="docutils literal notranslate"><span class="pre">d</span></code> are inserted as <code class="docutils literal notranslate"><span class="pre">NULL</span></code> for existing entries in the target table. <code class="docutils literal notranslate"><span class="pre">update</span></code> and <code class="docutils literal notranslate"><span class="pre">insert</span></code> fill entries in the source table with <code class="docutils literal notranslate"><span class="pre">a</span></code> casted to string and <code class="docutils literal notranslate"><span class="pre">b</span></code> as <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p>array&lt;struct&lt;a: string, b: struct&lt;c: string, d: string&gt;&gt;&gt;</p></td>
+<td><p>array&lt;struct&lt;a: string, b: struct&lt;c: string&gt;&gt;&gt;</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">update</span></code> and <code class="docutils literal notranslate"><span class="pre">insert</span></code> throw errors because <code class="docutils literal notranslate"><span class="pre">d</span></code> does not exist in the target table.</p></td>
+<td><p>The target table schema is changed to array&lt;struct&lt;a: string, b: struct&lt;c: string, d: string&gt;&gt;&gt;. <code class="docutils literal notranslate"><span class="pre">d</span></code> is inserted as <code class="docutils literal notranslate"><span class="pre">NULL</span></code> for existing entries in the target table.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="dealing-with-nulltype-columns-in-schema-updates">
+<h2>Dealing with <code class="docutils literal notranslate"><span class="pre">NullType</span></code> columns in schema updates<a class="headerlink" href="#dealing-with-nulltype-columns-in-schema-updates" title="Permalink to this headline"> </a></h2>
+<p>Because Parquet doesn’t support <code class="docutils literal notranslate"><span class="pre">NullType</span></code>, <code class="docutils literal notranslate"><span class="pre">NullType</span></code> columns are dropped from the DataFrame when writing into Delta tables, but are still stored in the schema. When a different data type is received for that column, Delta Lake merges the schema to the new data type. If Delta Lake receives a <code class="docutils literal notranslate"><span class="pre">NullType</span></code> for an existing column, the old schema is retained and the new column is dropped during the write.</p>
+<p><code class="docutils literal notranslate"><span class="pre">NullType</span></code> in streaming is not supported. Since you must set schemas when using streaming this should be very rare. <code class="docutils literal notranslate"><span class="pre">NullType</span></code> is also not accepted for complex types such as <code class="docutils literal notranslate"><span class="pre">ArrayType</span></code> and <code class="docutils literal notranslate"><span class="pre">MapType</span></code>.</p>
+</div>
+<div class="section" id="replace-table-schema">
+<h2>Replace table schema<a class="headerlink" href="#replace-table-schema" title="Permalink to this headline"> </a></h2>
+<p>By default, overwriting the data in a table does not overwrite the schema. When overwriting a table using <code class="docutils literal notranslate"><span class="pre">mode(&quot;overwrite&quot;)</span></code> without <code class="docutils literal notranslate"><span class="pre">replaceWhere</span></code>, you may still want to overwrite the schema of the data being written. You replace the schema and partitioning of the table by setting the <code class="docutils literal notranslate"><span class="pre">overwriteSchema</span></code> option to <code class="docutils literal notranslate"><span class="pre">true</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;overwriteSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You cannot specify <code class="docutils literal notranslate"><span class="pre">overwriteSchema</span></code> as <code class="docutils literal notranslate"><span class="pre">true</span></code> when using dynamic partition overwrite.</p>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

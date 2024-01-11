@@ -1,0 +1,597 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Run your first end-to-end analytics pipeline in a Databricks lakehouse." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Tutorial: Run an end-to-end lakehouse analytics pipeline">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Tutorial: Run an end-to-end lakehouse analytics pipeline &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/getting-started/lakehouse-e2e.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/getting-started/lakehouse-e2e.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/getting-started/lakehouse-e2e.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/getting-started/lakehouse-e2e.html" class="notranslate">English</option>
+    <option value="../../ja/getting-started/lakehouse-e2e.html" class="notranslate">日本語</option>
+    <option value="../../pt/getting-started/lakehouse-e2e.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Tutorial: Run an end-to-end lakehouse analytics pipeline</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="tutorial-run-an-end-to-end-lakehouse-analytics-pipeline">
+<h1>Tutorial: Run an end-to-end lakehouse analytics pipeline<a class="headerlink" href="#tutorial-run-an-end-to-end-lakehouse-analytics-pipeline" title="Permalink to this headline"> </a></h1>
+<p>This tutorial shows you how to set up an end-to-end analytics pipeline for a Databricks lakehouse.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This tutorial uses interactive notebooks to complete common ETL tasks in Python on Unity Catalog enabled clusters. If you are not using Unity Catalog, see <a class="reference internal" href="etl-quick-start.html"><span class="doc">Run your first ETL workload on Databricks</span></a>.</p>
+</div>
+<div class="section" id="tasks-in-this-tutorial">
+<h2>Tasks in this tutorial<a class="headerlink" href="#tasks-in-this-tutorial" title="Permalink to this headline"> </a></h2>
+<p>By the end of this article, you will feel comfortable:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#cluster"><span class="std std-ref">Launching a Unity Catalog enabled compute cluster</span></a>.</p></li>
+<li><p><a class="reference internal" href="#notebook"><span class="std std-ref">Creating a Databricks notebook</span></a>.</p></li>
+<li><p><a class="reference internal" href="#external-location"><span class="std std-ref">Writing and reading data from a Unity Catalog external location</span></a>.</p></li>
+<li><p><a class="reference internal" href="#auto-loader"><span class="std std-ref">Configuring incremental data ingestion to a Unity Catalog table with Auto Loader</span></a>.</p></li>
+<li><p><a class="reference internal" href="#process"><span class="std std-ref">Executing notebook cells to process, query, and preview data</span></a>.</p></li>
+<li><p><a class="reference internal" href="#schedule"><span class="std std-ref">Scheduling a notebook as a Databricks job</span></a>.</p></li>
+<li><p><a class="reference internal" href="#query"><span class="std std-ref">Querying Unity Catalog tables from Databricks SQL</span></a></p></li>
+</ol>
+<p>Databricks provides a suite of production-ready tools that allow data professionals to quickly develop and deploy extract, transform, and load (ETL) pipelines. Unity Catalog allows data stewards to configure and secure storage credentials, external locations, and database objects for users throughout an organization. Databricks SQL allows analysts to run SQL queries against the same tables used in production ETL workloads, allowing for real time business intelligence at scale.</p>
+<p></p>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>You are logged into Databricks.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not have cluster control privileges, you can still complete most of the steps below as long as you have <a class="reference internal" href="../compute/clusters-manage.html#display-clusters"><span class="std std-ref">access to a cluster</span></a>.</p>
+<p>If you only have access to the Databricks SQL workspace, see <a class="reference internal" href="../sql/admin/dbsql.html"><span class="doc">Set up your workspace to use Databricks SQL</span></a>.</p>
+</div>
+</div>
+<div class="section" id="step-1-create-a-cluster">
+<span id="cluster"></span><h2>Step 1: Create a cluster<a class="headerlink" href="#step-1-create-a-cluster" title="Permalink to this headline"> </a></h2>
+<p>To do exploratory data analysis and data engineering, create a cluster to provide the compute resources needed to execute commands.</p>
+<ol class="arabic simple">
+<li><p>Click <img alt="compute icon" src="../_images/clusters-icon.png" /> <strong>Compute</strong> in the sidebar.</p></li>
+<li><p>Click <img alt="New Icon" src="../_images/create-icon.png" /> <strong>New</strong> in the sidebar, then select <strong>Cluster</strong>. This opens the New Cluster/Compute page.</p></li>
+<li><p>Specify a unique name for the cluster.</p></li>
+<li><p>Select the <strong>Single node</strong> radio button.</p></li>
+<li><p>Select <strong>Single User</strong> from the <strong>Access mode</strong> dropdown.</p></li>
+<li><p>Make sure your email address is visible in the <strong>Single User</strong> field.</p></li>
+<li><p>Select the desired <strong>Databricks runtime version</strong>, 11.1 or above to use Unity Catalog.</p></li>
+<li><p>Click <strong>Create compute</strong> to create the cluster.</p></li>
+</ol>
+<p>To learn more about Databricks clusters, see <a class="reference internal" href="../compute/index.html"><span class="doc">Compute</span></a>.</p>
+</div>
+<div class="section" id="step-2-create-a-databricks-notebook">
+<span id="notebook"></span><h2>Step 2: Create a Databricks notebook<a class="headerlink" href="#step-2-create-a-databricks-notebook" title="Permalink to this headline"> </a></h2>
+<p>To get started writing and executing interactive code on Databricks, create a notebook.</p>
+<ol class="arabic simple">
+<li><p>Click <img alt="New Icon" src="../_images/create-icon.png" /> <strong>New</strong> in the sidebar, then click <strong>Notebook</strong>.</p></li>
+<li><p>On the Create Notebook page:</p>
+<ul class="simple">
+<li><p>Specify a unique name for your notebook.</p></li>
+<li><p>Make sure the default language is set to <strong>Python</strong>.</p></li>
+<li><p>Use the <strong>Connect</strong> dropdown menu to select the cluster you created in step 1 from the <strong>Cluster</strong> dropdown.</p></li>
+</ul>
+</li>
+</ol>
+<p>The notebook opens with one empty cell.</p>
+<p>To learn more about creating and managing notebooks, see <a class="reference internal" href="../notebooks/notebooks-manage.html"><span class="doc">Manage notebooks</span></a>.</p>
+</div>
+<div class="section" id="step-3-write-and-read-data-from-an-external-location-managed-by-unity-catalog">
+<span id="step-3-write-and-read-data-from-an-external-location-managed-by-uc"></span><span id="external-location"></span><h2>Step 3: Write and read data from an external location managed by Unity Catalog<a class="headerlink" href="#step-3-write-and-read-data-from-an-external-location-managed-by-unity-catalog" title="Permalink to this headline"> </a></h2>
+<p>Databricks recommends using <a class="reference internal" href="../ingestion/auto-loader/index.html"><span class="doc">Auto Loader</span></a> for incremental data ingestion. Auto Loader automatically detects and processes new files as they arrive in cloud object storage.</p>
+<p>Use Unity Catalog to manage secure access to external locations. Users or service principals with <code class="docutils literal notranslate"><span class="pre">READ</span> <span class="pre">FILES</span></code> permissions on an external location can use Auto Loader to ingest data.</p>
+<p>Normally, data will arrive in an external location due to writes from other systems. In this demo, you can simulate data arrival by writing out JSON files to an external location.</p>
+<p>Copy the code below into a notebook cell. Replace the string value for <code class="docutils literal notranslate"><span class="pre">catalog</span></code> with the name of a catalog with <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">CATALOG</span></code> and <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> permissions. Replace the string value for <code class="docutils literal notranslate"><span class="pre">external_location</span></code> with the path for an external location with <code class="docutils literal notranslate"><span class="pre">READ</span> <span class="pre">FILES</span></code>, <code class="docutils literal notranslate"><span class="pre">WRITE</span> <span class="pre">FILES</span></code>, and <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">TABLE</span></code> permissions.</p>
+<p>External locations can be defined as an entire storage container, but often point to a directory nested in a container.</p>
+<p>The correct format for an external location path is <code class="docutils literal notranslate"><span class="pre">&quot;s3://bucket-name/path/to/external_location&quot;</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+ <span class="n">external_location</span> <span class="o">=</span> <span class="s2">&quot;&lt;your-external-location&gt;&quot;</span>
+ <span class="n">catalog</span> <span class="o">=</span> <span class="s2">&quot;&lt;your-catalog&gt;&quot;</span>
+
+ <span class="n">dbutils</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">external_location</span><span class="si">}</span><span class="s2">/filename.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+ <span class="n">display</span><span class="p">(</span><span class="n">dbutils</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">external_location</span><span class="si">}</span><span class="s2">/filename.txt&quot;</span><span class="p">))</span>
+ <span class="n">dbutils</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">rm</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">external_location</span><span class="si">}</span><span class="s2">/filename.txt&quot;</span><span class="p">)</span>
+
+ <span class="n">display</span><span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SHOW SCHEMAS IN </span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Executing this cell should print a line that reads 12 bytes, print the string “Hello world!”, and display all the databases present in the catalog provided. If you are unable to get this cell to run, confirm that you are in a Unity Catalog enabled workspace and request proper permissions from your workspace administrator to complete this tutorial.</p>
+<p>The Python code below uses your email address to create a unique database in the catalog provided and a unique storage location in external location provided. Executing this cell will remove all data associated with this tutorial, allowing you to execute this example idempotently. A class is defined and instantiated that you will use to simulate batches of data arriving from a conncted system to your source external location.</p>
+<p>Copy this code to a new cell in your notebook and execute it to configure your environment.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The variables defined in this code should allow you to safely execute it without risk of conflicting with existing workspace assets or other users. Restricted network or storage permissions will raise errors when executing this code; contact your workspace administrator to troubleshoot these restrictions.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">col</span>
+
+<span class="c1"># Set parameters for isolation in workspace and reset demo</span>
+<span class="n">username</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT regexp_replace(current_user(), &#39;[^a-zA-Z0-9]&#39;, &#39;_&#39;)&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">database</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.e2e_lakehouse_</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">_db&quot;</span>
+<span class="n">source</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">external_location</span><span class="si">}</span><span class="s2">/e2e-lakehouse-source&quot;</span>
+<span class="n">table</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">database</span><span class="si">}</span><span class="s2">.target_table&quot;</span>
+<span class="n">checkpoint_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">external_location</span><span class="si">}</span><span class="s2">/_checkpoint/e2e-lakehouse-demo&quot;</span>
+
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SET c.username=&#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SET c.database=</span><span class="si">{</span><span class="n">database</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SET c.source=&#39;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;DROP DATABASE IF EXISTS $</span><span class="si">{c.database}</span><span class="s2"> CASCADE&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;CREATE DATABASE $</span><span class="si">{c.database}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;USE $</span><span class="si">{c.database}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Clear out data from previous demo execution</span>
+<span class="n">dbutils</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">rm</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">dbutils</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">rm</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+
+<span class="c1"># Define a class to load batches of data to source</span>
+<span class="k">class</span> <span class="nc">LoadData</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
+
+    <span class="k">def</span> <span class="nf">get_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;2016-01-01&quot;</span>
+        <span class="n">batch_date</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">selectExpr</span><span class="p">(</span><span class="s2">&quot;max(distinct(date(tpep_pickup_datetime))) + 1 day&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">batch_date</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Source data exhausted&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">batch_date</span>
+
+    <span class="k">def</span> <span class="nf">get_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_date</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">spark</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;samples.nyctaxi.trips&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;tpep_pickup_datetime&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">batch_date</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">write_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+        <span class="n">batch</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">land_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">batch_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_date</span><span class="p">()</span>
+        <span class="n">batch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_batch</span><span class="p">(</span><span class="n">batch_date</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_batch</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+
+<span class="n">RawData</span> <span class="o">=</span> <span class="n">LoadData</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can now land a batch of data by copying the following code into a cell and executing it. You can manually execute this cell up to 60 times to trigger new data arrival.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">RawData</span><span class="o">.</span><span class="n">land_batch</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-4-configure-auto-loader-to-ingest-data-to-unity-catalog">
+<span id="step-4-configure-al-to-ingest-data-to-uc"></span><span id="auto-loader"></span><h2>Step 4: Configure Auto Loader to ingest data to Unity Catalog<a class="headerlink" href="#step-4-configure-auto-loader-to-ingest-data-to-unity-catalog" title="Permalink to this headline"> </a></h2>
+<p>Databricks recommends storing data with <a class="reference internal" href="../delta/index.html"><span class="doc">Delta Lake</span></a>. Delta Lake is an open source storage layer that provides ACID transactions and enables the data lakehouse. Delta Lake is the default format for tables created in Databricks.</p>
+<p>To configure Auto Loader to ingest data to a Unity Catalog table, copy and paste the following code into an empty cell in your notebook:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import functions</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">col</span><span class="p">,</span> <span class="n">current_timestamp</span>
+
+<span class="c1"># Configure Auto Loader to ingest JSON data to a Delta table</span>
+<span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">readStream</span>
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;cloudFiles&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;cloudFiles.format&quot;</span><span class="p">,</span> <span class="s2">&quot;json&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;cloudFiles.schemaLocation&quot;</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">col</span><span class="p">(</span><span class="s2">&quot;_metadata.file_path&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;source_file&quot;</span><span class="p">),</span> <span class="n">current_timestamp</span><span class="p">()</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;processing_time&quot;</span><span class="p">))</span>
+  <span class="o">.</span><span class="n">writeStream</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;checkpointLocation&quot;</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">trigger</span><span class="p">(</span><span class="n">availableNow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;mergeSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">toTable</span><span class="p">(</span><span class="n">table</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>To learn more about Auto Loader, see <a class="reference internal" href="../ingestion/auto-loader/index.html"><span class="doc">What is Auto Loader?</span></a>.</p>
+<p>To learn more about Structured Streaming with Unity Catalog, see <a class="reference internal" href="../structured-streaming/unity-catalog.html"><span class="doc">Using Unity Catalog with Structured Streaming</span></a>.</p>
+</div>
+<div class="section" id="step-5-process-and-interact-with-data">
+<span id="process"></span><h2>Step 5: Process and interact with data<a class="headerlink" href="#step-5-process-and-interact-with-data" title="Permalink to this headline"> </a></h2>
+<p>Notebooks execute logic cell-by-cell. Use these steps to execute the logic in your cell:</p>
+<ol class="arabic">
+<li><p>To run the cell you completed in the previous step, select the cell and press <strong>SHIFT+ENTER</strong>.</p></li>
+<li><p>To query the table you’ve just created, copy and paste the following code into an empty cell, then press <strong>SHIFT+ENTER</strong> to run the cell.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>To preview the data in your DataFrame, copy and paste the following code into an empty cell, then press <strong>SHIFT+ENTER</strong> to run the cell.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>To learn more about interactive options for visualizing data, see <a class="reference internal" href="../visualizations/index.html"><span class="doc">Visualizations in Databricks notebooks</span></a>.</p>
+</div>
+<div class="section" id="step-6-schedule-a-job">
+<span id="schedule"></span><h2>Step 6: Schedule a job<a class="headerlink" href="#step-6-schedule-a-job" title="Permalink to this headline"> </a></h2>
+<p>You can run Databricks notebooks as production scripts by adding them as a task in a Databricks job. In this step, you will create a new job that you can trigger manually.</p>
+<p>To schedule your notebook as a task:</p>
+<ol class="arabic simple">
+<li><p>Click <strong>Schedule</strong> on the right side of the header bar.</p></li>
+<li><p>Enter a unique name for the <strong>Job name</strong>.</p></li>
+<li><p>Click <strong>Manual</strong>.</p></li>
+<li><p>In the <strong>Cluster</strong> drop-down, select the cluster you created in step 1.</p></li>
+<li><p>Click <strong>Create</strong>.</p></li>
+<li><p>In the window that appears, click <strong>Run now</strong>.</p></li>
+<li><p>To see the job run results, click the <img alt="External Link" src="../_images/external-link.png" /> icon next to the <strong>Last run</strong> timestamp.</p></li>
+</ol>
+<p>For more information on jobs, see <a class="reference internal" href="../workflows/index.html#what-is-jobs"><span class="std std-ref">What is Databricks Jobs?</span></a>.</p>
+</div>
+<div class="section" id="step-7-query-table-from-databricks-sql">
+<span id="step-7-query-table-from-dbsql"></span><span id="query"></span><h2>Step 7: Query table from Databricks SQL<a class="headerlink" href="#step-7-query-table-from-databricks-sql" title="Permalink to this headline"> </a></h2>
+<p>Anyone with the <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> permission on the current catalog, the <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> permission on the current schema, and <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> permissions on the table can query the contents of the table from their preferred Databricks API.</p>
+<p>You need access to a running SQL warehouse to execute queries in Databricks SQL.</p>
+<p>The table you created earlier in this tutorial has the name <code class="docutils literal notranslate"><span class="pre">target_table</span></code>. You can query it using the catalog you provided in the first cell and the database with the patern <code class="docutils literal notranslate"><span class="pre">e2e_lakehouse_&lt;your-username&gt;</span></code>. You can use <a class="reference internal" href="../catalog-explorer/index.html"><span class="doc">Catalog Explorer</span></a> to find the data objects that you created.</p>
+</div>
+<div class="section" id="additional-integrations">
+<h2>Additional Integrations<a class="headerlink" href="#additional-integrations" title="Permalink to this headline"> </a></h2>
+<p>Learn more about integrations and tools for data engineering with Databricks:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../dev-tools/index-ide.html"><span class="doc">Connect your favorite IDE</span></a></p></li>
+<li><p><a class="reference internal" href="../partners/prep/dbt.html"><span class="doc">Use dbt with Databricks</span></a></p></li>
+<li><p><a class="reference internal" href="../dev-tools/cli/index.html"><span class="doc">Learn about the Databricks Command Line Interface (CLI)</span></a></p></li>
+<li><p><a class="reference internal" href="../dev-tools/terraform/index.html"><span class="doc">Learn about the Databricks Terraform Provider</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

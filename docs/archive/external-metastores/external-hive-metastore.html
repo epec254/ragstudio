@@ -1,0 +1,788 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to connect to external Apache Hive metastores in Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="External Apache Hive metastore (legacy)">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>External Apache Hive metastore (legacy) &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/archive/external-metastores/external-hive-metastore.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/archive/external-metastores/external-hive-metastore.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/archive/external-metastores/external-hive-metastore.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/archive/external-metastores/external-hive-metastore.html" class="notranslate">English</option>
+    <option value="../../../ja/archive/external-metastores/external-hive-metastore.html" class="notranslate">日本語</option>
+    <option value="../../../pt/archive/external-metastores/external-hive-metastore.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>External Apache Hive metastore (legacy)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="external-apache-hive-metastore-legacy">
+<h1>External Apache Hive metastore (legacy)<a class="headerlink" href="#external-apache-hive-metastore-legacy" title="Permalink to this headline"> </a></h1>
+<p>This article describes how to set up Databricks clusters to connect to existing external Apache Hive metastores. It provides information about metastore deployment modes, recommended network setup, and cluster configuration requirements, followed by instructions for configuring clusters to connect to an external metastore. For Hive library versions included in Databricks Runtime, see the relevant Databricks Runtime version <a class="reference internal" href="../../release-notes/runtime/index.html"><span class="doc">release notes</span></a>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<ul class="simple">
+<li><p>If you use Azure Database for MySQL as an external metastore, you must change the value of the <code class="docutils literal notranslate"><span class="pre">lower_case_table_names</span></code> property from 1 (the default) to 2 in the server-side database configuration. For details, see <a class="reference external" href="https://dev.mysql.com/doc/refman/5.6/en/identifier-case-sensitivity.html">Identifier Case Sensitivity</a>.</p></li>
+<li><p>If you use a read-only metastore database, Databricks strongly recommends that you set <code class="docutils literal notranslate"><span class="pre">spark.databricks.delta.catalog.update.enabled</span></code> to <code class="docutils literal notranslate"><span class="pre">false</span></code> on your clusters for better performance.</p></li>
+</ul>
+</div>
+<p></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Using external metastores is a legacy data governance model. Databricks recommends that you upgrade to Unity Catalog. Unity Catalog simplifies security and governance of your data by providing a central place to administer and audit data access across multiple workspaces in your account. See <a class="reference internal" href="../../data-governance/unity-catalog/index.html"><span class="doc">What is Unity Catalog?</span></a>.</p>
+</div>
+<div class="section" id="hive-metastore-deployment-modes">
+<h2>Hive metastore deployment modes<a class="headerlink" href="#hive-metastore-deployment-modes" title="Permalink to this headline"> </a></h2>
+<p>In a production environment, you can deploy a Hive metastore in two modes: local and remote.</p>
+<p><strong>Local mode</strong></p>
+<p>The metastore client running inside a cluster connects to the underlying metastore database directly via JDBC.</p>
+<p><strong>Remote mode</strong></p>
+<p>Instead of connecting to the underlying database directly, the metastore client connects to a separate metastore service via the Thrift protocol. The metastore service connects to the underlying database. When running a metastore in remote mode, DBFS is <em>not supported</em>.</p>
+<p>For more details about these deployment modes, see the <a class="reference external" href="https://cwiki.apache.org/confluence/display/Hive/AdminManual+Metastore+Administration">Hive documentation</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The examples in this document use MySQL as the underlying metastore database.</p>
+</div>
+<p></p>
+</div>
+<div class="section" id="network-setup">
+<h2>Network setup<a class="headerlink" href="#network-setup" title="Permalink to this headline"> </a></h2>
+<p>Databricks clusters run inside a virtual private cloud (VPC). We recommend that you set up the external Hive metastore inside a new VPC and then peer these two VPCs to make clusters connect to the Hive metastore using a private IP address. <a class="reference internal" href="../../security/network/classic/vpc-peering.html"><span class="doc">VPC peering</span></a> provides detailed instructions about how to peer the VPC used by Databricks clusters and the VPC where the metastore lives. After peering the VPCs, you can test network connectivity from a cluster to the metastore VPC by running the following command inside a notebook:</p>
+<p></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>%sh
+nc<span class="w"> </span>-vz<span class="w"> </span>&lt;DNS<span class="w"> </span>name<span class="w"> </span>or<span class="w"> </span>private<span class="w"> </span>IP&gt;<span class="w"> </span>&lt;port&gt;
+</pre></div>
+</div>
+<p>where</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;DNS</span> <span class="pre">name</span> <span class="pre">or</span> <span class="pre">private</span> <span class="pre">IP&gt;</span></code> is the DNS name or the private IP address of the MySQL database (for local mode) or the metastore service (for remote mode). If you use a DNS name here, make sure that the resolved IP address is a private one.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;port&gt;</span></code> is the port of the MySQL database or the port of the metastore service.</p></li>
+</ul>
+</div>
+<div class="section" id="cluster-configurations">
+<h2>Cluster configurations<a class="headerlink" href="#cluster-configurations" title="Permalink to this headline"> </a></h2>
+<p>You must set three sets of configuration options to connect a cluster to an external metastore:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#spark-options"><span class="std std-ref">Spark options</span></a> configure Spark with the Hive metastore version and the JARs for the metastore client.</p></li>
+<li><p><a class="reference internal" href="#hive-options"><span class="std std-ref">Hive options</span></a> configure the metastore client to connect to the external metastore.</p></li>
+<li><p>An optional set of <a class="reference internal" href="#file-options"><span class="std std-ref">Hadoop options</span></a> configure file system options.</p></li>
+</ul>
+<p></p>
+<div class="section" id="spark-configuration-options">
+<span id="spark-options"></span><h3>Spark configuration options<a class="headerlink" href="#spark-configuration-options" title="Permalink to this headline"> </a></h3>
+<p>Set <code class="docutils literal notranslate"><span class="pre">spark.sql.hive.metastore.version</span></code> to the version of your Hive metastore and <code class="docutils literal notranslate"><span class="pre">spark.sql.hive.metastore.jars</span></code> as follows:</p>
+<ul>
+<li><p>Hive 0.13: do not set <code class="docutils literal notranslate"><span class="pre">spark.sql.hive.metastore.jars</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Hive 1.2.0 and 1.2.1 are not the built-in metastore on Databricks Runtime 7.0 and above. If you want to use Hive 1.2.0 or 1.2.1 with Databricks Runtime 7.0 and above, follow the procedure described in <a class="reference internal" href="#download-the-metastore-jars-and-point-to-them"><span class="std std-ref">Download the metastore jars and point to them</span></a>.</p>
+</div>
+</li>
+<li><p>Hive 2.3.7 (Databricks Runtime 7.0 - 9.x) or Hive 2.3.9 (Databricks Runtime 10.0 and above): set <code class="docutils literal notranslate"><span class="pre">spark.sql.hive.metastore.jars</span></code> to <code class="docutils literal notranslate"><span class="pre">builtin</span></code>.</p></li>
+<li><p>For all other Hive versions, Databricks recommends that you download the metastore JARs and set the configuration <code class="docutils literal notranslate"><span class="pre">spark.sql.hive.metastore.jars</span></code> to point to the downloaded JARs using the procedure described in <a class="reference internal" href="#download-the-metastore-jars-and-point-to-them"><span class="std std-ref">Download the metastore jars and point to them</span></a>.</p></li>
+</ul>
+<div class="section" id="download-the-metastore-jars-and-point-to-them">
+<h4>Download the metastore jars and point to them<a class="headerlink" href="#download-the-metastore-jars-and-point-to-them" title="Permalink to this headline"> </a></h4>
+<ol class="arabic">
+<li><p>Create a cluster with <code class="docutils literal notranslate"><span class="pre">spark.sql.hive.metastore.jars</span></code> set to <code class="docutils literal notranslate"><span class="pre">maven</span></code> and <code class="docutils literal notranslate"><span class="pre">spark.sql.hive.metastore.version</span></code> to match the version of your metastore.</p></li>
+<li><p>When the cluster is running, search the driver log and find a line like the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">17</span><span class="o">/</span><span class="mi">11</span><span class="o">/</span><span class="mi">18</span> <span class="mi">22</span><span class="p">:</span><span class="mi">41</span><span class="p">:</span><span class="mi">19</span> <span class="n">INFO</span> <span class="n">IsolatedClientLoader</span><span class="p">:</span> <span class="n">Downloaded</span> <span class="n">metastore</span> <span class="n">jars</span> <span class="n">to</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The directory <code class="docutils literal notranslate"><span class="pre">&lt;path&gt;</span></code> is the location of downloaded JARs in the driver node of the cluster.</p>
+<p>Alternatively you can run the following code in a Scala notebook to print the location of the JARs:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">com</span><span class="p">.</span><span class="nn">typesafe</span><span class="p">.</span><span class="nn">config</span><span class="p">.</span><span class="nc">ConfigFactory</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">ConfigFactory</span><span class="p">.</span><span class="n">load</span><span class="p">().</span><span class="n">getString</span><span class="p">(</span><span class="s">&quot;java.io.tmpdir&quot;</span><span class="p">)</span>
+
+<span class="n">println</span><span class="p">(</span><span class="s">s&quot;\nHive JARs are downloaded to the path: </span><span class="si">$</span><span class="n">path</span><span class="s"> \n&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">%sh</span> <span class="pre">cp</span> <span class="pre">-r</span> <span class="pre">&lt;path&gt;</span> <span class="pre">/dbfs/hive_metastore_jar</span></code> (replacing <code class="docutils literal notranslate"><span class="pre">&lt;path&gt;</span></code> with your cluster’s info) to copy this directory to a directory in DBFS root called <code class="docutils literal notranslate"><span class="pre">hive_metastore_jar</span></code> through the DBFS client in the driver node.</p></li>
+<li><p>Create an <a class="reference internal" href="../../init-scripts/index.html"><span class="doc">init script</span></a> that copies <code class="docutils literal notranslate"><span class="pre">/dbfs/hive_metastore_jar</span></code> to the local filesystem of the node, making sure to make the init script sleep a few seconds before it accesses the DBFS client. This ensures that the client is ready.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">spark.sql.hive.metastore.jars</span></code> to use this directory. If your init script copies <code class="docutils literal notranslate"><span class="pre">/dbfs/hive_metastore_jar</span></code> to <code class="docutils literal notranslate"><span class="pre">/databricks/hive_metastore_jars/</span></code>, set  <code class="docutils literal notranslate"><span class="pre">spark.sql.hive.metastore.jars</span></code> to <code class="docutils literal notranslate"><span class="pre">/databricks/hive_metastore_jars/*</span></code>. The location must include the trailing <code class="docutils literal notranslate"><span class="pre">/*</span></code>.</p></li>
+<li><p>Restart the cluster.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="hive-configuration-options">
+<span id="hive-options"></span><h3>Hive configuration options<a class="headerlink" href="#hive-configuration-options" title="Permalink to this headline"> </a></h3>
+<p>This section describes options specific to Hive.</p>
+<div class="section" id="configuration-options-for-local-mode">
+<h4>Configuration options for local mode<a class="headerlink" href="#configuration-options-for-local-mode" title="Permalink to this headline"> </a></h4>
+<p>To connect to an external metastore using local mode, set the following Hive configuration options:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># JDBC connect string for a JDBC metastore</span>
+<span class="na">javax.jdo.option.ConnectionURL jdbc</span><span class="o">:</span><span class="s">mysql://&lt;metastore-host&gt;:&lt;metastore-port&gt;/&lt;metastore-db&gt;</span>
+
+<span class="c1"># Username to use against metastore database</span>
+<span class="na">javax.jdo.option.ConnectionUserName &lt;mysql-username&gt;</span>
+
+<span class="c1"># Password to use against metastore database</span>
+<span class="na">javax.jdo.option.ConnectionPassword &lt;mysql-password&gt;</span>
+
+<span class="c1"># Driver class name for a JDBC metastore (Runtime 3.4 and later)</span>
+<span class="na">javax.jdo.option.ConnectionDriverName org.mariadb.jdbc.Driver</span>
+
+<span class="c1"># Driver class name for a JDBC metastore (prior to Runtime 3.4)</span>
+<span class="c1"># javax.jdo.option.ConnectionDriverName com.mysql.jdbc.Driver</span>
+</pre></div>
+</div>
+<p>where</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;metastore-host&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;metastore-port&gt;</span></code> are the host and listening port of your MySQL instance.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;metastore-db&gt;</span></code> is the name of the MySQL database that holds all of the metastore tables.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;mysql-username&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;mysql-password&gt;</span></code> specify the username and password of your MySQL account that has read/write access to <code class="docutils literal notranslate"><span class="pre">&lt;metastore-db&gt;</span></code>.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Use the MariaDB driver to communicate with MySQL databases.</p></li>
+<li><p>For production environments, we recommend that you set <code class="docutils literal notranslate"><span class="pre">hive.metastore.schema.verification</span></code> to <code class="docutils literal notranslate"><span class="pre">true</span></code>. This prevents Hive metastore client from implicitly modifying the metastore database schema when the metastore client version does not match the metastore database version. When enabling this setting for metastore client versions lower than Hive 1.2.0, make sure that the metastore client has the write permission to the metastore database (to prevent the issue described in <a class="reference external" href="https://issues.apache.org/jira/browse/HIVE-9749">HIVE-9749</a>).</p>
+<ul>
+<li><p>For Hive metastore 1.2.0 and higher, set <code class="docutils literal notranslate"><span class="pre">hive.metastore.schema.verification.record.version</span></code> to <code class="docutils literal notranslate"><span class="pre">true</span></code> to enable <code class="docutils literal notranslate"><span class="pre">hive.metastore.schema.verification</span></code>.</p></li>
+<li><p>For Hive metastore 2.1.1 and higher, set <code class="docutils literal notranslate"><span class="pre">hive.metastore.schema.verification.record.version</span></code> to <code class="docutils literal notranslate"><span class="pre">true</span></code> as it is set to <code class="docutils literal notranslate"><span class="pre">false</span></code> by default.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="configuration-options-for-remote-mode">
+<h4>Configuration options for remote mode<a class="headerlink" href="#configuration-options-for-remote-mode" title="Permalink to this headline"> </a></h4>
+<p>To connect to an external metastore using remote mode, set the following Hive configuration option:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># Thrift URI for the remote metastore. Used by metastore client to connect to remote metastore.</span>
+<span class="na">hive.metastore.uris thrift</span><span class="o">:</span><span class="s">//&lt;metastore-host&gt;:&lt;metastore-port&gt;</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;metastore-host&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;metastore-port&gt;</span></code> are the listening host and port of your Hive metastore service.</p>
+</div>
+</div>
+<div class="section" id="file-system-options">
+<span id="hive-configuration-options"></span><span id="file-options"></span><h3>File system options<a class="headerlink" href="#file-system-options" title="Permalink to this headline"> </a></h3>
+<p>If you want to use an <a class="reference internal" href="../admin-guide/assume-role.html"><span class="doc">instance profile and set AssumeRole</span></a>, you must set:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fs.s3a.credentialsType</span></code> to <code class="docutils literal notranslate"><span class="pre">AssumeRole</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fs.s3a.stsAssumeRole.arn</span></code> to the Amazon Resource Name (ARN) of the role to assume</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="set-up-an-external-metastore-using-the-ui">
+<h2>Set up an external metastore using the UI<a class="headerlink" href="#set-up-an-external-metastore-using-the-ui" title="Permalink to this headline"> </a></h2>
+<p>To set up an external metastore using the Databricks UI:</p>
+<ol class="arabic">
+<li><p>Click the <strong>Clusters</strong> button on the sidebar.</p></li>
+<li><p>Click <strong>Create Cluster</strong>.</p></li>
+<li><p>Enter the following <a class="reference internal" href="../../compute/configure.html#spark-configuration"><span class="std std-ref">Spark configuration options</span></a>:</p>
+<p><strong>Local mode</strong></p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># Hive specific configuration options.</span>
+<span class="c1"># spark.hadoop prefix is added to make sure these Hive specific options will propagate to the metastore client.</span>
+<span class="na">spark.hadoop.javax.jdo.option.ConnectionURL jdbc</span><span class="o">:</span><span class="s">mysql://&lt;mysql-host&gt;:&lt;mysql-port&gt;/&lt;metastore-db&gt;</span>
+
+<span class="c1"># Driver class name for a JDBC metastore (Runtime 3.4 and later)</span>
+<span class="na">spark.hadoop.javax.jdo.option.ConnectionDriverName org.mariadb.jdbc.Driver</span>
+
+<span class="c1"># Driver class name for a JDBC metastore (prior to Runtime 3.4)</span>
+<span class="c1"># spark.hadoop.javax.jdo.option.ConnectionDriverName com.mysql.jdbc.Driver</span>
+
+<span class="na">spark.hadoop.javax.jdo.option.ConnectionUserName &lt;mysql-username&gt;</span>
+<span class="na">spark.hadoop.javax.jdo.option.ConnectionPassword &lt;mysql-password&gt;</span>
+
+<span class="c1"># Spark specific configuration options</span>
+<span class="na">spark.sql.hive.metastore.version &lt;hive-version&gt;</span>
+<span class="c1"># Skip this one if &lt;hive-version&gt; is 0.13.x.</span>
+<span class="na">spark.sql.hive.metastore.jars &lt;hive-jar-source&gt;</span>
+
+<span class="c1"># If you need to use AssumeRole, uncomment the following settings.</span>
+<span class="c1"># spark.hadoop.fs.s3a.credentialsType AssumeRole</span>
+<span class="c1"># spark.hadoop.fs.s3a.stsAssumeRole.arn &lt;sts-arn&gt;</span>
+</pre></div>
+</div>
+<p><strong>Remote mode</strong></p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># Hive specific configuration option</span>
+<span class="c1"># spark.hadoop prefix is added to make sure these Hive specific options will propagate to the metastore client.</span>
+<span class="na">spark.hadoop.hive.metastore.uris thrift</span><span class="o">:</span><span class="s">//&lt;metastore-host&gt;:&lt;metastore-port&gt;</span>
+
+<span class="c1"># Spark specific configuration options</span>
+<span class="na">spark.sql.hive.metastore.version &lt;hive-version&gt;</span>
+<span class="c1"># Skip this one if &lt;hive-version&gt; is 0.13.x.</span>
+<span class="na">spark.sql.hive.metastore.jars &lt;hive-jar-source&gt;</span>
+
+<span class="c1"># If you need to use AssumeRole, uncomment the following settings.</span>
+<span class="c1"># spark.hadoop.fs.s3a.credentialsType AssumeRole</span>
+<span class="c1"># spark.hadoop.fs.s3a.stsAssumeRole.arn &lt;sts-arn&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Continue your cluster configuration, following the instructions in <a class="reference internal" href="../../compute/configure.html"><span class="doc">Create a cluster</span></a>.</p></li>
+<li><p>Click <strong>Create Cluster</strong> to create the cluster.</p></li>
+</ol>
+<p></p>
+</div>
+<div class="section" id="set-up-an-external-metastore-using-an-init-script">
+<h2>Set up an external metastore using an init script<a class="headerlink" href="#set-up-an-external-metastore-using-an-init-script" title="Permalink to this headline"> </a></h2>
+<p><a class="reference internal" href="../../init-scripts/index.html"><span class="doc">Init scripts</span></a> let you connect to an existing Hive metastore without manually setting required configurations.</p>
+<div class="section" id="local-mode">
+<h3>Local mode<a class="headerlink" href="#local-mode" title="Permalink to this headline"> </a></h3>
+<ol class="arabic simple">
+<li><p>Create the base directory you want to store the init script in if it does not exist. The following example uses <code class="docutils literal notranslate"><span class="pre">dbfs:/databricks/scripts</span></code>.</p></li>
+<li><p>Run the following snippet in a notebook. The snippet creates the init script <code class="docutils literal notranslate"><span class="pre">/databricks/scripts/external-metastore.sh</span></code> in <a class="reference internal" href="../../dbfs/index.html"><span class="doc">Databricks File System (DBFS)</span></a>. Alternatively, you can use the <a class="reference external" href="https://docs.databricks.com/api/workspace/dbfs">DBFS REST API put operation</a> to create the init script. This init script writes required configuration options to a configuration file named <code class="docutils literal notranslate"><span class="pre">00-custom-spark.conf</span></code> in a JSON-like format under <code class="docutils literal notranslate"><span class="pre">/databricks/driver/conf/</span></code> inside every node of the cluster. Databricks provides default Spark configurations in the <code class="docutils literal notranslate"><span class="pre">/databricks/driver/conf/spark-branch.conf</span></code> file. Configuration files in the <code class="docutils literal notranslate"><span class="pre">/databricks/driver/conf</span></code> directory apply in reverse alphabetical order. If you want to change the name of the <code class="docutils literal notranslate"><span class="pre">00-custom-spark.conf</span></code> file, make sure that it continues to apply before the <code class="docutils literal notranslate"><span class="pre">spark-branch.conf</span></code> file.</p></li>
+</ol>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">dbutils</span><span class="p">.</span><span class="n">fs</span><span class="p">.</span><span class="n">put</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;/databricks/scripts/external-metastore.sh&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;&quot;&quot;#!/bin/sh</span>
+<span class="s">      |# Loads environment variables to determine the correct JDBC driver to use.</span>
+<span class="s">      |source /etc/environment</span>
+<span class="s">      |# Quoting the label (i.e. EOF) with single quotes to disable variable interpolation.</span>
+<span class="s">      |cat &lt;&lt; &#39;EOF&#39; &gt; /databricks/driver/conf/00-custom-spark.conf</span>
+<span class="s">      |[driver] {</span>
+<span class="s">      |    # Hive specific configuration options for metastores in local mode.</span>
+<span class="s">      |    # spark.hadoop prefix is added to make sure these Hive specific options will propagate to the metastore client.</span>
+<span class="s">      |    &quot;spark.hadoop.javax.jdo.option.ConnectionURL&quot; = &quot;jdbc:mysql://&lt;mysql-host&gt;:&lt;mysql-port&gt;/&lt;metastore-db&gt;&quot;</span>
+<span class="s">      |    &quot;spark.hadoop.javax.jdo.option.ConnectionUserName&quot; = &quot;&lt;mysql-username&gt;&quot;</span>
+<span class="s">      |    &quot;spark.hadoop.javax.jdo.option.ConnectionPassword&quot; = &quot;&lt;mysql-password&gt;&quot;</span>
+<span class="s">      |</span>
+<span class="s">      |    # Spark specific configuration options</span>
+<span class="s">      |    &quot;spark.sql.hive.metastore.version&quot; = &quot;&lt;hive-version&gt;&quot;</span>
+<span class="s">      |    # Skip this one if &lt;hive-version&gt; is 0.13.x.</span>
+<span class="s">      |    &quot;spark.sql.hive.metastore.jars&quot; = &quot;&lt;hive-jar-source&gt;&quot;</span>
+<span class="s">      |</span>
+<span class="s">      |    # If you need to use AssumeRole, uncomment the following settings.</span>
+<span class="s">      |    # &quot;spark.hadoop.fs.s3a.credentialsType&quot; = &quot;AssumeRole&quot;</span>
+<span class="s">      |    # &quot;spark.hadoop.fs.s3a.stsAssumeRole.arn&quot; = &quot;&lt;sts-arn&gt;&quot;</span>
+<span class="s">      |EOF</span>
+<span class="s">      |</span>
+<span class="s">      |case &quot;$DATABRICKS_RUNTIME_VERSION&quot; in</span>
+<span class="s">      |  &quot;&quot;)</span>
+<span class="s">      |     DRIVER=&quot;com.mysql.jdbc.Driver&quot;</span>
+<span class="s">      |     ;;</span>
+<span class="s">      |  *)</span>
+<span class="s">      |     DRIVER=&quot;org.mariadb.jdbc.Driver&quot;</span>
+<span class="s">      |     ;;</span>
+<span class="s">      |esac</span>
+<span class="s">      |# Add the JDBC driver separately since must use variable expansion to choose the correct</span>
+<span class="s">      |# driver version.</span>
+<span class="s">      |cat &lt;&lt; EOF &gt;&gt; /databricks/driver/conf/00-custom-spark.conf</span>
+<span class="s">      |    &quot;spark.hadoop.javax.jdo.option.ConnectionDriverName&quot; = &quot;$DRIVER&quot;</span>
+<span class="s">      |}</span>
+<span class="s">      |EOF</span>
+<span class="s">      |&quot;&quot;&quot;</span><span class="p">.</span><span class="n">stripMargin</span><span class="p">,</span>
+<span class="w">    </span><span class="n">overwrite</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">contents</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;#!/bin/sh</span>
+<span class="s2"># Loads environment variables to determine the correct JDBC driver to use.</span>
+<span class="s2">source /etc/environment</span>
+<span class="s2"># Quoting the label (i.e. EOF) with single quotes to disable variable interpolation.</span>
+<span class="s2">cat &lt;&lt; &#39;EOF&#39; &gt; /databricks/driver/conf/00-custom-spark.conf</span>
+<span class="s2">[driver] {</span>
+<span class="s2">    # Hive specific configuration options for metastores in local mode.</span>
+<span class="s2">    # spark.hadoop prefix is added to make sure these Hive specific options will propagate to the metastore client.</span>
+<span class="s2">    &quot;spark.hadoop.javax.jdo.option.ConnectionURL&quot; = &quot;jdbc:mysql://&lt;mysql-host&gt;:&lt;mysql-port&gt;/&lt;metastore-db&gt;&quot;</span>
+<span class="s2">    &quot;spark.hadoop.javax.jdo.option.ConnectionUserName&quot; = &quot;&lt;mysql-username&gt;&quot;</span>
+<span class="s2">    &quot;spark.hadoop.javax.jdo.option.ConnectionPassword&quot; = &quot;&lt;mysql-password&gt;&quot;</span>
+
+<span class="s2">    # Spark specific configuration options</span>
+<span class="s2">    &quot;spark.sql.hive.metastore.version&quot; = &quot;&lt;hive-version&gt;&quot;</span>
+<span class="s2">    # Skip this one if &lt;hive-version&gt; is 0.13.x.</span>
+<span class="s2">    &quot;spark.sql.hive.metastore.jars&quot; = &quot;&lt;hive-jar-source&gt;&quot;</span>
+
+<span class="s2">    # If you need to use AssumeRole, uncomment the following settings.</span>
+<span class="s2">    # &quot;spark.hadoop.fs.s3a.credentialsType&quot; = &quot;AssumeRole&quot;</span>
+<span class="s2">    # &quot;spark.hadoop.fs.s3a.stsAssumeRole.arn&quot; = &quot;&lt;sts-arn&gt;&quot;</span>
+<span class="s2">EOF</span>
+
+<span class="s2">case &quot;$DATABRICKS_RUNTIME_VERSION&quot; in</span>
+<span class="s2">  &quot;&quot;)</span>
+<span class="s2">    DRIVER=&quot;com.mysql.jdbc.Driver&quot;</span>
+<span class="s2">    ;;</span>
+<span class="s2">  *)</span>
+<span class="s2">    DRIVER=&quot;org.mariadb.jdbc.Driver&quot;</span>
+<span class="s2">    ;;</span>
+<span class="s2">esac</span>
+<span class="s2"># Add the JDBC driver separately since must use variable expansion to choose the correct</span>
+<span class="s2"># driver version.</span>
+<span class="s2">cat &lt;&lt; EOF &gt;&gt; /databricks/driver/conf/00-custom-spark.conf</span>
+<span class="s2">    &quot;spark.hadoop.javax.jdo.option.ConnectionDriverName&quot; = &quot;$DRIVER&quot;</span>
+<span class="s2">}</span>
+<span class="s2">EOF&quot;&quot;&quot;</span>
+
+<span class="n">dbutils</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;/databricks/scripts/external-metastore.sh&quot;</span><span class="p">,</span>
+    <span class="n">contents</span> <span class="o">=</span> <span class="n">contents</span><span class="p">,</span>
+    <span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<ol class="arabic simple">
+<li><p>Configure your cluster with the init script.</p></li>
+<li><p>Restart the cluster.</p></li>
+</ol>
+</div>
+<div class="section" id="remote-mode">
+<h3>Remote mode<a class="headerlink" href="#remote-mode" title="Permalink to this headline"> </a></h3>
+<ol class="arabic">
+<li><p>Create the base directory you want to store the init script in if it does not exist. The following example uses <code class="docutils literal notranslate"><span class="pre">dbfs:/databricks/scripts</span></code>.</p></li>
+<li><p>Run the following snippet in a notebook:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">dbutils</span><span class="p">.</span><span class="n">fs</span><span class="p">.</span><span class="n">put</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;/databricks/scripts/external-metastore.sh&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;&quot;&quot;#!/bin/sh</span>
+<span class="s">      |</span>
+<span class="s">      |# Quoting the label (i.e. EOF) with single quotes to disable variable interpolation.</span>
+<span class="s">      |cat &lt;&lt; &#39;EOF&#39; &gt; /databricks/driver/conf/00-custom-spark.conf</span>
+<span class="s">      |[driver] {</span>
+<span class="s">      |    # Hive specific configuration options for metastores in remote mode.</span>
+<span class="s">      |    # spark.hadoop prefix is added to make sure these Hive specific options will propagate to the metastore client.</span>
+<span class="s">      |    &quot;spark.hadoop.hive.metastore.uris&quot; = &quot;thrift://&lt;metastore-host&gt;:&lt;metastore-port&gt;&quot;</span>
+<span class="s">      |</span>
+<span class="s">      |    # Spark specific configuration options</span>
+<span class="s">      |    &quot;spark.sql.hive.metastore.version&quot; = &quot;&lt;hive-version&gt;&quot;</span>
+<span class="s">      |    # Skip this one if &lt;hive-version&gt; is 0.13.x.</span>
+<span class="s">      |    &quot;spark.sql.hive.metastore.jars&quot; = &quot;&lt;hive-jar-source&gt;&quot;</span>
+<span class="s">      |</span>
+<span class="s">      |    # If you need to use AssumeRole, uncomment the following settings.</span>
+<span class="s">      |    # &quot;spark.hadoop.fs.s3a.credentialsType&quot; = &quot;AssumeRole&quot;</span>
+<span class="s">      |    # &quot;spark.hadoop.fs.s3a.stsAssumeRole.arn&quot; = &quot;&lt;sts-arn&gt;&quot;</span>
+<span class="s">      |}</span>
+<span class="s">      |EOF</span>
+<span class="s">      |&quot;&quot;&quot;</span><span class="p">.</span><span class="n">stripMargin</span><span class="p">,</span>
+<span class="w">    </span><span class="n">overwrite</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">contents</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;#!/bin/sh</span>
+
+<span class="s2"># Quoting the label (i.e. EOF) with single quotes to disable variable interpolation.</span>
+<span class="s2">cat &lt;&lt; &#39;EOF&#39; &gt; /databricks/driver/conf/00-custom-spark.conf</span>
+<span class="s2">[driver] {</span>
+<span class="s2">    # Hive specific configuration options for metastores in remote mode.</span>
+<span class="s2">    # spark.hadoop prefix is added to make sure these Hive specific options will propagate to the metastore client.</span>
+<span class="s2">    &quot;spark.hadoop.hive.metastore.uris&quot; = &quot;thrift://&lt;metastore-host&gt;:&lt;metastore-port&gt;&quot;</span>
+
+<span class="s2">    # Spark specific configuration options</span>
+<span class="s2">    &quot;spark.sql.hive.metastore.version&quot; = &quot;&lt;hive-version&gt;&quot;</span>
+<span class="s2">    # Skip this one if &lt;hive-version&gt; is 0.13.x.</span>
+<span class="s2">    &quot;spark.sql.hive.metastore.jars&quot; = &quot;&lt;hive-jar-source&gt;&quot;</span>
+
+<span class="s2">    # If you need to use AssumeRole, uncomment the following settings.</span>
+<span class="s2">    # &quot;spark.hadoop.fs.s3a.credentialsType&quot; = &quot;AssumeRole&quot;</span>
+<span class="s2">    # &quot;spark.hadoop.fs.s3a.stsAssumeRole.arn&quot; = &quot;&lt;sts-arn&gt;&quot;</span>
+<span class="s2">}</span>
+<span class="s2">EOF&quot;&quot;&quot;</span>
+
+<span class="n">dbutils</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
+  <span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;/databricks/scripts/external-metastore.sh&quot;</span><span class="p">,</span>
+  <span class="n">contents</span> <span class="o">=</span> <span class="n">contents</span><span class="p">,</span>
+  <span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><p>Configure your cluster with the init script.</p></li>
+<li><p>Restart the cluster.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline"> </a></h2>
+<p><strong>Clusters do not start (due to incorrect init script settings)</strong></p>
+<p>If an init script for setting up the external metastore causes cluster creation to fail, configure the init script to <a class="reference internal" href="../../init-scripts/logs.html"><span class="doc">log</span></a>, and debug the init script using the logs.</p>
+<p><strong>Error in SQL statement: InvocationTargetException</strong></p>
+<ul>
+<li><p>Error message pattern in the full exception stack trace:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Caused</span> <span class="n">by</span><span class="p">:</span> <span class="n">javax</span><span class="o">.</span><span class="n">jdo</span><span class="o">.</span><span class="n">JDOFatalDataStoreException</span><span class="p">:</span> <span class="n">Unable</span> <span class="n">to</span> <span class="nb">open</span> <span class="n">a</span> <span class="n">test</span> <span class="n">connection</span> <span class="n">to</span> <span class="n">the</span> <span class="n">given</span> <span class="n">database</span><span class="o">.</span> <span class="n">JDBC</span> <span class="n">url</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>External metastore JDBC connection information is misconfigured. Verify the configured hostname, port, username, password, and JDBC driver class name. Also, make sure that the username has the right privilege to access the metastore database.</p>
+</li>
+<li><p>Error message pattern in the full exception stack trace:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Required</span> <span class="n">table</span> <span class="n">missing</span> <span class="p">:</span> <span class="s2">&quot;`DBS`&quot;</span> <span class="ow">in</span> <span class="n">Catalog</span> <span class="s2">&quot;&quot;</span> <span class="n">Schema</span> <span class="s2">&quot;&quot;</span><span class="o">.</span> <span class="n">DataNucleus</span> <span class="n">requires</span> <span class="n">this</span> <span class="n">table</span> <span class="n">to</span> <span class="n">perform</span> <span class="n">its</span> <span class="n">persistence</span> <span class="n">operations</span><span class="o">.</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>External metastore database not properly initialized. Verify that you created the metastore database and put the correct database name in the JDBC connection string. Then, start a new cluster with the following two Spark configuration options:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">datanucleus.schema.autoCreateTables true</span>
+<span class="na">datanucleus.fixedDatastore false</span>
+</pre></div>
+</div>
+<p>In this way, the Hive client library will try to create and initialize tables in the metastore database automatically when it tries to access them but finds them absent.</p>
+</li>
+</ul>
+<p><strong>Error in SQL statement: AnalysisException: Unable to instantiate org.apache.hadoop.hive.metastore.HiveMetastoreClient</strong></p>
+<p>Error message in the full exception stacktrace:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="n">specified</span> <span class="n">datastore</span> <span class="n">driver</span> <span class="p">(</span><span class="n">driver</span> <span class="n">name</span><span class="p">)</span> <span class="n">was</span> <span class="ow">not</span> <span class="n">found</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">CLASSPATH</span>
+</pre></div>
+</div>
+<p>The cluster is configured to use an incorrect JDBC driver.</p>
+<p>This error can occur if a cluster using Runtime 3.4 or later is configured to use the MySQL rather than the MariaDB driver.</p>
+<p><strong>Setting datanucleus.autoCreateSchema to true doesn’t work as expected</strong></p>
+<p>By default, Databricks also sets <code class="docutils literal notranslate"><span class="pre">datanucleus.fixedDatastore</span></code> to <code class="docutils literal notranslate"><span class="pre">true</span></code>, which prevents any accidental structural changes to the metastore databases. Therefore, the Hive client library cannot create metastore tables even if you set <code class="docutils literal notranslate"><span class="pre">datanucleus.autoCreateSchema</span></code> to <code class="docutils literal notranslate"><span class="pre">true</span></code>. This strategy is, in general, safer for production environments since it prevents the metastore database to be accidentally upgraded.</p>
+<p>If you do want to use <code class="docutils literal notranslate"><span class="pre">datanucleus.autoCreateSchema</span></code> to help initialize the metastore database, make sure you set <code class="docutils literal notranslate"><span class="pre">datanucleus.fixedDatastore</span></code> to <code class="docutils literal notranslate"><span class="pre">false</span></code>. Also, you may want to flip both flags after initializing the metastore database to provide better protection to your production environment.</p>
+<p><strong>com.amazonaws.AmazonClientException: Couldn’t initialize a SAX driver to create an XMLReader</strong></p>
+<p>This exception may be thrown if the version of the cluster is 2.1.1-db5. This issue has been fixed in 2.1.1-db6. For 2.1.1-db5, you can fix this issue by setting the following JVM properties as part of the settings of <code class="docutils literal notranslate"><span class="pre">spark.driver.extraJavaOptions</span></code> and <code class="docutils literal notranslate"><span class="pre">spark.executor.extraJavaOptions</span></code>:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">-Djavax.xml.datatype.DatatypeFactory</span><span class="o">=</span><span class="s">com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl</span>
+<span class="na">-Djavax.xml.parsers.DocumentBuilderFactory</span><span class="o">=</span><span class="s">com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl</span>
+<span class="na">-Djavax.xml.parsers.SAXParserFactory</span><span class="o">=</span><span class="s">com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl</span>
+<span class="na">-Djavax.xml.validation.SchemaFactory</span><span class="o">:</span><span class="s">https://www.w3.org/2001/XMLSchema=com.sun.org.apache.xerces.internal.jaxp.validation.XMLSchemaFactory</span>
+<span class="na">-Dorg.xml.sax.driver</span><span class="o">=</span><span class="s">com.sun.org.apache.xerces.internal.parsers.SAXParser</span>
+<span class="na">-Dorg.w3c.dom.DOMImplementationSourceList</span><span class="o">=</span><span class="s">com.sun.org.apache.xerces.internal.dom.DOMXSImplementationSourceImpl</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

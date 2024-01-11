@@ -1,0 +1,659 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use Delta Sharing for secure data sharing with users outside your organization or on different metastores within your Databricks account." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Share data securely using Delta Sharing">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Share data securely using Delta Sharing &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/data-sharing/index.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/data-sharing/index.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/data-sharing/index.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/data-sharing/index.html" class="notranslate">English</option>
+    <option value="../../ja/data-sharing/index.html" class="notranslate">日本語</option>
+    <option value="../../pt/data-sharing/index.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Share data securely using Delta Sharing</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="share-data-securely-using-delta-sharing">
+<span id="share-data-securely-using-ds"></span><h1>Share data securely using Delta Sharing<a class="headerlink" href="#share-data-securely-using-delta-sharing" title="Permalink to this headline"> </a></h1>
+<p>This article introduces Delta Sharing in Databricks, the secure data sharing platform that lets you share data in Databricks with users outside your organization, whether those users use Databricks or not.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The Delta Sharing articles on this site focus on sharing Databricks data and notebooks. Delta Sharing is also available as an <a class="reference external" href="https://delta.io/sharing">open-source project</a> that you can use to share Delta tables from other platforms. Delta Sharing also provides the backbone for <a class="reference internal" href="../marketplace/index.html"><span class="doc">Databricks Marketplace</span></a>, an open forum for exchanging data products.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are a <em>data recipient</em> who has been granted access to shared data through Delta Sharing, and you just want to learn how to access that data, see <a class="reference internal" href="recipient.html"><span class="doc">Access data shared with you using Delta Sharing (for recipients)</span></a>.</p>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="what-is-delta-sharing">
+<span id="what-is-ds"></span><h2>What is Delta Sharing?<a class="headerlink" href="#what-is-delta-sharing" title="Permalink to this headline"> </a></h2>
+<p><a class="reference external" href="https://delta.io/sharing">Delta Sharing</a> is an <a class="reference external" href="https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md">open protocol</a> developed by Databricks for secure data sharing with other organizations regardless of the computing platforms they use.</p>
+<p>There are three ways to share data using Delta Sharing:</p>
+<ol class="arabic">
+<li><p><strong>The Databricks-to-Databricks sharing protocol</strong>, which lets you share data from your Unity Catalog-enabled workspace with users who also have access to a Unity Catalog-enabled Databricks workspace.</p>
+<p>This approach uses the Delta Sharing server that is built into Databricks. It supports some Delta Sharing features that are not suppported in the other protocols, including notebook sharing, Unity Catalog volume sharing, Unity Catalog data governance, auditing, and usage tracking for both providers and recipients. The integration with Unity Catalog simplifies setup and governance for both providers and recipients and improves performance.</p>
+<p>See <a class="reference internal" href="share-data-databricks.html"><span class="doc">Share data using the Delta Sharing Databricks-to-Databricks protocol (for providers)</span></a>.</p>
+</li>
+<li><p><strong>The Databricks open sharing protocol</strong>, which lets you share tabular data that you manage in a Unity Catalog-enabled Databricks workspace with users on any computing platform.</p>
+<p>This approach uses the Delta Sharing server that is built into Databricks and is useful when you manage data using Unity Catalog and want to share it with users who don’t use Databricks or don’t have access to a Unity Catalog-enabled Databricks workspace. The integration with Unity Catalog on the provider side simplifies setup and governance for providers.</p>
+<p>See <a class="reference internal" href="share-data-open.html"><span class="doc">Share data using the Delta Sharing open sharing protocol (for providers)</span></a>.</p>
+</li>
+<li><p><strong>A customer-managed implementation of the open-source Delta Sharing server</strong>, which lets you share from any platform to any platform, whether Databricks or not.</p>
+<p>The Databricks documentation does not cover instructions for setting up your own Delta Sharing server. See <a class="reference external" href="https://github.com/delta-io/delta-sharing">github.com/delta-io/delta-sharing</a>.</p>
+</li>
+</ol>
+<p></p>
+</div>
+<div class="section" id="shares-providers-and-recipients">
+<span id="shares-recipients"></span><h2>Shares, providers, and recipients<a class="headerlink" href="#shares-providers-and-recipients" title="Permalink to this headline"> </a></h2>
+<p>The primary concepts underlying Delta Sharing in Databricks are <em>shares</em>, <em>providers</em>, and <em>recipients</em>.</p>
+<p></p>
+<div class="section" id="what-is-a-share">
+<h3>What is a share?<a class="headerlink" href="#what-is-a-share" title="Permalink to this headline"> </a></h3>
+<p>In Delta Sharing, a <em>share</em> is a read-only collection of tables and table partitions that a provider wants to share with one or more recipients. If your recipient uses a Unity Catalog-enabled Databricks workspace, you can also include notebook files, views (including dynamic views that restrict access at the row and column level), and Unity Catalog volumes in a share.</p>
+<p>You can add or remove tables, views, volumes, and notebook files from a share at any time, and you can assign or revoke data recipient access to a share at any time.</p>
+<p>In a Unity Catalog-enabled Databricks workspace, a share is a securable object registered in Unity Catalog. If you remove a share from your Unity Catalog metastore, all recipients of that share lose the ability to access it.</p>
+<p>See <a class="reference internal" href="create-share.html"><span class="doc">Create and manage shares for Delta Sharing</span></a>.</p>
+</div>
+<div class="section" id="what-is-a-provider">
+<h3>What is a provider?<a class="headerlink" href="#what-is-a-provider" title="Permalink to this headline"> </a></h3>
+<p>A <em>provider</em> is an entity that shares data with a recipient. If you are a provider and you want to take advantage of the built-in Databricks Delta Sharing server and manage shares and recipients using Unity Catalog, you need at least one Databricks workspace that is enabled for Unity Catalog. You do not need to migrate all of your existing workspaces to Unity Catalog. You can simply create a new Unity Catalog-enabled workspace for your Delta Sharing needs.</p>
+<p>If a recipient is on a Unity Catalog-enabled Databricks workspace, the provider is also a Unity Catalog securable object that represents the provider organization and associates that organization with a set of shares.</p>
+</div>
+<div class="section" id="what-is-a-recipient">
+<h3>What is a recipient?<a class="headerlink" href="#what-is-a-recipient" title="Permalink to this headline"> </a></h3>
+<p>A <em>recipient</em> is an entity that receives shares from a provider. In Unity Catalog, a share is a securable object that represents an organization and associates it with a credential or secure sharing identifier that allows that organization to access one or more shares.</p>
+<p>As a data provider (sharer), you can define multiple recipients for any given Unity Catalog metastore, but if you want to share data from multiple metastores with a particular user or group of users, you must define the recipient separately for each metastore. A recipient can have access to multiple shares.</p>
+<p>If a provider deletes a recipient from their Unity Catalog metastore, that recipient loses access to all shares it could previously access.</p>
+<p>See <a class="reference internal" href="create-recipient.html"><span class="doc">Create and manage data recipients for Delta Sharing</span></a>.</p>
+</div>
+</div>
+<div class="section" id="open-sharing-versus-databricks-to-databricks-sharing">
+<span id="open-vs-d-to-d"></span><h2>Open sharing versus Databricks-to-Databricks sharing<a class="headerlink" href="#open-sharing-versus-databricks-to-databricks-sharing" title="Permalink to this headline"> </a></h2>
+<p>This section describes the two protocols for sharing from a Databricks workspace that is enabled for Unity Catalog.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This section assumes that the provider is on a Unity Catalog-enabled Databricks workspace. To learn about setting up an open-source Delta Sharing server to share from a non-Databricks platform or non-Unity Catalog workspace, see <a class="reference external" href="https://github.com/delta-io/delta-sharing">github.com/delta-io/delta-sharing</a>.</p>
+</div>
+<p>The way a provider uses Delta Sharing in Databricks depends on who they are sharing data with:</p>
+<ul class="simple">
+<li><p><em>Open sharing</em> lets you share data with any user, whether or not they have access to Databricks.</p></li>
+<li><p><em>Databricks-to-Databricks sharing</em> lets you share data with Databricks users whose workspace is attached to a Unity Catalog metastore that is different from yours. Databricks-to-Databricks also supports notebook and volume sharing, which is not available in open sharing.</p></li>
+</ul>
+<div class="section" id="what-is-open-delta-sharing">
+<span id="what-is-open-ds"></span><span id="open"></span><h3>What is open Delta Sharing?<a class="headerlink" href="#what-is-open-delta-sharing" title="Permalink to this headline"> </a></h3>
+<p>If you want to share data with users outside of your Databricks workspace, regardless of whether they use Databricks, you can use open Delta Sharing to share your data securely. As a data provider, you generate a token and share it securely with the recipient. They use the token to authenticate and get read access to the tables you’ve included in the shares you’ve given them access to.</p>
+<p>Recipients can access the shared data using many computing tools and platforms, including:</p>
+<ul class="simple">
+<li><p>Databricks</p></li>
+<li><p>Apache Spark</p></li>
+<li><p>Pandas</p></li>
+<li><p>Power BI</p></li>
+</ul>
+<p>For a full list of Delta Sharing connectors and information about how to use them, see the <a class="reference external" href="https://delta.io/sharing">Delta Sharing</a> documentation.</p>
+<p>See also <a class="reference internal" href="share-data-open.html"><span class="doc">Share data using the Delta Sharing open sharing protocol (for providers)</span></a>.</p>
+</div>
+<div class="section" id="what-is-databricks-to-databricks-delta-sharing">
+<span id="what-is-databricks-to-databricks-ds"></span><span id="d-to-d"></span><h3>What is Databricks-to-Databricks Delta Sharing?<a class="headerlink" href="#what-is-databricks-to-databricks-delta-sharing" title="Permalink to this headline"> </a></h3>
+<p>If you want to share data with users who have a Databricks workspace that is <a class="reference internal" href="../data-governance/unity-catalog/enable-workspaces.html"><span class="doc">enabled for Unity Catalog</span></a>, you can use Databricks-to-Databricks Delta Sharing. Databricks-to-Databricks sharing lets you share data with users in other Databricks accounts, whether they’re on AWS, Azure, or GCP. It’s also a great way to securely share data across different Unity Catalog metastores in your own Databricks account. Note that there is no need to use Delta Sharing to share data between workspaces attached to the same Unity Catalog metastore, because in that scenario you can use Unity Catalog itself to manage access to data across workspaces.</p>
+<p>One advantage of Databricks-to-Databricks sharing is that the share recipient doesn’t need a token to access the share, and the provider doesn’t need to manage recipient tokens. The security of the sharing connection—including all identity verification, authentication, and auditing—is managed entirely through Delta Sharing and the Databricks platform. Another advantage is the ability to share Databricks notebook files, views, and Unity Catalog volumes.</p>
+<p>See also <a class="reference internal" href="share-data-databricks.html"><span class="doc">Share data using the Delta Sharing Databricks-to-Databricks protocol (for providers)</span></a>.</p>
+</div>
+</div>
+<div class="section" id="how-do-provider-admins-set-up-delta-sharing">
+<span id="how-do-provider-admins-set-up-ds"></span><h2>How do provider admins set up Delta Sharing?<a class="headerlink" href="#how-do-provider-admins-set-up-delta-sharing" title="Permalink to this headline"> </a></h2>
+<p>This section gives an overview of how providers can enable Delta Sharing and initiate sharing from a Unity Catalog-enabled Databricks workspace. For open-source Delta Sharing, see <a class="reference external" href="https://github.com/delta-io/delta-sharing">github.com/delta-io/delta-sharing</a>.</p>
+<p>Databricks-to-Databricks sharing between Unity Catalog metastores in the same account is always enabled. If you are a provider who wants to enable Delta Sharing to share data with Databricks workspaces in other accounts or non-Databricks clients, a Databricks account admin or metastore admin performs the following setup steps (at a high level):</p>
+<ol class="arabic">
+<li><p>Enable Delta Sharing for the Unity Catalog metastore that manages the data you want to share.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You do not need to enable Delta Sharing on your metastore if you intend to use Delta Sharing to share data only with users on other Unity Catalog metastores in your account. Metastore-to-metastore sharing within a single Databricks account is enabled by default.</p>
+</div>
+<p>See <a class="reference internal" href="set-up.html#enable"><span class="std std-ref">Enable Delta Sharing on a metastore</span></a>.</p>
+</li>
+<li><p>Create a share that includes data assets registered in the Unity Catalog metastore.</p>
+<p>If you are sharing with a non-Databricks recipient (known as open sharing) you can include tables in the Delta or Parquet format. If you plan to use <a class="reference internal" href="#d-to-d"><span class="std std-ref">Databricks-to-Databricks sharing</span></a>, you can also add views, Unity Catalog volumes, and notebook files to a share.</p>
+<p>See <a class="reference internal" href="create-share.html"><span class="doc">Create and manage shares for Delta Sharing</span></a>.</p>
+</li>
+<li><p>Create a recipient.</p>
+<p>See <a class="reference internal" href="create-recipient.html"><span class="doc">Create and manage data recipients for Delta Sharing</span></a>.</p>
+<p>If your recipient is not a Databricks user, or does not have access to a Databricks workspace that is enabled for Unity Catalog, you must use <a class="reference internal" href="#open"><span class="std std-ref">open sharing</span></a>. A set of token-based credentials is generated for that recipient.</p>
+<p>If your recipient has access to a Databricks workspace that is enabled for Unity Catalog, you can use <a class="reference internal" href="#d-to-d"><span class="std std-ref">Databricks-to-Databricks sharing</span></a>, and no token-based credentials are required. You request a <em>sharing identifier</em> from the recipient and use it to establish the secure connection.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Use yourself as a test recipient to try out the setup process.</p>
+</div>
+</li>
+<li><p>Grant the recipient access to one or more shares.</p>
+<p>See <a class="reference internal" href="grant-access.html"><span class="doc">Grant and manage access to Delta Sharing data shares (for providers)</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This step can also be performed by a non-admin user with the <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SHARE</span></code>, <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">RECIPIENT</span></code> and <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">SHARE</span> <span class="pre">PERMISSION</span></code> privileges. See <a class="reference internal" href="../data-governance/unity-catalog/manage-privileges/privileges.html"><span class="doc">Unity Catalog privileges and securable objects</span></a>.</p>
+</div>
+</li>
+<li><p>Send the recipient the information they need to connect to the share (open sharing only).</p>
+<p>See <a class="reference internal" href="create-recipient.html#send"><span class="std std-ref">Send the recipient their connection information</span></a>.</p>
+<p>For open sharing, use a secure channel to send the recipient an activation link that allows them to download their token-based credentials.</p>
+<p>For Databricks-to-Databricks sharing, the data included in the share becomes available in the recipient’s Databricks workspace as soon as you grant them access to the share.</p>
+</li>
+</ol>
+<p>The recipient can now access the shared data.</p>
+</div>
+<div class="section" id="how-do-recipients-access-the-shared-data">
+<h2>How do recipients access the shared data?<a class="headerlink" href="#how-do-recipients-access-the-shared-data" title="Permalink to this headline"> </a></h2>
+<p>Recipients access shared data assets in read-only format. Shared notebook files are read-only, but they can be cloned and then modified and run in the recipient workspace just like any other notebook.</p>
+<p>Secure access depends on the sharing model:</p>
+<ul class="simple">
+<li><p>Open sharing (recipient does not have a Databricks workspace enabled for Unity Catalog): The recipient provides the credential whenever they access the data in their tool of choice, including Apache Spark, pandas, Power BI, Databricks, and many more.  See <a class="reference internal" href="read-data-open.html"><span class="doc">Read data shared using Delta Sharing open sharing (for recipients)</span></a>.</p></li>
+<li><p>Databricks-to-Databricks (recipient workspace is enabled for Unity Catalog): The recipient accesses the data using Databricks. They can use Unity Catalog to grant and deny access to other users in their Databricks account. See <a class="reference internal" href="read-data-databricks.html"><span class="doc">Read data shared using Databricks-to-Databricks Delta Sharing (for recipients)</span></a>.</p></li>
+</ul>
+<p>Whenever the data provider updates data tables or volumes in their own Databricks account, the updates appear in near real time in the recipient’s system.</p>
+</div>
+<div class="section" id="how-do-you-keep-track-of-who-is-sharing-and-accessing-shared-data">
+<h2>How do you keep track of who is sharing and accessing shared data?<a class="headerlink" href="#how-do-you-keep-track-of-who-is-sharing-and-accessing-shared-data" title="Permalink to this headline"> </a></h2>
+<p>Data providers on Unity Catalog-enabled Databricks workspaces can use Databricks audit logging and system tables to monitor the creation and modification of shares and recipients, and can monitor recipient activity on shares. See <a class="reference internal" href="audit-logging-provider.html"><span class="doc">Audit and monitor data sharing using Delta Sharing (for providers)</span></a>.</p>
+<p>Data recipients who use shared data in a Databricks workspace can use Databricks audit logging and system tables to understand who is accessing which data. See <a class="reference internal" href="audit-logging-recipient.html"><span class="doc">Audit and monitor data access using Delta Sharing (for recipients)</span></a>.</p>
+</div>
+<div class="section" id="sharing-volumes">
+<h2>Sharing volumes<a class="headerlink" href="#sharing-volumes" title="Permalink to this headline"> </a></h2>
+<p>You can share volumes using the Databricks-to-Databricks sharing flow. See <a class="reference internal" href="create-share.html#volumes"><span class="std std-ref">Add volumes to a share</span></a> (for providers) and <a class="reference internal" href="read-data-databricks.html"><span class="doc">Read data shared using Databricks-to-Databricks Delta Sharing (for recipients)</span></a> (for recipients).</p>
+</div>
+<div class="section" id="sharing-notebooks">
+<h2>Sharing notebooks<a class="headerlink" href="#sharing-notebooks" title="Permalink to this headline"> </a></h2>
+<p>You can use Delta Sharing to share notebook files using the Databricks-to-Databricks sharing flow. See <a class="reference internal" href="create-share.html#add-remove-notebook-files"><span class="std std-ref">Add notebook files to a share</span></a> (for providers) and <a class="reference internal" href="read-data-databricks.html#preview-notebook-files"><span class="std std-ref">Read shared notebooks</span></a> (for recipients).</p>
+</div>
+<div class="section" id="restricting-access-at-the-row-and-column-level">
+<h2>Restricting access at the row and column level<a class="headerlink" href="#restricting-access-at-the-row-and-column-level" title="Permalink to this headline"> </a></h2>
+<p>You can share dynamic views that restrict access to certain table data based on recipient properties. Dynamic view sharing requires the Databricks-to-Databricks sharing flow. See <a class="reference internal" href="create-share.html#dynamic-views"><span class="std std-ref">Add dynamic views to a share to filter rows and columns</span></a>.</p>
+</div>
+<div class="section" id="delta-sharing-and-streaming">
+<span id="ds-and-streaming"></span><h2>Delta Sharing and streaming<a class="headerlink" href="#delta-sharing-and-streaming" title="Permalink to this headline"> </a></h2>
+<p>Delta Sharing supports Spark Structured Streaming. A provider can share a table with history so that a recipient can use it as a Structured Streaming source, processing shared data incrementally with low latency. Recipients can also perform <a class="reference internal" href="../delta/history.html"><span class="doc">Delta Lake time travel queries</span></a> on tables shared with history.</p>
+<p>To learn how to share tables with history, see <a class="reference internal" href="create-share.html#add-tables"><span class="std std-ref">Add tables to a share</span></a>. To learn how to use shared tables as streaming sources, see <a class="reference internal" href="read-data-databricks.html#streaming-source"><span class="std std-ref">Query a table using Apache Spark Structured Streaming</span></a> (for recipients of Databricks-to-Databricks sharing) or <a class="reference internal" href="read-data-open.html#streaming-source"><span class="std std-ref">Access a shared table using Spark Structured Streaming</span></a> (for recipients of open sharing data).</p>
+<p>See also <a class="reference internal" href="../structured-streaming/index.html"><span class="doc">Streaming on Databricks</span></a>.</p>
+</div>
+<div class="section" id="delta-sharing-faqs">
+<span id="ds-faqs"></span><h2>Delta Sharing FAQs<a class="headerlink" href="#delta-sharing-faqs" title="Permalink to this headline"> </a></h2>
+<p>The following are frequently asked questions about Delta Sharing.</p>
+<div class="section" id="do-i-need-unity-catalog-to-use-delta-sharing">
+<span id="do-i-need-uc-to-use-ds"></span><span id="uc-faq"></span><h3>Do I need Unity Catalog to use Delta Sharing?<a class="headerlink" href="#do-i-need-unity-catalog-to-use-delta-sharing" title="Permalink to this headline"> </a></h3>
+<p>No, you do not need Unity Catalog to share (as a provider) or consume shared data (as a recipient). However, Unity Catalog provides benefits such as support for non-tabular asset sharing, out-of-the-box governance, simplicity, and query performance.</p>
+<p>Providers can share data in two ways:</p>
+<ul>
+<li><p>Put the assets to share under Unity Catalog management and share them using the built-in Databricks Delta Sharing server.</p>
+<p>You do do not need to migrate all assets to Unity Catalog. You need only one Databricks workspace that is enabled for Unity Catalog to manage assets that you want to share. In some accounts, new workspaces are enabled for Unity Catalog automatically. See <a class="reference internal" href="../data-governance/unity-catalog/get-started.html#enablement"><span class="std std-ref">Automatic enablement of Unity Catalog</span></a>.</p>
+</li>
+<li><p>Implement the <a class="reference external" href="https://github.com/delta-io/delta-sharing">open Delta Sharing server</a> to share data, without necessarily using your Databricks account.</p></li>
+</ul>
+<p>Recipients can consume data in two ways:</p>
+<ul>
+<li><p>Without a Databricks workspace. Use open source Delta Sharing connectors that are available for many data platforms, including Power BI, pandas, and open source Apache Spark. See <a class="reference internal" href="read-data-open.html"><span class="doc">Read data shared using Delta Sharing open sharing (for recipients)</span></a> and the <a class="reference external" href="https://delta.io/sharing/">Delta Sharing open source project</a>.</p></li>
+<li><p>In a Databricks workspace. Recipient workspaces don’t need to be enabled for Unity Catalog, but there are advantages of governance, simplicity, and performance if they are.</p>
+<p>Recipient organizations who want these advantages don’t need to migrate all assets to Unity Catalog. You need only one Databricks workspace that is enabled for Unity Catalog to manage assets that are shared with you. In some accounts, new workspaces are enabled for Unity Catalog automatically. See <a class="reference internal" href="../data-governance/unity-catalog/get-started.html#enablement"><span class="std std-ref">Automatic enablement of Unity Catalog</span></a>.</p>
+<p>Recipient organizations who want these advantages don’t need to migrate all assets to Unity Catalog. You need only one Databricks workspace that is enabled for Unity Catalog to manage assets that are shared with you.</p>
+<p>See <a class="reference internal" href="read-data-open.html"><span class="doc">Read data shared using Delta Sharing open sharing (for recipients)</span></a> and <a class="reference internal" href="read-data-databricks.html"><span class="doc">Read data shared using Databricks-to-Databricks Delta Sharing (for recipients)</span></a>.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="do-i-need-to-be-a-databricks-customer-to-use-delta-sharing">
+<span id="do-i-need-to-be-a-databricks-customer-to-use-ds"></span><h3>Do I need to be a Databricks customer to use Delta Sharing?<a class="headerlink" href="#do-i-need-to-be-a-databricks-customer-to-use-delta-sharing" title="Permalink to this headline"> </a></h3>
+<p>No, Delta Sharing is an open protocol. You can share non-Databricks data with recipients on any data platform. Providers can configure an open Delta Sharing server to share from any computing platform. Recipients can consume shared data using open source Delta Sharing connectors for many data products, including Power BI, pandas, and open source Spark.</p>
+<p>However, using Delta Sharing on Databricks, especially sharing from a Unity Catalog-enabled workspace, has many advantages.</p>
+<p>For details, see the first question in this FAQ.</p>
+</div>
+<div class="section" id="are-egress-costs-high">
+<h3>Are egress costs high?<a class="headerlink" href="#are-egress-costs-high" title="Permalink to this headline"> </a></h3>
+<p></p>
+<p>Delta Sharing within a region incurs no egress cost.</p>
+<p>Delta Sharing is the only solution that enables cross-cloud and cross-region sharing without data replication, which is why it can incur egress charges.</p>
+<p>To learn about how to reduce egress charges, talk to your Databricks account team.</p>
+</div>
+<div class="section" id="can-providers-revoke-recipient-access">
+<h3>Can providers revoke recipient access?<a class="headerlink" href="#can-providers-revoke-recipient-access" title="Permalink to this headline"> </a></h3>
+<p>Yes, recipient access can be revoked on-demand and at specified levels of granularity. You can deny recipient access to specific shares and specific IP addresses, filter tabular data for a recipient, revoke recipient tokens, and delete recipients entirely.  See <a class="reference internal" href="grant-access.html#revoke"><span class="std std-ref">Revoke recipient access to a share</span></a> and <a class="reference internal" href="create-recipient.html"><span class="doc">Create and manage data recipients for Delta Sharing</span></a>.</p>
+</div>
+<div class="section" id="isnt-it-insecure-to-use-pre-signed-urls">
+<h3>Isn’t it insecure to use pre-signed URLs?<a class="headerlink" href="#isnt-it-insecure-to-use-pre-signed-urls" title="Permalink to this headline"> </a></h3>
+<p>Delta Sharing uses pre-signed URLs to provide temporary access to a file in object storage. They are only given to recipients that already have access to the shared data. They are secure because they are short-lived and don’t expand the level of access beyond what recipients have already been granted.</p>
+<p></p>
+</div>
+<div class="section" id="are-the-tokens-used-in-the-delta-sharing-open-sharing-protocol-secure">
+<span id="are-the-tokens-used-in-the-ds-open-sharing-protocol-secure"></span><h3>Are the tokens used in the Delta Sharing open sharing protocol secure?<a class="headerlink" href="#are-the-tokens-used-in-the-delta-sharing-open-sharing-protocol-secure" title="Permalink to this headline"> </a></h3>
+<p>Because Delta Sharing enables cross-platform sharing—unlike other available data sharing platforms—the sharing protocol requires an open token. Providers can ensure token security by configuring the token lifetime, setting networking controls, and revoking access on demand. In addition, the token does not expand the level of access beyond what recipients have already been granted. See <a class="reference internal" href="create-recipient.html#security-considerations"><span class="std std-ref">Security considerations for tokens</span></a>.</p>
+<p>If you prefer not to use tokens to manage access to recipient shares, you should use <a class="reference internal" href="share-data-databricks.html"><span class="doc">Databricks-to-Databricks sharing</span></a> or contact your Databricks account team for alternatives.</p>
+</div>
+<div class="section" id="does-delta-sharing-support-view-sharing">
+<span id="does-ds-support-view-sharing"></span><h3>Does Delta Sharing support view sharing?<a class="headerlink" href="#does-delta-sharing-support-view-sharing" title="Permalink to this headline"> </a></h3>
+<p>Yes, Delta Sharing supports view sharing. See <a class="reference internal" href="create-share.html#views"><span class="std std-ref">Add views to a share</span></a>.</p>
+<p>To learn about planned enhancements to viewing sharing, contact your Databricks account team.</p>
+</div>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>Tabular data must be in the <a class="reference internal" href="../delta/index.html"><span class="doc">Delta table format</span></a>. You can easily convert Parquet tables to Delta—and back again. See <a class="reference internal" href="../sql/language-manual/delta-convert-to-delta.html"><span class="doc">CONVERT TO DELTA</span></a>.</p></li>
+<li><p>View sharing is supported only in Databricks-to-Databricks sharing. Shareable views must be defined on Delta tables or other shareable views. See (for providers)<a class="reference internal" href="create-share.html#views"><span class="std std-ref">Add views to a share</span></a> and (for consumers) <a class="reference internal" href="read-data-databricks.html#views"><span class="std std-ref">Read shared views</span></a>.</p></li>
+<li><p>Volume sharing is supported only in Databricks-to-Databricks sharing. See <a class="reference internal" href="create-share.html#volumes"><span class="std std-ref">Add volumes to a share</span></a> (for providers) and <a class="reference internal" href="read-data-databricks.html"><span class="doc">Read data shared using Databricks-to-Databricks Delta Sharing (for recipients)</span></a> (for recipients).</p></li>
+<li><p>There are limits on the number of files in metadata allowed for a shared table. To learn more, see <a class="reference internal" href="troubleshooting.html#resource-limits"><span class="std std-ref">Resource limit exceeded errors</span></a>.</p></li>
+<li><p>Schemas named <code class="docutils literal notranslate"><span class="pre">information_schema</span></code> cannot be imported into a Unity Catalog metastore, because that schema name is reserved in Unity Catalog.</p></li>
+<li><p><a class="reference internal" href="../tables/constraints.html"><span class="doc">Table constraints</span></a> (primary and foreign key constraints) are not available in shared tables.</p></li>
+</ul>
+</div>
+<div class="section" id="resource-quotas">
+<span id="quotas"></span><h2>Resource quotas<a class="headerlink" href="#resource-quotas" title="Permalink to this headline"> </a></h2>
+<p>The values below indicate the quotas for Delta Sharing resources. Quota values below are expressed relative to the parent object in Unity Catalog.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 38%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Object</p></th>
+<th class="head"><p>Parent</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> provider</p></td>
+<td><p> metastore</p></td>
+<td><p> 1000</p></td>
+</tr>
+<tr class="row-odd"><td><p> recipients</p></td>
+<td><p> metastore</p></td>
+<td><p> 5000</p></td>
+</tr>
+<tr class="row-even"><td><p> shares</p></td>
+<td><p> metastore</p></td>
+<td><p> 1000</p></td>
+</tr>
+<tr class="row-odd"><td><p> tables</p></td>
+<td><p> share</p></td>
+<td><p> 1000</p></td>
+</tr>
+<tr class="row-even"><td><p> volumes</p></td>
+<td><p> share</p></td>
+<td><p> 1000</p></td>
+</tr>
+<tr class="row-odd"><td><p> schemas</p></td>
+<td><p> share</p></td>
+<td><p> 500</p></td>
+</tr>
+<tr class="row-even"><td><p> notebooks</p></td>
+<td><p> share</p></td>
+<td><p> 100</p></td>
+</tr>
+</tbody>
+</table>
+<p>If you expect to exceed these resource limits, contact your Databricks account team.</p>
+</div>
+<div class="section" id="next-steps">
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="set-up.html"><span class="doc">Enable your Databricks account for Delta Sharing</span></a></p></li>
+<li><p><a class="reference internal" href="create-share.html"><span class="doc">Create shares</span></a></p></li>
+<li><p><a class="reference internal" href="create-recipient.html"><span class="doc">Create recipients</span></a></p></li>
+<li><p>Learn more about the <a class="reference internal" href="share-data-open.html"><span class="doc">open sharing</span></a> and <a class="reference internal" href="share-data-databricks.html"><span class="doc">Databricks-to-Databricks</span></a> sharing models</p></li>
+<li><p><a class="reference internal" href="recipient.html"><span class="doc">Learn how recipients access shared data</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

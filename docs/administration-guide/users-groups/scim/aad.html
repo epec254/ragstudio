@@ -1,0 +1,581 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to provision users to Databricks using Microsoft Microsoft Entra ID (formerly Azure Active Directory)." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Configure SCIM provisioning using Microsoft Microsoft Entra ID (formerly Azure Active Directory)">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Configure SCIM provisioning using Microsoft Microsoft Entra ID (formerly Azure Active Directory) &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/administration-guide/users-groups/scim/aad.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/administration-guide/users-groups/scim/aad.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/administration-guide/users-groups/scim/aad.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../../en/administration-guide/users-groups/scim/aad.html" class="notranslate">English</option>
+    <option value="../../../../ja/administration-guide/users-groups/scim/aad.html" class="notranslate">日本語</option>
+    <option value="../../../../pt/administration-guide/users-groups/scim/aad.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Configure SCIM provisioning using Microsoft Microsoft Entra ID (formerly Azure Active Directory)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="configure-scim-provisioning-using-microsoft-microsoft-entra-id-formerly-azure-active-directory">
+<span id="configure-scim-provisioning-using-microsoft-ms-entra-id-formerly-aad"></span><h1>Configure SCIM provisioning using Microsoft Microsoft Entra ID (formerly Azure Active Directory)<a class="headerlink" href="#configure-scim-provisioning-using-microsoft-microsoft-entra-id-formerly-azure-active-directory" title="Permalink to this headline"> </a></h1>
+<p>This article describes how to set up provisioning to Databricks using Microsoft Entra ID (formerly Azure Active Directory).</p>
+<p>You can set up provisioning to Databricks using Microsoft Entra ID at the Databricks account level or at the Databricks workspace level.</p>
+<p>Databricks recommends that you provision users, service principals, and groups to the account level and manage the assignment of users and groups to workspaces within Databricks. Your workspaces must be <a class="reference internal" href="../index.html#enable-identity-federation"><span class="std std-ref">enabled for identity federation</span></a>, in order to manage the assignment of users to workspaces. If you have any workspaces that are not enabled for identity federation, you should continue to provision users, service principals, and groups directly to those workspaces.</p>
+<div class="section" id="provision-identities-to-your-databricks-account-using-microsoft-entra-id">
+<span id="provision-identities-to-your-databricks-account-using-ms-entra-id"></span><span id="account"></span><h2>Provision identities to your Databricks account using Microsoft Entra ID<a class="headerlink" href="#provision-identities-to-your-databricks-account-using-microsoft-entra-id" title="Permalink to this headline"> </a></h2>
+<p>You can sync account-level users and groups from your Microsoft Entra ID tenant to Databricks using a SCIM provisioning connector.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If you already have SCIM connectors that sync identities directly to your workspaces, you must disable those SCIM connectors when the account-level SCIM connector is enabled. See <a class="reference internal" href="index.html#migrate"><span class="std std-ref">Migrate workspace-level SCIM provisioning to the account level</span></a>.</p>
+</div>
+<div class="section" id="requirements">
+<span id="account-req"></span><h3>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h3>
+<ul class="simple">
+<li><p>Your Databricks account must have the <a class="reference external" href="https://databricks.com/product/pricing/platform-addons">Premium plan or above</a>.</p></li>
+<li><p>You must have the Cloud Application Administrator role in Microsoft Entra ID.</p></li>
+<li><p>Your Microsoft Entra ID account must be a Premium edition account to provision groups. Provisioning users is available for any Microsoft Entra ID edition.</p></li>
+<li><p>You must be a Databricks account admin.</p></li>
+</ul>
+</div>
+<div class="section" id="step-1-configure-databricks">
+<h3>Step 1: Configure Databricks<a class="headerlink" href="#step-1-configure-databricks" title="Permalink to this headline"> </a></h3>
+<ol class="arabic simple">
+<li><p>As a Databricks account admin, log in to the Databricks <a class="reference external" href="https://accounts.cloud.databricks.com">account console</a>.</p></li>
+<li><p>Click <img alt="User Settings Icon" src="../../../_images/user-settings-icon.png" /> <strong>Settings</strong>.</p></li>
+<li><p>Click <strong>User Provisioning</strong>.</p></li>
+<li><p>Click <strong>Enable user provisioning</strong>.</p></li>
+</ol>
+<p>Copy the SCIM token and the Account SCIM URL. You will use these to configure your Microsoft Entra ID application.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The SCIM token is restricted to the Account SCIM API <code class="docutils literal notranslate"><span class="pre">/api/2.0/accounts/{account_id}/scim/v2/</span></code> and cannot be used to authenticate to other Databricks REST APIs.</p>
+</div>
+</div>
+<div class="section" id="step-2-configure-the-enterprise-application">
+<h3>Step 2: Configure the enterprise application<a class="headerlink" href="#step-2-configure-the-enterprise-application" title="Permalink to this headline"> </a></h3>
+<p>These instructions tell you how to create an enterprise application in the Azure portal and use that application for provisioning. If you have an existing enterprise application, you can modify it to <a class="reference internal" href="#automate-scim-provisioning-using-microsoft-graph"><span class="std std-ref">automate SCIM provisioning using Microsoft Graph</span></a>. This removes the need for a separate provisioning application in the Azure Portal.</p>
+<p>Follow these steps to enable Microsoft Entra ID to sync users and groups to your Databricks account. This configuration is separate from any configurations you have created to sync users and groups to workspaces.</p>
+<ol class="arabic simple">
+<li><p>In your Azure portal, go to <strong>Microsoft Entra ID &gt; Enterprise Applications</strong>.</p></li>
+<li><p>Click <strong>+ New Application</strong> above the application list. Under <strong>Add</strong> from the gallery, search for and select <strong>Azure Databricks SCIM Provisioning Connector</strong>.</p></li>
+<li><p>Enter a <strong>Name</strong> for the application and click <strong>Add</strong>.</p></li>
+<li><p>Under the <strong>Manage</strong> menu, click <strong>Provisioning</strong>.</p></li>
+<li><p>Set <strong>Provisioning Mode</strong> to Automatic.</p></li>
+<li><p>Set the <strong>SCIM API endpoint URL</strong> to the Account SCIM URL that you copied earlier.</p></li>
+<li><p>Set <strong>Secret Token</strong> to the Databricks SCIM token that you generated earlier.</p></li>
+<li><p>Click <strong>Test Connection</strong> and wait for the message that confirms that the credentials are authorized to enable provisioning.</p></li>
+<li><p>Click <strong>Save</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="step-3-assign-users-and-groups-to-the-application">
+<h3>Step 3: Assign users and groups to the application<a class="headerlink" href="#step-3-assign-users-and-groups-to-the-application" title="Permalink to this headline"> </a></h3>
+<p>Users and groups assigned to the SCIM application will be provisioned to the Databricks account. If you have existing Databricks workspaces, Databricks recommends that you add all existing users and groups in those workspaces to the SCIM application.</p>
+<ol class="arabic simple">
+<li><p>Go to <strong>Manage &gt; Properties</strong>.</p></li>
+<li><p>Set <strong>Assignment required</strong> to <strong>No</strong>. Databricks recommends this option, which allows all users to sign in to the Databricks account.</p></li>
+<li><p>Go to <strong>Manage &gt; Provisioning</strong>.</p></li>
+<li><p>To start synchronizing Microsoft Entra ID users and groups to Databricks, set the <strong>Provisioning Status</strong> toggle to <strong>On</strong>.</p></li>
+<li><p>Click <strong>Save</strong>.</p></li>
+<li><p>Go to <strong>Manage &gt; Users and groups</strong>.</p></li>
+<li><p>Click <strong>Add user/group</strong>, select the users and groups, and click the <strong>Assign</strong> button.</p></li>
+<li><p>Wait a few minutes and check that the users and groups exist in your Databricks account.</p></li>
+</ol>
+<p>Users and groups that you add and assign will automatically be provisioned to the Databricks account when Microsoft Entra ID schedules the next sync.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you remove a user from the account-level SCIM application, that user is deactivated from the account and from their workspaces, regardless of whether or not identity federation has been enabled.</p>
+</div>
+</div>
+</div>
+<div class="section" id="provision-identities-to-your-databricks-workspace-using-microsoft-entra-id">
+<span id="provision-identities-to-your-databricks-workspace-using-ms-entra-id"></span><span id="workspace"></span><h2>Provision identities to your Databricks workspace using Microsoft Entra ID<a class="headerlink" href="#provision-identities-to-your-databricks-workspace-using-microsoft-entra-id" title="Permalink to this headline"> </a></h2>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../../../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<p>If you have any workspaces not enabled for <a class="reference internal" href="../index.html#enable-identity-federation"><span class="std std-ref">identity federation</span></a>, you should provision users, service principals, and groups directly to those workspaces. This section describes how to do this.</p>
+<p>In the following examples, replace <code class="docutils literal notranslate"><span class="pre">&lt;databricks-instance&gt;</span></code> with the <a class="reference internal" href="../../../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace URL</span></a> of your Databricks deployment.</p>
+<div class="section" id="requirements">
+<span id="requirements-1"></span><span id="workspace-req"></span><h3>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h3>
+<ul class="simple">
+<li><p>Your Databricks account must have the <a class="reference external" href="https://databricks.com/product/pricing/platform-addons">Premium plan or above</a>.</p></li>
+<li><p>You must have the Cloud Application Administrator role in Microsoft Entra ID.</p></li>
+<li><p>Your Microsoft Entra ID account must be a Premium edition account to provision groups. Provisioning users is available for any Microsoft Entra ID edition.</p></li>
+<li><p>You must be a Databricks workspace admin.</p></li>
+</ul>
+</div>
+<div class="section" id="step-1-create-the-enterprise-application-and-connect-it-to-the-databricks-scim-api">
+<span id="create-enterprise-application"></span><h3>Step 1: Create the enterprise application and connect it to the Databricks SCIM API<a class="headerlink" href="#step-1-create-the-enterprise-application-and-connect-it-to-the-databricks-scim-api" title="Permalink to this headline"> </a></h3>
+<p>To set up provisioning directly to Databricks workspaces using Microsoft Entra ID, you create an enterprise application for each Databricks workspace.</p>
+<p>These instructions tell you how to create an enterprise application in the Azure portal and use that application for provisioning. If you have an existing enterprise application, you can modify it to <a class="reference internal" href="#automate-scim-provisioning-using-microsoft-graph"><span class="std std-ref">automate SCIM provisioning using Microsoft Graph</span></a>. This removes the need for a separate provisioning application in the Azure Portal.</p>
+<ol class="arabic">
+<li><p>As a workspace admin, log in to your Databricks workspace.</p></li>
+<li><p>Generate a <a class="reference external" href="https://docs.databricks.com/api/workspace/tokenmanagement">personal access token</a> and copy it. You provide this token to Microsoft Entra ID in a subsequent step.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Generate this token as a Databricks workspace admin who <em>is not</em> managed by the Microsoft Entra ID enterprise application. If the Databricks admin user who owns the personal access token is deprovisioned using Microsoft Entra ID, the SCIM provisioning application will be disabled.</p>
+</div>
+</li>
+<li><p>In your Azure portal, go to <strong>Microsoft Entra ID &gt; Enterprise Applications</strong>.</p></li>
+<li><p>Click <strong>+ New Application</strong> above the application list. Under <strong>Add from the gallery</strong>, search for and select <strong>Azure Databricks SCIM Provisioning Connector</strong>.</p></li>
+<li><p>Enter a <strong>Name</strong> for the application and click <strong>Add</strong>. Use a name that will help administrators find it, like <code class="docutils literal notranslate"><span class="pre">&lt;workspace-name&gt;-provisioning</span></code>.</p></li>
+<li><p>Under the <strong>Manage</strong> menu, click <strong>Provisioning</strong>.</p></li>
+<li><p>Set <strong>Provisioning Mode</strong> to <strong>Automatic</strong>.</p></li>
+<li><p>Enter the SCIM API endpoint URL. Append <code class="docutils literal notranslate"><span class="pre">/api/2.0/preview/scim</span></code> to your workspace URL:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//&lt;</span><span class="n">databricks</span><span class="o">-</span><span class="n">instance</span><span class="o">&gt;/</span><span class="n">api</span><span class="o">/</span><span class="mf">2.0</span><span class="o">/</span><span class="n">preview</span><span class="o">/</span><span class="n">scim</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;databricks-instance&gt;</span></code> with the <a class="reference internal" href="../../../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace URL</span></a> of your Databricks deployment. See <a class="reference internal" href="../../../workspace/workspace-details.html"><span class="doc">Get identifiers for workspace objects</span></a>.</p>
+</li>
+<li><p>Set <strong>Secret Token</strong> to the Databricks personal access token that you generated in step 1.</p></li>
+<li><p>Click <strong>Test Connection</strong> and wait for the message that confirms that the credentials are authorized to enable provisioning.</p></li>
+<li><p>Optionally, enter a notification email to receive notifications of critical errors with SCIM provisioning.</p></li>
+<li><p>Click <strong>Save</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="step-2-assign-users-and-groups-to-the-application">
+<h3>Step 2: Assign users and groups to the application<a class="headerlink" href="#step-2-assign-users-and-groups-to-the-application" title="Permalink to this headline"> </a></h3>
+<ol class="arabic simple">
+<li><p>Go to <strong>Manage &gt; Properties</strong>.</p></li>
+<li><p>Set <strong>Assignment required</strong> to <strong>Yes</strong>. Databricks recommends this option, which syncs only users and groups assigned to the enterprise application.</p></li>
+<li><p>Go to <strong>Manage &gt; Provisioning</strong>.</p></li>
+<li><p>To start synchronizing Microsoft Entra ID users and groups to Databricks, set the <strong>Provisioning Status</strong> toggle to <strong>On</strong>.</p></li>
+<li><p>Click <strong>Save</strong>.</p></li>
+<li><p>Go to <strong>Manage &gt; Users and groups</strong>.</p></li>
+<li><p>Click <strong>Add user/group</strong>, select the users and groups, and click the <strong>Assign</strong> button.</p></li>
+<li><p>Wait a few minutes and check that the users and groups exist in your Databricks account.</p></li>
+</ol>
+<p>In the future, users and groups that you add and assign are automatically provisioned when Microsoft Entra ID schedules the next sync.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Do not assign the Databricks workspace admin whose personal access token was used to configure the <strong>Azure Databricks SCIM Provisioning Connector</strong> application.</p>
+</div>
+</div>
+<div class="section" id="optional-automate-scim-provisioning-using-microsoft-graph">
+<span id="automate-scim-provisioning-using-microsoft-graph"></span><h3>(Optional) Automate SCIM provisioning using Microsoft Graph<a class="headerlink" href="#optional-automate-scim-provisioning-using-microsoft-graph" title="Permalink to this headline"> </a></h3>
+<p><a class="reference external" href="https://learn.microsoft.com/graph/auth/auth-concepts">Microsoft Graph</a> includes authentication and authorization libraries that you can integrate into your application to automate provisioning of users and groups to your Databricks account or workspaces, instead of configuring a SCIM provisioning connector application.</p>
+<ol class="arabic simple">
+<li><p>Follow the <a class="reference external" href="https://learn.microsoft.com/graph/auth-register-app-v2">instructions for registering an application with Microsoft Graph</a>. Make a note of the <strong>Application ID</strong> and the <strong>Tenant ID</strong> for the application</p></li>
+<li><p>Go to the applications’s Overview page. On that page:</p>
+<ol class="loweralpha simple">
+<li><p>Configure a client secret for the application, and make a note of the secret.</p></li>
+<li><p>Grant the application these permissions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Application.ReadWrite.All</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Application.ReadWrite.OwnedBy</span></code></p></li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>Ask a Microsoft Entra ID administrator to <a class="reference external" href="https://learn.microsoft.com/azure/active-directory/manage-apps/grant-admin-consent">grant admin consent</a>.</p></li>
+<li><p>Update your application’s code to <a class="reference external" href="https://learn.microsoft.com/graph/migrate-azure-ad-graph-planning-checklist">add support for Microsoft Graph</a>.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="provisioning-tips">
+<h2>Provisioning tips<a class="headerlink" href="#provisioning-tips" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>Users and groups that existed in the Databricks workspace prior to enabling provisioning exhibit the following behavior upon provisioning sync:</p>
+<ul>
+<li><p>Are merged if they also exist in Microsoft Entra ID</p></li>
+<li><p>Are ignored if they don’t exist in Microsoft Entra ID</p></li>
+</ul>
+</li>
+<li><p>User permissions that are assigned individually and are duplicated through membership in a group remain after the group membership is removed for the user.</p></li>
+<li><p>Users removed from a Databricks workspace directly, using the Databricks workspace admin settings page:</p>
+<ul>
+<li><p>Lose access to that Databricks workspace but may still have access to other Databricks workspaces.</p></li>
+<li><p>Will not be synced again using Microsoft Entra ID provisioning, even if they remain in the enterprise application.</p></li>
+</ul>
+</li>
+<li><p>The initial Microsoft Entra ID sync is triggered immediately after you enable provisioning. Subsequent syncs are triggered every 20-40 minutes, depending on the number of users and groups in the application. See <a class="reference external" href="https://learn.microsoft.com/azure/active-directory/manage-apps/check-status-user-account-provisioning#provisioning-summary-report">Provisioning summary report</a> in the Microsoft Entra ID documentation.</p></li>
+<li><p>You cannot update the username or email address of a Databricks workspace user.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">admins</span></code> group is a reserved group in Databricks and cannot be removed.</p></li>
+<li><p>You can use the Databricks <a class="reference external" href="https://docs.databricks.com/api/workspace/groups">Groups API</a> or the <a class="reference internal" href="../groups.html"><span class="doc">Groups UI</span></a> to get a list of members of any Databricks workspace group.</p></li>
+<li><p>You cannot sync nested groups or Microsoft Entra ID service principals from the <strong>Azure Databricks SCIM Provisioning Connector</strong> application. Databricks recommends that you use the enterprise application to sync users and groups and manage nested groups and service principals within Databricks. However, you can also use the <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs">Databricks Terraform provider</a> or custom scripts that target the Databricks SCIM API in order to sync nested groups or Microsoft Entra ID service principals.</p></li>
+</ul>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline"> </a></h2>
+<div class="section" id="users-and-groups-do-not-sync">
+<h3>Users and groups do not sync<a class="headerlink" href="#users-and-groups-do-not-sync" title="Permalink to this headline"> </a></h3>
+<ul class="simple">
+<li><p>If you are using the <strong>Azure Databricks SCIM Provisioning Connector</strong> application:</p>
+<ul>
+<li><p>For workspace-level provisioning: In the Databricks admin settings page, verify that the Databricks user whose personal access token is being used by the <strong>Azure Databricks SCIM Provisioning Connector</strong> application is still a workspace admin user in Databricks and that the token is still valid.</p></li>
+<li><p>For account-level provisioning: In the account console verify that the Databricks SCIM token that was used to set up provisioning is still valid.</p></li>
+</ul>
+</li>
+<li><p>Do not attempt to sync nested groups, which are not supported by Microsoft Entra ID automatic provisioning. For more information, see <a class="reference external" href="https://learn.microsoft.com/azure/active-directory/manage-apps/user-provisioning#does-automatic-user-provisioning-to-saas-apps-work-with-nested-groups-in-azure-ad">this FAQ</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="microsoft-entra-id-service-principals-do-not-sync">
+<span id="ms-entra-id-service-principals-do-not-sync"></span><h3>Microsoft Entra ID service principals do not sync<a class="headerlink" href="#microsoft-entra-id-service-principals-do-not-sync" title="Permalink to this headline"> </a></h3>
+<ul class="simple">
+<li><p>The <strong>Azure Databricks SCIM Provisioning Connector</strong> application does not support syncing service principals.</p></li>
+</ul>
+</div>
+<div class="section" id="after-initial-sync-the-users-and-groups-stop-syncing">
+<h3>After initial sync, the users and groups stop syncing<a class="headerlink" href="#after-initial-sync-the-users-and-groups-stop-syncing" title="Permalink to this headline"> </a></h3>
+<p>If you are using the <strong>Azure Databricks SCIM Provisioning Connector</strong> application: After the initial sync, Microsoft Entra ID does not sync immediately after you change user or group assignments. It schedules a sync with the application after a delay, based  on the number of users and groups. To request an immediate sync, go to <strong>Manage &gt; Provisioning</strong> for the enterprise application and select <strong>Clear current state and restart synchronization</strong>.</p>
+</div>
+<div class="section" id="microsoft-entra-id-provisioning-service-ip-range-not-accessible">
+<span id="ms-entra-id-provisioning-service-ip-range-not-accessible"></span><h3>Microsoft Entra ID provisioning service IP range not accessible<a class="headerlink" href="#microsoft-entra-id-provisioning-service-ip-range-not-accessible" title="Permalink to this headline"> </a></h3>
+<p>The Microsoft Entra ID provisioning service operates under specific IP ranges. If you need to restrict network access, you must allow traffic from the IP addresses for <code class="docutils literal notranslate"><span class="pre">AzureActiveDirectory</span></code> in this <a class="reference external" href="https://www.microsoft.com/download/details.aspx?id=56519&amp;WT.mc_id=rss_alldownloads_all">IP range file</a>. For more information, see <a class="reference external" href="https://learn.microsoft.com/azure/active-directory/app-provisioning/use-scim-to-provision-users-and-groups#ip-ranges">IP Ranges</a>.</p>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

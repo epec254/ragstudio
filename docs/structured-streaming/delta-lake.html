@@ -1,0 +1,826 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use Delta Lake tables as streaming sources and sinks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Delta table streaming reads and writes">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Delta table streaming reads and writes &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/structured-streaming/delta-lake.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/structured-streaming/delta-lake.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/structured-streaming/delta-lake.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/structured-streaming/delta-lake.html" class="notranslate">English</option>
+    <option value="../../ja/structured-streaming/delta-lake.html" class="notranslate">日本語</option>
+    <option value="../../pt/structured-streaming/delta-lake.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Delta table streaming reads and writes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="delta-table-streaming-reads-and-writes">
+<h1>Delta table streaming reads and writes<a class="headerlink" href="#delta-table-streaming-reads-and-writes" title="Permalink to this headline"> </a></h1>
+<p>Delta Lake is deeply integrated with <a class="reference external" href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html">Spark Structured Streaming</a> through <code class="docutils literal notranslate"><span class="pre">readStream</span></code> and <code class="docutils literal notranslate"><span class="pre">writeStream</span></code>. Delta Lake overcomes many of the limitations typically associated with streaming systems and files, including:</p>
+<ul class="simple">
+<li><p>Coalescing small files produced by low latency ingest.</p></li>
+<li><p>Maintaining “exactly-once” processing with more than one stream (or concurrent batch jobs).</p></li>
+<li><p>Efficiently discovering which files are new when using files as the source for a stream.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This article describes using Delta Lake tables as streaming sources and sinks. To learn how to load data using streaming tables in Databricks SQL, see <a class="reference internal" href="../sql/load-data-streaming-table.html"><span class="doc">Load data using streaming tables in Databricks SQL</span></a>.</p>
+</div>
+<div class="section" id="delta-table-as-a-source">
+<span id="stream-source"></span><h2>Delta table as a source<a class="headerlink" href="#delta-table-as-a-source" title="Permalink to this headline"> </a></h2>
+<p>Structured Streaming incrementally reads Delta tables. While a streaming query is active against a Delta table, new records are processed idempotently as new table versions commit to the source table.</p>
+<p>The follow code examples show configuring a streaming read using either the table name or file path.</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">readStream</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;table_name&quot;</span><span class="p">)</span>
+
+<span class="n">spark</span><span class="o">.</span><span class="n">readStream</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;/path/to/table&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="p">.</span><span class="n">readStream</span><span class="p">.</span><span class="n">table</span><span class="p">(</span><span class="s">&quot;table_name&quot;</span><span class="p">)</span>
+
+<span class="n">spark</span><span class="p">.</span><span class="n">readStream</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;/path/to/table&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If the schema for a Delta table changes after a streaming read begins against the table, the query fails. For most schema changes, you can restart the stream to resolve schema mismatch and continue processing.</p>
+<p>In Databricks Runtime 13.0 and below, you cannot stream from a Delta table with column mapping enabled that has undergone non-additive schema evolution such as renaming or dropping columns. For details, see <a class="reference internal" href="../delta/delta-column-mapping.html#schema-tracking"><span class="std std-ref">Streaming with column mapping and schema changes</span></a>.</p>
+</div>
+</div>
+<div class="section" id="limit-input-rate">
+<h2>Limit input rate<a class="headerlink" href="#limit-input-rate" title="Permalink to this headline"> </a></h2>
+<p>The following options are available to control micro-batches:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">maxFilesPerTrigger</span></code>: How many new files to be considered in every micro-batch. The default is 1000.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maxBytesPerTrigger</span></code>: How much data gets processed in each micro-batch. This option sets a “soft max”, meaning that a batch processes approximately this amount of data and may process more than the limit in order to make the streaming query move forward in cases when the smallest input unit is larger than this limit. This is not set by default.</p></li>
+</ul>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">maxBytesPerTrigger</span></code> in conjunction with <code class="docutils literal notranslate"><span class="pre">maxFilesPerTrigger</span></code>, the micro-batch processes data until either the <code class="docutils literal notranslate"><span class="pre">maxFilesPerTrigger</span></code> or <code class="docutils literal notranslate"><span class="pre">maxBytesPerTrigger</span></code> limit is reached.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In cases when the source table transactions are cleaned up due to the <code class="docutils literal notranslate"><span class="pre">logRetentionDuration</span></code> <a class="reference internal" href="../delta/history.html#data-retention"><span class="std std-ref">configuration</span></a> and the streaming query tries to process those versions, by default the query fails to avoid data loss. You can set the option <code class="docutils literal notranslate"><span class="pre">failOnDataLoss</span></code> to <code class="docutils literal notranslate"><span class="pre">false</span></code> to ignore lost data and continue processing.</p>
+</div>
+</div>
+<div class="section" id="stream-a-delta-lake-change-data-capture-cdc-feed">
+<span id="stream-a-delta-change-data-capture-cdc-feed"></span><h2>Stream a Delta Lake change data capture (CDC) feed<a class="headerlink" href="#stream-a-delta-lake-change-data-capture-cdc-feed" title="Permalink to this headline"> </a></h2>
+<p>Delta Lake <a class="reference internal" href="../delta/delta-change-data-feed.html"><span class="doc">change data feed</span></a> records changes to a Delta table, including updates and deletes. When enabled, you can stream from a change data feed and write logic to process inserts, updates, and deletes into downstream tables. Although change data feed data output differs slightly from the Delta table it describes, this provides a solution for propagating incremental changes to downstream tables in a <a class="reference internal" href="../lakehouse/medallion.html"><span class="doc">medallion architecture</span></a>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>In Databricks Runtime 13.0 and below, you cannot stream from the change data feed for a Delta table with column mapping enabled that has undergone non-additive schema evolution such as renaming or dropping columns. See <a class="reference internal" href="../delta/delta-column-mapping.html#schema-tracking"><span class="std std-ref">Streaming with column mapping and schema changes</span></a>.</p>
+</div>
+</div>
+<div class="section" id="ignore-updates-and-deletes">
+<span id="ignore-changes"></span><h2>Ignore updates and deletes<a class="headerlink" href="#ignore-updates-and-deletes" title="Permalink to this headline"> </a></h2>
+<p>Structured Streaming does not handle input that is not an append and throws an exception if any modifications occur on the table being used as a source. There are two main strategies for dealing with changes that cannot be automatically propagated downstream:</p>
+<ul class="simple">
+<li><p>You can delete the output and checkpoint and restart the stream from the beginning.</p></li>
+<li><p>You can set either of these two options:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">ignoreDeletes</span></code>: ignore transactions that delete data at partition boundaries.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">skipChangeCommits</span></code>: ignore transactions that delete or modify existing records. <code class="docutils literal notranslate"><span class="pre">skipChangeCommits</span></code> subsumes <code class="docutils literal notranslate"><span class="pre">ignoreDeletes</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In Databricks Runtime 12.1 and above, <code class="docutils literal notranslate"><span class="pre">skipChangeCommits</span></code> deprecates the previous setting <code class="docutils literal notranslate"><span class="pre">ignoreChanges</span></code>. In Databricks Runtime 12.0 and lower, <code class="docutils literal notranslate"><span class="pre">ignoreChanges</span></code> is the only supported option.</p>
+<p>The semantics for <code class="docutils literal notranslate"><span class="pre">ignoreChanges</span></code> differ greatly from <code class="docutils literal notranslate"><span class="pre">skipChangeCommits</span></code>. With <code class="docutils literal notranslate"><span class="pre">ignoreChanges</span></code> enabled, rewritten data files in the source table are re-emitted after a data changing operation such as <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, <code class="docutils literal notranslate"><span class="pre">MERGE</span> <span class="pre">INTO</span></code>, <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> (within partitions), or <code class="docutils literal notranslate"><span class="pre">OVERWRITE</span></code>. Unchanged rows are often emitted alongside new rows, so downstream consumers must be able to handle duplicates. Deletes are not propagated downstream. <code class="docutils literal notranslate"><span class="pre">ignoreChanges</span></code> subsumes <code class="docutils literal notranslate"><span class="pre">ignoreDeletes</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">skipChangeCommits</span></code> disregards file changing operations entirely. Data files that are rewritten in the source table due to data changing operation such as <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, <code class="docutils literal notranslate"><span class="pre">MERGE</span> <span class="pre">INTO</span></code>, <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>, and <code class="docutils literal notranslate"><span class="pre">OVERWRITE</span></code> are ignored entirely. In order to reflect changes in upstream source tables, you must implement separate logic to propagate these changes.</p>
+<p>Workloads configured with <code class="docutils literal notranslate"><span class="pre">ignoreChanges</span></code> continue to operate using known semantics, but Databricks recommends using <code class="docutils literal notranslate"><span class="pre">skipChangeCommits</span></code> for all new workloads. Migrating workloads using <code class="docutils literal notranslate"><span class="pre">ignoreChanges</span></code> to <code class="docutils literal notranslate"><span class="pre">skipChangeCommits</span></code> requires refactoring logic.</p>
+</div>
+<div class="section" id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline"> </a></h3>
+<p>For example, suppose you have a table <code class="docutils literal notranslate"><span class="pre">user_events</span></code> with <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">user_email</span></code>, and <code class="docutils literal notranslate"><span class="pre">action</span></code> columns that is partitioned by <code class="docutils literal notranslate"><span class="pre">date</span></code>. You stream out of the <code class="docutils literal notranslate"><span class="pre">user_events</span></code> table and you need to delete data from it due to GDPR.</p>
+<p>When you delete at partition boundaries (that is, the <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> is on a partition column), the files are already segmented by value so the delete just drops those files from the metadata. When you delete an entire partition of data, you can use the following:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="p">.</span><span class="n">readStream</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;delta&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;ignoreDeletes&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;/tmp/delta/user_events&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you delete data in multiple partitions (in this example, filtering on <code class="docutils literal notranslate"><span class="pre">user_email</span></code>), use the following syntax:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="p">.</span><span class="n">readStream</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;delta&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;skipChangeCommits&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;/tmp/delta/user_events&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you update a <code class="docutils literal notranslate"><span class="pre">user_email</span></code> with the <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code> statement, the file containing the <code class="docutils literal notranslate"><span class="pre">user_email</span></code> in question is rewritten. Use <code class="docutils literal notranslate"><span class="pre">skipChangeCommits</span></code> to ignore the changed data files.</p>
+</div>
+</div>
+<div class="section" id="specify-initial-position">
+<h2>Specify initial position<a class="headerlink" href="#specify-initial-position" title="Permalink to this headline"> </a></h2>
+<p>You can use the following options to specify the starting point of the Delta Lake streaming source without processing the entire table.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">startingVersion</span></code>: The Delta Lake version to start from. Databricks recommends omitting this option for most workloads. When not set, the stream starts from the latest available version including a complete snapshot of the table at that moment.</p>
+<p> If specified, the stream reads all changes to the Delta table starting with the specified version (inclusive). If the specified version is no longer available, the stream fails to start. You can obtain the commit versions from the <code class="docutils literal notranslate"><span class="pre">version</span></code> column of the <a class="reference internal" href="../delta/history.html"><span class="doc">DESCRIBE HISTORY</span></a> command output.</p>
+<p>In Databricks Runtime 7.4 and above, to return only the latest changes, specify <code class="docutils literal notranslate"><span class="pre">latest</span></code>.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">startingTimestamp</span></code>: The timestamp to start from. All table changes committed at or after the timestamp (inclusive) are read by the streaming reader. If the provided timestamp precedes all table commits, the streaming read begins with the earliest available timestamp. One of:</p>
+<ul class="simple">
+<li><p>A timestamp string. For example, <code class="docutils literal notranslate"><span class="pre">&quot;2019-01-01T00:00:00.000Z&quot;</span></code>.</p></li>
+<li><p>A date string. For example, <code class="docutils literal notranslate"><span class="pre">&quot;2019-01-01&quot;</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<p>You cannot set both options at the same time. They take effect only when starting a new streaming query. If a streaming query has started and the progress has been recorded in its checkpoint, these options are ignored.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Although you can start the streaming source from a specified version or timestamp, the schema of the streaming source is always the latest schema of the Delta table. You must ensure there is no incompatible schema change to the Delta table after the specified version or timestamp. Otherwise, the streaming source may return incorrect results when reading the data with an incorrect schema.</p>
+</div>
+<div class="section" id="example">
+<span id="example-1"></span><h3>Example<a class="headerlink" href="#example" title="Permalink to this headline"> </a></h3>
+<p>For example, suppose you have a table <code class="docutils literal notranslate"><span class="pre">user_events</span></code>. If you want to read changes since version 5, use:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="p">.</span><span class="n">readStream</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;delta&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;startingVersion&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;5&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;/tmp/delta/user_events&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you want to read changes since 2018-10-18, use:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="p">.</span><span class="n">readStream</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;delta&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;startingTimestamp&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;2018-10-18&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;/tmp/delta/user_events&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="process-initial-snapshot-without-data-being-dropped">
+<h2>Process initial snapshot without data being dropped<a class="headerlink" href="#process-initial-snapshot-without-data-being-dropped" title="Permalink to this headline"> </a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This feature is available on Databricks Runtime 11.1 and above. This feature is in <a class="reference internal" href="../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<p>When using a Delta table as a stream source, the query first processes all of the data present in the table. The Delta table at this version is called the initial snapshot. By default, the Delta table’s data files are processed based on which file was last modified. However, the last modification time does not necessarily represent the record event time order.</p>
+<p>In a stateful streaming query with a defined watermark, processing files by modification time can result in records being processed in the wrong order. This could lead to records dropping as late events by the watermark.</p>
+<p>You can avoid the data drop issue by enabling the following option:</p>
+<ul class="simple">
+<li><p>withEventTimeOrder: Whether the initial snapshot should be processed with event time order.</p></li>
+</ul>
+<p>With event time order enabled, the event time range of initial snapshot data is divided into time buckets. Each micro batch processes a bucket by filtering data within the time range. The maxFilesPerTrigger and maxBytesPerTrigger configuration options are still applicable to control the microbatch size but only in an approximate way due to the nature of the processing.</p>
+<p>The graphic below shows this process:</p>
+<div class="figure align-default">
+<img alt="Initial Snapshot" src="../_images/delta-initial-snapshot-data-drop.png" />
+</div>
+<p>Notable information about this feature:</p>
+<ul class="simple">
+<li><p>The data drop issue only happens when the initial Delta snapshot of a stateful streaming query is processed in the default order.</p></li>
+<li><p>You cannot change <code class="docutils literal notranslate"><span class="pre">withEventTimeOrder</span></code> once the stream query is started while the initial snapshot is still being processed. To restart with <code class="docutils literal notranslate"><span class="pre">withEventTimeOrder</span></code> changed, you need to delete the checkpoint.</p></li>
+<li><p>If you are running a stream query with withEventTimeOrder enabled, you cannot downgrade it to a DBR version which doesn’t support this feature until the initial snapshot processing is completed. If you need to downgrade, you can wait for the initial snapshot to finish, or delete the checkpoint and restart the query.</p></li>
+<li><p>This feature is not supported in the following uncommon scenarios:</p>
+<ul>
+<li><p>The event time column is a generated column and there are non-projection transformations between the Delta source and watermark.</p></li>
+<li><p>There is a watermark that has more than one Delta source in the stream query.</p></li>
+</ul>
+</li>
+<li><p>With event time order enabled, the performance of the Delta initial snapshot processing might be slower.</p></li>
+<li><p>Each micro batch scans the initial snapshot to filter data within the corresponding event time range. For faster filter action, it is advised to use a Delta source column as the event time so that data skipping can be applied (check <a class="reference internal" href="../delta/data-skipping.html"><span class="doc">Data skipping with Z-order indexes for Delta Lake</span></a> for when it’s applicable). Additionally, table partitioning along the event time column can further speed the processing. You can check Spark UI to see how many delta files are scanned for a specific micro batch.</p></li>
+</ul>
+<div class="section" id="example">
+<span id="example-2"></span><h3>Example<a class="headerlink" href="#example" title="Permalink to this headline"> </a></h3>
+<p>Suppose you have a table <code class="docutils literal notranslate"><span class="pre">user_events</span></code> with an <code class="docutils literal notranslate"><span class="pre">event_time</span></code> column. Your streaming query is an aggregation query. If you want to ensure no data drop during the initial snapshot processing, you can use:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="p">.</span><span class="n">readStream</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;delta&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;withEventTimeOrder&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;/tmp/delta/user_events&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">withWatermark</span><span class="p">(</span><span class="s">&quot;event_time&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;10 seconds&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can also enable this with Spark config on the cluster which will apply to all streaming queries: <code class="docutils literal notranslate"><span class="pre">spark.databricks.delta.withEventTimeOrder.enabled</span> <span class="pre">true</span></code></p>
+</div>
+</div>
+</div>
+<div class="section" id="delta-table-as-a-sink">
+<span id="stream-sink"></span><h2>Delta table as a sink<a class="headerlink" href="#delta-table-as-a-sink" title="Permalink to this headline"> </a></h2>
+<p>You can also write data into a Delta table using Structured Streaming. The transaction log enables Delta Lake to guarantee exactly-once processing, even when there are other streams or batch queries running concurrently against the table.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Delta Lake <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> function removes all files not managed by Delta Lake but skips any directories that begin with <code class="docutils literal notranslate"><span class="pre">_</span></code>. You can safely store checkpoints alongside other data and metadata for a Delta table using a directory structure such as <code class="docutils literal notranslate"><span class="pre">&lt;table-name&gt;/_checkpoints</span></code>.</p>
+</div>
+<div class="section" id="metrics">
+<h3>Metrics<a class="headerlink" href="#metrics" title="Permalink to this headline"> </a></h3>
+<p>You can find out the number of bytes and number of files yet to be processed in a <a class="reference external" href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#reading-metrics-interactively">streaming query process</a> as the <code class="docutils literal notranslate"><span class="pre">numBytesOutstanding</span></code> and <code class="docutils literal notranslate"><span class="pre">numFilesOutstanding</span></code> metrics. Additional metrics include:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">numNewListedFiles</span></code>: Number of Delta Lake files that were listed in order to calculate the backlog for this batch.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">backlogEndOffset</span></code>: The table version used to calculate the backlog.</p></li>
+</ul>
+</li>
+</ul>
+<p>If you are running the stream in a notebook, you can see these metrics under the <strong>Raw Data</strong> tab in the streaming query progress dashboard:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;sources&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;description&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DeltaSource[file:/path/to/source]&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;metrics&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;numBytesOutstanding&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3456&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;numFilesOutstanding&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;8&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="append-mode">
+<span id="streaming-append"></span><h3>Append mode<a class="headerlink" href="#append-mode" title="Permalink to this headline"> </a></h3>
+<p>By default, streams run in append mode, which adds new records to the table.</p>
+<p>You can use the path method:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">events</span><span class="o">.</span><span class="n">writeStream</span>
+   <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span>
+   <span class="o">.</span><span class="n">outputMode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span>
+   <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;checkpointLocation&quot;</span><span class="p">,</span> <span class="s2">&quot;/tmp/delta/_checkpoints/&quot;</span><span class="p">)</span>
+   <span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s2">&quot;/delta/events&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">events</span><span class="p">.</span><span class="n">writeStream</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;delta&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">outputMode</span><span class="p">(</span><span class="s">&quot;append&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;checkpointLocation&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/tmp/delta/events/_checkpoints/&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">start</span><span class="p">(</span><span class="s">&quot;/tmp/delta/events&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>or the <code class="docutils literal notranslate"><span class="pre">toTable</span></code> method, as follows:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">events</span><span class="o">.</span><span class="n">writeStream</span>
+   <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span>
+   <span class="o">.</span><span class="n">outputMode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span>
+   <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;checkpointLocation&quot;</span><span class="p">,</span> <span class="s2">&quot;/tmp/delta/events/_checkpoints/&quot;</span><span class="p">)</span>
+   <span class="o">.</span><span class="n">toTable</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">events</span><span class="p">.</span><span class="n">writeStream</span>
+<span class="w">  </span><span class="p">.</span><span class="n">outputMode</span><span class="p">(</span><span class="s">&quot;append&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;checkpointLocation&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/tmp/delta/events/_checkpoints/&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">toTable</span><span class="p">(</span><span class="s">&quot;events&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="complete-mode">
+<h3>Complete mode<a class="headerlink" href="#complete-mode" title="Permalink to this headline"> </a></h3>
+<p>You can also use Structured Streaming to replace the entire table with every batch. One example use case is to compute a summary using aggregation:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">readStream</span>
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;/tmp/delta/events&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;customerId&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">count</span><span class="p">()</span>
+  <span class="o">.</span><span class="n">writeStream</span>
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">outputMode</span><span class="p">(</span><span class="s2">&quot;complete&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;checkpointLocation&quot;</span><span class="p">,</span> <span class="s2">&quot;/tmp/delta/eventsByCustomer/_checkpoints/&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s2">&quot;/tmp/delta/eventsByCustomer&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="p">.</span><span class="n">readStream</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;delta&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;/tmp/delta/events&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s">&quot;customerId&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">count</span><span class="p">()</span>
+<span class="w">  </span><span class="p">.</span><span class="n">writeStream</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;delta&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">outputMode</span><span class="p">(</span><span class="s">&quot;complete&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;checkpointLocation&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/tmp/delta/eventsByCustomer/_checkpoints/&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">start</span><span class="p">(</span><span class="s">&quot;/tmp/delta/eventsByCustomer&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The preceding example continuously updates a table that contains the aggregate number of events by customer.</p>
+<p>For applications with more lenient latency requirements, you can save computing resources with one-time triggers. Use these to update summary aggregation tables on a given schedule, processing only new data that has arrived since the last update.</p>
+</div>
+</div>
+<div class="section" id="performing-stream-static-joins">
+<span id="delta-stream-static"></span><h2>Performing stream-static joins<a class="headerlink" href="#performing-stream-static-joins" title="Permalink to this headline"> </a></h2>
+<p>You can rely on the transactional guarantees and versioning protocol of Delta Lake to perform <em>stream-static</em> joins. A stream-static join joins the latest valid version of a Delta table (the static data) to a data stream using a stateless join.</p>
+<p>When Databricks processes a micro-batch of data in a stream-static join, the latest valid version of data from the static Delta table joins with the records present in the current micro-batch. Because the join is stateless, you do not need to configure watermarking and can process results with low latency. The data in the static Delta table used in the join should be slowly-changing.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">streamingDF</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">readStream</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;orders&quot;</span><span class="p">)</span>
+<span class="n">staticDF</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;customers&quot;</span><span class="p">)</span>
+
+<span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="n">streamingDF</span>
+  <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">staticDF</span><span class="p">,</span> <span class="n">streamingDF</span><span class="o">.</span><span class="n">customer_id</span><span class="o">==</span><span class="n">staticDF</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;inner&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">writeStream</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;checkpointLocation&quot;</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;orders_with_customer_info&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="upsert-from-streaming-queries-using-foreachbatch">
+<span id="merge-in-streaming"></span><h2>Upsert from streaming queries using <code class="docutils literal notranslate"><span class="pre">foreachBatch</span></code><a class="headerlink" href="#upsert-from-streaming-queries-using-foreachbatch" title="Permalink to this headline"> </a></h2>
+<p>You can use a combination of <code class="docutils literal notranslate"><span class="pre">merge</span></code> and <code class="docutils literal notranslate"><span class="pre">foreachBatch</span></code> to write complex upserts from a streaming query into a Delta table. See <a class="reference internal" href="foreach.html"><span class="doc">Use foreachBatch to write to arbitrary data sinks</span></a>.</p>
+<p>This pattern has many applications, including the following:</p>
+<ul class="simple">
+<li><p><strong>Write streaming aggregates in Update Mode</strong>: This is much more efficient than Complete Mode.</p></li>
+<li><p><strong>Write a stream of database changes into a Delta table</strong>: The <a class="reference internal" href="../delta/merge.html#merge-in-cdc"><span class="std std-ref">merge query for writing change data</span></a> can be used in <code class="docutils literal notranslate"><span class="pre">foreachBatch</span></code> to continuously apply a stream of changes to a Delta table.</p></li>
+<li><p><strong>Write a stream of data into Delta table with deduplication</strong>: The <a class="reference internal" href="../delta/merge.html#dedupe"><span class="std std-ref">insert-only merge query for deduplication</span></a> can be used in <code class="docutils literal notranslate"><span class="pre">foreachBatch</span></code> to continuously write data (with duplicates) to a Delta table with automatic deduplication.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Make sure that your <code class="docutils literal notranslate"><span class="pre">merge</span></code> statement inside <code class="docutils literal notranslate"><span class="pre">foreachBatch</span></code> is idempotent as restarts of the streaming query can apply the operation on the same batch of data multiple times.</p></li>
+<li><p>When <code class="docutils literal notranslate"><span class="pre">merge</span></code> is used in <code class="docutils literal notranslate"><span class="pre">foreachBatch</span></code>, the input data rate of the streaming query (reported through <code class="docutils literal notranslate"><span class="pre">StreamingQueryProgress</span></code> and visible in the notebook rate graph) may be reported as a multiple of the actual rate at which data is generated at the source. This is because <code class="docutils literal notranslate"><span class="pre">merge</span></code> reads the input data multiple times causing the input metrics to be multiplied. If this is a bottleneck, you can cache the batch DataFrame before <code class="docutils literal notranslate"><span class="pre">merge</span></code> and then uncache it after <code class="docutils literal notranslate"><span class="pre">merge</span></code>.</p></li>
+</ul>
+</div>
+<p>The following example demonstrates how you can use SQL within <code class="docutils literal notranslate"><span class="pre">foreachBatch</span></code> to accomplish this task:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// Function to upsert microBatchOutputDF into Delta table using merge</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">upsertToDelta</span><span class="p">(</span><span class="n">microBatchOutputDF</span><span class="p">:</span><span class="w"> </span><span class="nc">DataFrame</span><span class="p">,</span><span class="w"> </span><span class="n">batchId</span><span class="p">:</span><span class="w"> </span><span class="nc">Long</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Set the dataframe to view name</span>
+<span class="w">  </span><span class="n">microBatchOutputDF</span><span class="p">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s">&quot;updates&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// Use the view name to apply MERGE</span>
+<span class="w">  </span><span class="c1">// NOTE: You have to use the SparkSession that has been used to define the `updates` dataframe</span>
+<span class="w">  </span><span class="n">microBatchOutputDF</span><span class="p">.</span><span class="n">sparkSession</span><span class="p">.</span><span class="n">sql</span><span class="p">(</span><span class="s">s&quot;&quot;&quot;</span>
+<span class="s">    MERGE INTO aggregates t</span>
+<span class="s">    USING updates s</span>
+<span class="s">    ON s.key = t.key</span>
+<span class="s">    WHEN MATCHED THEN UPDATE SET *</span>
+<span class="s">    WHEN NOT MATCHED THEN INSERT *</span>
+<span class="s">  &quot;&quot;&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// Write the output of a streaming aggregation query into Delta table</span>
+<span class="n">streamingAggregatesDF</span><span class="p">.</span><span class="n">writeStream</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;delta&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">foreachBatch</span><span class="p">(</span><span class="n">upsertToDelta</span><span class="w"> </span><span class="n">_</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">outputMode</span><span class="p">(</span><span class="s">&quot;update&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Function to upsert microBatchOutputDF into Delta table using merge</span>
+<span class="k">def</span> <span class="nf">upsertToDelta</span><span class="p">(</span><span class="n">microBatchOutputDF</span><span class="p">,</span> <span class="n">batchId</span><span class="p">):</span>
+  <span class="c1"># Set the dataframe to view name</span>
+  <span class="n">microBatchOutputDF</span><span class="o">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s2">&quot;updates&quot;</span><span class="p">)</span>
+
+  <span class="c1"># Use the view name to apply MERGE</span>
+  <span class="c1"># NOTE: You have to use the SparkSession that has been used to define the `updates` dataframe</span>
+
+  <span class="c1"># In Databricks Runtime 10.5 and below, you must use the following:</span>
+  <span class="c1"># microBatchOutputDF._jdf.sparkSession().sql(&quot;&quot;&quot;</span>
+  <span class="n">microBatchOutputDF</span><span class="o">.</span><span class="n">sparkSession</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    MERGE INTO aggregates t</span>
+<span class="s2">    USING updates s</span>
+<span class="s2">    ON s.key = t.key</span>
+<span class="s2">    WHEN MATCHED THEN UPDATE SET *</span>
+<span class="s2">    WHEN NOT MATCHED THEN INSERT *</span>
+<span class="s2">  &quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="c1"># Write the output of a streaming aggregation query into Delta table</span>
+<span class="p">(</span><span class="n">streamingAggregatesDF</span><span class="o">.</span><span class="n">writeStream</span>
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">foreachBatch</span><span class="p">(</span><span class="n">upsertToDelta</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">outputMode</span><span class="p">(</span><span class="s2">&quot;update&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>You can also choose to use the Delta Lake APIs to perform streaming upserts, as in the following example:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">io</span><span class="p">.</span><span class="nn">delta</span><span class="p">.</span><span class="nn">tables</span><span class="p">.</span><span class="n">*</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">deltaTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">DeltaTable</span><span class="p">.</span><span class="n">forPath</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/data/aggregates&quot;</span><span class="p">)</span>
+
+<span class="c1">// Function to upsert microBatchOutputDF into Delta table using merge</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">upsertToDelta</span><span class="p">(</span><span class="n">microBatchOutputDF</span><span class="p">:</span><span class="w"> </span><span class="nc">DataFrame</span><span class="p">,</span><span class="w"> </span><span class="n">batchId</span><span class="p">:</span><span class="w"> </span><span class="nc">Long</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">deltaTable</span><span class="p">.</span><span class="n">as</span><span class="p">(</span><span class="s">&quot;t&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">merge</span><span class="p">(</span>
+<span class="w">      </span><span class="n">microBatchOutputDF</span><span class="p">.</span><span class="n">as</span><span class="p">(</span><span class="s">&quot;s&quot;</span><span class="p">),</span>
+<span class="w">      </span><span class="s">&quot;s.key = t.key&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">whenMatched</span><span class="p">().</span><span class="n">updateAll</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">whenNotMatched</span><span class="p">().</span><span class="n">insertAll</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">execute</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="c1">// Write the output of a streaming aggregation query into Delta table</span>
+<span class="n">streamingAggregatesDF</span><span class="p">.</span><span class="n">writeStream</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;delta&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">foreachBatch</span><span class="p">(</span><span class="n">upsertToDelta</span><span class="w"> </span><span class="n">_</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">outputMode</span><span class="p">(</span><span class="s">&quot;update&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">delta.tables</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">deltaTable</span> <span class="o">=</span> <span class="n">DeltaTable</span><span class="o">.</span><span class="n">forPath</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="s2">&quot;/data/aggregates&quot;</span><span class="p">)</span>
+
+<span class="c1"># Function to upsert microBatchOutputDF into Delta table using merge</span>
+<span class="k">def</span> <span class="nf">upsertToDelta</span><span class="p">(</span><span class="n">microBatchOutputDF</span><span class="p">,</span> <span class="n">batchId</span><span class="p">):</span>
+  <span class="p">(</span><span class="n">deltaTable</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+      <span class="n">microBatchOutputDF</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">),</span>
+      <span class="s2">&quot;s.key = t.key&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">whenMatchedUpdateAll</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">whenNotMatchedInsertAll</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+  <span class="p">)</span>
+
+<span class="c1"># Write the output of a streaming aggregation query into Delta table</span>
+<span class="p">(</span><span class="n">streamingAggregatesDF</span><span class="o">.</span><span class="n">writeStream</span>
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">foreachBatch</span><span class="p">(</span><span class="n">upsertToDelta</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">outputMode</span><span class="p">(</span><span class="s2">&quot;update&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="idempotent-table-writes-in-foreachbatch">
+<span id="idempot-write"></span><h2>Idempotent table writes in <code class="docutils literal notranslate"><span class="pre">foreachBatch</span></code><a class="headerlink" href="#idempotent-table-writes-in-foreachbatch" title="Permalink to this headline"> </a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Databricks recommends configuring a separate streaming write for each sink you wish to update. Using <code class="docutils literal notranslate"><span class="pre">foreachBatch</span></code> to write to multiple tables serializes writes, which reduces parallelizaiton and increases overall latency.</p>
+</div>
+<p>Delta tables support the following <code class="docutils literal notranslate"><span class="pre">DataFrameWriter</span></code> options to make writes to multiple tables within <code class="docutils literal notranslate"><span class="pre">foreachBatch</span></code> idempotent:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">txnAppId</span></code>: A unique string that you can pass on each DataFrame write. For example, you can use the StreamingQuery ID as <code class="docutils literal notranslate"><span class="pre">txnAppId</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">txnVersion</span></code>: A monotonically increasing number that acts as transaction version.</p></li>
+</ul>
+<p>Delta Lake uses the combination of <code class="docutils literal notranslate"><span class="pre">txnAppId</span></code> and <code class="docutils literal notranslate"><span class="pre">txnVersion</span></code> to identify duplicate writes and ignore them.</p>
+<p>If a batch write is interrupted with a failure, re-running the batch uses the same application and batch ID to help the runtime correctly identify duplicate writes and ignore them. Application ID (<code class="docutils literal notranslate"><span class="pre">txnAppId</span></code>) can be any user-generated unique string and does not have to be related to the stream ID. See <a class="reference internal" href="foreach.html"><span class="doc">Use foreachBatch to write to arbitrary data sinks</span></a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you delete the streaming checkpoint and restart the query with a new checkpoint, you must provide a different <code class="docutils literal notranslate"><span class="pre">txnAppId</span></code>. New checkpoints start with a batch ID of <code class="docutils literal notranslate"><span class="pre">0</span></code>. Delta Lake uses the batch ID and <code class="docutils literal notranslate"><span class="pre">txnAppId</span></code> as a unique key, and skips batches with already seen values.</p>
+</div>
+<p>The same <code class="docutils literal notranslate"><span class="pre">DataFrameWriter</span></code> options can be used to achieve the idempotent writes in batch jobs. For details, see <a class="reference internal" href="../delta/idempotent-writes.html"><span class="doc">Enable idempotent writes across jobs</span></a>.</p>
+<p>The following code example demonstrates this pattern:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">app_id</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># A unique string that is used as an application ID.</span>
+
+<span class="k">def</span> <span class="nf">writeToDeltaLakeTableIdempotent</span><span class="p">(</span><span class="n">batch_df</span><span class="p">,</span> <span class="n">batch_id</span><span class="p">):</span>
+  <span class="n">batch_df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;txnVersion&quot;</span><span class="p">,</span> <span class="n">batch_id</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;txnAppId&quot;</span><span class="p">,</span> <span class="n">app_id</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="c1"># location 1</span>
+  <span class="n">batch_df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;txnVersion&quot;</span><span class="p">,</span> <span class="n">batch_id</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;txnAppId&quot;</span><span class="p">,</span> <span class="n">app_id</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="c1"># location 2</span>
+
+<span class="n">streamingDF</span><span class="o">.</span><span class="n">writeStream</span><span class="o">.</span><span class="n">foreachBatch</span><span class="p">(</span><span class="n">writeToDeltaLakeTableIdempotent</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="n">appId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="c1">// A unique string that is used as an application ID.</span>
+<span class="n">streamingDF</span><span class="p">.</span><span class="n">writeStream</span><span class="p">.</span><span class="n">foreachBatch</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="n">batchDF</span><span class="p">:</span><span class="w"> </span><span class="nc">DataFrame</span><span class="p">,</span><span class="w"> </span><span class="n">batchId</span><span class="p">:</span><span class="w"> </span><span class="nc">Long</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">  </span><span class="n">batchDF</span><span class="p">.</span><span class="n">write</span><span class="p">.</span><span class="n">format</span><span class="p">(...).</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;txnVersion&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">batchId</span><span class="p">).</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;txnAppId&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">appId</span><span class="p">).</span><span class="n">save</span><span class="p">(...)</span><span class="w">  </span><span class="c1">// location 1</span>
+<span class="w">  </span><span class="n">batchDF</span><span class="p">.</span><span class="n">write</span><span class="p">.</span><span class="n">format</span><span class="p">(...).</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;txnVersion&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">batchId</span><span class="p">).</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;txnAppId&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">appId</span><span class="p">).</span><span class="n">save</span><span class="p">(...)</span><span class="w">  </span><span class="c1">// location 2</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

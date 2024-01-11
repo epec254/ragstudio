@@ -1,0 +1,711 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use dates and timestamps in Databricks Runtime 7.0 and above." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Dates and timestamps">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Dates and timestamps &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/archive/spark-3.x-migration/dates-timestamps.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/archive/spark-3.x-migration/dates-timestamps.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/archive/spark-3.x-migration/dates-timestamps.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/archive/spark-3.x-migration/dates-timestamps.html" class="notranslate">English</option>
+    <option value="../../../ja/archive/spark-3.x-migration/dates-timestamps.html" class="notranslate">日本語</option>
+    <option value="../../../pt/archive/spark-3.x-migration/dates-timestamps.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Dates and timestamps</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="dates-and-timestamps">
+<h1>Dates and timestamps<a class="headerlink" href="#dates-and-timestamps" title="Permalink to this headline"> </a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This documentation has been retired and might not be updated. The products, services, or technologies mentioned in this content are no longer supported. See <a class="reference internal" href="../../sql/language-manual/sql-ref-datetime-pattern.html"><span class="doc">Datetime patterns</span></a>.</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">Date</span></code> and <code class="docutils literal notranslate"><span class="pre">Timestamp</span></code> datatypes changed significantly in Databricks Runtime 7.0. This article describes:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Date</span></code> type and the associated calendar.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Timestamp</span></code> type and how it relates to time zones. It also explains the details of time zone offset resolution and the subtle behavior changes in the new time API in Java 8, used by Databricks Runtime 7.0.</p></li>
+<li><p>APIs to construct date and timestamp values.</p></li>
+<li><p>Common pitfalls and best practices for collecting date and timestamp objects on the Apache Spark driver.</p></li>
+</ul>
+<div class="section" id="dates-and-calendars">
+<h2>Dates and calendars<a class="headerlink" href="#dates-and-calendars" title="Permalink to this headline"> </a></h2>
+<p>A <code class="docutils literal notranslate"><span class="pre">Date</span></code> is a combination of the year, month, and day fields, like (year=2012, month=12, day=31). However, the values of the year, month, and day fields have constraints to ensure that the date value is a valid date in the real world. For example, the value of month must be from 1 to 12, the value of day must be from 1 to 28,29,30, or 31 (depending on the year and month), and so on. The <code class="docutils literal notranslate"><span class="pre">Date</span></code> type does not consider time zones.</p>
+<div class="section" id="calendars">
+<h3>Calendars<a class="headerlink" href="#calendars" title="Permalink to this headline"> </a></h3>
+<p>Constraints on <code class="docutils literal notranslate"><span class="pre">Date</span></code> fields are defined by one of many possible calendars. Some, like the <a class="reference external" href="https://en.wikipedia.org/wiki/Lunar_calendar">Lunar calendar</a>, are used only in specific regions. Some, like the <a class="reference external" href="https://en.wikipedia.org/wiki/Julian_calendar">Julian calendar</a>, are used only in history. The de facto international standard is the <a class="reference external" href="https://en.wikipedia.org/wiki/Gregorian_calendar">Gregorian calendar</a> which is used almost everywhere in the world for civil purposes. It was introduced in 1582 and was extended to support dates before 1582 as well. This extended calendar is called the <a class="reference external" href="https://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar">Proleptic Gregorian calendar</a>.</p>
+<p>Databricks Runtime 7.0 uses the Proleptic Gregorian calendar, which is already being used by other data systems like pandas, R, and Apache Arrow. Databricks Runtime 6.x and below used a combination of the Julian and Gregorian calendar: for dates before 1582, the Julian calendar was used, for dates after 1582 the Gregorian calendar was used. This is inherited from the legacy <code class="docutils literal notranslate"><span class="pre">java.sql.Date</span></code> API, which was superseded in Java 8 by <code class="docutils literal notranslate"><span class="pre">java.time.LocalDate</span></code>, which uses the Proleptic Gregorian calendar.</p>
+</div>
+</div>
+<div class="section" id="timestamps-and-time-zones">
+<h2>Timestamps and time zones<a class="headerlink" href="#timestamps-and-time-zones" title="Permalink to this headline"> </a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Timestamp</span></code> type extends the <code class="docutils literal notranslate"><span class="pre">Date</span></code> type with new fields: hour, minute, second (which can have a fractional part) and together with a global (session scoped) time zone. It defines a concrete time instant. For example, (year=2012, month=12, day=31, hour=23, minute=59, second=59.123456) with session time zone UTC+01:00. When writing timestamp values out to non-text data sources like Parquet, the values are just instants (like timestamp in UTC) that have no time zone information. If you write and read a timestamp value with a different session time zone, you may see different values of the hour, minute, and second fields, but they are the same concrete time instant.</p>
+<p>The hour, minute, and second fields have standard ranges: 0–23 for hours and 0–59 for minutes and seconds. Spark supports fractional seconds with up to microsecond precision. The valid range for fractions is from 0 to 999,999 microseconds.</p>
+<p>At any concrete instant, depending on time zone, you can observe many different wall clock values:</p>
+<div class="figure align-default">
+<img alt="Wall clocks" src="../../_images/wall-clocks.png" />
+</div>
+<p>Conversely, a wall clock value can represent many different time instants.</p>
+<p>The <em>time zone offset</em> allows you to unambiguously bind a local timestamp to a time instant. Usually, time zone offsets are defined as offsets in hours from Greenwich Mean Time (GMT) or <a class="reference external" href="https://en.wikipedia.org/wiki/UTC±00:00">UTC+0</a> (<a class="reference external" href="https://en.wikipedia.org/wiki/UTC%C2%B100:00">Coordinated Universal Time</a>). This representation of time zone information eliminates ambiguity, but it is inconvenient. Most people prefer to point out a location such as <code class="docutils literal notranslate"><span class="pre">America/Los_Angeles</span></code> or <code class="docutils literal notranslate"><span class="pre">Europe/Paris</span></code>. This additional level of abstraction from zone offsets makes life easier but brings complications. For example, you now have to maintain a special time zone database to map time zone names to offsets. Since Spark runs on the JVM, it delegates the mapping to the Java standard library, which loads data from the <a class="reference external" href="https://www.iana.org/time-zones">Internet Assigned Numbers Authority Time Zone Database</a> (IANA TZDB). Furthermore, the mapping mechanism in Java’s standard library has some nuances that influence Spark’s behavior.</p>
+<p>Since Java 8, the JDK exposed a different API for date-time manipulation and time zone offset resolution and Databricks Runtime 7.0 uses this API. Although the mapping of time zone names to offsets has the same source, IANA TZDB, it is implemented differently in Java 8 and above compared to Java 7.</p>
+<p>For example, take a look at a timestamp before the year 1883 in the <code class="docutils literal notranslate"><span class="pre">America/Los_Angeles</span></code> time zone: <code class="docutils literal notranslate"><span class="pre">1883-11-10</span> <span class="pre">00:00:00</span></code>. This year stands out from others because on November 18, 1883, all North American railroads switched to a new standard time system. Using the Java 7 time API, you can obtain a time zone offset at the local timestamp as <code class="docutils literal notranslate"><span class="pre">-08:00</span></code>:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">java</span><span class="p">.</span><span class="n">time</span><span class="p">.</span><span class="nc">ZoneId</span><span class="p">.</span><span class="n">systemDefault</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">res0</span><span class="p">:</span><span class="n">java</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">ZoneId</span> <span class="o">=</span> <span class="n">America</span><span class="o">/</span><span class="n">Los_Angeles</span>
+</pre></div>
+</div>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">java</span><span class="p">.</span><span class="n">sql</span><span class="p">.</span><span class="nc">Timestamp</span><span class="p">.</span><span class="n">valueOf</span><span class="p">(</span><span class="s">&quot;1883-11-10 00:00:00&quot;</span><span class="p">).</span><span class="n">getTimezoneOffset</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">60.0</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">res1</span><span class="p">:</span> <span class="n">Double</span> <span class="o">=</span> <span class="mf">8.0</span>
+</pre></div>
+</div>
+<p>The equivalent Java 8 API returns a different result:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">java</span><span class="p">.</span><span class="n">time</span><span class="p">.</span><span class="nc">ZoneId</span><span class="p">.</span><span class="n">of</span><span class="p">(</span><span class="s">&quot;America/Los_Angeles&quot;</span><span class="p">).</span><span class="n">getRules</span><span class="p">.</span><span class="n">getOffset</span><span class="p">(</span><span class="n">java</span><span class="p">.</span><span class="n">time</span><span class="p">.</span><span class="nc">LocalDateTime</span><span class="p">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;1883-11-10T00:00:00&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">res2</span><span class="p">:</span> <span class="n">java</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">ZoneOffset</span> <span class="o">=</span> <span class="o">-</span><span class="mi">07</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mi">58</span>
+</pre></div>
+</div>
+<p>Prior to November 18, 1883, time of day in North America was a local matter, and most cities and towns used some form of local solar time, maintained by a well-known clock (on a church steeple, for example, or in a jeweler’s window). That’s why you see such a strange time zone offset.</p>
+<p>The example demonstrates that Java 8 functions are more precise and take into account historical data from IANA TZDB. After switching to the Java 8 time API, Databricks Runtime 7.0 benefited from the improvement automatically and became more precise in how it resolves time zone offsets.</p>
+<p>Databricks Runtime 7.0 also switched to the Proleptic Gregorian calendar for the <code class="docutils literal notranslate"><span class="pre">Timestamp</span></code> type. The <a class="reference external" href="https://blog.ansi.org/2018/10/sql-standard-iso-iec-9075-2016-ansi-x3-135/">ISO SQL:2016</a> standard declares the valid range for timestamps is from <code class="docutils literal notranslate"><span class="pre">0001-01-01</span> <span class="pre">00:00:00</span></code> to <code class="docutils literal notranslate"><span class="pre">9999-12-31</span> <span class="pre">23:59:59.999999</span></code>. Databricks Runtime 7.0 fully conforms to the standard and supports all timestamps in this range. Compared to Databricks Runtime 6.x and below, note the following sub-ranges:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">0001-01-01</span> <span class="pre">00:00:00..1582-10-03</span> <span class="pre">23:59:59.999999</span></code>. Databricks Runtime 6.x and below uses the Julian calendar and doesn’t conform to the standard. Databricks Runtime 7.0 fixes the issue and applies the Proleptic Gregorian calendar in internal operations on timestamps such as getting year, month, day, etc. Due to different calendars, some dates that exist in Databricks Runtime 6.x and below don’t exist in Databricks Runtime 7.0. For example, 1000-02-29 is not a valid date because 1000 isn’t a leap year in the Gregorian calendar. Also, Databricks Runtime 6.x and below resolves time zone name to zone offsets incorrectly for this timestamp range.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1582-10-04</span> <span class="pre">00:00:00..1582-10-14</span> <span class="pre">23:59:59.999999</span></code>. This is a valid range of local timestamps in Databricks Runtime 7.0, in contrast to Databricks Runtime 6.x and below where such timestamps didn’t exist.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1582-10-15</span> <span class="pre">00:00:00..1899-12-31</span> <span class="pre">23:59:59.999999</span></code>. Databricks Runtime 7.0 resolves time zone offsets correctly using historical data from IANA TZDB. Compared to Databricks Runtime 7.0, Databricks Runtime 6.x and below might resolve zone offsets from time zone names incorrectly in some cases, as shown in the preceding example.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1900-01-01</span> <span class="pre">00:00:00..2036-12-31</span> <span class="pre">23:59:59.999999</span></code>. Both Databricks Runtime 7.0 and Databricks Runtime 6.x and below conform to the ANSI SQL standard and use Gregorian calendar in date-time operations such as getting the day of the month.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2037-01-01</span> <span class="pre">00:00:00..9999-12-31</span> <span class="pre">23:59:59.999999</span></code>. Databricks Runtime 6.x and below can resolve time zone offsets and daylight saving time offsets incorrectly. Databricks Runtime 7.0 does not.</p></li>
+</ul>
+<p>One more aspect of mapping time zone names to offsets is overlapping of local timestamps that can happen due to daylight savings time (DST) or switching to another standard time zone offset. For instance, on November 3 2019, 02:00:00, most states in the USA turned clocks backwards 1 hour to 01:00:00. The local timestamp <code class="docutils literal notranslate"><span class="pre">2019-11-03</span> <span class="pre">01:30:00</span> <span class="pre">America/Los_Angeles</span></code> can be mapped either to <code class="docutils literal notranslate"><span class="pre">2019-11-03</span> <span class="pre">01:30:00</span> <span class="pre">UTC-08:00</span></code> or <code class="docutils literal notranslate"><span class="pre">2019-11-03</span> <span class="pre">01:30:00</span> <span class="pre">UTC-07:00</span></code>. If you don’t specify the offset and just set the time zone name (for example, <code class="docutils literal notranslate"><span class="pre">2019-11-03</span> <span class="pre">01:30:00</span> <span class="pre">America/Los_Angeles</span></code>), Databricks Runtime 7.0 takes the earlier offset, typically corresponding to “summer”. The behavior diverges from Databricks Runtime 6.x and below which takes the “winter” offset. In the case of a gap, where clocks jump forward, there is no valid offset. For a typical one-hour daylight saving time change, Spark moves such timestamps to the next valid timestamp corresponding to “summer” time.</p>
+<p>As you can see from the preceding examples, the mapping of time zone names to offsets is ambiguous, and is not one to one. In the cases when it is possible, when constructing timestamps we recommend specifying exact time zone offsets, for example <code class="docutils literal notranslate"><span class="pre">2019-11-03</span> <span class="pre">01:30:00</span> <span class="pre">UTC-07:00</span></code>.</p>
+<div class="section" id="ansi-sql-and-spark-sql-timestamps">
+<h3>ANSI SQL and Spark SQL timestamps<a class="headerlink" href="#ansi-sql-and-spark-sql-timestamps" title="Permalink to this headline"> </a></h3>
+<p>The ANSI SQL standard defines two types of timestamps:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span> <span class="pre">WITHOUT</span> <span class="pre">TIME</span> <span class="pre">ZONE</span></code> or <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span></code>: Local timestamp as (<code class="docutils literal notranslate"><span class="pre">YEAR</span></code>, <code class="docutils literal notranslate"><span class="pre">MONTH</span></code>, <code class="docutils literal notranslate"><span class="pre">DAY</span></code>, <code class="docutils literal notranslate"><span class="pre">HOUR</span></code>, <code class="docutils literal notranslate"><span class="pre">MINUTE</span></code>, <code class="docutils literal notranslate"><span class="pre">SECOND</span></code>). These timestamps are not bound to any time zone, and are wall clock timestamps.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span> <span class="pre">WITH</span> <span class="pre">TIME</span> <span class="pre">ZONE</span></code>: Zoned timestamp as (<code class="docutils literal notranslate"><span class="pre">YEAR</span></code>, <code class="docutils literal notranslate"><span class="pre">MONTH</span></code>, <code class="docutils literal notranslate"><span class="pre">DAY</span></code>, <code class="docutils literal notranslate"><span class="pre">HOUR</span></code>, <code class="docutils literal notranslate"><span class="pre">MINUTE</span></code>, <code class="docutils literal notranslate"><span class="pre">SECOND</span></code>, <code class="docutils literal notranslate"><span class="pre">TIMEZONE_HOUR</span></code>, <code class="docutils literal notranslate"><span class="pre">TIMEZONE_MINUTE</span></code>). These timestamps represent an instant in the UTC time zone + a time zone offset (in hours and minutes) associated with each value.</p></li>
+</ul>
+<p>The time zone offset of a <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span> <span class="pre">WITH</span> <span class="pre">TIME</span> <span class="pre">ZONE</span></code> does not affect the physical point in time that the timestamp represents, as that is fully represented by the UTC time instant given by the other timestamp components. Instead, the time zone offset only affects the default behavior of a timestamp value for display, date/time component extraction (for example, <code class="docutils literal notranslate"><span class="pre">EXTRACT</span></code>), and other operations that require knowing a time zone, such as adding months to a timestamp.</p>
+<p>Spark SQL defines the timestamp type as <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span> <span class="pre">WITH</span> <span class="pre">SESSION</span> <span class="pre">TIME</span> <span class="pre">ZONE</span></code>, which is a combination of the fields (<code class="docutils literal notranslate"><span class="pre">YEAR</span></code>, <code class="docutils literal notranslate"><span class="pre">MONTH</span></code>, <code class="docutils literal notranslate"><span class="pre">DAY</span></code>, <code class="docutils literal notranslate"><span class="pre">HOUR</span></code>, <code class="docutils literal notranslate"><span class="pre">MINUTE</span></code>, <code class="docutils literal notranslate"><span class="pre">SECOND</span></code>, <code class="docutils literal notranslate"><span class="pre">SESSION</span> <span class="pre">TZ</span></code>) where the <code class="docutils literal notranslate"><span class="pre">YEAR</span></code> through <code class="docutils literal notranslate"><span class="pre">SECOND</span></code> field identify a time instant in the UTC time zone, and where SESSION TZ is taken from the SQL config spark.sql.session.timeZone. The session time zone can be set as:</p>
+<ul class="simple">
+<li><p>Zone offset <code class="docutils literal notranslate"><span class="pre">(+|-)HH:mm</span></code>. This form allows you to unambiguously define a physical point in time.</p></li>
+<li><p>Time zone name in the form of region ID <code class="docutils literal notranslate"><span class="pre">area/city</span></code>, such as <code class="docutils literal notranslate"><span class="pre">America/Los_Angeles</span></code>. This form of time zone info suffers from some of the problems described previously like overlapping of local timestamps. However, each UTC time instant is unambiguously associated with one time zone offset for any region ID, and as a result, each timestamp with a region ID based time zone can be unambiguously converted to a timestamp with a zone offset. By default, the session time zone is set to the default time zone of the Java virtual machine.</p></li>
+</ul>
+<p>Spark <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span> <span class="pre">WITH</span> <span class="pre">SESSION</span> <span class="pre">TIME</span> <span class="pre">ZONE</span></code> is different from:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span> <span class="pre">WITHOUT</span> <span class="pre">TIME</span> <span class="pre">ZONE</span></code>, because a value of this type can map to multiple physical time instants, but any value of <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span> <span class="pre">WITH</span> <span class="pre">SESSION</span> <span class="pre">TIME</span> <span class="pre">ZONE</span></code> is a concrete physical time instant. The SQL type can be emulated by using one fixed time zone offset across all sessions, for instance UTC+0. In that case, you could consider timestamps at UTC as local timestamps.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span> <span class="pre">WITH</span> <span class="pre">TIME</span> <span class="pre">ZONE</span></code>, because according to the SQL standard column values of the type can have different time zone offsets. That is not supported by Spark SQL.</p></li>
+</ul>
+<p>You should notice that timestamps that are associated with a global (session scoped) time zone are not something newly invented by Spark SQL. RDBMSs such as Oracle provide a similar type for timestamps: <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span> <span class="pre">WITH</span> <span class="pre">LOCAL</span> <span class="pre">TIME</span> <span class="pre">ZONE</span></code>.</p>
+</div>
+</div>
+<div class="section" id="construct-dates-and-timestamps">
+<h2>Construct dates and timestamps<a class="headerlink" href="#construct-dates-and-timestamps" title="Permalink to this headline"> </a></h2>
+<p>Spark SQL provides a few methods for constructing date and timestamp values:</p>
+<ul class="simple">
+<li><p>Default constructors without parameters: <code class="docutils literal notranslate"><span class="pre">CURRENT_TIMESTAMP()</span></code> and <code class="docutils literal notranslate"><span class="pre">CURRENT_DATE()</span></code>.</p></li>
+<li><p>From other primitive Spark SQL types, such as <code class="docutils literal notranslate"><span class="pre">INT</span></code>, <code class="docutils literal notranslate"><span class="pre">LONG</span></code>, and <code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></li>
+<li><p>From external types like Python datetime or Java classes <code class="docutils literal notranslate"><span class="pre">java.time.LocalDate</span></code>/<code class="docutils literal notranslate"><span class="pre">Instant</span></code>.</p></li>
+<li><p>Deserialization from data sources such as CSV, JSON, Avro, Parquet, ORC, and so on.</p></li>
+</ul>
+<p>The function <code class="docutils literal notranslate"><span class="pre">MAKE_DATE</span></code> introduced in Databricks Runtime 7.0 takes three parameters—<code class="docutils literal notranslate"><span class="pre">YEAR</span></code>, <code class="docutils literal notranslate"><span class="pre">MONTH</span></code>, and <code class="docutils literal notranslate"><span class="pre">DAY</span></code>—and constructs a <code class="docutils literal notranslate"><span class="pre">DATE</span></code> value. All input parameters are implicitly converted to the <code class="docutils literal notranslate"><span class="pre">INT</span></code> type whenever possible. The function checks that the resulting dates are valid dates in the Proleptic Gregorian calendar, otherwise it returns <code class="docutils literal notranslate"><span class="pre">NULL</span></code>. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">26</span><span class="p">),</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">29</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">44</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)],[</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;M&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">createTempView</span><span class="p">(</span><span class="s1">&#39;YMD&#39;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">sql</span><span class="p">(</span><span class="s1">&#39;select make_date(Y, M, D) as date from YMD&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">root</span>
+<span class="o">|--</span> <span class="n">date</span><span class="p">:</span> <span class="n">date</span> <span class="p">(</span><span class="n">nullable</span> <span class="o">=</span> <span class="n">true</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To print DataFrame content, call the <code class="docutils literal notranslate"><span class="pre">show()</span></code> action, which converts dates to strings on executors and transfers the strings to the driver to output them on the console:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+-----------+</span>
+<span class="o">|</span>       <span class="n">date</span><span class="o">|</span>
+<span class="o">+-----------+</span>
+<span class="o">|</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">26</span><span class="o">|</span>
+<span class="o">|</span>       <span class="n">null</span><span class="o">|</span>
+<span class="o">|-</span><span class="mi">0044</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span><span class="o">|</span>
+<span class="o">+-----------+</span>
+</pre></div>
+</div>
+<p>Similarly, you can construct timestamp values using the <code class="docutils literal notranslate"><span class="pre">MAKE_TIMESTAMP</span></code> functions. Like <code class="docutils literal notranslate"><span class="pre">MAKE_DATE</span></code>, it performs the same validation for date fields, and additionally accepts time fields HOUR (0-23), MINUTE (0-59) and SECOND (0-60). SECOND has the type Decimal(precision = 8, scale = 6) because seconds can be passed with the fractional part up to microsecond precision. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mf">30.123456</span><span class="p">),</span> \
+<span class="p">(</span><span class="mi">1582</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">2.0001</span><span class="p">),</span> <span class="p">(</span><span class="mi">2019</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)],[</span><span class="s1">&#39;YEAR&#39;</span><span class="p">,</span> <span class="s1">&#39;MONTH&#39;</span><span class="p">,</span> <span class="s1">&#39;DAY&#39;</span><span class="p">,</span> <span class="s1">&#39;HOUR&#39;</span><span class="p">,</span> <span class="s1">&#39;MINUTE&#39;</span><span class="p">,</span> <span class="s1">&#39;SECOND&#39;</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+----+-----+---+----+------+---------+</span>
+<span class="o">|</span><span class="n">YEAR</span><span class="o">|</span><span class="n">MONTH</span><span class="o">|</span><span class="n">DAY</span><span class="o">|</span><span class="n">HOUR</span><span class="o">|</span><span class="n">MINUTE</span><span class="o">|</span>   <span class="n">SECOND</span><span class="o">|</span>
+<span class="o">+----+-----+---+----+------+---------+</span>
+<span class="o">|</span><span class="mi">2020</span><span class="o">|</span>    <span class="mi">6</span><span class="o">|</span> <span class="mi">28</span><span class="o">|</span>  <span class="mi">10</span><span class="o">|</span>    <span class="mi">31</span><span class="o">|</span><span class="mf">30.123456</span><span class="o">|</span>
+<span class="o">|</span><span class="mi">1582</span><span class="o">|</span>   <span class="mi">10</span><span class="o">|</span> <span class="mi">10</span><span class="o">|</span>   <span class="mi">0</span><span class="o">|</span>     <span class="mi">1</span><span class="o">|</span>   <span class="mf">2.0001</span><span class="o">|</span>
+<span class="o">|</span><span class="mi">2019</span><span class="o">|</span>    <span class="mi">2</span><span class="o">|</span> <span class="mi">29</span><span class="o">|</span>   <span class="mi">9</span><span class="o">|</span>    <span class="mi">29</span><span class="o">|</span>      <span class="mf">1.0</span><span class="o">|</span>
+<span class="o">+----+-----+---+----+------+---------+</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">selectExpr</span><span class="p">(</span><span class="s2">&quot;make_timestamp(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND) as MAKE_TIMESTAMP&quot;</span><span class="p">)</span>
+<span class="n">ts</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">root</span>
+<span class="o">|--</span> <span class="n">MAKE_TIMESTAMP</span><span class="p">:</span> <span class="n">timestamp</span> <span class="p">(</span><span class="n">nullable</span> <span class="o">=</span> <span class="n">true</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As for dates, print the content of the ts DataFrame using the show() action. In a similar way, <code class="docutils literal notranslate"><span class="pre">show()</span></code> converts timestamps to strings but now it takes into account the session time zone defined by the SQL config <code class="docutils literal notranslate"><span class="pre">spark.sql.session.timeZone</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ts</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">truncate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+--------------------------+</span>
+<span class="o">|</span><span class="n">MAKE_TIMESTAMP</span>            <span class="o">|</span>
+<span class="o">+--------------------------+</span>
+<span class="o">|</span><span class="mi">2020</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">28</span> <span class="mi">10</span><span class="p">:</span><span class="mi">31</span><span class="p">:</span><span class="mf">30.123456</span><span class="o">|</span>
+<span class="o">|</span><span class="mi">1582</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">10</span> <span class="mi">00</span><span class="p">:</span><span class="mi">01</span><span class="p">:</span><span class="mf">02.0001</span>  <span class="o">|</span>
+<span class="o">|</span><span class="n">null</span>                      <span class="o">|</span>
+<span class="o">+--------------------------+</span>
+</pre></div>
+</div>
+<p>Spark cannot create the last timestamp because this date is not valid: 2019 is not a leap year.</p>
+<p>You might notice that there is no time zone information in the preceding example. In that case, Spark takes a time zone from the SQL configuration <code class="docutils literal notranslate"><span class="pre">spark.sql.session.timeZone</span></code> and applies it to function invocations. You can also pick a different time zone by passing it as the last parameter of <code class="docutils literal notranslate"><span class="pre">MAKE_TIMESTAMP</span></code>. Here is an example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="s1">&#39;UTC&#39;</span><span class="p">),(</span><span class="mi">1582</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;America/Los_Angeles&#39;</span><span class="p">),</span> \
+<span class="p">(</span><span class="mi">2019</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Europe/Moscow&#39;</span><span class="p">)],</span> <span class="p">[</span><span class="s1">&#39;YEAR&#39;</span><span class="p">,</span> <span class="s1">&#39;MONTH&#39;</span><span class="p">,</span> <span class="s1">&#39;DAY&#39;</span><span class="p">,</span> <span class="s1">&#39;HOUR&#39;</span><span class="p">,</span> <span class="s1">&#39;MINUTE&#39;</span><span class="p">,</span> <span class="s1">&#39;SECOND&#39;</span><span class="p">,</span> <span class="s1">&#39;TZ&#39;</span><span class="p">])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">selectExpr</span><span class="p">(</span><span class="s1">&#39;make_timestamp(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, TZ) as MAKE_TIMESTAMP&#39;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">selectExpr</span><span class="p">(</span><span class="s2">&quot;date_format(MAKE_TIMESTAMP, &#39;yyyy-MM-dd HH:mm:ss VV&#39;) AS TIMESTAMP_STRING&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">truncate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+---------------------------------+</span>
+<span class="o">|</span><span class="n">TIMESTAMP_STRING</span>                 <span class="o">|</span>
+<span class="o">+---------------------------------+</span>
+<span class="o">|</span><span class="mi">2020</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">28</span> <span class="mi">13</span><span class="p">:</span><span class="mi">31</span><span class="p">:</span><span class="mi">00</span> <span class="n">Europe</span><span class="o">/</span><span class="n">Moscow</span><span class="o">|</span>
+<span class="o">|</span><span class="mi">1582</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">10</span> <span class="mi">10</span><span class="p">:</span><span class="mi">24</span><span class="p">:</span><span class="mi">00</span> <span class="n">Europe</span><span class="o">/</span><span class="n">Moscow</span><span class="o">|</span>
+<span class="o">|</span><span class="mi">2019</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">28</span> <span class="mi">09</span><span class="p">:</span><span class="mi">29</span><span class="p">:</span><span class="mi">00</span> <span class="n">Europe</span><span class="o">/</span><span class="n">Moscow</span><span class="o">|</span>
+<span class="o">+---------------------------------+</span>
+</pre></div>
+</div>
+<p>As the example demonstrates, Spark takes into account the specified time zones but adjusts all local timestamps to the session time zone. The original time zones passed to the <code class="docutils literal notranslate"><span class="pre">MAKE_TIMESTAMP</span></code> function are lost because the <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span> <span class="pre">WITH</span> <span class="pre">SESSION</span> <span class="pre">TIME</span> <span class="pre">ZONE</span></code> type assumes that all values belong to one time zone, and it doesn’t even store a time zone per every value. According to the definition of the <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span> <span class="pre">WITH</span> <span class="pre">SESSION</span> <span class="pre">TIME</span> <span class="pre">ZONE</span></code>, Spark stores local timestamps in the UTC time zone, and uses the session time zone while extracting date-time fields or converting the timestamps to strings.</p>
+<p>Also, timestamps can be constructed from the LONG type using casting. If a LONG column contains the number of seconds since the epoch 1970-01-01 00:00:00Z, it can be cast to a Spark SQL <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">select</span><span class="w"> </span><span class="k">CAST</span><span class="p">(</span><span class="o">-</span><span class="mi">123456789</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">);</span>
+<span class="mi">1966</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">02</span><span class="w"> </span><span class="mi">05</span><span class="p">:</span><span class="mi">26</span><span class="p">:</span><span class="mi">51</span>
+</pre></div>
+</div>
+<p>Unfortunately, this approach doesn’t allow you to specify the fractional part of seconds.</p>
+<p>Another way is to construct dates and timestamps from values of the <code class="docutils literal notranslate"><span class="pre">STRING</span></code> type. You can make literals using special keywords:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">select</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="s1">&#39;2020-06-28 22:17:33.123456 Europe/Amsterdam&#39;</span><span class="p">,</span><span class="w"> </span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;2020-07-01&#39;</span><span class="p">;</span>
+<span class="mi">2020</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">28</span><span class="w"> </span><span class="mi">23</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mi">33</span><span class="p">.</span><span class="mi">123456</span><span class="w">        </span><span class="mi">2020</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">01</span>
+</pre></div>
+</div>
+<p>Alternatively, you can use casting that you can apply for all values in a column:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">select</span><span class="w"> </span><span class="k">cast</span><span class="p">(</span><span class="s1">&#39;2020-06-28 22:17:33.123456 Europe/Amsterdam&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">timestamp</span><span class="p">),</span><span class="w"> </span><span class="k">cast</span><span class="p">(</span><span class="s1">&#39;2020-07-01&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nb">date</span><span class="p">);</span>
+<span class="mi">2020</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">28</span><span class="w"> </span><span class="mi">23</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mi">33</span><span class="p">.</span><span class="mi">123456</span><span class="w">        </span><span class="mi">2020</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">01</span>
+</pre></div>
+</div>
+<p>The input timestamp strings are interpreted as local timestamps in the specified time zone or in the session time zone if a time zone is omitted in the input string. Strings with unusual patterns can be converted to timestamp using the <code class="docutils literal notranslate"><span class="pre">to_timestamp()</span></code> function. The supported patterns are described in <a class="reference external" href="http://spark.apache.org/docs/latest/sql-ref-datetime-pattern.html">Datetime Patterns for Formatting and Parsing</a>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">select</span><span class="w"> </span><span class="n">to_timestamp</span><span class="p">(</span><span class="s1">&#39;28/6/2020 22.17.33&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;dd/M/yyyy HH.mm.ss&#39;</span><span class="p">);</span>
+<span class="mi">2020</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">28</span><span class="w"> </span><span class="mi">22</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mi">33</span>
+</pre></div>
+</div>
+<p>If you don’t specify a pattern, the function behaves similarly to <code class="docutils literal notranslate"><span class="pre">CAST</span></code>.</p>
+<p>For usability, Spark SQL recognizes special string values in all methods that accept a string and return a timestamp or date:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">epoch</span></code> is an alias for date <code class="docutils literal notranslate"><span class="pre">1970-01-01</span></code> or timestamp <code class="docutils literal notranslate"><span class="pre">1970-01-01</span> <span class="pre">00:00:00Z</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">now</span></code> is the current timestamp or date at the session time zone. Within a single query it always produces the same result.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">today</span></code> is the beginning of the current date for the <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span></code> type or just current date for the <code class="docutils literal notranslate"><span class="pre">DATE</span></code> type.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tomorrow</span></code> is the beginning of the next day for timestamps or just the next day for the <code class="docutils literal notranslate"><span class="pre">DATE</span></code> type.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">yesterday</span></code> is the day before current one or its beginning for the <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span></code> type.</p></li>
+</ul>
+<p>For example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">select</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="s1">&#39;yesterday&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="s1">&#39;today&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="s1">&#39;now&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="s1">&#39;tomorrow&#39;</span><span class="p">;</span>
+<span class="mi">2020</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">27</span><span class="w"> </span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="w">        </span><span class="mi">2020</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">28</span><span class="w"> </span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="w">        </span><span class="mi">2020</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">28</span><span class="w"> </span><span class="mi">23</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">07</span><span class="p">.</span><span class="mi">18</span><span class="w">        </span><span class="mi">2020</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">29</span><span class="w"> </span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+<span class="k">select</span><span class="w"> </span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;yesterday&#39;</span><span class="p">,</span><span class="w"> </span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;today&#39;</span><span class="p">,</span><span class="w"> </span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;now&#39;</span><span class="p">,</span><span class="w"> </span><span class="nb">date</span><span class="w"> </span><span class="s1">&#39;tomorrow&#39;</span><span class="p">;</span>
+<span class="mi">2020</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">27</span><span class="w">        </span><span class="mi">2020</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">28</span><span class="w">        </span><span class="mi">2020</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">28</span><span class="w">        </span><span class="mi">2020</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">29</span>
+</pre></div>
+</div>
+<p>Spark allows you to create <code class="docutils literal notranslate"><span class="pre">Datasets</span></code> from existing collections of external objects at the driver side and create columns of corresponding types. Spark converts instances of external types to semantically equivalent internal representations. For example, to create a <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> with <code class="docutils literal notranslate"><span class="pre">DATE</span></code> and <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span></code> columns from Python collections, you can use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">))],</span> <span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+-------------------+----------+</span>
+<span class="o">|</span>          <span class="n">timestamp</span><span class="o">|</span>      <span class="n">date</span><span class="o">|</span>
+<span class="o">+-------------------+----------+</span>
+<span class="o">|</span><span class="mi">2020</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="o">|</span><span class="mi">2020</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">01</span><span class="o">|</span>
+<span class="o">+-------------------+----------+</span>
+</pre></div>
+</div>
+<p>PySpark converts Python’s date-time objects to internal Spark SQL representations at the driver side using the system time zone, which can be different from Spark’s session time zone setting <code class="docutils literal notranslate"><span class="pre">spark.sql.session.timeZone</span></code>. The internal values don’t contain information about the original time zone. Future operations over the parallelized date and timestamp values take into account only Spark SQL sessions time zone according to the <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span> <span class="pre">WITH</span> <span class="pre">SESSION</span> <span class="pre">TIME</span> <span class="pre">ZONE</span></code> type definition.</p>
+<p>In a similar way, Spark recognizes the following types as external date-time types in Java and Scala APIs:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">java.sql.Date</span></code> and <code class="docutils literal notranslate"><span class="pre">java.time.LocalDate</span></code> as external types for the <code class="docutils literal notranslate"><span class="pre">DATE</span></code> type</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">java.sql.Timestamp</span></code> and <code class="docutils literal notranslate"><span class="pre">java.time.Instant</span></code> for the <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span></code> type.</p></li>
+</ul>
+<p>There is a difference between <code class="docutils literal notranslate"><span class="pre">java.sql.*</span></code> and <code class="docutils literal notranslate"><span class="pre">java.time.*</span></code> types. <code class="docutils literal notranslate"><span class="pre">java.time.LocalDate</span></code> and <code class="docutils literal notranslate"><span class="pre">java.time.Instant</span></code> were added in Java 8, and the types are based on the Proleptic Gregorian calendar–the same calendar that is used by Databricks Runtime 7.0 and above. <code class="docutils literal notranslate"><span class="pre">java.sql.Date</span></code> and <code class="docutils literal notranslate"><span class="pre">java.sql.Timestamp</span></code> have another calendar underneath–the hybrid calendar (Julian + Gregorian since 1582-10-15), which is the same as the legacy calendar used by Databricks Runtime 6.x and below. Due to different calendar systems, Spark has to perform additional operations during conversions to internal Spark SQL representations, and rebase input dates/timestamp from one calendar to another. The rebase operation has a little overhead for modern timestamps after the year 1900, and it can be more significant for old timestamps.</p>
+<p>The following example shows how to make timestamps from Scala collections. The first example constructs a <code class="docutils literal notranslate"><span class="pre">java.sql.Timestamp</span></code> object from a string. The <code class="docutils literal notranslate"><span class="pre">valueOf</span></code> method interprets the input strings as a local timestamp in the default JVM time zone which can be different from Spark’s session time zone. If you need to construct instances of <code class="docutils literal notranslate"><span class="pre">java.sql.Timestamp</span></code> or <code class="docutils literal notranslate"><span class="pre">java.sql.Date</span></code> in specific time zone, have a look at <a class="reference external" href="https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html">java.text.SimpleDateFormat</a> (and its method <code class="docutils literal notranslate"><span class="pre">setTimeZone</span></code>) or <a class="reference external" href="https://docs.oracle.com/javase/7/docs/api/java/util/Calendar.html">java.util.Calendar</a>.</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="nc">Seq</span><span class="p">(</span><span class="n">java</span><span class="p">.</span><span class="n">sql</span><span class="p">.</span><span class="nc">Timestamp</span><span class="p">.</span><span class="n">valueOf</span><span class="p">(</span><span class="s">&quot;2020-06-29 22:41:30&quot;</span><span class="p">),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="n">sql</span><span class="p">.</span><span class="nc">Timestamp</span><span class="p">(</span><span class="mi">0</span><span class="p">)).</span><span class="n">toDF</span><span class="p">(</span><span class="s">&quot;ts&quot;</span><span class="p">).</span><span class="n">show</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+-------------------+</span>
+<span class="o">|</span><span class="n">ts</span>                 <span class="o">|</span>
+<span class="o">+-------------------+</span>
+<span class="o">|</span><span class="mi">2020</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">29</span> <span class="mi">22</span><span class="p">:</span><span class="mi">41</span><span class="p">:</span><span class="mi">30</span><span class="o">|</span>
+<span class="o">|</span><span class="mi">1970</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">03</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="o">|</span>
+<span class="o">+-------------------+</span>
+</pre></div>
+</div>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="nc">Seq</span><span class="p">(</span><span class="n">java</span><span class="p">.</span><span class="n">time</span><span class="p">.</span><span class="nc">Instant</span><span class="p">.</span><span class="n">ofEpochSecond</span><span class="p">(</span><span class="o">-</span><span class="il">12219261484L</span><span class="p">),</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="n">time</span><span class="p">.</span><span class="nc">Instant</span><span class="p">.</span><span class="nc">EPOCH</span><span class="p">).</span><span class="n">toDF</span><span class="p">(</span><span class="s">&quot;ts&quot;</span><span class="p">).</span><span class="n">show</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+-------------------+</span>
+<span class="o">|</span>                 <span class="n">ts</span><span class="o">|</span>
+<span class="o">+-------------------+</span>
+<span class="o">|</span><span class="mi">1582</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">15</span> <span class="mi">11</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span><span class="mi">13</span><span class="o">|</span>
+<span class="o">|</span><span class="mi">1970</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">03</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="o">|</span>
+<span class="o">+-------------------+</span>
+</pre></div>
+</div>
+<p>Similarly, you can make a <code class="docutils literal notranslate"><span class="pre">DATE</span></code> column from collections of <code class="docutils literal notranslate"><span class="pre">java.sql.Date</span></code> or <code class="docutils literal notranslate"><span class="pre">java.sql.LocalDate</span></code>. Parallelization of <code class="docutils literal notranslate"><span class="pre">java.sql.LocalDate</span></code> instances is fully independent of either Spark’s session or JVM default time zones, but the same is not true for parallelization of <code class="docutils literal notranslate"><span class="pre">java.sql.Date</span></code> instances. There are nuances:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">java.sql.Date</span></code> instances represent local dates at the default JVM time zone on the driver.</p></li>
+<li><p>For correct conversions to Spark SQL values, the default JVM time zone on the driver and executors must be the same.</p></li>
+</ol>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="nc">Seq</span><span class="p">(</span><span class="n">java</span><span class="p">.</span><span class="n">time</span><span class="p">.</span><span class="nc">LocalDate</span><span class="p">.</span><span class="n">of</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">29</span><span class="p">),</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="n">time</span><span class="p">.</span><span class="nc">LocalDate</span><span class="p">.</span><span class="n">now</span><span class="p">).</span><span class="n">toDF</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">).</span><span class="n">show</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+----------+</span>
+<span class="o">|</span>      <span class="n">date</span><span class="o">|</span>
+<span class="o">+----------+</span>
+<span class="o">|</span><span class="mi">2020</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">29</span><span class="o">|</span>
+<span class="o">|</span><span class="mi">2020</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">29</span><span class="o">|</span>
+<span class="o">+----------+</span>
+</pre></div>
+</div>
+<p>To avoid any calendar and time zone related issues, we recommend Java 8 types <code class="docutils literal notranslate"><span class="pre">java.sql.LocalDate</span></code>/<code class="docutils literal notranslate"><span class="pre">Instant</span></code> as external types in parallelization of Java/Scala collections of timestamps or dates.</p>
+</div>
+<div class="section" id="collect-dates-and-timestamps">
+<h2>Collect dates and timestamps<a class="headerlink" href="#collect-dates-and-timestamps" title="Permalink to this headline"> </a></h2>
+<p>The reverse operation of parallelization is collecting dates and timestamps from executors back to the driver and returning a collection of external types. For example above, you can pull the <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> back to the driver using the <code class="docutils literal notranslate"><span class="pre">collect()</span></code> action:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">.</span><span class="n">collect</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Row</span><span class="p">(</span><span class="n">timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">))]</span>
+</pre></div>
+</div>
+<p>Spark transfers internal values of dates and timestamps columns as time instants in the UTC time zone from executors to the driver, and performs conversions to Python datetime objects in the system time zone at the driver, not using Spark SQL session time zone. <code class="docutils literal notranslate"><span class="pre">collect()</span></code> is different from  the <code class="docutils literal notranslate"><span class="pre">show()</span></code> action described in the previous section. <code class="docutils literal notranslate"><span class="pre">show()</span></code> uses the session time zone while converting timestamps to strings, and collects the resulted strings on the driver.</p>
+<p>In Java and Scala APIs, Spark performs the following conversions by default:</p>
+<ul class="simple">
+<li><p>Spark SQL <code class="docutils literal notranslate"><span class="pre">DATE</span></code> values are converted to instances of <code class="docutils literal notranslate"><span class="pre">java.sql.Date</span></code>.</p></li>
+<li><p>Spark SQL <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span></code> values  are converted to instances of <code class="docutils literal notranslate"><span class="pre">java.sql.Timestamp</span></code>.</p></li>
+</ul>
+<p>Both conversions are performed in the default JVM time zone on the driver. In this way, to have the same date-time fields that you can get using <code class="docutils literal notranslate"><span class="pre">Date.getDay()</span></code>, <code class="docutils literal notranslate"><span class="pre">getHour()</span></code>, and so on, and using Spark SQL functions <code class="docutils literal notranslate"><span class="pre">DAY</span></code>, <code class="docutils literal notranslate"><span class="pre">HOUR</span></code>, the default JVM time zone on the driver and the session time zone on executors should be the same.</p>
+<p>Similarly to making dates/timestamps from <code class="docutils literal notranslate"><span class="pre">java.sql.Date</span></code>/<code class="docutils literal notranslate"><span class="pre">Timestamp</span></code>, Databricks Runtime 7.0 performs rebasing from the Proleptic Gregorian calendar to the hybrid calendar (Julian + Gregorian). This operation is almost free for modern dates (after the year 1582) and timestamps (after the year 1900), but it could bring some overhead for ancient dates and timestamps.</p>
+<p>You can avoid such calendar-related issues, and ask Spark to return <code class="docutils literal notranslate"><span class="pre">java.time</span></code> types, which were added since Java 8. If you set the SQL config <code class="docutils literal notranslate"><span class="pre">spark.sql.datetime.java8API.enabled</span></code> to true, the <code class="docutils literal notranslate"><span class="pre">Dataset.collect()</span></code> action returns:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">java.time.LocalDate</span></code> for Spark SQL <code class="docutils literal notranslate"><span class="pre">DATE</span></code> type</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">java.time.Instant</span></code> for Spark SQL <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span></code> type</p></li>
+</ul>
+<p>Now the conversions don’t suffer from the calendar-related issues because Java 8 types and Databricks Runtime 7.0 and above are both based on the Proleptic Gregorian calendar. The <code class="docutils literal notranslate"><span class="pre">collect()</span></code> action doesn’t depend on the default JVM time zone. The timestamp conversions don’t depend on time zone at all. Date conversions use the session time zone from the SQL config <code class="docutils literal notranslate"><span class="pre">spark.sql.session.timeZone</span></code>. For example, consider a <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> with <code class="docutils literal notranslate"><span class="pre">DATE</span></code> and <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span></code> columns, with the default JVM time zone to set to <code class="docutils literal notranslate"><span class="pre">Europe/Moscow</span></code> and the session time zone set to <code class="docutils literal notranslate"><span class="pre">America/Los_Angeles</span></code>.</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="nc">TimeZone</span><span class="p">.</span><span class="n">getDefault</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">res1</span><span class="p">:</span> <span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">TimeZone</span> <span class="o">=</span> <span class="n">sun</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">calendar</span><span class="o">.</span><span class="n">ZoneInfo</span><span class="p">[</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;Europe/Moscow&quot;</span><span class="p">,</span><span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;spark.sql.session.timeZone&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">res2</span><span class="p">:</span> <span class="n">String</span> <span class="o">=</span> <span class="n">America</span><span class="o">/</span><span class="n">Los_Angeles</span>
+</pre></div>
+</div>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">.</span><span class="n">show</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+-------------------+----------+</span>
+<span class="o">|</span>          <span class="n">timestamp</span><span class="o">|</span>      <span class="n">date</span><span class="o">|</span>
+<span class="o">+-------------------+----------+</span>
+<span class="o">|</span><span class="mi">2020</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="o">|</span><span class="mi">2020</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">01</span><span class="o">|</span>
+<span class="o">+-------------------+----------+</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">show()</span></code> action prints the timestamp at the session time <code class="docutils literal notranslate"><span class="pre">America/Los_Angeles</span></code>, but if you collect the <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>, it is converted to <code class="docutils literal notranslate"><span class="pre">java.sql.Timestamp</span></code> and the <code class="docutils literal notranslate"><span class="pre">toString</span></code> method prints <code class="docutils literal notranslate"><span class="pre">Europe/Moscow</span></code>:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">.</span><span class="n">collect</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">res16</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">Row</span><span class="p">]</span> <span class="o">=</span> <span class="n">Array</span><span class="p">([</span><span class="mi">2020</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">01</span> <span class="mi">10</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mf">00.0</span><span class="p">,</span><span class="mi">2020</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">01</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">.</span><span class="n">collect</span><span class="p">()(</span><span class="mi">0</span><span class="p">).</span><span class="n">getAs</span><span class="p">[</span><span class="n">java</span><span class="p">.</span><span class="n">sql</span><span class="p">.</span><span class="nc">Timestamp</span><span class="p">](</span><span class="mi">0</span><span class="p">).</span><span class="n">toString</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">res18</span><span class="p">:</span> <span class="n">java</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">Timestamp</span> <span class="o">=</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">01</span> <span class="mi">10</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mf">00.0</span>
+</pre></div>
+</div>
+<p>Actually, the local timestamp 2020-07-01 00:00:00 is 2020-07-01T07:00:00Z at UTC. You can observe that if you enable Java 8 API and collect the Dataset:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">.</span><span class="n">collect</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">res27</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">Row</span><span class="p">]</span> <span class="o">=</span> <span class="n">Array</span><span class="p">([</span><span class="mi">2020</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">01</span><span class="n">T07</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="n">Z</span><span class="p">,</span><span class="mi">2020</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">01</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>You can convert a <code class="docutils literal notranslate"><span class="pre">java.time.Instant</span></code> object to any local timestamp independently from the global JVM time zone. This is one of the advantages of <code class="docutils literal notranslate"><span class="pre">java.time.Instant</span></code> over <code class="docutils literal notranslate"><span class="pre">java.sql.Timestamp</span></code>. The former requires changing the global JVM setting, which influences other timestamps on the same JVM. Therefore, if your applications process dates or timestamps in different time zones, and the applications should not clash with each other while collecting data to the driver using Java or Scala <code class="docutils literal notranslate"><span class="pre">Dataset.collect()</span></code> API, we recommend switching to Java 8 API using the SQL config <code class="docutils literal notranslate"><span class="pre">spark.sql.datetime.java8API.enabled</span></code>.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

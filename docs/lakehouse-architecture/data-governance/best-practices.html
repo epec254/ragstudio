@@ -1,0 +1,450 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="This article covers best practices supporting principles of data governance on the Databricks lakehouse." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Best practices for data governance">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Best practices for data governance &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/lakehouse-architecture/data-governance/best-practices.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/lakehouse-architecture/data-governance/best-practices.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/lakehouse-architecture/data-governance/best-practices.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/lakehouse-architecture/data-governance/best-practices.html" class="notranslate">English</option>
+    <option value="../../../ja/lakehouse-architecture/data-governance/best-practices.html" class="notranslate">日本語</option>
+    <option value="../../../pt/lakehouse-architecture/data-governance/best-practices.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Best practices for data governance</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="best-practices-for-data-governance">
+<h1>Best practices for data governance<a class="headerlink" href="#best-practices-for-data-governance" title="Permalink to this headline"> </a></h1>
+<p>This article covers best practices of <strong>data governance</strong>, organized by architectural principles listed in the following sections.</p>
+<div class="section" id="1-unify-data-management">
+<h2>1. Unify data management<a class="headerlink" href="#1-unify-data-management" title="Permalink to this headline"> </a></h2>
+<div class="section" id="manage-metadata-for-all-data-assets-in-one-place">
+<h3>Manage metadata for all data assets in one place<a class="headerlink" href="#manage-metadata-for-all-data-assets-in-one-place" title="Permalink to this headline"> </a></h3>
+<p>As a best practice, run the lakehouse in a single account with one <a class="reference internal" href="../../data-governance/unity-catalog/index.html"><span class="doc">Unity Catalog</span></a>. The top-level container of objects in Unity Catalog is a <a class="reference internal" href="../../data-governance/unity-catalog/best-practices.html"><span class="doc">metastore</span></a>. It stores data assets (such as, tables and views) and the permissions that govern access to them. Use a single metastore per cloud region and do not access metastores across regions to avoid latency issues.</p>
+<p>The metastore provides a three-level namespace:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../data-governance/unity-catalog/create-catalogs.html"><span class="doc">Catalog</span></a></p></li>
+<li><p><a class="reference internal" href="../../data-governance/unity-catalog/create-schemas.html"><span class="doc">Schema</span></a></p></li>
+<li><p><a class="reference internal" href="../../data-governance/unity-catalog/create-tables.html"><span class="doc">Table</span></a>/<a class="reference internal" href="../../data-governance/unity-catalog/create-views.html"><span class="doc">view</span></a>.</p></li>
+</ul>
+<p>Databricks recommends using <a class="reference internal" href="../../data-governance/unity-catalog/best-practices.html#organize-your-data"><span class="std std-ref">catalogs to provide segregation across your organization’s information architecture</span></a>. Often this means that catalogs can correspond to software development environment scope, team, or business unit.</p>
+</div>
+<div class="section" id="track-data-lineage-to-drive-visibility-of-the-data">
+<span id="manage-metadata-for-all-data-assets-in-one-place"></span><h3>Track data lineage to drive visibility of the data<a class="headerlink" href="#track-data-lineage-to-drive-visibility-of-the-data" title="Permalink to this headline"> </a></h3>
+<p>Data lineage is a powerful tool that helps data leaders drive greater visibility and understanding of the data in their organizations. It describes the transformation and refinement of data from source to insight. Lineage includes the capture of all relevant metadata and events associated with the data in its lifecycle, including the source of the data set, what other data sets were used to create it, who created it and when, what transformations were performed, what other data sets use it, and many other events and attributes. Data lineage can be used for many data-related use cases:</p>
+<ul class="simple">
+<li><p><strong>Compliance and audit readiness</strong>: Data lineage helps organizations trace the source of tables and fields. This is important for meeting the requirements of many compliance regulations, such as General Data Protection Regulation (GDPR), California Consumer Privacy Act (CCPA), Health Insurance Portability and Accountability Act (HIPAA), Basel Committee on Banking Supervision (BCBS) 239, and Sarbanes-Oxley Act (SOX).</p></li>
+<li><p><strong>Impact analysis/change management</strong>: Data goes through multiple transformations from the source to the final business-ready table. Understanding the potential impact of data changes on downstream users becomes important from a risk-management perspective. This impact can be easily determined using the data lineage collected by Unity Catalog.</p></li>
+<li><p><strong>Data quality assurance</strong>: Understanding where a data set came from and what transformations have been applied provides much better context for data scientists and analysts, enabling them to gain better and more accurate insights.</p></li>
+<li><p><strong>Debugging and diagnostics</strong>: In the event of an unexpected result, data lineage helps data teams perform root cause analysis by tracing the error back to its source. This dramatically reduces debugging time.</p></li>
+</ul>
+<p>Unity Catalog captures runtime <a class="reference internal" href="../../data-governance/unity-catalog/data-lineage.html"><span class="doc">data lineage</span></a> across queries run on Databricks. Lineage is supported for all languages and is captured down to the column level. Lineage data includes notebooks, workflows, and dashboards related to the query. Lineage can be visualized in <a class="reference internal" href="../../catalog-explorer/index.html"><span class="doc">Catalog Explorer</span></a> in near real-time and retrieved with the Databricks <a class="reference internal" href="../../data-governance/unity-catalog/data-lineage.html#data-lineage-api"><span class="std std-ref">Data Lineage REST API</span></a>.</p>
+</div>
+<div class="section" id="discover-data-and-related-information-via-the-catalog-explorer">
+<h3>Discover data and related information via the Catalog Explorer<a class="headerlink" href="#discover-data-and-related-information-via-the-catalog-explorer" title="Permalink to this headline"> </a></h3>
+<p>Easy data discovery enables data scientists, data analysts, and data engineers to quickly discover and reference relevant data and accelerate time to value. Databricks <a class="reference internal" href="../../catalog-explorer/index.html"><span class="doc">Catalog Explorer</span></a> provides a UI to explore and manage data, schemas (databases), tables, and permissions, data owners, external locations, and credentials. Additionally, you can use the Insights tab in Catalog Explorer to <a class="reference internal" href="../../discover/table-insights.html"><span class="doc">view the most frequent recent queries</span></a> and users of any table registered in Unity Catalog.</p>
+</div>
+</div>
+<div class="section" id="2-unify-data-security">
+<h2>2. Unify data security<a class="headerlink" href="#2-unify-data-security" title="Permalink to this headline"> </a></h2>
+<div class="section" id="centralize-access-control">
+<h3>Centralize access control<a class="headerlink" href="#centralize-access-control" title="Permalink to this headline"> </a></h3>
+<p>The Databricks platform provides methods for data access control, mechanisms that describe which groups or individuals can access what data. These are statements of policy that can be extremely granular and specific, right down to definitions of every record that each individual has access to. Or they can be very expressive and broad, such as all finance users can see all financial data.</p>
+<p>Unity Catalog centralizes access controls for files, tables, and views. Each securable object in Unity Catalog has an owner. An object’s owner has all privileges on the object, as well as the permission to grant privileges on the securable object to other principals. Unity Catalog allows to <a class="reference internal" href="../../data-governance/unity-catalog/manage-privileges/index.html"><span class="doc">manage privileges</span></a>, and to <a class="reference internal" href="../../data-governance/unity-catalog/best-practices.html#configure-access-control"><span class="std std-ref">configure access control</span></a> by using SQL DDL statements.</p>
+<p>Unity Catalog uses dynamic views for fine-grained access controls so that you can restrict access to rows and columns to the users and groups who are authorized to query them. See <a class="reference internal" href="../../data-governance/unity-catalog/create-views.html#dynamic-view"><span class="std std-ref">Create a dynamic view</span></a>.</p>
+<p>For further information see <a class="reference internal" href="../security-compliance-and-privacy/best-practices.html#1-manage-identity-and-access-using-least-privilege"><span class="std std-ref">Security, compliance &amp; privacy - Manage identity and access using least privilege</span></a>.</p>
+</div>
+<div class="section" id="configure-audit-logging">
+<h3>Configure audit logging<a class="headerlink" href="#configure-audit-logging" title="Permalink to this headline"> </a></h3>
+<p>Databricks provides access to <a class="reference internal" href="../../administration-guide/account-settings/audit-logs.html"><span class="doc">audit logs</span></a> of activities performed by Databricks users, allowing your enterprise to monitor detailed Databricks usage patterns. There are two types of logs: Workspace-level audit logs with workspace-level events and account-level audit logs with account-level events.</p>
+</div>
+<div class="section" id="audit-unity-catalog-events">
+<h3>Audit Unity Catalog events<a class="headerlink" href="#audit-unity-catalog-events" title="Permalink to this headline"> </a></h3>
+<p>Unity Catalog <a class="reference internal" href="../../data-governance/unity-catalog/audit.html"><span class="doc">captures an audit log</span></a> of actions performed against the metastore. This enables admins to access fine-grained details about who accessed a given dataset and what actions they performed.</p>
+</div>
+<div class="section" id="audit-data-sharing-events">
+<h3>Audit data sharing events<a class="headerlink" href="#audit-data-sharing-events" title="Permalink to this headline"> </a></h3>
+<p>For secure sharing with Delta Sharing, Databricks provides <a class="reference internal" href="../../data-sharing/audit-logging-provider.html"><span class="doc">audit logs to monitor Delta Sharing events</span></a>, including:</p>
+<ul class="simple">
+<li><p>When someone creates, modifies, updates, or deletes a share or a recipient.</p></li>
+<li><p>When a recipient accesses an activation link and downloads the credential.</p></li>
+<li><p>When a recipient accesses shares or data in shared tables.</p></li>
+<li><p>When a recipient’s credential is rotated or expires.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="3-manage-data-quality">
+<h2>3. Manage data quality<a class="headerlink" href="#3-manage-data-quality" title="Permalink to this headline"> </a></h2>
+<p>The Databricks platform provides robust data quality management with built-in quality controls, testing, monitoring, and enforcement to ensure accurate and useful data is available for downstream BI, analytics, and machine learning workloads.</p>
+<p>See <a class="reference internal" href="../reliability/best-practices.html#2-manage-data-quality"><span class="std std-ref">Reliablity - Manage data quality</span></a>.</p>
+</div>
+<div class="section" id="4-share-data-securely-and-in-real-time">
+<h2>4. Share data securely and in real-time<a class="headerlink" href="#4-share-data-securely-and-in-real-time" title="Permalink to this headline"> </a></h2>
+<div class="section" id="use-the-open-delta-sharing-protocol-for-sharing-data-with-partners">
+<span id="use-the-open-ds-protocol-for-sharing-data-with-partners"></span><h3>Use the open Delta Sharing protocol for sharing data with partners<a class="headerlink" href="#use-the-open-delta-sharing-protocol-for-sharing-data-with-partners" title="Permalink to this headline"> </a></h3>
+<p><a class="reference internal" href="../../data-sharing/index.html"><span class="doc">Delta Sharing</span></a> provides an <a class="reference internal" href="../../data-sharing/share-data-open.html"><span class="doc">open solution for securely sharing live data</span></a> from your lakehouse to any computing platform. Recipients do not need to be on the Databricks platform, on the same cloud, or on any cloud at all. Delta Sharing is natively integrated with Unity Catalog, enabling organizations to centrally manage and audit shared data across the enterprise and confidently share data assets while meeting security and compliance requirements.</p>
+<p>Data providers can share live data from where it resides in their cloud storage without replicating or moving it to another system. This approach reduces the operational costs of data sharing because data providers don’t have to replicate data multiple times across clouds, geographies, or data platforms to each of their data consumers.</p>
+</div>
+<div class="section" id="use-databricks-to-databricks-delta-sharing-between-databricks-users">
+<span id="use-databricks-to-databricks-ds-between-databricks-users"></span><h3>Use Databricks-to-Databricks Delta Sharing between Databricks users<a class="headerlink" href="#use-databricks-to-databricks-delta-sharing-between-databricks-users" title="Permalink to this headline"> </a></h3>
+<p>If you want to share data with users who don’t have access to your Unity Catalog metastore, you can use <a class="reference internal" href="../../data-sharing/share-data-databricks.html"><span class="doc">Databricks-to-Databricks Delta Sharing</span></a>, as long as the recipients have access to a Databricks workspace that is enabled for Unity Catalog. Databricks-to-Databricks sharing lets you share data with users in other Databricks accounts, across cloud regions, across cloud providers. It’s a great way to securely share data across different Unity Catalog metastores in your own Databricks account.</p>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

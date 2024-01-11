@@ -1,0 +1,840 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn about Model Registry Webhooks in Databricks. Webhooks enable you to listen for Model Registry events so your integrations can automatically trigger actions." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="MLflow Model Registry Webhooks on Databricks">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>MLflow Model Registry Webhooks on Databricks &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/mlflow/model-registry-webhooks.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/mlflow/model-registry-webhooks.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/mlflow/model-registry-webhooks.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/mlflow/model-registry-webhooks.html" class="notranslate">English</option>
+    <option value="../../ja/mlflow/model-registry-webhooks.html" class="notranslate">日本語</option>
+    <option value="../../pt/mlflow/model-registry-webhooks.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>MLflow Model Registry Webhooks on Databricks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="mlflow-model-registry-webhooks-on-databricks">
+<h1>MLflow Model Registry Webhooks on Databricks<a class="headerlink" href="#mlflow-model-registry-webhooks-on-databricks" title="Permalink to this headline"> </a></h1>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<p>Webhooks enable you to listen for Model Registry events so your integrations can automatically trigger actions. You can use webhooks to automate and integrate your machine learning pipeline with existing CI/CD tools and workflows. For example, you can trigger CI builds when a new model version is created or notify your team members through Slack each time a model transition to production is requested.</p>
+<p>Webhooks are available through the <a class="reference external" href="https://docs.databricks.com/api/workspace/experiments">Databricks REST API</a> or the Python client <code class="docutils literal notranslate"><span class="pre">databricks-registry-webhooks</span></code> on <a class="reference external" href="https://pypi.org/project/databricks-registry-webhooks/">PyPI</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Webhooks are not available when you use <a class="reference internal" href="models-in-uc.html"><span class="doc">Models in Unity Catalog</span></a>. For an alternative, see <a class="reference internal" href="../machine-learning/manage-model-lifecycle/upgrade-workflows.html#manual-approval"><span class="std std-ref">Can I use stage transition requests or trigger webhooks on events?</span></a>.</p>
+</div>
+<div class="section" id="webhook-events">
+<h2>Webhook events<a class="headerlink" href="#webhook-events" title="Permalink to this headline"> </a></h2>
+<p>You can specify a webhook to trigger upon one or more of these events:</p>
+<ul class="simple">
+<li><p><strong>MODEL_VERSION_CREATED</strong>: A new model version was created for the associated model.</p></li>
+<li><p><strong>MODEL_VERSION_TRANSITIONED_STAGE</strong>: A model version’s stage was changed.</p></li>
+<li><p><strong>TRANSITION_REQUEST_CREATED</strong>: A user requested a model version’s stage be transitioned.</p></li>
+<li><p><strong>COMMENT_CREATED</strong>: A user wrote a comment on a registered model.</p></li>
+<li><p><strong>REGISTERED_MODEL_CREATED</strong>: A new registered model was created. This event type can only be specified for a registry-wide webhook, which can be created by not specifying a model name in the create request.</p></li>
+<li><p><strong>MODEL_VERSION_TAG_SET</strong>: A user set a tag on the model version.</p></li>
+<li><p><strong>MODEL_VERSION_TRANSITIONED_TO_STAGING</strong>: A model version was transitioned to staging.</p></li>
+<li><p><strong>MODEL_VERSION_TRANSITIONED_TO_PRODUCTION</strong>: A model version was transitioned to production.</p></li>
+<li><p><strong>MODEL_VERSION_TRANSITIONED_TO_ARCHIVED</strong>: A model version was archived.</p></li>
+<li><p><strong>TRANSITION_REQUEST_TO_STAGING_CREATED</strong>: A user requested a model version be transitioned to staging.</p></li>
+<li><p><strong>TRANSITION_REQUEST_TO_PRODUCTION_CREATED</strong>: A user requested a model version be transitioned to production.</p></li>
+<li><p><strong>TRANSITION_REQUEST_TO_ARCHIVED_CREATED</strong>: A user requested a model version be archived.</p></li>
+</ul>
+</div>
+<div class="section" id="types-of-webhooks">
+<h2>Types of webhooks<a class="headerlink" href="#types-of-webhooks" title="Permalink to this headline"> </a></h2>
+<p>There are two types of webhooks based on their trigger targets:</p>
+<ul class="simple">
+<li><p><strong>Webhooks with HTTP endpoints (HTTP registry webhooks)</strong>: Send triggers to an HTTP endpoint.</p></li>
+<li><p><strong>Webhooks with job triggers (job registry webhooks)</strong>: Trigger a job in a Databricks workspace. If IP allowlisting is enabled in the job’s workspace, you must allowlist the workspace IPs of the model registry. See <a class="reference internal" href="#ip-allowlisting"><span class="std std-ref">IP allowlisting for job registry webhooks</span></a> for more information.</p></li>
+</ul>
+<p>There are also two types of webhooks based on their scope, with different access control requirements:</p>
+<ul class="simple">
+<li><p><strong>Model-specific webhooks</strong>: The webhook applies to a specific registered model. You must have <strong>Can Manage</strong> permissions on the registered model to create, modify, delete, or test model-specific webhooks.</p></li>
+<li><p><strong>Registry-wide webhooks</strong>: The webhook is triggered by events on any registered model in the workspace, including the creation of a new registered model. To create a registry-wide webhook, omit the <code class="docutils literal notranslate"><span class="pre">model_name</span></code> field on creation. You must have workspace admin permissions to create, modify, delete, or test registry-wide webhooks.</p></li>
+</ul>
+</div>
+<div class="section" id="webhook-payload">
+<h2>Webhook payload<a class="headerlink" href="#webhook-payload" title="Permalink to this headline"> </a></h2>
+<p>Each event trigger has minimal fields included in the payload for the outgoing request to the webhook endpoint.</p>
+<ul class="simple">
+<li><p>Sensitive information like artifact path location is excluded. Users and principals with appropriate ACLs can use client or REST APIs to query the Model Registry for this information.</p></li>
+<li><p>Payloads are not encrypted. See <a class="reference internal" href="#security"><span class="std std-ref">Security</span></a> for information on how to validate that Databricks is the source of the webhook.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">text</span></code> field facilitates Slack integration. To send a Slack message, provide a Slack webhook endpoint as the webhook URL.</p></li>
+</ul>
+<div class="section" id="job-registry-webhook-payload">
+<h3>Job registry webhook payload<a class="headerlink" href="#job-registry-webhook-payload" title="Permalink to this headline"> </a></h3>
+<p>The payload for a job registry webhook depends on the type of job and is sent to the <code class="docutils literal notranslate"><span class="pre">jobs/run-now</span></code> endpoint in the target workspace.</p>
+<div class="section" id="single-task-jobs">
+<h4>Single-task jobs<a class="headerlink" href="#single-task-jobs" title="Permalink to this headline"> </a></h4>
+<p>Single-task jobs have one of three payloads based on the task type.</p>
+<div class="section" id="notebook-and-python-wheel-jobs">
+<h5>Notebook and Python wheel jobs<a class="headerlink" href="#notebook-and-python-wheel-jobs" title="Permalink to this headline"> </a></h5>
+<p>Notebook and Python wheel jobs have a JSON payload with a parameter dictionary that contains a field <code class="docutils literal notranslate"><span class="pre">event_message</span></code>.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;job_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1234567890</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;notebook_params&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;event_message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;Webhook Payload&gt;&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="python-jar-and-spark-submit-jobs">
+<h5>Python, JAR, and Spark Submit jobs<a class="headerlink" href="#python-jar-and-spark-submit-jobs" title="Permalink to this headline"> </a></h5>
+<p>Python, JAR, and Spark submit jobs have a JSON payload with a parameter list.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;job_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1234567890</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;python_params&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&lt;Webhook Payload&gt;&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="all-other-jobs">
+<h5>All other jobs<a class="headerlink" href="#all-other-jobs" title="Permalink to this headline"> </a></h5>
+<p>All other types of jobs have a JSON payload with no parameters.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;job_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1234567890</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="multi-task-jobs">
+<h4>Multi-task jobs<a class="headerlink" href="#multi-task-jobs" title="Permalink to this headline"> </a></h4>
+<p>Multi-task jobs have a JSON payload with all parameters populated to account for different task types.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;job_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1234567890</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;notebook_params&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;event_message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;Webhook Payload&gt;&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;python_named_params&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;event_message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;Webhook Payload&gt;&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;jar_params&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&lt;Webhook Payload&gt;&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;python_params&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&lt;Webhook Payload&gt;&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;spark_submit_params&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&lt;Webhook Payload&gt;&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="example-payloads">
+<h3>Example payloads<a class="headerlink" href="#example-payloads" title="Permalink to this headline"> </a></h3>
+<div class="section" id="event-model_version_transitioned_stage">
+<h4>event: <code class="docutils literal notranslate"><span class="pre">MODEL_VERSION_TRANSITIONED_STAGE</span></code><a class="headerlink" href="#event-model_version_transitioned_stage" title="Permalink to this headline"> </a></h4>
+<p><strong>Response</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">POST</span>
+<span class="o">/</span><span class="n">your</span><span class="o">/</span><span class="n">endpoint</span><span class="o">/</span><span class="k">for</span><span class="o">/</span><span class="n">event</span><span class="o">/</span><span class="n">model</span><span class="o">-</span><span class="n">versions</span><span class="o">/</span><span class="n">stage</span><span class="o">-</span><span class="n">transition</span>
+<span class="o">--</span><span class="n">data</span> <span class="p">{</span>
+  <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;MODEL_VERSION_TRANSITIONED_STAGE&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;webhook_id&quot;</span><span class="p">:</span> <span class="s2">&quot;c5596721253c4b429368cf6f4341b88a&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;event_timestamp&quot;</span><span class="p">:</span> <span class="mi">1589859029343</span><span class="p">,</span>
+  <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Airline_Delay_SparkML&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;8&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;to_stage&quot;</span><span class="p">:</span> <span class="s2">&quot;Production&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;from_stage&quot;</span><span class="p">:</span> <span class="s2">&quot;None&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Registered model &#39;someModel&#39; version 8 transitioned from None to Production.&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="event-model_version_tag_set">
+<h4>event: <code class="docutils literal notranslate"><span class="pre">MODEL_VERSION_TAG_SET</span></code><a class="headerlink" href="#event-model_version_tag_set" title="Permalink to this headline"> </a></h4>
+<p><strong>Response</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">POST</span>
+<span class="o">/</span><span class="n">your</span><span class="o">/</span><span class="n">endpoint</span><span class="o">/</span><span class="k">for</span><span class="o">/</span><span class="n">event</span><span class="o">/</span><span class="n">model</span><span class="o">-</span><span class="n">versions</span><span class="o">/</span><span class="n">tag</span><span class="o">-</span><span class="nb">set</span>
+<span class="o">--</span><span class="n">data</span> <span class="p">{</span>
+  <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;MODEL_VERSION_TAG_SET&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;webhook_id&quot;</span><span class="p">:</span> <span class="s2">&quot;8d7fc634e624474f9bbfde960fdf354c&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;event_timestamp&quot;</span><span class="p">:</span> <span class="mi">1589859029343</span><span class="p">,</span>
+  <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Airline_Delay_SparkML&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;8&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;key&quot;</span><span class="p">:</span><span class="s2">&quot;key1&quot;</span><span class="p">,</span><span class="s2">&quot;value&quot;</span><span class="p">:</span><span class="s2">&quot;value1&quot;</span><span class="p">},{</span><span class="s2">&quot;key&quot;</span><span class="p">:</span><span class="s2">&quot;key2&quot;</span><span class="p">,</span><span class="s2">&quot;value&quot;</span><span class="p">:</span><span class="s2">&quot;value2&quot;</span><span class="p">}],</span>
+  <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;example@yourdomain.com set version tag(s) &#39;key1&#39; =&gt; &#39;value1&#39;, &#39;key2&#39; =&gt; &#39;value2&#39; for registered model &#39;someModel&#39; version 8.&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="event-comment_created">
+<h4>event: <code class="docutils literal notranslate"><span class="pre">COMMENT_CREATED</span></code><a class="headerlink" href="#event-comment_created" title="Permalink to this headline"> </a></h4>
+<p><strong>Response</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">POST</span>
+<span class="o">/</span><span class="n">your</span><span class="o">/</span><span class="n">endpoint</span><span class="o">/</span><span class="k">for</span><span class="o">/</span><span class="n">event</span><span class="o">/</span><span class="n">comments</span><span class="o">/</span><span class="n">create</span>
+<span class="o">--</span><span class="n">data</span> <span class="p">{</span>
+  <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;COMMENT_CREATED&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;webhook_id&quot;</span><span class="p">:</span> <span class="s2">&quot;8d7fc634e624474f9bbfde960fdf354c&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;event_timestamp&quot;</span><span class="p">:</span> <span class="mi">1589859029343</span><span class="p">,</span>
+  <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Airline_Delay_SparkML&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;8&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;Raw text content of the comment&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;A user commented on registered model &#39;someModel&#39; version 8.&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="security">
+<h2>Security<a class="headerlink" href="#security" title="Permalink to this headline"> </a></h2>
+<p>For security, Databricks includes the X-Databricks-Signature in the header computed from the payload and the shared secret key associated with the webhook using the <a class="reference external" href="https://en.wikipedia.org/wiki/HMAC">HMAC with SHA-256 algorithm</a>.</p>
+<p>In addition, you can include a standard Authorization header in the outgoing request by specifying one in the <code class="docutils literal notranslate"><span class="pre">HttpUrlSpec</span></code> of the webhook.</p>
+<div class="section" id="client-verification">
+<h3>Client verification<a class="headerlink" href="#client-verification" title="Permalink to this headline"> </a></h3>
+<p>If a shared secret is set, the payload recipient should verify the source of the HTTP request by using the shared secret to HMAC-encode the payload, and then comparing the encoded value with the <code class="docutils literal notranslate"><span class="pre">X-Databricks-Signature</span></code> from the header. This is particularly important if SSL certificate validation is disabled (that is, if the <code class="docutils literal notranslate"><span class="pre">enable_ssl_verification</span></code> field is set to <code class="docutils literal notranslate"><span class="pre">false</span></code>).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">enable_ssl_verification</span></code> is <code class="docutils literal notranslate"><span class="pre">true</span></code> by default. For self-signed certificates, this field must be <code class="docutils literal notranslate"><span class="pre">false</span></code>, and the destination server must disable certificate validation.</p>
+<p>For security purposes, Databricks recommends that you perform secret validation with the HMAC-encoded portion of the payload. If you disable host name validation, you increase the risk that a request could be maliciously routed to an unintended host.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">hmac</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">secret</span> <span class="o">=</span> <span class="n">shared_secret</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="n">signature_key</span> <span class="o">=</span> <span class="s1">&#39;X-Databricks-Signature&#39;</span>
+
+<span class="k">def</span> <span class="nf">validate_signature</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">signature_key</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;No X-Signature. Webhook not be trusted.&#39;</span><span class="p">)</span>
+
+  <span class="n">x_sig</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">signature_key</span><span class="p">)</span>
+  <span class="n">body</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+  <span class="n">h</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">secret</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">)</span>
+  <span class="n">computed_sig</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">hmac</span><span class="o">.</span><span class="n">compare_digest</span><span class="p">(</span><span class="n">computed_sig</span><span class="p">,</span> <span class="n">x_sig</span><span class="o">.</span><span class="n">encode</span><span class="p">()):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;X-Signature mismatch. Webhook not be trusted.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="authorization-header-for-http-registry-webhooks">
+<h3>Authorization header for HTTP registry webhooks<a class="headerlink" href="#authorization-header-for-http-registry-webhooks" title="Permalink to this headline"> </a></h3>
+<p>If an Authorization header is set, clients should verify the source of the HTTP request by verifying the bearer token or authorization credentials in the Authorization header.</p>
+</div>
+<div class="section" id="ip-allowlisting-for-job-registry-webhooks">
+<span id="ip-allowlisting"></span><h3>IP allowlisting for job registry webhooks<a class="headerlink" href="#ip-allowlisting-for-job-registry-webhooks" title="Permalink to this headline"> </a></h3>
+<p>To use a webhook that triggers job runs in a different workspace that has IP allowlisting enabled, you must <a class="reference internal" href="../security/network/front-end/ip-access-list-workspace.html"><span class="doc">allowlist</span></a> the region NAT IP where the webhook is located to accept incoming requests.</p>
+<p>If the webhook and the job are in the same workspace, you do not need to add any IPs to your allowlist.</p>
+<p>Contact your accounts team to identify the IPs you need to allowlist.</p>
+</div>
+</div>
+<div class="section" id="audit-logging">
+<h2>Audit logging<a class="headerlink" href="#audit-logging" title="Permalink to this headline"> </a></h2>
+<p>If audit logging is enabled for your workspace, the following events are included in the audit logs:</p>
+<ul class="simple">
+<li><p>Create webhook</p></li>
+<li><p>Update webhook</p></li>
+<li><p>List webhook</p></li>
+<li><p>Delete webhook</p></li>
+<li><p>Test webhook</p></li>
+<li><p>Webhook trigger</p></li>
+</ul>
+<div class="section" id="webhook-trigger-audit-logging">
+<h3>Webhook trigger audit logging<a class="headerlink" href="#webhook-trigger-audit-logging" title="Permalink to this headline"> </a></h3>
+<p>For webhooks with HTTP endpoints, the HTTP request sent to the URL specified for the webhook along with the URL and <code class="docutils literal notranslate"><span class="pre">enable_ssl_verification</span></code> values are logged.</p>
+<p>For webhooks with job triggers, the <code class="docutils literal notranslate"><span class="pre">job_id</span></code> and <code class="docutils literal notranslate"><span class="pre">workspace_url</span></code> values are logged.</p>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"> </a></h2>
+<p>This section includes:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#http-registry-webhook-example-workflow"><span class="std std-ref">HTTP registry webhook workflow example</span></a>.</p></li>
+<li><p><a class="reference internal" href="#job-registry-webhook-example-workflow"><span class="std std-ref">job registry webhook workflow example</span></a>.</p></li>
+<li><p><a class="reference internal" href="#list-registry-webhooks-example"><span class="std std-ref">list webhooks example</span></a>.</p></li>
+<li><p>two <a class="reference internal" href="#notebooks"><span class="std std-ref">example notebooks</span></a>: one illustrating the REST API, and one illustrating the Python client.</p></li>
+</ul>
+<div class="section" id="http-registry-webhook-example-workflow">
+<h3>HTTP registry webhook example workflow<a class="headerlink" href="#http-registry-webhook-example-workflow" title="Permalink to this headline"> </a></h3>
+<div class="section" id="1-create-a-webhook">
+<h4>1. Create a webhook<a class="headerlink" href="#1-create-a-webhook" title="Permalink to this headline"> </a></h4>
+<p>When an HTTPS endpoint is ready to receive the webhook event request, you can create a webhook using the webhooks Databricks REST API. For example, the webhook’s URL can point to Slack to post messages to a channel.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access-token&gt;&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<span class="s1">&#39;{&quot;model_name&quot;: &quot;&lt;model-name&gt;&quot;,</span>
+<span class="s1">  &quot;events&quot;: [&quot;MODEL_VERSION_CREATED&quot;],</span>
+<span class="s1">  &quot;description&quot;: &quot;Slack notifications&quot;,</span>
+<span class="s1">  &quot;status&quot;: &quot;TEST_MODE&quot;,</span>
+<span class="s1">  &quot;http_url_spec&quot;: {</span>
+<span class="s1">    &quot;url&quot;: &quot;https://hooks.slack.com/services/...&quot;,</span>
+<span class="s1">    &quot;secret&quot;: &quot;anyRandomString&quot;</span>
+<span class="s1">    &quot;authorization&quot;: &quot;Bearer AbcdEfg1294&quot;}}&#39;</span><span class="w"> </span>https://&lt;databricks-instance&gt;/api/2.0/mlflow/registry-webhooks/create
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks_registry_webhooks</span> <span class="kn">import</span> <span class="n">RegistryWebhooksClient</span><span class="p">,</span> <span class="n">HttpUrlSpec</span>
+
+<span class="n">http_url_spec</span> <span class="o">=</span> <span class="n">HttpUrlSpec</span><span class="p">(</span>
+  <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://hooks.slack.com/services/...&quot;</span><span class="p">,</span>
+  <span class="n">secret</span><span class="o">=</span><span class="s2">&quot;secret_string&quot;</span><span class="p">,</span>
+  <span class="n">authorization</span><span class="o">=</span><span class="s2">&quot;Bearer AbcdEfg1294&quot;</span>
+<span class="p">)</span>
+<span class="n">http_webhook</span> <span class="o">=</span> <span class="n">RegistryWebhooksClient</span><span class="p">()</span><span class="o">.</span><span class="n">create_webhook</span><span class="p">(</span>
+  <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;&lt;model-name&gt;&quot;</span><span class="p">,</span>
+  <span class="n">events</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;MODEL_VERSION_CREATED&quot;</span><span class="p">],</span>
+  <span class="n">http_url_spec</span><span class="o">=</span><span class="n">http_url_spec</span><span class="p">,</span>
+  <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Slack notifications&quot;</span><span class="p">,</span>
+  <span class="n">status</span><span class="o">=</span><span class="s2">&quot;TEST_MODE&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Response</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;webhook&quot;</span><span class="p">:</span> <span class="p">{</span>
+   <span class="s2">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;1234567890&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;creation_timestamp&quot;</span><span class="p">:</span><span class="mi">1571440826026</span><span class="p">,</span>
+   <span class="s2">&quot;last_updated_timestamp&quot;</span><span class="p">:</span><span class="mi">1582768296651</span><span class="p">,</span>
+   <span class="s2">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;TEST_MODE&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;events&quot;</span><span class="p">:[</span><span class="s2">&quot;MODEL_VERSION_CREATED&quot;</span><span class="p">],</span>
+   <span class="s2">&quot;http_url_spec&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://hooks.slack.com/services/...&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;enable_ssl_verification&quot;</span><span class="p">:</span> <span class="kc">True</span>
+<span class="p">}}}</span>
+</pre></div>
+</div>
+<p>You can also create an HTTP registry webhook with the <a class="reference internal" href="../dev-tools/terraform/index.html"><span class="doc">Databricks Terraform provider</span></a> and <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mlflow_webhook">databricks_mlflow_webhook</a>.</p>
+</div>
+<div class="section" id="2-test-the-webhook">
+<h4>2. Test the webhook<a class="headerlink" href="#2-test-the-webhook" title="Permalink to this headline"> </a></h4>
+<p>The previous webhook was created in <code class="docutils literal notranslate"><span class="pre">TEST_MODE</span></code>, so a mock event can be triggered to send a request to the specified URL. However, the webhook does not trigger on a real event. The test endpoint returns the received status code and body from the specified URL.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access-token&gt;&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<span class="s1">&#39;{&quot;id&quot;: &quot;1234567890&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+https://&lt;databricks-instance&gt;/api/2.0/mlflow/registry-webhooks/test
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks_registry_webhooks</span> <span class="kn">import</span> <span class="n">RegistryWebhooksClient</span>
+
+<span class="n">http_webhook</span> <span class="o">=</span> <span class="n">RegistryWebhooksClient</span><span class="p">()</span><span class="o">.</span><span class="n">test_webhook</span><span class="p">(</span>
+  <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;1234567890&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Response</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+ <span class="s2">&quot;status&quot;</span><span class="p">:</span><span class="mi">200</span><span class="p">,</span>
+ <span class="s2">&quot;body&quot;</span><span class="p">:</span><span class="s2">&quot;OK&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="3-update-the-webhook-to-active-status">
+<h4>3. Update the webhook to active status<a class="headerlink" href="#3-update-the-webhook-to-active-status" title="Permalink to this headline"> </a></h4>
+<p>To enable the webhook for real events, set its status to <code class="docutils literal notranslate"><span class="pre">ACTIVE</span></code> through an update call, which can also be used to change any of its other properties.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>curl<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access-token&gt;&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<span class="s1">&#39;{&quot;id&quot;: &quot;1234567890&quot;, &quot;status&quot;: &quot;ACTIVE&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+https://&lt;databricks-instance&gt;/api/2.0/mlflow/registry-webhooks/update
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks_registry_webhooks</span> <span class="kn">import</span> <span class="n">RegistryWebhooksClient</span>
+
+<span class="n">http_webhook</span> <span class="o">=</span> <span class="n">RegistryWebhooksClient</span><span class="p">()</span><span class="o">.</span><span class="n">update_webhook</span><span class="p">(</span>
+  <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;1234567890&quot;</span><span class="p">,</span>
+  <span class="n">status</span><span class="o">=</span><span class="s2">&quot;ACTIVE&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Response</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;webhook&quot;</span><span class="p">:</span> <span class="p">{</span>
+   <span class="s2">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;1234567890&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;creation_timestamp&quot;</span><span class="p">:</span><span class="mi">1571440826026</span><span class="p">,</span>
+   <span class="s2">&quot;last_updated_timestamp&quot;</span><span class="p">:</span><span class="mi">1582768296651</span><span class="p">,</span>
+   <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;ACTIVE&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;events&quot;</span><span class="p">:[</span><span class="s2">&quot;MODEL_VERSION_CREATED&quot;</span><span class="p">],</span>
+   <span class="s2">&quot;http_url_spec&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://hooks.slack.com/services/...&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;enable_ssl_verification&quot;</span><span class="p">:</span> <span class="kc">True</span>
+<span class="p">}}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="4-delete-the-webhook">
+<h4>4. Delete the webhook<a class="headerlink" href="#4-delete-the-webhook" title="Permalink to this headline"> </a></h4>
+<p>To disable the webhook, set its status to <code class="docutils literal notranslate"><span class="pre">DISABLED</span></code> (using a similar update command as above), or delete it.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>curl<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access-token&gt;&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<span class="s1">&#39;{&quot;id&quot;: &quot;1234567890&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+https://&lt;databricks-instance&gt;/api/2.0/mlflow/registry-webhooks/delete
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks_registry_webhooks</span> <span class="kn">import</span> <span class="n">RegistryWebhooksClient</span>
+
+<span class="n">http_webhook</span> <span class="o">=</span> <span class="n">RegistryWebhooksClient</span><span class="p">()</span><span class="o">.</span><span class="n">delete_webhook</span><span class="p">(</span>
+  <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;1234567890&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Response</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="job-registry-webhook-example-workflow">
+<h3>Job registry webhook example workflow<a class="headerlink" href="#job-registry-webhook-example-workflow" title="Permalink to this headline"> </a></h3>
+<p>The workflow for managing job registry webhooks is similar to HTTP registry webhooks, with the only difference being the <code class="docutils literal notranslate"><span class="pre">job_spec</span></code> field that replaces the <code class="docutils literal notranslate"><span class="pre">http_url_spec</span></code> field.</p>
+<p>With webhooks, you can trigger jobs in the same workspace or in a different workspace. The workspace is specified using the optional parameter <code class="docutils literal notranslate"><span class="pre">workspace_url</span></code>. If no <code class="docutils literal notranslate"><span class="pre">workspace_url</span></code> is present, the default behavior is to trigger a job in the same workspace as the webhook.</p>
+<div class="section" id="requirements">
+<h4>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h4>
+<ul class="simple">
+<li><p>An existing <a class="reference internal" href="../workflows/jobs/create-run-jobs.html"><span class="doc">job</span></a>.</p></li>
+<li><p>A <a class="reference external" href="https://docs.databricks.com/api/workspace/tokenmanagement">personal access token</a>. Note that access tokens are not included in the webhook object returned by the APIs.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As a security best practice when you authenticate with automated tools, systems, scripts, and apps, Databricks recommends that you use OAuth tokens.</p>
+<p>If you use personal access token authentication, Databricks recommends using personal access tokens belonging to <a class="reference internal" href="../administration-guide/users-groups/service-principals.html"><span class="doc">service principals</span></a> instead of workspace users. To create tokens for service principals, see <a class="reference internal" href="../administration-guide/users-groups/service-principals.html#personal-access-tokens"><span class="std std-ref">Manage tokens for a service principal</span></a>.</p>
+</div>
+</div>
+<div class="section" id="create-a-job-registry-webhook">
+<h4>Create a job registry webhook<a class="headerlink" href="#create-a-job-registry-webhook" title="Permalink to this headline"> </a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access-token&gt;&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="se">\ </span><span class="s1">&#39;{&quot;model_name&quot;: &quot;&lt;model-name&gt;&quot;,</span>
+<span class="s1">  &quot;events&quot;: [&quot;TRANSITION_REQUEST_CREATED&quot;],</span>
+<span class="s1">  &quot;description&quot;: &quot;Job webhook trigger&quot;,</span>
+<span class="s1">  &quot;status&quot;: &quot;TEST_MODE&quot;,</span>
+<span class="s1">  &quot;job_spec&quot;: {</span>
+<span class="s1">    &quot;job_id&quot;: &quot;1&quot;,</span>
+<span class="s1">    &quot;workspace_url&quot;: &quot;https://my-databricks-workspace.com&quot;,</span>
+<span class="s1">    &quot;access_token&quot;: &quot;dapi12345...&quot;}}&#39;</span>
+https://&lt;databricks-instance&gt;/api/2.0/mlflow/registry-webhooks/create
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks_registry_webhooks</span> <span class="kn">import</span> <span class="n">RegistryWebhooksClient</span><span class="p">,</span> <span class="n">JobSpec</span>
+
+<span class="n">job_spec</span> <span class="o">=</span> <span class="n">JobSpec</span><span class="p">(</span>
+  <span class="n">job_id</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+  <span class="n">workspace_url</span><span class="o">=</span><span class="s2">&quot;https://my-databricks-workspace.com&quot;</span><span class="p">,</span>
+  <span class="n">access_token</span><span class="o">=</span><span class="s2">&quot;dapi12345...&quot;</span>
+<span class="p">)</span>
+<span class="n">job_webhook</span> <span class="o">=</span> <span class="n">RegistryWebhooksClient</span><span class="p">()</span><span class="o">.</span><span class="n">create_webhook</span><span class="p">(</span>
+  <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;&lt;model-name&gt;&quot;</span><span class="p">,</span>
+  <span class="n">events</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;TRANSITION_REQUEST_CREATED&quot;</span><span class="p">],</span>
+  <span class="n">job_spec</span><span class="o">=</span><span class="n">job_spec</span><span class="p">,</span>
+  <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Job webhook trigger&quot;</span><span class="p">,</span>
+  <span class="n">status</span><span class="o">=</span><span class="s2">&quot;TEST_MODE&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Response</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;webhook&quot;</span><span class="p">:</span> <span class="p">{</span>
+   <span class="s2">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;1234567891&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;creation_timestamp&quot;</span><span class="p">:</span><span class="mi">1591440826026</span><span class="p">,</span>
+   <span class="s2">&quot;last_updated_timestamp&quot;</span><span class="p">:</span><span class="mi">1591440826026</span><span class="p">,</span>
+   <span class="s2">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;TEST_MODE&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;events&quot;</span><span class="p">:[</span><span class="s2">&quot;TRANSITION_REQUEST_CREATED&quot;</span><span class="p">],</span>
+   <span class="s2">&quot;job_spec&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;workspace_url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://my-databricks-workspace.com&quot;</span>
+<span class="p">}}}</span>
+</pre></div>
+</div>
+<p>You can also create a job registry webhook with the <a class="reference internal" href="../dev-tools/terraform/index.html"><span class="doc">Databricks Terraform provider</span></a> and <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mlflow_webhook">databricks_mlflow_webhook</a>.</p>
+</div>
+</div>
+<div class="section" id="list-registry-webhooks-example">
+<h3>List registry webhooks example<a class="headerlink" href="#list-registry-webhooks-example" title="Permalink to this headline"> </a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access-token&gt;&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="se">\ </span><span class="s1">&#39;{&quot;model_name&quot;: &quot;&lt;model-name&gt;&quot;}&#39;</span>
+https://&lt;databricks-instance&gt;/api/2.0/mlflow/registry-webhooks/list
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">databricks_registry_webhooks</span> <span class="kn">import</span> <span class="n">RegistryWebhooksClient</span>
+
+<span class="n">webhooks_list</span> <span class="o">=</span> <span class="n">RegistryWebhooksClient</span><span class="p">()</span><span class="o">.</span><span class="n">list_webhooks</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;&lt;model-name&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Response</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;webhooks&quot;</span><span class="p">:</span> <span class="p">[{</span>
+   <span class="s2">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;1234567890&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;creation_timestamp&quot;</span><span class="p">:</span><span class="mi">1571440826026</span><span class="p">,</span>
+   <span class="s2">&quot;last_updated_timestamp&quot;</span><span class="p">:</span><span class="mi">1582768296651</span><span class="p">,</span>
+   <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;ACTIVE&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;events&quot;</span><span class="p">:[</span><span class="s2">&quot;MODEL_VERSION_CREATED&quot;</span><span class="p">],</span>
+   <span class="s2">&quot;http_url_spec&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://hooks.slack.com/services/...&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;enable_ssl_verification&quot;</span><span class="p">:</span> <span class="kc">True</span>
+<span class="p">}},</span>
+<span class="p">{</span>
+   <span class="s2">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;1234567891&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;creation_timestamp&quot;</span><span class="p">:</span><span class="mi">1591440826026</span><span class="p">,</span>
+   <span class="s2">&quot;last_updated_timestamp&quot;</span><span class="p">:</span><span class="mi">1591440826026</span><span class="p">,</span>
+   <span class="s2">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;TEST_MODE&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;events&quot;</span><span class="p">:[</span><span class="s2">&quot;TRANSITION_REQUEST_CREATED&quot;</span><span class="p">],</span>
+   <span class="s2">&quot;job_spec&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;workspace_url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://my-databricks-workspace.com&quot;</span>
+<span class="p">}}]}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="notebooks">
+<h3>Notebooks<a class="headerlink" href="#notebooks" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook-section section" id="mlflow-model-registry-webhooks-rest-api-example-notebook">
+<span id="mlflow-model-registry-webhooks-rest-api-example"></span><h4>MLflow Model Registry webhooks REST API example notebook<a class="headerlink" href="#mlflow-model-registry-webhooks-rest-api-example-notebook" title="Permalink to this headline"> </a></h4>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/mlflow/mlflow-model-registry-webhooks-rest-api-example.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/mlflow/mlflow-model-registry-webhooks-rest-api-example.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/mlflow/mlflow-model-registry-webhooks-rest-api-example.html"            id="86f80e1c745db071cbbfdce31a5afa36ec88570ad7b2ffa401263ea60e781696" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+<div class="embedded-notebook-section section" id="mlflow-model-registry-webhooks-python-client-example-notebook">
+<span id="mlflow-model-registry-webhooks-python-client-example"></span><h4>MLflow Model Registry webhooks Python client example notebook<a class="headerlink" href="#mlflow-model-registry-webhooks-python-client-example-notebook" title="Permalink to this headline"> </a></h4>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/mlflow/mlflow-model-registry-webhooks-python-client-example.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/mlflow/mlflow-model-registry-webhooks-python-client-example.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/mlflow/mlflow-model-registry-webhooks-python-client-example.html"            id="e26a3a2786826af7e3d096242a59d34c8e730651bb955d0cb708616ce95c4545" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

@@ -1,0 +1,616 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Use Databricks SQL alerts to periodically run queries, evaluate defined conditions, and send notifications if a condition is met." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="What are Databricks SQL alerts?">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>What are Databricks SQL alerts? &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/sql/user/alerts/index.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/sql/user/alerts/index.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/sql/user/alerts/index.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../../en/sql/user/alerts/index.html" class="notranslate">English</option>
+    <option value="../../../../ja/sql/user/alerts/index.html" class="notranslate">日本語</option>
+    <option value="../../../../pt/sql/user/alerts/index.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>What are Databricks SQL alerts?</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="what-are-databricks-sql-alerts">
+<span id="what-are-dbsql-alerts"></span><h1>What are Databricks SQL alerts?<a class="headerlink" href="#what-are-databricks-sql-alerts" title="Permalink to this headline"> </a></h1>
+<p>Databricks SQL alerts periodically run queries, evaluate defined conditions, and send notifications if a condition is met. You can set up alerts to monitor your business and send notifications when reported data falls outside of expected limits. Scheduling an alert executes its underlying query and checks the alert criteria. This is independent of any schedule that might exist on the underlying query.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<ul class="simple">
+<li><p>Alerts leveraging queries with <a class="reference internal" href="../queries/query-parameters.html"><span class="doc">parameters</span></a> use the default value specified in the SQL editor for each parameter.</p></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="view-and-organize-alerts">
+<span id="view-alerts"></span><h2>View and organize alerts<a class="headerlink" href="#view-and-organize-alerts" title="Permalink to this headline"> </a></h2>
+<p>Alerts can be viewed in one of two ways:</p>
+<ul class="simple">
+<li><p>New alerts can now be viewed in the workspace browser by clicking <img alt="Workspace Icon" src="../../../_images/workspace-icon.png" /> <strong>Workspace</strong> in the sidebar. These alerts are viewable, by default, in the <strong>Home</strong> folder. Users can organize alerts into folders in the workspace browser along with other Databricks objects. To view and organize currently existing alerts in the workspace browser, users (or admins) must migrate them into the workspace browser. For information about the Databricks SQL workspace browser, including migration, see <a class="reference internal" href="../../../workspace/workspace-browser/index.html"><span class="doc">Workspace browser</span></a>.</p></li>
+<li><p>All alerts, regardless of creation time or migration status, can be viewed by clicking <img alt="Alerts Icon" src="../../../_images/alerts-icon.png" /> <strong>Alerts</strong> in the sidebar.</p></li>
+</ul>
+<p>By default, objects are sorted in reverse chronological order. You can reorder the list by clicking the column headings.</p>
+<ul class="simple">
+<li><p><strong>Name</strong> shows the string name of each alert.</p></li>
+<li><p><strong>State</strong> shows whether the alert status is <code class="docutils literal notranslate"><span class="pre">TRIGGERED</span></code>,  <code class="docutils literal notranslate"><span class="pre">OK</span></code>, or <code class="docutils literal notranslate"><span class="pre">UNKNOWN</span></code>.</p></li>
+<li><p><strong>Last Updated</strong> shows the last updated time or date.</p></li>
+<li><p><strong>Created at</strong> shows the date and time the alert was created.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">TRIGGERED</span></code> means that on the most recent execution, the Value column in your target query met the Condition and Threshold you configured. If your alert checks whether “cats” is above 1500, your alert will be triggered as long as “cats” is above 1500.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OK</span></code> means that on the most recent query execution, the Value column did not meet the Condition and Threshold you configured. This doesn’t mean that the Alert was not previously triggered. If your “cats” value is now 1470, your alert will show as <code class="docutils literal notranslate"><span class="pre">OK</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UNKNOWN</span></code> means Databricks SQL does not have enough data to evaluate the alert
+criteria. You will see this status immediately after creating your Alert and until the query has executed. You will also see this status if there was no data in the query result or if the most recent query result doesn’t include the <em>Value Column</em> you configured.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="create-an-alert">
+<span id="create-alert"></span><h2>Create an alert<a class="headerlink" href="#create-an-alert" title="Permalink to this headline"> </a></h2>
+<p>Follow these steps to create an alert on a single column of a query.</p>
+<ol class="arabic">
+<li><p>Do one of the following:</p>
+<ul class="simple">
+<li><p>Click <img alt="New Icon" src="../../../_images/create-icon.png" /> <strong>New</strong> in the sidebar and select <strong>Alert</strong>.</p></li>
+<li><p>Click <img alt="Alerts Icon" src="../../../_images/alerts-icon.png" /> <strong>Alerts</strong> in the sidebar and click the <strong>+ New Alert</strong> button.</p></li>
+<li><p>Click <img alt="Workspace Icon" src="../../../_images/workspace-icon.png" /> <strong>Workspace</strong> in the sidebar and click <strong>+ Create Alert</strong>.</p></li>
+<li><p>Click the <img alt="Kebab menu" src="../../../_images/kebab-menu.png" /> kebab menu in the upper-right corner of a saved query and click <strong>+ Create Alert</strong>.</p></li>
+</ul>
+</li>
+<li><p>In the <strong>Query</strong> field, search for a target query.</p>
+<div class="figure align-default">
+<img alt="Target query" src="../../../_images/new-alert-query-search.png" />
+</div>
+<p>To alert on multiple columns, you need to modify your query. See <a class="reference internal" href="#alert-multiple-columns"><span class="std std-ref">Alert aggregations</span></a>.</p>
+</li>
+<li><p>In the <strong>Trigger condition</strong> field, configure the alert.</p>
+<ul>
+<li><p>The <strong>Value column</strong> drop-down controls which field of your query result is evaluated. Alert conditions can be set on the first value of a column in the query result, or you can choose to set an aggregation across all the rows of a single column, such as SUM or AVERAGE.</p>
+<div class="figure align-default">
+<img alt="Alert aggregations" src="../../../_images/alert-aggregation.png" />
+</div>
+</li>
+<li><p>The <strong>Operator</strong> drop-down controls the logical operation to be applied.</p></li>
+<li><p>The <strong>Threshold value</strong> text input is compared against the Value column using the Condition you specify.</p></li>
+</ul>
+<div class="figure align-default">
+<img alt="Trigger conditions" src="../../../_images/trigger-condition.png" />
+</div>
+</li>
+<li><p>Click <strong>Preview alert</strong> to preview the alert and test whether the alert would trigger with the current data.</p></li>
+<li><p>In the <strong>When alert is triggered, send notification</strong> field, select how many notifications are sent when your alert is triggered:</p>
+<ul class="simple">
+<li><p><strong>Just once</strong>: Send a notification when the <a class="reference internal" href="#view-alerts"><span class="std std-ref">alert status</span></a> changes from <code class="docutils literal notranslate"><span class="pre">OK</span></code> to <code class="docutils literal notranslate"><span class="pre">TRIGGERED</span></code>.</p></li>
+<li><p><strong>Each time alert is evaluated</strong>: Send a notification whenever the alert status is <code class="docutils literal notranslate"><span class="pre">TRIGGERED</span></code> regardless of its status at the previous evaluation.</p></li>
+<li><p><strong>At most every</strong>: Send a notification whenever the alert status is <code class="docutils literal notranslate"><span class="pre">TRIGGERED</span></code> at a specific interval. This choice lets you avoid notification spam for alerts that trigger often.</p></li>
+</ul>
+<p>Regardless of which notification setting you choose, you receive a notification whenever the status goes from <code class="docutils literal notranslate"><span class="pre">OK</span></code> to <code class="docutils literal notranslate"><span class="pre">TRIGGERED</span></code> or from <code class="docutils literal notranslate"><span class="pre">TRIGGERED</span></code> to <code class="docutils literal notranslate"><span class="pre">OK</span></code>. The schedule settings affect how many notifications you will receive if the status remains <code class="docutils literal notranslate"><span class="pre">TRIGGERED</span></code> from one execution to the next. For details, see <a class="reference internal" href="#notification-frequency"><span class="std std-ref">Notification frequency</span></a>.</p>
+</li>
+<li><p>In the <strong>Template</strong> drop-down, choose a template:</p>
+<ul>
+<li><p><strong>Use default template</strong>: Alert notification is a message with links to the Alert configuration screen and the Query screen.</p></li>
+<li><p><strong>Use custom template</strong>: Alert notification includes more specific information about the alert.</p>
+<ol class="loweralpha">
+<li><p>A box displays, consisting of input fields for subject and body. Any static content is valid, and you can incorporate built-in template variables:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ALERT_STATUS</span></code>: The evaluated alert status (string).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ALERT_CONDITION</span></code>: The alert condition operator (string).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ALERT_THRESHOLD</span></code>:  The alert threshold (string or number).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ALERT_COLUMN</span></code>:  The alert column name (string).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ALERT_NAME</span></code>: The alert name (string).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ALERT_URL</span></code>: The alert page URL (string).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">QUERY_NAME</span></code>: The associated query name (string).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">QUERY_URL</span></code>: The associated query page URL (string).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">QUERY_RESULT_TABLE</span></code>: The query result HTML table (string).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">QUERY_RESULT_VALUE</span></code>: The query result value (string or number).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">QUERY_RESULT_ROWS</span></code>: The query result rows (value array).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">QUERY_RESULT_COLS</span></code>: The query result columns (string array).</p></li>
+</ul>
+<p>An example subject, for instance, could be: <code class="docutils literal notranslate"><span class="pre">Alert</span> <span class="pre">&quot;{{ALERT_NAME}}&quot;</span> <span class="pre">changed</span> <span class="pre">status</span> <span class="pre">to</span> <span class="pre">{{ALERT_STATUS}}</span></code>.</p>
+</li>
+<li><p>You can use HTML to format messages in a custom template. The following tags and attributes are allowed in templates:</p>
+<ul class="simple">
+<li><p>Tags: <code class="docutils literal notranslate"><span class="pre">&lt;a&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;abbr&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;acronym&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;b&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;blockquote&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;body&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;br&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;code&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;div&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;em&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;h1&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;h2&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;h3&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;h4&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;h5</span></code>&gt;, <code class="docutils literal notranslate"><span class="pre">&lt;h6</span></code>&gt;, <code class="docutils literal notranslate"><span class="pre">&lt;head</span></code>&gt;, <code class="docutils literal notranslate"><span class="pre">&lt;hr&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;html&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;i&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;li&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;ol&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;p&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;span&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;strong&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;table&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;tbody&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;td&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;th&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;tr&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;ul&gt;</span></code></p></li>
+<li><p>Attributes: href (for <code class="docutils literal notranslate"><span class="pre">&lt;a&gt;</span></code>), title (for <code class="docutils literal notranslate"><span class="pre">&lt;a&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;abbr&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;acronym&gt;</span></code>)</p></li>
+</ul>
+</li>
+<li><p>Click the <strong>Preview</strong> toggle button to preview the rendered result.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The preview is useful for verifying that template variables are rendered correctly. It is not an accurate representation of the eventual notification content, as each notification destination can display notifications differently.</p>
+</div>
+</li>
+<li><p>Click the <strong>Save Changes</strong> button.</p></li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>Click <strong>Create Alert</strong>.</p></li>
+<li><p>Click <strong>Add Schedule</strong>.</p>
+<ul class="simple">
+<li><p>Use the dropdown pickers to specify the frequency, period, starting time, and time zone. Optionally, select the <strong>Show cron syntax</strong> checkbox to edit the schedule in <a class="reference external" href="http://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html">Quartz Cron Syntax</a>.</p></li>
+<li><p>Choose <strong>More options</strong> to show optional settings. You can also choose:</p>
+<ul>
+<li><p>A name for the schedule.</p></li>
+<li><p>A SQL warehouse to power the query. By default, the SQL warehouse used for ad hoc query execution is also used for a scheduled job. Use this optional setting to select a different warehouse to run the scheduled query.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Click the <strong>Destinations</strong> tab in the <strong>Add schedule</strong> dialog.</p>
+<div class="figure align-default">
+<img alt="Destinations tab in settings dialog" src="../../../_images/add-new-dest.png" />
+</div>
+<ul class="simple">
+<li><p>Use the drop-down to select an available <a class="reference internal" href="../../../administration-guide/workspace-settings/notification-destinations.html"><span class="doc">notification destination</span></a>. Or, start typing a username to add individuals.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If you skip this step you <em>will not</em> be notified when the alert is triggered.</p>
+</div>
+</li>
+<li><p>Click <strong>Create</strong>. Your saved alert and notification details appear on the screen.</p>
+<div class="figure align-default">
+<img alt="Saved alert" src="../../../_images/saved-alert.png" />
+</div>
+</li>
+<li><p>Share the schedule.</p>
+<ul class="simple">
+<li><p>To the right of the listed schedule, choose the <img alt="Kebab menu" src="../../../_images/kebab-menu.png" /> kebab menu and select <strong>Edit schedule permissions</strong>.</p></li>
+<li><p>Choose a user, group, or service principal from the drop-down menu in the dialog.</p></li>
+<li><p>Choose <strong>Can View</strong> to allow the selected users to view the results of scheduled runs.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Permissions for alerts and schedules are separate. Grant access to users and groups in the notifications destinations list so they can view scheduled run results.</p>
+</div>
+<p>For more information on schedule permissions, see <a class="reference internal" href="../../../security/auth-authz/access-control/dashboard-acl.html"><span class="doc">Share Databricks SQL dashboards</span></a></p>
+</li>
+<li><p>Share the alert.</p>
+<ul class="simple">
+<li><p>Click <img alt="Share Button" src="../../../_images/share-button.png" /> near the top-right of the page.</p></li>
+<li><p>Add users or groups who should have access to the alert.</p></li>
+<li><p>Choose the appropriate permission level, then click <strong>Add</strong>.</p></li>
+</ul>
+</li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><strong>Can Manage</strong> grants permission to view, modify, and delete schedules. This permission is required in order to make changes to the run interval, update the notification destination list, and pause or unpause the schedule.</p>
+<p> For more information on controlling access to an alert, see <a class="reference internal" href="../../../security/auth-authz/access-control/alert-acl.html"><span class="doc">Share alerts</span></a>.</p>
+</div>
+</div>
+<div class="section" id="alert-aggregations">
+<span id="alert-multiple-columns"></span><h2>Alert aggregations<a class="headerlink" href="#alert-aggregations" title="Permalink to this headline"> </a></h2>
+<p>An aggregation on an alert works by modifying the original SQL of the Databricks SQL query attached to the alert. The alert wraps the original query text in a common table expression (CTE) and performs a wrapping aggregation query on it to aggregate the query result.</p>
+<p>As an example, a <code class="docutils literal notranslate"><span class="pre">SUM</span></code> aggregation on an alert attached to a query with text <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">1</span> <span class="pre">AS</span> <span class="pre">column_name</span></code> means that whenever the alert is refreshed, the modified SQL that runs would be: <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">q</span> <span class="pre">AS</span> <span class="pre">(SELECT</span> <span class="pre">1</span> <span class="pre">AS</span> <span class="pre">column_name)</span> <span class="pre">SELECT</span> <span class="pre">SUM(column_name)</span> <span class="pre">FROM</span> <span class="pre">q</span></code>.</p>
+<p>This means that the original query result (pre-aggregated) cannot be shown in an alert custom body (with parameters such as <code class="docutils literal notranslate"><span class="pre">QUERY_RESULT_ROWS</span></code> and <code class="docutils literal notranslate"><span class="pre">QUERY_RESULT_COLS</span></code>) whenever there is an aggregation on an alert. Instead, those variables will only display the final, post-aggregation query result.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All trigger conditions related to aggregations are not supported by the API.</p>
+</div>
+</div>
+<div class="section" id="alert-on-multiple-columns">
+<h2>Alert on multiple columns<a class="headerlink" href="#alert-on-multiple-columns" title="Permalink to this headline"> </a></h2>
+<p>To set an alert based on multiple columns of a query, your query can implement the alert logic and
+return a boolean value for the alert to trigger on. For example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="k">CASE</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="n">drafts_count</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">10000</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">archived_count</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">5000</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">ELSE</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">END</span>
+<span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="k">CASE</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="n">is_archived</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">ELSE</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">END</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">archived_count</span><span class="p">,</span>
+<span class="k">sum</span><span class="p">(</span><span class="k">CASE</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="n">is_draft</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">ELSE</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">END</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">drafts_count</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">queries</span><span class="p">)</span><span class="w"> </span><span class="k">data</span>
+</pre></div>
+</div>
+<p>This query returns <code class="docutils literal notranslate"><span class="pre">1</span></code> when <code class="docutils literal notranslate"><span class="pre">drafts_count</span> <span class="pre">&gt;</span> <span class="pre">10000</span> <span class="pre">and</span> <span class="pre">archived_count</span> <span class="pre">&gt;</span> <span class="pre">5000</span></code>.
+Then you can configure the alert to trigger when the value is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+</div>
+<div class="section" id="notification-frequency">
+<h2>Notification frequency<a class="headerlink" href="#notification-frequency" title="Permalink to this headline"> </a></h2>
+<p>Databricks SQL sends notifications to your chosen notification destinations whenever it detects
+that the Alert status has changed from <code class="docutils literal notranslate"><span class="pre">OK</span></code> to <code class="docutils literal notranslate"><span class="pre">TRIGGERED</span></code> or vice versa.
+Consider this example where an Alert is configured on a query that is scheduled
+to run once daily. The daily status of the Alert appears in the following table.
+Prior to Monday the alert status was <code class="docutils literal notranslate"><span class="pre">OK</span></code>.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Day</p></th>
+<th class="head"><p>Alert Status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> Monday</p></td>
+<td><p> OK</p></td>
+</tr>
+<tr class="row-odd"><td><p> Tuesday</p></td>
+<td><p> OK</p></td>
+</tr>
+<tr class="row-even"><td><p> Wednesday</p></td>
+<td><p> TRIGGERED</p></td>
+</tr>
+<tr class="row-odd"><td><p> Thursday</p></td>
+<td><p> TRIGGERED</p></td>
+</tr>
+<tr class="row-even"><td><p> Friday</p></td>
+<td><p> TRIGGERED</p></td>
+</tr>
+<tr class="row-odd"><td><p> Saturday</p></td>
+<td><p> TRIGGERED</p></td>
+</tr>
+<tr class="row-even"><td><p> Sunday</p></td>
+<td><p> OK</p></td>
+</tr>
+</tbody>
+</table>
+<p>If the notification frequency is set to <code class="docutils literal notranslate"><span class="pre">Just</span> <span class="pre">Once</span></code>, Databricks SQL sends a
+notification on Wednesday when the status changed from <code class="docutils literal notranslate"><span class="pre">OK</span></code> to <code class="docutils literal notranslate"><span class="pre">TRIGGERED</span></code> and
+again on Sunday when it switches back. It does not send alerts on Thursday,
+Friday, or Saturday unless you specifically configure it to do so because the
+Alert status did not change between executions on those days.</p>
+</div>
+<div class="section" id="configure-alert-permissions-and-transfer-alert-ownership">
+<span id="alert-permissions"></span><h2>Configure alert permissions and transfer alert ownership<a class="headerlink" href="#configure-alert-permissions-and-transfer-alert-ownership" title="Permalink to this headline"> </a></h2>
+<p>To configure who can manage and run alerts and to transfer an ownership of an alert, see <a class="reference internal" href="../../../security/auth-authz/access-control/alert-acl.html"><span class="doc">Share alerts</span></a>.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

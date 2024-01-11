@@ -1,0 +1,494 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn best practices for each stage of deep learning model development in Databricks from resource management to model serving." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Best practices for deep learning on Databricks">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Best practices for deep learning on Databricks &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/machine-learning/train-model/dl-best-practices.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/machine-learning/train-model/dl-best-practices.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/machine-learning/train-model/dl-best-practices.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/machine-learning/train-model/dl-best-practices.html" class="notranslate">English</option>
+    <option value="../../../ja/machine-learning/train-model/dl-best-practices.html" class="notranslate">日本語</option>
+    <option value="../../../pt/machine-learning/train-model/dl-best-practices.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Best practices for deep learning on Databricks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="best-practices-for-deep-learning-on-databricks">
+<h1>Best practices for deep learning on Databricks<a class="headerlink" href="#best-practices-for-deep-learning-on-databricks" title="Permalink to this headline"> </a></h1>
+<p>This article includes tips for deep learning on Databricks and information about built-in tools and libraries designed to optimize deep learning workloads such as the following:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../delta/index.html"><span class="doc">Delta</span></a> and <a class="reference internal" href="../load-data/petastorm.html"><span class="doc">Petastorm</span></a> to load data</p></li>
+<li><p><a class="reference internal" href="distributed-training/horovod-runner.html"><span class="doc">Horovod</span></a> and <a class="reference internal" href="../automl-hyperparam-tuning/index.html#hyperparameter-tuning-with-hyperopt"><span class="std std-ref">Hyperopt</span></a> to parallelize training</p></li>
+<li><p><a class="reference internal" href="../../udf/pandas.html"><span class="doc">Pandas UDFs</span></a> for inference</p></li>
+</ul>
+<p>Databricks Machine Learning provides pre-built deep learning infrastructure with Databricks Runtime for Machine Learning, which includes the most common deep learning libraries like TensorFlow, PyTorch, and Keras. It also has built-in, pre-configured GPU support including drivers and supporting libraries.</p>
+<p>Databricks Runtime ML also includes all of the capabilities of the Databricks workspace, such as cluster creation and management, library and environment management, code management with Databricks Repos, automation support including Databricks Jobs and APIs, and integrated MLflow for model development tracking and model deployment and serving.</p>
+<div class="section" id="resource-and-environment-management">
+<h2>Resource and environment management<a class="headerlink" href="#resource-and-environment-management" title="Permalink to this headline"> </a></h2>
+<p>Databricks helps you to both customize your deep learning environment and keep the environment consistent across users.</p>
+<div class="section" id="customize-the-development-environment">
+<h3>Customize the development environment<a class="headerlink" href="#customize-the-development-environment" title="Permalink to this headline"> </a></h3>
+<p>With Databricks Runtime, you can customize your development environment at the notebook, cluster, and job levels.</p>
+<ul class="simple">
+<li><p>Use <a class="reference internal" href="../../libraries/notebooks-python-libraries.html"><span class="doc">notebook-scoped Python libraries</span></a> or <a class="reference internal" href="../../libraries/notebooks-r-libraries.html"><span class="doc">notebook-scoped R libraries</span></a> to use a specific set or version of libraries without affecting other cluster users.</p></li>
+<li><p><a class="reference internal" href="../../libraries/cluster-libraries.html"><span class="doc">Install libraries at the cluster level</span></a> to standardize versions for a team or a project.</p></li>
+<li><p>Set up a Databricks <a class="reference internal" href="../../workflows/jobs/create-run-jobs.html"><span class="doc">job</span></a> to ensure that a repeated task runs in a consistent, unchanging environment.</p></li>
+</ul>
+</div>
+<div class="section" id="use-cluster-policies">
+<h3>Use cluster policies<a class="headerlink" href="#use-cluster-policies" title="Permalink to this headline"> </a></h3>
+<p>You can create <a class="reference internal" href="../../administration-guide/clusters/policies.html"><span class="doc">cluster policies</span></a> to guide data scientists to the right choices, such as using a Single Node cluster for development and using an autoscaling cluster for large jobs.</p>
+</div>
+<div class="section" id="consider-a100-gpus-for-deep-learning-workloads">
+<h3>Consider A100 GPUs for deep learning workloads<a class="headerlink" href="#consider-a100-gpus-for-deep-learning-workloads" title="Permalink to this headline"> </a></h3>
+<p>A100 GPUs are an efficient choice for many deep learning tasks, such as training and tuning large language models, natural language processing, object detection and classification, and recommendation engines.</p>
+<ul class="simple">
+<li><p>Databricks supports A100 GPUs on all clouds. For the complete list of supported GPU types, see <a class="reference internal" href="../../compute/gpu.html#gpu-list"><span class="std std-ref">Supported instance types</span></a>.</p></li>
+<li><p>A100 GPUs usually have limited availability. Contact your cloud provider for resource allocation, or consider reserving capacity in advance.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="best-practices-for-loading-data">
+<h2>Best practices for loading data<a class="headerlink" href="#best-practices-for-loading-data" title="Permalink to this headline"> </a></h2>
+<p>Cloud data storage is typically not optimized for I/O, which can be a challenge for deep learning models that require large datasets. Databricks Runtime ML includes <a class="reference internal" href="../../delta/index.html"><span class="doc">Delta Lake</span></a> and <a class="reference internal" href="../load-data/petastorm.html"><span class="doc">Petastorm</span></a> to optimize data throughput for deep learning applications.</p>
+<p>Databricks recommends using Delta Lake tables for data storage. Delta Lake simplifies ETL and lets you access data efficiently. Especially for images, Delta Lake helps optimize ingestion for both training and inference. The <a class="reference internal" href="../reference-solutions/images-etl-inference.html"><span class="doc">reference solution for image applications</span></a> provides an example of optimizing ETL for images using Delta Lake.</p>
+<p>Petastorm provides APIs that let you prepare data in parquet format for use by TensorFlow, Keras, or PyTorch. The SparkConverter API provides Spark DataFrame integration. Petastorm also provides data sharding for distributed processing. See <a class="reference internal" href="../load-data/petastorm.html"><span class="doc">Load data using Petastorm</span></a> for details.</p>
+</div>
+<div class="section" id="best-practices-for-training-deep-learning-models">
+<h2>Best practices for training deep learning models<a class="headerlink" href="#best-practices-for-training-deep-learning-models" title="Permalink to this headline"> </a></h2>
+<p>Databricks recommends using <a class="reference internal" href="../index.html"><span class="doc">Databricks Runtime for Machine Learning</span></a> and <a class="reference internal" href="../../mlflow/tracking.html"><span class="doc">MLflow tracking</span></a> and <a class="reference internal" href="../../mlflow/databricks-autologging.html"><span class="doc">autologging</span></a> for all model training.</p>
+<div class="section" id="start-with-a-single-node-cluster">
+<h3>Start with a Single Node cluster<a class="headerlink" href="#start-with-a-single-node-cluster" title="Permalink to this headline"> </a></h3>
+<p>A <a class="reference internal" href="../../compute/single-node.html"><span class="doc">Single Node</span></a> (driver only) <a class="reference internal" href="../../compute/gpu.html"><span class="doc">GPU cluster</span></a> is typically fastest and most cost-effective for deep learning model development. One node with 4 GPUs is likely to be faster for deep learning training that 4 worker nodes with 1 GPU each. This is because distributed training incurs network communication overhead.</p>
+<p>A Single Node cluster is a good option during fast, iterative development and for training models on small- to medium-size data.  If your dataset is large enough to make training slow on a single machine, consider moving to multi-GPU and even distributed compute.</p>
+</div>
+<div class="section" id="use-tensorboard-and-cluster-metrics-to-monitor-the-training-process">
+<span id="start-with-a-single-node-cluster"></span><h3>Use TensorBoard and cluster metrics to monitor the training process<a class="headerlink" href="#use-tensorboard-and-cluster-metrics-to-monitor-the-training-process" title="Permalink to this headline"> </a></h3>
+<p>TensorBoard is preinstalled in Databricks Runtime ML. You can use it within a notebook or in a separate tab. See <a class="reference internal" href="tensorboard.html"><span class="doc">TensorBoard</span></a> for details.</p>
+<p>Cluster metrics are available in all Databricks runtimes. You can examine network, processor, and memory usage to inspect for bottlenecks. See <a class="reference internal" href="../../compute/clusters-manage.html#metrics"><span class="std std-ref">cluster metrics</span></a> for details.</p>
+</div>
+<div class="section" id="optimize-performance-for-deep-learning">
+<h3>Optimize performance for deep learning<a class="headerlink" href="#optimize-performance-for-deep-learning" title="Permalink to this headline"> </a></h3>
+<p>You can, and should, use deep learning performance optimization techniques on Databricks.</p>
+<div class="section" id="early-stopping">
+<h4>Early stopping<a class="headerlink" href="#early-stopping" title="Permalink to this headline"> </a></h4>
+<p>Early stopping monitors the value of a metric calculated on the validation set and stops training when the metric stops improving. This is a better approach than guessing at a good number of epochs to complete.  Each deep learning library provides a native API for early stopping; for example, see the EarlyStopping callback APIs for <a class="reference external" href="https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping">TensorFlow/Keras</a> and for <a class="reference external" href="https://pytorch-lightning.readthedocs.io/en/latest/common/early_stopping.html">PyTorch Lightning</a>. For an example notebook, see <a class="reference internal" href="tensorflow.html#tensorflow-keras-example-notebook"><span class="std std-ref">TensorFlow Keras example notebook</span></a>.</p>
+</div>
+<div class="section" id="batch-size-tuning">
+<h4>Batch size tuning<a class="headerlink" href="#batch-size-tuning" title="Permalink to this headline"> </a></h4>
+<p>Batch size tuning helps optimize GPU utilization. If the batch size is too small, the calculations cannot fully use the GPU capabilities. You can use <a class="reference internal" href="../../compute/clusters-manage.html#metrics"><span class="std std-ref">cluster metrics</span></a> to view GPU metrics.</p>
+<p>Adjust the batch size in conjunction with the learning rate. A good rule of thumb is, when you increase the batch size by n, increase the learning rate by sqrt(n). When tuning manually, try changing batch size by a factor of 2 or 0.5. Then continue tuning to optimize performance, either manually or by testing a variety of hyperparameters using an automated tool like <a class="reference internal" href="#hyperopt"><span class="std std-ref">Hyperopt</span></a>.</p>
+</div>
+<div class="section" id="transfer-learning">
+<h4>Transfer learning<a class="headerlink" href="#transfer-learning" title="Permalink to this headline"> </a></h4>
+<p>With transfer learning, you start with a previously trained model and modify it as needed for your application. Transfer learning can significantly reduce the time required to train and tune a new model. See <a class="reference internal" href="../preprocess-data/transfer-learning-tensorflow.html"><span class="doc">Featurization for transfer learning</span></a> for more information and an example.</p>
+</div>
+</div>
+<div class="section" id="move-to-distributed-training">
+<h3>Move to distributed training<a class="headerlink" href="#move-to-distributed-training" title="Permalink to this headline"> </a></h3>
+<p>Databricks Runtime ML includes HorovodRunner, <code class="docutils literal notranslate"><span class="pre">spark-tensorflow-distributor</span></code>, TorchDistributor and Hyperopt to facilitate the move from single-node to distributed training.</p>
+<div class="section" id="horovodrunner">
+<h4>HorovodRunner<a class="headerlink" href="#horovodrunner" title="Permalink to this headline"> </a></h4>
+<p>Horovod is an open-source project that scales deep learning training to multi-GPU or distributed computation. <a class="reference internal" href="distributed-training/horovod-runner.html"><span class="doc">HorovodRunner</span></a>, built by Databricks and included in Databricks Runtime ML, is a Horovod wrapper that provides Spark compatibility. The API lets you scale single-node code with minimal changes. HorovodRunner works with TensorFlow, Keras, and PyTorch.</p>
+</div>
+<div class="section" id="spark-tensorflow-distributor">
+<h4><code class="docutils literal notranslate"><span class="pre">spark-tensorflow-distributor</span></code><a class="headerlink" href="#spark-tensorflow-distributor" title="Permalink to this headline"> </a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">spark-tensorflow-distributor</span></code> is an open-source native package in TensorFlow for distributed training with TensorFlow on Spark clusters. See the <a class="reference internal" href="distributed-training/spark-tf-distributor.html"><span class="doc">example notebook</span></a>.</p>
+</div>
+</div>
+<div class="section" id="torchdistributor">
+<h3>TorchDistributor<a class="headerlink" href="#torchdistributor" title="Permalink to this headline"> </a></h3>
+<p>TorchDistributor is an open-source module in PySpark that facilitates distributed training with PyTorch on Spark clusters, that allows you to launch PyTorch training jobs as Spark jobs. See <a class="reference internal" href="distributed-training/spark-pytorch-distributor.html"><span class="doc">Distributed training with TorchDistributor</span></a>.</p>
+<div class="section" id="hyperopt">
+<h4>Hyperopt<a class="headerlink" href="#hyperopt" title="Permalink to this headline"> </a></h4>
+<p><a class="reference internal" href="../automl-hyperparam-tuning/index.html#hyperparameter-tuning-with-hyperopt"><span class="std std-ref">Hyperopt</span></a> provides adaptive hyperparameter tuning for machine learning. With the SparkTrials class, you can iteratively tune parameters for deep learning models in parallel across a cluster.</p>
+</div>
+</div>
+</div>
+<div class="section" id="best-practices-for-inference">
+<h2>Best practices for inference<a class="headerlink" href="#best-practices-for-inference" title="Permalink to this headline"> </a></h2>
+<p>This section contains general tips about using models for inference with Databricks.</p>
+<ul class="simple">
+<li><p>To minimize costs, consider both CPUs and inference-optimized GPUs such as the Amazon EC2 G4 and G5 instances. There is no clear recommendation, as the best choice depends on model size, data dimensions, and other variables.</p></li>
+</ul>
+<ul class="simple">
+<li><p>Use <a class="reference internal" href="../../mlflow/index.html"><span class="doc">MLflow</span></a> to simplify deployment and model serving. MLflow can log any deep learning model, including custom preprocessing and postprocessing logic. Models registered in the <a class="reference internal" href="../../mlflow/model-registry.html"><span class="doc">MLflow Model Registry</span></a> can be deployed for batch, streaming, or online inference.</p></li>
+</ul>
+<div class="section" id="batch-and-streaming-inference">
+<h3>Batch and streaming inference<a class="headerlink" href="#batch-and-streaming-inference" title="Permalink to this headline"> </a></h3>
+<p>Batch and streaming scoring supports high-throughput, low-cost scoring at latencies as low as minutes. For more information, see <a class="reference internal" href="../model-inference/index.html#offline-batch-predictions"><span class="std std-ref">Use MLflow for model inference</span></a>.</p>
+<ul class="simple">
+<li><p>If you expect to access data for inference more than once, consider creating a preprocessing job to ETL the data into a Delta Lake table before running the inference job. This way, the cost of ingesting and preparing the data is spread across multiple reads of the data. Separating preprocessing from inference also allows you to select different hardware for each job to optimize cost and performance. For example, you might use CPUs for ETL and GPUs for inference.</p></li>
+<li><p>Use <a class="reference internal" href="../../udf/pandas.html"><span class="doc">Spark Pandas UDFs</span></a> to scale batch and streaming inference across a cluster.</p>
+<ul>
+<li><p>When you log a model from Databricks, MLflow automatically provides inference code to <a class="reference internal" href="../../mlflow/runs.html#code-snippets-for-prediction"><span class="std std-ref">apply the model as a pandas UDF</span></a>.</p></li>
+<li><p>You can also optimize your inference pipeline further, especially for large deep learning models. See the <a class="reference internal" href="../reference-solutions/images-etl-inference.html"><span class="doc">reference solution for image ETL</span></a> for an example.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="online-serving">
+<span id="batch-and-streaming-inference"></span><h3>Online serving<a class="headerlink" href="#online-serving" title="Permalink to this headline"> </a></h3>
+<p>The best option for low-latency serving is online serving behind a REST API. Databricks provides <a class="reference internal" href="../model-serving/index.html"><span class="doc">Model Serving</span></a> for online inference.</p>
+<p>MLflow provides <a class="reference external" href="https://mlflow.org/docs/latest/python_api/index.html">APIs</a> for deploying to various managed services for online inference, as well as <a class="reference external" href="https://mlflow.org/docs/latest/cli.html#mlflow-models-build-docker">APIs for creating Docker containers</a> for custom serving solutions.</p>
+<p>You can also use SageMaker Serving. See the <a class="reference internal" href="../../mlflow/scikit-learn-model-deployment-on-sagemaker.html"><span class="doc">example notebook</span></a> and the <a class="reference external" href="https://mlflow.org/docs/latest/models.html#deploy-a-python-function-model-on-amazon-sagemaker">MLflow documentation</a>.</p>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

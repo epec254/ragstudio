@@ -1,0 +1,551 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to configure Databricks Lakehouse Federation to run federated queries on Amazon Redshift data that is not managed by Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Run federated queries on Amazon Redshift">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Run federated queries on Amazon Redshift &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/query-federation/redshift.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/query-federation/redshift.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/query-federation/redshift.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/query-federation/redshift.html" class="notranslate">English</option>
+    <option value="../../ja/query-federation/redshift.html" class="notranslate">日本語</option>
+    <option value="../../pt/query-federation/redshift.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Run federated queries on Amazon Redshift</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="run-federated-queries-on-amazon-redshift">
+<h1>Run federated queries on Amazon Redshift<a class="headerlink" href="#run-federated-queries-on-amazon-redshift" title="Permalink to this headline"> </a></h1>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<p>This article describes how to set up Lakehouse Federation to run federated queries on Run queries on Amazon Redshift data that is not managed by Databricks. To learn more about Lakehouse Federation, see <a class="reference internal" href="index.html"><span class="doc">Run queries using Lakehouse Federation</span></a>.</p>
+<p>To connect to a Run queries on Amazon Redshift database using Lakehouse Federation, you must create the following in your Databricks Unity Catalog metastore:</p>
+<ul class="simple">
+<li><p>A <em>connection</em> to your Run queries on Amazon Redshift database.</p></li>
+<li><p>A <em>foreign catalog</em> that mirrors your Run queries on Amazon Redshift database in Unity Catalog so that you can use Unity Catalog query syntax and data governance tools to manage Databricks user access to the database.</p></li>
+</ul>
+<div class="section" id="before-you-begin">
+<h2>Before you begin<a class="headerlink" href="#before-you-begin" title="Permalink to this headline"> </a></h2>
+<p>Workspace requirements:</p>
+<ul class="simple">
+<li><p>Workspace enabled for Unity Catalog.</p></li>
+</ul>
+<p>Compute requirements:</p>
+<ul class="simple">
+<li><p>Network connectivity from your Databricks Runtime cluster or SQL warehouse to the target database systems. See <a class="reference internal" href="networking.html"><span class="doc">Networking recommendations for Lakehouse Federation</span></a>.</p></li>
+<li><p>Databricks clusters must use Databricks Runtime 13.1 or above and shared or single-user access mode.</p></li>
+<li><p>SQL warehouses must be Pro or Serverless.</p></li>
+</ul>
+<p>Permissions required:</p>
+<ul class="simple">
+<li><p>To create a connection, you must be a metastore admin or a user with the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">CONNECTION</span></code> privilege on the Unity Catalog metastore attached to the workspace.</p></li>
+<li><p>To create a foreign catalog, you must have the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">CATALOG</span></code> permission on the metastore and be either the owner of the connection or have the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">FOREIGN</span> <span class="pre">CATALOG</span></code> privilege on the connection.</p></li>
+</ul>
+<p>Additional permission requirements are specified in each task-based section that follows.</p>
+</div>
+<div class="section" id="create-a-connection">
+<span id="connection"></span><h2>Create a connection<a class="headerlink" href="#create-a-connection" title="Permalink to this headline"> </a></h2>
+<p>A connection specifies a path and credentials for accessing an external database system. To create a connection, you can use Catalog Explorer or the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">CONNECTION</span></code> SQL command in a Databricks notebook or the Databricks SQL query editor.</p>
+<p></p>
+<p><strong>Permissions required:</strong>  Metastore admin or user with the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">CONNECTION</span></code> privilege.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Catalog&amp;nbsp;Explorer">
+<ol class="arabic simple">
+<li><p>In your Databricks workspace, click <img alt="Catalog icon" src="../_images/data-icon.png" /> <strong>Catalog</strong>.</p></li>
+<li><p>In the left pane, expand the <strong>External Data</strong> menu and select <strong>Connections</strong>.</p></li>
+<li><p>Click <strong>Create connection</strong>.</p></li>
+<li><p>Enter a user-friendly <strong>Connection name</strong>.</p></li>
+<li><p>Select a <strong>Connection type</strong> of <strong>Redshift</strong>.</p></li>
+<li><p>Enter the following connection properties for your Redshift instance.</p>
+<ul class="simple">
+<li><p><strong>Host</strong>: For example, <code class="docutils literal notranslate"><span class="pre">redshift-demo.us-west-2.redshift.amazonaws.com</span></code></p></li>
+<li><p><strong>Port</strong>: For example, <code class="docutils literal notranslate"><span class="pre">5439</span></code></p></li>
+<li><p><strong>User</strong>: For example, <code class="docutils literal notranslate"><span class="pre">redshift_user</span></code></p></li>
+<li><p><strong>Password</strong>: For example, <code class="docutils literal notranslate"><span class="pre">password123</span></code></p></li>
+</ul>
+</li>
+<li><p>(Optional) Click <strong>Test connection</strong> to confirm that it works.</p></li>
+<li><p>(Optional) Add a comment.</p></li>
+<li><p>Click <strong>Create</strong>.</p></li>
+</ol>
+</div>
+<div class="compound-last compound" lang="SQL">
+<p class="compound-first">Run the following command in a notebook or the Databricks SQL query editor.</p>
+<div class="compound-middle highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">CONNECTION</span><span class="w"> </span><span class="o">&lt;</span><span class="k">connection</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">TYPE</span><span class="w"> </span><span class="n">redshift</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="k">host</span><span class="w"> </span><span class="s1">&#39;&lt;hostname&gt;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">port</span><span class="w"> </span><span class="s1">&#39;&lt;port&gt;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="k">user</span><span class="w"> </span><span class="s1">&#39;&lt;user&gt;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">password</span><span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p class="compound-middle">We recommend that you use Databricks <a class="reference internal" href="../security/secrets/index.html"><span class="doc">secrets</span></a> instead of plaintext strings for sensitive values like credentials. For example:</p>
+<div class="compound-middle highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">CONNECTION</span><span class="w"> </span><span class="o">&lt;</span><span class="k">connection</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">TYPE</span><span class="w"> </span><span class="n">redshift</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="k">host</span><span class="w"> </span><span class="s1">&#39;&lt;hostname&gt;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">port</span><span class="w"> </span><span class="s1">&#39;&lt;port&gt;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="k">user</span><span class="w"> </span><span class="n">secret</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;&lt;secret-scope&gt;&#39;</span><span class="p">,</span><span class="s1">&#39;&lt;secret-key-user&gt;&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="n">password</span><span class="w"> </span><span class="n">secret</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;&lt;secret-scope&gt;&#39;</span><span class="p">,</span><span class="s1">&#39;&lt;secret-key-password&gt;&#39;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p class="compound-last">For information about setting up secrets, see <a class="reference internal" href="../security/secrets/index.html"><span class="doc">Secret management</span></a>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="create-a-foreign-catalog">
+<h2>Create a foreign catalog<a class="headerlink" href="#create-a-foreign-catalog" title="Permalink to this headline"> </a></h2>
+<p>A foreign catalog mirrors a database in an external data system so that you can query and manage access to data in that database using Databricks and Unity Catalog. To create a foreign catalog, you use a connection to the data source that has already been defined.</p>
+<p>To create a foreign catalog, you can use Catalog Explorer or the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">FOREIGN</span> <span class="pre">CATALOG</span></code> SQL command in a Databricks notebook or the Databricks SQL query editor.</p>
+<p></p>
+<p><strong>Permissions required:</strong> <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">CATALOG</span></code> permission on the metastore and either ownership of the connection or the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">FOREIGN</span> <span class="pre">CATALOG</span></code> privilege on the connection.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Catalog&amp;nbsp;Explorer">
+<ol class="arabic simple">
+<li><p>In your Databricks workspace, click <img alt="Catalog icon" src="../_images/data-icon.png" /> <strong>Catalog</strong>.</p></li>
+<li><p>Click the <strong>Create Catalog</strong> button.</p></li>
+<li><p>On the <strong>Create a new catalog</strong> dialog, enter a name for the catalog and select a <strong>Type</strong> of <strong>Foreign</strong>.</p></li>
+<li><p>Select the <strong>Connection</strong> that provides access to the database that you want to mirror as a Unity Catalog catalog.</p></li>
+<li><p>Enter the name of the <strong>Database</strong> that you want to mirror as a catalog.</p></li>
+<li><p>Click <strong>Create.</strong></p></li>
+</ol>
+</div>
+<div class="compound-last compound" lang="SQL">
+<p class="compound-first">Run the following SQL command in a notebook or Databricks SQL editor. Items in brackets are optional. Replace the placeholder values:</p>
+<ul class="compound-middle simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;catalog-name&gt;</span></code>: Name for the catalog in Databricks.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;connection-name&gt;</span></code>: The <a class="reference internal" href="index.html#connection"><span class="std std-ref">connection object</span></a> that specifies the data source, path, and access credentials.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;database-name&gt;</span></code>: Name of the database you want to mirror as a catalog in Databricks.</p></li>
+</ul>
+<div class="compound-last highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">CATALOG</span><span class="w"> </span><span class="p">[</span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="k">catalog</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="k">CONNECTION</span><span class="w"> </span><span class="o">&lt;</span><span class="k">connection</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="k">database</span><span class="w"> </span><span class="s1">&#39;&lt;database-name&gt;&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="supported-pushdowns">
+<h2>Supported pushdowns<a class="headerlink" href="#supported-pushdowns" title="Permalink to this headline"> </a></h2>
+<p>The following pushdowns are supported:</p>
+<ul class="simple">
+<li><p>Filters</p></li>
+<li><p>Projections</p></li>
+<li><p>Limit</p></li>
+<li><p>Joins</p></li>
+<li><p>Aggregates  (Average, Count, Max, Min, StddevPop, StddevSamp, Sum, VarianceSamp)</p></li>
+<li><p>Functions  (String functions and other miscellaneous functions, such as Alias, Cast, SortOrder)</p></li>
+<li><p>Sorting</p></li>
+</ul>
+<p>The following pushdowns are not supported:</p>
+<ul class="simple">
+<li><p>Windows functions</p></li>
+</ul>
+</div>
+<div class="section" id="data-type-mappings">
+<h2>Data type mappings<a class="headerlink" href="#data-type-mappings" title="Permalink to this headline"> </a></h2>
+<p>When you read from Redshift to Spark, data types map as follows:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Redshift type</p></th>
+<th class="head"><p>Spark type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>numeric</p></td>
+<td><p>DecimalType</p></td>
+</tr>
+<tr class="row-odd"><td><p>int2, int4</p></td>
+<td><p>IntegerType</p></td>
+</tr>
+<tr class="row-even"><td><p>int8, oid, xid</p></td>
+<td><p>LongType</p></td>
+</tr>
+<tr class="row-odd"><td><p>float4</p></td>
+<td><p>FloatType</p></td>
+</tr>
+<tr class="row-even"><td><p>double precision, float8, money</p></td>
+<td><p>DoubleType</p></td>
+</tr>
+<tr class="row-odd"><td><p>bpchar, char, character varying, name, super, text, tid, varchar</p></td>
+<td><p>StringType</p></td>
+</tr>
+<tr class="row-even"><td><p>bytea, geometry, varbyte</p></td>
+<td><p>BinaryType</p></td>
+</tr>
+<tr class="row-odd"><td><p>bit, bool</p></td>
+<td><p>BooleanType</p></td>
+</tr>
+<tr class="row-even"><td><p>date</p></td>
+<td><p>DateType</p></td>
+</tr>
+<tr class="row-odd"><td><p>tabstime, time, time with time zone, timetz, time without time zone, timestamp with time zone, timestamp, timestamptz, timestamp without time zone*</p></td>
+<td><p>TimestampType/TimestampNTZType</p></td>
+</tr>
+</tbody>
+</table>
+<p>*When you read from Redshift, Redshift <code class="docutils literal notranslate"><span class="pre">Timestamp</span></code> is mapped to Spark <code class="docutils literal notranslate"><span class="pre">TimestampType</span></code> if <code class="docutils literal notranslate"><span class="pre">infer_timestamp_ntz_type</span> <span class="pre">=</span> <span class="pre">false</span></code> (default). Redshift <code class="docutils literal notranslate"><span class="pre">Timestamp</span></code> is mapped to <code class="docutils literal notranslate"><span class="pre">TimestampNTZType</span></code> if  <code class="docutils literal notranslate"><span class="pre">infer_timestamp_ntz_type</span> <span class="pre">=</span> <span class="pre">true</span></code>.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

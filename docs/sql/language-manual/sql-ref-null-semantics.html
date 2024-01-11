@@ -1,0 +1,1010 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn about SQL null semantics in Databricks SQL and Databricks Runtime." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="NULL semantics">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>NULL semantics &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/sql/language-manual/sql-ref-null-semantics.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/sql/language-manual/sql-ref-null-semantics.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/sql/language-manual/sql-ref-null-semantics.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/sql/language-manual/sql-ref-null-semantics.html" class="notranslate">English</option>
+    <option value="../../../ja/sql/language-manual/sql-ref-null-semantics.html" class="notranslate">日本語</option>
+    <option value="../../../pt/sql/language-manual/sql-ref-null-semantics.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>NULL semantics</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="null-semantics">
+<h1>NULL semantics<a class="headerlink" href="#null-semantics" title="Permalink to this headline"> </a></h1>
+<p><strong>Applies to:</strong> <img alt="check marked yes" src="../../_images/check.png" /> Databricks SQL <img alt="check marked yes" src="../../_images/check.png" /> Databricks Runtime</p>
+<p>A table consists of a set of rows and each row contains a set of columns.
+A column is associated with a data type and represents
+a specific attribute of an entity (for example, <code class="docutils literal notranslate"><span class="pre">age</span></code> is a column of an
+entity called <code class="docutils literal notranslate"><span class="pre">person</span></code>). Sometimes, the value of a column
+specific to a row is not known at the time the row comes into existence.
+In <code class="docutils literal notranslate"><span class="pre">SQL</span></code>, such values are represented as <code class="docutils literal notranslate"><span class="pre">NULL</span></code>. This section details the
+semantics of <code class="docutils literal notranslate"><span class="pre">NULL</span></code> values handling in various operators, expressions and
+other <code class="docutils literal notranslate"><span class="pre">SQL</span></code> constructs.</p>
+<p>The following illustrates the schema layout and data of a table named <code class="docutils literal notranslate"><span class="pre">person</span></code>. The data contains <code class="docutils literal notranslate"><span class="pre">NULL</span></code> values in
+the <code class="docutils literal notranslate"><span class="pre">age</span></code> column and this table is used in various examples in the sections below.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">Id</span>  <span class="n">Name</span>   <span class="n">Age</span>
+ <span class="o">---</span> <span class="o">--------</span> <span class="o">----</span>
+ <span class="mi">100</span> <span class="n">Joe</span>      <span class="mi">30</span>
+ <span class="mi">200</span> <span class="n">Marry</span>    <span class="n">NULL</span>
+ <span class="mi">300</span> <span class="n">Mike</span>     <span class="mi">18</span>
+ <span class="mi">400</span> <span class="n">Fred</span>     <span class="mi">50</span>
+ <span class="mi">500</span> <span class="n">Albert</span>   <span class="n">NULL</span>
+ <span class="mi">600</span> <span class="n">Michelle</span> <span class="mi">30</span>
+ <span class="mi">700</span> <span class="n">Dan</span>      <span class="mi">50</span>
+</pre></div>
+</div>
+<div class="section" id="comparison-operators">
+<h2>Comparison operators<a class="headerlink" href="#comparison-operators" title="Permalink to this headline"> </a></h2>
+<p>Databricks supports the standard comparison operators such as <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">=</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>.
+The result of these operators is unknown or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> when one of the operands or both the operands are
+unknown or <code class="docutils literal notranslate"><span class="pre">NULL</span></code>. In order to compare the <code class="docutils literal notranslate"><span class="pre">NULL</span></code> values for equality, Databricks provides a null-safe
+equal operator (<code class="docutils literal notranslate"><span class="pre">&lt;=&gt;</span></code>), which returns <code class="docutils literal notranslate"><span class="pre">False</span></code> when one of the operand is <code class="docutils literal notranslate"><span class="pre">NULL</span></code> and returns <code class="docutils literal notranslate"><span class="pre">True</span></code> when
+both the operands are <code class="docutils literal notranslate"><span class="pre">NULL</span></code>. The following table illustrates the behavior of comparison operators when
+one or both operands are <code class="docutils literal notranslate"><span class="pre">NULL</span></code>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 27%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Left Operand</p></th>
+<th class="head"><p>Right  Operand</p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">&gt;</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">&gt;=</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">=</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">&lt;</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">&lt;=</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">&lt;=&gt;</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>NULL</p></td>
+<td><p>Any value</p></td>
+<td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-odd"><td><p>Any value</p></td>
+<td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-even"><td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>True</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"> </a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Normal comparison operators return `NULL` when one of the operand is `NULL`.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">expression_output</span><span class="p">;</span>
+<span class="w"> </span><span class="n">expression_output</span>
+<span class="w"> </span><span class="c1">-----------------</span>
+<span class="w">              </span><span class="k">null</span>
+
+<span class="c1">-- Normal comparison operators return `NULL` when both the operands are `NULL`.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">expression_output</span><span class="p">;</span>
+<span class="w"> </span><span class="n">expression_output</span>
+<span class="w"> </span><span class="c1">-----------------</span>
+<span class="w">              </span><span class="k">null</span>
+
+<span class="c1">-- Null-safe equal operator return `False` when one of the operand is `NULL`</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="o">&lt;=&gt;</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">expression_output</span><span class="p">;</span>
+<span class="w"> </span><span class="n">expression_output</span>
+<span class="w"> </span><span class="c1">-----------------</span>
+<span class="w">             </span><span class="k">false</span>
+
+<span class="c1">-- Null-safe equal operator return `True` when one of the operand is `NULL`</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="o">&lt;=&gt;</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
+<span class="w"> </span><span class="n">expression_output</span>
+<span class="w"> </span><span class="c1">-----------------</span>
+<span class="w">              </span><span class="k">true</span>
+<span class="w"> </span><span class="c1">-----------------</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="logical-operators">
+<h2>Logical operators<a class="headerlink" href="#logical-operators" title="Permalink to this headline"> </a></h2>
+<p>Databricks supports standard logical operators such as <code class="docutils literal notranslate"><span class="pre">AND</span></code>, <code class="docutils literal notranslate"><span class="pre">OR</span></code> and <code class="docutils literal notranslate"><span class="pre">NOT</span></code>.
+These operators take <code class="docutils literal notranslate"><span class="pre">Boolean</span></code> expressions as the arguments and return a <code class="docutils literal notranslate"><span class="pre">Boolean</span></code> value.</p>
+<p>The following tables illustrate the behavior of logical operators when one or both operands are <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 38%" />
+<col style="width: 12%" />
+<col style="width: 15%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Left Operand</p></th>
+<th class="head"><p>Right Operand</p></th>
+<th class="head"><p>OR</p></th>
+<th class="head"><p>AND</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>True</p></td>
+<td><p>NULL</p></td>
+<td><p>True</p></td>
+<td><p>NULL</p></td>
+</tr>
+<tr class="row-odd"><td><p>False</p></td>
+<td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-even"><td><p>NULL</p></td>
+<td><p>True</p></td>
+<td><p>True</p></td>
+<td><p>NULL</p></td>
+</tr>
+<tr class="row-odd"><td><p>NULL</p></td>
+<td><p>False</p></td>
+<td><p>NULL</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-even"><td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>NULL</p></td>
+<td><p>NULL</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 64%" />
+<col style="width: 36%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>operand</p></th>
+<th class="head"><p>NOT</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>NULL</p></td>
+<td><p>NULL</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="examples">
+<span id="examples-1"></span><h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"> </a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Normal comparison operators return `NULL` when one of the operands is `NULL`.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">true</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">expression_output</span><span class="p">;</span>
+<span class="w"> </span><span class="n">expression_output</span>
+<span class="w"> </span><span class="c1">-----------------</span>
+<span class="w">              </span><span class="k">true</span>
+
+<span class="c1">-- Normal comparison operators return `NULL` when both the operands are `NULL`.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">null</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">false</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">expression_output</span>
+<span class="w"> </span><span class="n">expression_output</span>
+<span class="w"> </span><span class="c1">-----------------</span>
+<span class="w">              </span><span class="k">null</span>
+
+<span class="c1">-- Null-safe equal operator returns `False` when one of the operands is `NULL`</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">NOT</span><span class="p">(</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">expression_output</span><span class="p">;</span>
+<span class="w"> </span><span class="n">expression_output</span>
+<span class="w"> </span><span class="c1">-----------------</span>
+<span class="w">              </span><span class="k">null</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="expressions">
+<h2>Expressions<a class="headerlink" href="#expressions" title="Permalink to this headline"> </a></h2>
+<p>The comparison operators and logical operators are treated as expressions in Databricks.
+Databricks also supports other forms of expressions, which can be broadly classified as:</p>
+<ul class="simple">
+<li><p>Null intolerant expressions</p></li>
+<li><p>Expressions that can process <code class="docutils literal notranslate"><span class="pre">NULL</span></code> value operands</p>
+<ul>
+<li><p>The result of these expressions depends on the expression itself.</p></li>
+</ul>
+</li>
+</ul>
+<div class="section" id="null-intolerant-expressions">
+<h3>Null intolerant expressions<a class="headerlink" href="#null-intolerant-expressions" title="Permalink to this headline"> </a></h3>
+<p>Null intolerant expressions return <code class="docutils literal notranslate"><span class="pre">NULL</span></code> when one or more arguments of
+expression are <code class="docutils literal notranslate"><span class="pre">NULL</span></code> and most of the expressions fall in this category.</p>
+<div class="section" id="examples">
+<span id="examples-2"></span><h4>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"> </a></h4>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">concat</span><span class="p">(</span><span class="s1">&#39;John&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">expression_output</span><span class="p">;</span>
+<span class="w"> </span><span class="n">expression_output</span>
+<span class="w"> </span><span class="c1">-----------------</span>
+<span class="w">              </span><span class="k">null</span>
+
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">positive</span><span class="p">(</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">expression_output</span><span class="p">;</span>
+<span class="w"> </span><span class="n">expression_output</span>
+<span class="w"> </span><span class="c1">-----------------</span>
+<span class="w">              </span><span class="k">null</span>
+
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">to_date</span><span class="p">(</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">expression_output</span><span class="p">;</span>
+<span class="w"> </span><span class="n">expression_output</span>
+<span class="w"> </span><span class="c1">-----------------</span>
+<span class="w">              </span><span class="k">null</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="expressions-that-can-process-null-value-operands">
+<h3>Expressions that can process null value operands<a class="headerlink" href="#expressions-that-can-process-null-value-operands" title="Permalink to this headline"> </a></h3>
+<p>This class of expressions are designed to handle <code class="docutils literal notranslate"><span class="pre">NULL</span></code> values. The result of the
+expressions depends on the expression itself. As an example, function expression <code class="docutils literal notranslate"><span class="pre">isnull</span></code>
+returns a <code class="docutils literal notranslate"><span class="pre">true</span></code> on null input and <code class="docutils literal notranslate"><span class="pre">false</span></code> on non null input where as function <code class="docutils literal notranslate"><span class="pre">coalesce</span></code>
+returns the first non <code class="docutils literal notranslate"><span class="pre">NULL</span></code> value in its list of operands. However, <code class="docutils literal notranslate"><span class="pre">coalesce</span></code> returns
+<code class="docutils literal notranslate"><span class="pre">NULL</span></code> when all its operands are <code class="docutils literal notranslate"><span class="pre">NULL</span></code>. Below is an incomplete list of expressions of this category.</p>
+<ul class="simple">
+<li><p>COALESCE</p></li>
+<li><p>NULLIF</p></li>
+<li><p>IFNULL</p></li>
+<li><p>NVL</p></li>
+<li><p>NVL2</p></li>
+<li><p>ISNAN</p></li>
+<li><p>NANVL</p></li>
+<li><p>ISNULL</p></li>
+<li><p>ISNOTNULL</p></li>
+<li><p>ATLEASTNNONNULLS</p></li>
+<li><p>IN</p></li>
+</ul>
+<div class="section" id="examples">
+<span id="examples-3"></span><h4>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"> </a></h4>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">isnull</span><span class="p">(</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">expression_output</span><span class="p">;</span>
+<span class="w"> </span><span class="n">expression_output</span>
+<span class="w"> </span><span class="c1">-----------------</span>
+<span class="w">              </span><span class="k">true</span>
+
+<span class="c1">-- Returns the first occurrence of non `NULL` value.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">coalesce</span><span class="p">(</span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">expression_output</span><span class="p">;</span>
+<span class="w"> </span><span class="n">expression_output</span>
+<span class="w"> </span><span class="c1">-----------------</span>
+<span class="w">                 </span><span class="mi">3</span>
+
+<span class="c1">-- Returns `NULL` as all its operands are `NULL`.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">coalesce</span><span class="p">(</span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">expression_output</span><span class="p">;</span>
+<span class="w"> </span><span class="n">expression_output</span>
+<span class="w"> </span><span class="c1">-----------------</span>
+<span class="w">              </span><span class="k">null</span>
+
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">isnan</span><span class="p">(</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">expression_output</span><span class="p">;</span>
+<span class="w"> </span><span class="n">expression_output</span>
+<span class="w"> </span><span class="c1">-----------------</span>
+<span class="w">             </span><span class="k">false</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="built-in-aggregate-expressions">
+<h3>Built-in aggregate expressions<a class="headerlink" href="#built-in-aggregate-expressions" title="Permalink to this headline"> </a></h3>
+<p>Aggregate functions compute a single result by processing a set of input rows. Below are
+the rules of how <code class="docutils literal notranslate"><span class="pre">NULL</span></code> values are handled by aggregate functions.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NULL</span></code> values are ignored from processing by all the aggregate functions.</p>
+<ul>
+<li><p>Only exception to this rule is COUNT(*) function.</p></li>
+</ul>
+</li>
+<li><p>Some aggregate functions return <code class="docutils literal notranslate"><span class="pre">NULL</span></code> when all input values are <code class="docutils literal notranslate"><span class="pre">NULL</span></code> or the input data set
+is empty.  The list of these functions is:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">MAX</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MIN</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SUM</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AVG</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EVERY</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ANY</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SOME</span></code></p></li>
+</ul>
+</li>
+</ul>
+<div class="section" id="examples">
+<span id="examples-4"></span><h4>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"> </a></h4>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- `count(*)` does not skip `NULL` values.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="p">;</span>
+<span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w"> </span><span class="c1">--------</span>
+<span class="w">        </span><span class="mi">7</span>
+
+<span class="c1">-- `NULL` values in column `age` are skipped from processing.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="n">age</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="p">;</span>
+<span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
+<span class="w"> </span><span class="c1">----------</span>
+<span class="w">          </span><span class="mi">5</span>
+
+<span class="c1">-- `count(*)` on an empty input set returns 0. This is unlike the other</span>
+<span class="c1">-- aggregate functions, such as `max`, which return `NULL`.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w"> </span><span class="c1">--------</span>
+<span class="w">        </span><span class="mi">0</span>
+
+<span class="c1">-- `NULL` values are excluded from computation of maximum value.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">max</span><span class="p">(</span><span class="n">age</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="p">;</span>
+<span class="w"> </span><span class="k">max</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
+<span class="w"> </span><span class="c1">--------</span>
+<span class="w">       </span><span class="mi">50</span>
+
+<span class="c1">-- `max` returns `NULL` on an empty input set.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">max</span><span class="p">(</span><span class="n">age</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w"> </span><span class="k">max</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
+<span class="w"> </span><span class="c1">--------</span>
+<span class="w">     </span><span class="k">null</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="condition-expressions-in-where-having-and-join-clauses">
+<h2>Condition expressions in <code class="docutils literal notranslate"><span class="pre">WHERE</span></code>, <code class="docutils literal notranslate"><span class="pre">HAVING</span></code>, and <code class="docutils literal notranslate"><span class="pre">JOIN</span></code> clauses<a class="headerlink" href="#condition-expressions-in-where-having-and-join-clauses" title="Permalink to this headline"> </a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">WHERE</span></code>, <code class="docutils literal notranslate"><span class="pre">HAVING</span></code> operators filter rows based on the user specified condition.
+A <code class="docutils literal notranslate"><span class="pre">JOIN</span></code> operator is used to combine rows from two tables based on a join condition.
+For all the three operators, a condition expression is a boolean expression and can return
+<code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">False</span></code> or <code class="docutils literal notranslate"><span class="pre">Unknown</span> <span class="pre">(NULL)</span></code>. They are “satisfied” if the result of the condition is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<div class="section" id="examples">
+<span id="examples-5"></span><h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"> </a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Persons whose age is unknown (`NULL`) are filtered out from the result set.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">     </span><span class="n">name</span><span class="w"> </span><span class="n">age</span>
+<span class="w"> </span><span class="c1">-------- ---</span>
+<span class="w"> </span><span class="n">Michelle</span><span class="w">  </span><span class="mi">30</span>
+<span class="w">     </span><span class="n">Fred</span><span class="w">  </span><span class="mi">50</span>
+<span class="w">     </span><span class="n">Mike</span><span class="w">  </span><span class="mi">18</span>
+<span class="w">      </span><span class="n">Dan</span><span class="w">  </span><span class="mi">50</span>
+<span class="w">      </span><span class="n">Joe</span><span class="w">  </span><span class="mi">30</span>
+
+<span class="c1">-- `IS NULL` expression is used in disjunction to select the persons</span>
+<span class="c1">-- with unknown (`NULL`) records.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
+<span class="w">     </span><span class="n">name</span><span class="w">  </span><span class="n">age</span>
+<span class="w"> </span><span class="c1">-------- ----</span>
+<span class="w">   </span><span class="n">Albert</span><span class="w"> </span><span class="k">null</span>
+<span class="w"> </span><span class="n">Michelle</span><span class="w">   </span><span class="mi">30</span>
+<span class="w">     </span><span class="n">Fred</span><span class="w">   </span><span class="mi">50</span>
+<span class="w">     </span><span class="n">Mike</span><span class="w">   </span><span class="mi">18</span>
+<span class="w">      </span><span class="n">Dan</span><span class="w">   </span><span class="mi">50</span>
+<span class="w">    </span><span class="n">Marry</span><span class="w"> </span><span class="k">null</span>
+<span class="w">      </span><span class="n">Joe</span><span class="w">   </span><span class="mi">30</span>
+
+<span class="c1">-- Person with unknown(`NULL`) ages are skipped from processing.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">max</span><span class="p">(</span><span class="n">age</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">18</span><span class="p">;</span>
+<span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w"> </span><span class="c1">--- --------</span>
+<span class="w">  </span><span class="mi">50</span><span class="w">        </span><span class="mi">2</span>
+<span class="w">  </span><span class="mi">30</span><span class="w">        </span><span class="mi">2</span>
+
+<span class="c1">-- A self join case with a join condition `p1.age = p2.age AND p1.name = p2.name`.</span>
+<span class="c1">-- The persons with unknown age (`NULL`) are filtered out by the join operator.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="n">p1</span><span class="p">,</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="n">p2</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p2</span><span class="p">.</span><span class="n">age</span>
+<span class="w">    </span><span class="k">AND</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p2</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+<span class="w">     </span><span class="n">name</span><span class="w"> </span><span class="n">age</span><span class="w">     </span><span class="n">name</span><span class="w"> </span><span class="n">age</span>
+<span class="w"> </span><span class="c1">-------- --- -------- ---</span>
+<span class="w"> </span><span class="n">Michelle</span><span class="w">  </span><span class="mi">30</span><span class="w"> </span><span class="n">Michelle</span><span class="w">  </span><span class="mi">30</span>
+<span class="w">     </span><span class="n">Fred</span><span class="w">  </span><span class="mi">50</span><span class="w">     </span><span class="n">Fred</span><span class="w">  </span><span class="mi">50</span>
+<span class="w">     </span><span class="n">Mike</span><span class="w">  </span><span class="mi">18</span><span class="w">     </span><span class="n">Mike</span><span class="w">  </span><span class="mi">18</span>
+<span class="w">      </span><span class="n">Dan</span><span class="w">  </span><span class="mi">50</span><span class="w">      </span><span class="n">Dan</span><span class="w">  </span><span class="mi">50</span>
+<span class="w">      </span><span class="n">Joe</span><span class="w">  </span><span class="mi">30</span><span class="w">      </span><span class="n">Joe</span><span class="w">  </span><span class="mi">30</span>
+
+<span class="c1">-- The age column from both legs of join are compared using null-safe equal which</span>
+<span class="c1">-- is why the persons with unknown age (`NULL`) are qualified by the join.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="n">p1</span><span class="p">,</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="n">p2</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">age</span><span class="w"> </span><span class="o">&lt;=&gt;</span><span class="w"> </span><span class="n">p2</span><span class="p">.</span><span class="n">age</span>
+<span class="w">    </span><span class="k">AND</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p2</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+<span class="w">     </span><span class="n">name</span><span class="w">  </span><span class="n">age</span><span class="w">     </span><span class="n">name</span><span class="w">  </span><span class="n">age</span>
+<span class="w"> </span><span class="c1">-------- ---- -------- ----</span>
+<span class="w">   </span><span class="n">Albert</span><span class="w"> </span><span class="k">null</span><span class="w">   </span><span class="n">Albert</span><span class="w"> </span><span class="k">null</span>
+<span class="w"> </span><span class="n">Michelle</span><span class="w">   </span><span class="mi">30</span><span class="w"> </span><span class="n">Michelle</span><span class="w">   </span><span class="mi">30</span>
+<span class="w">     </span><span class="n">Fred</span><span class="w">   </span><span class="mi">50</span><span class="w">     </span><span class="n">Fred</span><span class="w">   </span><span class="mi">50</span>
+<span class="w">     </span><span class="n">Mike</span><span class="w">   </span><span class="mi">18</span><span class="w">     </span><span class="n">Mike</span><span class="w">   </span><span class="mi">18</span>
+<span class="w">      </span><span class="n">Dan</span><span class="w">   </span><span class="mi">50</span><span class="w">      </span><span class="n">Dan</span><span class="w">   </span><span class="mi">50</span>
+<span class="w">    </span><span class="n">Marry</span><span class="w"> </span><span class="k">null</span><span class="w">    </span><span class="n">Marry</span><span class="w"> </span><span class="k">null</span>
+<span class="w">      </span><span class="n">Joe</span><span class="w">   </span><span class="mi">30</span><span class="w">      </span><span class="n">Joe</span><span class="w">   </span><span class="mi">30</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="aggregate-operators-group-by-distinct">
+<h2>Aggregate operators (<code class="docutils literal notranslate"><span class="pre">GROUP</span> <span class="pre">BY</span></code>, <code class="docutils literal notranslate"><span class="pre">DISTINCT</span></code>)<a class="headerlink" href="#aggregate-operators-group-by-distinct" title="Permalink to this headline"> </a></h2>
+<p>As discussed in <a class="reference internal" href="#comparison-operators"><span class="std std-ref">Comparison operators</span></a>,
+two <code class="docutils literal notranslate"><span class="pre">NULL</span></code> values are not equal. However, for the purpose of grouping and distinct processing, the two or more
+values with <code class="docutils literal notranslate"><span class="pre">NULL</span> <span class="pre">data</span></code>are grouped together into the same bucket. This behavior conforms with the SQL
+standard and with other enterprise database management systems.</p>
+<div class="section" id="examples">
+<span id="examples-6"></span><h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"> </a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- `NULL` values are put in one bucket in `GROUP BY` processing.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">age</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">age</span><span class="p">;</span>
+<span class="w">  </span><span class="n">age</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w"> </span><span class="c1">---- --------</span>
+<span class="w"> </span><span class="k">null</span><span class="w">        </span><span class="mi">2</span>
+<span class="w">   </span><span class="mi">50</span><span class="w">        </span><span class="mi">2</span>
+<span class="w">   </span><span class="mi">30</span><span class="w">        </span><span class="mi">2</span>
+<span class="w">   </span><span class="mi">18</span><span class="w">        </span><span class="mi">1</span>
+
+<span class="c1">-- All `NULL` ages are considered one distinct value in `DISTINCT` processing.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="p">;</span>
+<span class="w">  </span><span class="n">age</span>
+<span class="w"> </span><span class="c1">----</span>
+<span class="w"> </span><span class="k">null</span>
+<span class="w">   </span><span class="mi">50</span>
+<span class="w">   </span><span class="mi">30</span>
+<span class="w">   </span><span class="mi">18</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="sort-operator-order-by-clause">
+<h2>Sort operator (<code class="docutils literal notranslate"><span class="pre">ORDER</span> <span class="pre">BY</span></code> clause)<a class="headerlink" href="#sort-operator-order-by-clause" title="Permalink to this headline"> </a></h2>
+<p>Databricks supports null ordering specification in <code class="docutils literal notranslate"><span class="pre">ORDER</span> <span class="pre">BY</span></code> clause. Databricks processes the <code class="docutils literal notranslate"><span class="pre">ORDER</span> <span class="pre">BY</span></code> clause by
+placing all the <code class="docutils literal notranslate"><span class="pre">NULL</span></code> values at first or at last depending on the null ordering specification. By default, all
+the <code class="docutils literal notranslate"><span class="pre">NULL</span></code> values are placed at first.</p>
+<div class="section" id="examples">
+<span id="examples-7"></span><h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"> </a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- `NULL` values are shown at first and other values</span>
+<span class="c1">-- are sorted in ascending way.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">age</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">age</span><span class="p">;</span>
+<span class="w">  </span><span class="n">age</span><span class="w">     </span><span class="n">name</span>
+<span class="w"> </span><span class="c1">---- --------</span>
+<span class="w"> </span><span class="k">null</span><span class="w">    </span><span class="n">Marry</span>
+<span class="w"> </span><span class="k">null</span><span class="w">   </span><span class="n">Albert</span>
+<span class="w">   </span><span class="mi">18</span><span class="w">     </span><span class="n">Mike</span>
+<span class="w">   </span><span class="mi">30</span><span class="w"> </span><span class="n">Michelle</span>
+<span class="w">   </span><span class="mi">30</span><span class="w">      </span><span class="n">Joe</span>
+<span class="w">   </span><span class="mi">50</span><span class="w">     </span><span class="n">Fred</span>
+<span class="w">   </span><span class="mi">50</span><span class="w">      </span><span class="n">Dan</span>
+
+<span class="c1">-- Column values other than `NULL` are sorted in ascending</span>
+<span class="c1">-- way and `NULL` values are shown at the last.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">age</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="n">NULLS</span><span class="w"> </span><span class="k">LAST</span><span class="p">;</span>
+<span class="w">  </span><span class="n">age</span><span class="w">     </span><span class="n">name</span>
+<span class="w"> </span><span class="c1">---- --------</span>
+<span class="w">   </span><span class="mi">18</span><span class="w">     </span><span class="n">Mike</span>
+<span class="w">   </span><span class="mi">30</span><span class="w"> </span><span class="n">Michelle</span>
+<span class="w">   </span><span class="mi">30</span><span class="w">      </span><span class="n">Joe</span>
+<span class="w">   </span><span class="mi">50</span><span class="w">      </span><span class="n">Dan</span>
+<span class="w">   </span><span class="mi">50</span><span class="w">     </span><span class="n">Fred</span>
+<span class="w"> </span><span class="k">null</span><span class="w">    </span><span class="n">Marry</span>
+<span class="w"> </span><span class="k">null</span><span class="w">   </span><span class="n">Albert</span>
+
+<span class="c1">-- Columns other than `NULL` values are sorted in descending</span>
+<span class="c1">-- and `NULL` values are shown at the last.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">age</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="n">NULLS</span><span class="w"> </span><span class="k">LAST</span><span class="p">;</span>
+<span class="w">  </span><span class="n">age</span><span class="w">     </span><span class="n">name</span>
+<span class="w"> </span><span class="c1">---- --------</span>
+<span class="w">   </span><span class="mi">50</span><span class="w">     </span><span class="n">Fred</span>
+<span class="w">   </span><span class="mi">50</span><span class="w">      </span><span class="n">Dan</span>
+<span class="w">   </span><span class="mi">30</span><span class="w"> </span><span class="n">Michelle</span>
+<span class="w">   </span><span class="mi">30</span><span class="w">      </span><span class="n">Joe</span>
+<span class="w">   </span><span class="mi">18</span><span class="w">     </span><span class="n">Mike</span>
+<span class="w"> </span><span class="k">null</span><span class="w">    </span><span class="n">Marry</span>
+<span class="w"> </span><span class="k">null</span><span class="w">   </span><span class="n">Albert</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="set-operators-union-intersect-except">
+<h2>Set operators (<code class="docutils literal notranslate"><span class="pre">UNION</span></code>, <code class="docutils literal notranslate"><span class="pre">INTERSECT</span></code>, <code class="docutils literal notranslate"><span class="pre">EXCEPT</span></code>)<a class="headerlink" href="#set-operators-union-intersect-except" title="Permalink to this headline"> </a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">NULL</span></code> values are compared in a null-safe manner for equality in the context of
+set operations. That means when comparing rows, two <code class="docutils literal notranslate"><span class="pre">NULL</span></code> values are considered
+equal unlike the regular <code class="docutils literal notranslate"><span class="pre">EqualTo</span></code>(<code class="docutils literal notranslate"><span class="pre">=</span></code>) operator.</p>
+<div class="section" id="examples">
+<span id="examples-8"></span><h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"> </a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">unknown_age</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
+
+<span class="c1">-- Only common rows between two legs of `INTERSECT` are in the</span>
+<span class="c1">-- result set. The comparison between columns of the row are done</span>
+<span class="c1">-- in a null-safe manner.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span>
+<span class="w">    </span><span class="k">INTERSECT</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">unknown_age</span><span class="p">;</span>
+<span class="w">   </span><span class="n">name</span><span class="w">  </span><span class="n">age</span>
+<span class="w"> </span><span class="c1">------ ----</span>
+<span class="w"> </span><span class="n">Albert</span><span class="w"> </span><span class="k">null</span>
+<span class="w">  </span><span class="n">Marry</span><span class="w"> </span><span class="k">null</span>
+
+<span class="c1">-- `NULL` values from two legs of the `EXCEPT` are not in output.</span>
+<span class="c1">-- This basically shows that the comparison happens in a null-safe manner.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">age</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span>
+<span class="w">    </span><span class="k">EXCEPT</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">unknown_age</span><span class="p">;</span>
+<span class="w"> </span><span class="n">age</span><span class="w">     </span><span class="n">name</span>
+<span class="w"> </span><span class="c1">--- --------</span>
+<span class="w">  </span><span class="mi">30</span><span class="w">      </span><span class="n">Joe</span>
+<span class="w">  </span><span class="mi">50</span><span class="w">     </span><span class="n">Fred</span>
+<span class="w">  </span><span class="mi">30</span><span class="w"> </span><span class="n">Michelle</span>
+<span class="w">  </span><span class="mi">18</span><span class="w">     </span><span class="n">Mike</span>
+<span class="w">  </span><span class="mi">50</span><span class="w">      </span><span class="n">Dan</span>
+
+<span class="c1">-- Performs `UNION` operation between two sets of data.</span>
+<span class="c1">-- The comparison between columns of the row ae done in</span>
+<span class="c1">-- null-safe manner.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span>
+<span class="w">    </span><span class="k">UNION</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">unknown_age</span><span class="p">;</span>
+<span class="w">     </span><span class="n">name</span><span class="w">  </span><span class="n">age</span>
+<span class="w"> </span><span class="c1">-------- ----</span>
+<span class="w">   </span><span class="n">Albert</span><span class="w"> </span><span class="k">null</span>
+<span class="w">      </span><span class="n">Joe</span><span class="w">   </span><span class="mi">30</span>
+<span class="w"> </span><span class="n">Michelle</span><span class="w">   </span><span class="mi">30</span>
+<span class="w">    </span><span class="n">Marry</span><span class="w"> </span><span class="k">null</span>
+<span class="w">     </span><span class="n">Fred</span><span class="w">   </span><span class="mi">50</span>
+<span class="w">     </span><span class="n">Mike</span><span class="w">   </span><span class="mi">18</span>
+<span class="w">      </span><span class="n">Dan</span><span class="w">   </span><span class="mi">50</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="exists-and-not-exists-subqueries">
+<h2><code class="docutils literal notranslate"><span class="pre">EXISTS</span></code> and <code class="docutils literal notranslate"><span class="pre">NOT</span> <span class="pre">EXISTS</span></code> subqueries<a class="headerlink" href="#exists-and-not-exists-subqueries" title="Permalink to this headline"> </a></h2>
+<p>In Databricks, <code class="docutils literal notranslate"><span class="pre">EXISTS</span></code> and <code class="docutils literal notranslate"><span class="pre">NOT</span> <span class="pre">EXISTS</span></code> expressions are allowed inside a <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> clause.
+These are Boolean expressions that return either <code class="docutils literal notranslate"><span class="pre">TRUE</span></code> or
+<code class="docutils literal notranslate"><span class="pre">FALSE</span></code>. In other words, <code class="docutils literal notranslate"><span class="pre">EXISTS</span></code> is a membership condition and returns <code class="docutils literal notranslate"><span class="pre">TRUE</span></code>
+when the subquery it refers to returns one or more rows. Similarly, NOT EXISTS
+is a non-membership condition and returns <code class="docutils literal notranslate"><span class="pre">TRUE</span></code> when no rows or zero rows are
+returned from the subquery.</p>
+<p>These two expressions are not affected by presence of NULL in the result of
+the subquery. They are normally faster because they can be converted to
+semijoins and anti-semijoins without special provisions for null awareness.</p>
+<div class="section" id="examples">
+<span id="examples-9"></span><h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"> </a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Even if subquery produces rows with `NULL` values, the `EXISTS` expression</span>
+<span class="c1">-- evaluates to `TRUE` as the subquery produces 1 row.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">null</span><span class="p">);</span>
+<span class="w">     </span><span class="n">name</span><span class="w">  </span><span class="n">age</span>
+<span class="w"> </span><span class="c1">-------- ----</span>
+<span class="w">   </span><span class="n">Albert</span><span class="w"> </span><span class="k">null</span>
+<span class="w"> </span><span class="n">Michelle</span><span class="w">   </span><span class="mi">30</span>
+<span class="w">     </span><span class="n">Fred</span><span class="w">   </span><span class="mi">50</span>
+<span class="w">     </span><span class="n">Mike</span><span class="w">   </span><span class="mi">18</span>
+<span class="w">      </span><span class="n">Dan</span><span class="w">   </span><span class="mi">50</span>
+<span class="w">    </span><span class="n">Marry</span><span class="w"> </span><span class="k">null</span>
+<span class="w">      </span><span class="n">Joe</span><span class="w">   </span><span class="mi">30</span>
+
+<span class="c1">-- `NOT EXISTS` expression returns `FALSE`. It returns `TRUE` only when</span>
+<span class="c1">-- subquery produces no rows. In this case, it returns 1 row.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">null</span><span class="p">);</span>
+<span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="n">age</span>
+<span class="w"> </span><span class="c1">---- ---</span>
+
+<span class="c1">-- `NOT EXISTS` expression returns `TRUE`.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">     </span><span class="n">name</span><span class="w">  </span><span class="n">age</span>
+<span class="w"> </span><span class="c1">-------- ----</span>
+<span class="w">   </span><span class="n">Albert</span><span class="w"> </span><span class="k">null</span>
+<span class="w"> </span><span class="n">Michelle</span><span class="w">   </span><span class="mi">30</span>
+<span class="w">     </span><span class="n">Fred</span><span class="w">   </span><span class="mi">50</span>
+<span class="w">     </span><span class="n">Mike</span><span class="w">   </span><span class="mi">18</span>
+<span class="w">      </span><span class="n">Dan</span><span class="w">   </span><span class="mi">50</span>
+<span class="w">    </span><span class="n">Marry</span><span class="w"> </span><span class="k">null</span>
+<span class="w">      </span><span class="n">Joe</span><span class="w">   </span><span class="mi">30</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="in-and-not-in-subqueries">
+<h2><code class="docutils literal notranslate"><span class="pre">IN</span></code> and <code class="docutils literal notranslate"><span class="pre">NOT</span> <span class="pre">IN</span></code> subqueries<a class="headerlink" href="#in-and-not-in-subqueries" title="Permalink to this headline"> </a></h2>
+<p>In Databricks, <code class="docutils literal notranslate"><span class="pre">IN</span></code> and <code class="docutils literal notranslate"><span class="pre">NOT</span> <span class="pre">IN</span></code> expressions are allowed inside a <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> clause of
+a query. Unlike the <code class="docutils literal notranslate"><span class="pre">EXISTS</span></code> expression, <code class="docutils literal notranslate"><span class="pre">IN</span></code> expression can return a <code class="docutils literal notranslate"><span class="pre">TRUE</span></code>,
+<code class="docutils literal notranslate"><span class="pre">FALSE</span></code> or <code class="docutils literal notranslate"><span class="pre">UNKNOWN</span> <span class="pre">(NULL)</span></code> value. Conceptually a <code class="docutils literal notranslate"><span class="pre">IN</span></code> expression is semantically
+equivalent to a set of equality condition separated by a disjunctive operator (<code class="docutils literal notranslate"><span class="pre">OR</span></code>).
+For example, c1 IN (1, 2, 3) is semantically equivalent to <code class="docutils literal notranslate"><span class="pre">(C1</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">OR</span> <span class="pre">c1</span> <span class="pre">=</span> <span class="pre">2</span> <span class="pre">OR</span> <span class="pre">c1</span> <span class="pre">=</span> <span class="pre">3)</span></code>.</p>
+<p>As far as handling <code class="docutils literal notranslate"><span class="pre">NULL</span></code> values are concerned, the semantics can be deduced from
+the <code class="docutils literal notranslate"><span class="pre">NULL</span></code> value handling in comparison operators(<code class="docutils literal notranslate"><span class="pre">=</span></code>) and logical operators(<code class="docutils literal notranslate"><span class="pre">OR</span></code>).
+To summarize, below are the rules for computing the result of an <code class="docutils literal notranslate"><span class="pre">IN</span></code> expression.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TRUE</span></code> is returned when the non-NULL value in question is found in the list</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FALSE</span></code> is returned when the non-NULL value is not found in the list and the
+list does not contain NULL values</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UNKNOWN</span></code> is returned when the value is <code class="docutils literal notranslate"><span class="pre">NULL</span></code>, or the non-NULL value is not found in the list
+and the list contains at least one <code class="docutils literal notranslate"><span class="pre">NULL</span></code> value</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">NOT</span> <span class="pre">IN</span></code> always returns UNKNOWN when the list contains <code class="docutils literal notranslate"><span class="pre">NULL</span></code>, regardless of the input value.
+This is because <code class="docutils literal notranslate"><span class="pre">IN</span></code> returns <code class="docutils literal notranslate"><span class="pre">UNKNOWN</span></code> if the value is not in the list containing <code class="docutils literal notranslate"><span class="pre">NULL</span></code>,
+and because <code class="docutils literal notranslate"><span class="pre">NOT</span> <span class="pre">UNKNOWN</span></code> is again <code class="docutils literal notranslate"><span class="pre">UNKNOWN</span></code>.</p>
+<div class="section" id="examples">
+<span id="examples-10"></span><h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"> </a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- The subquery has only `NULL` value in its result set. Therefore,</span>
+<span class="c1">-- the result of `IN` predicate is UNKNOWN.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">null</span><span class="p">);</span>
+<span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="n">age</span>
+<span class="w"> </span><span class="c1">---- ---</span>
+
+<span class="c1">-- The subquery has `NULL` value in the result set as well as a valid</span>
+<span class="c1">-- value `50`. Rows with age = 50 are returned.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">50</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="n">sub</span><span class="p">(</span><span class="n">age</span><span class="p">));</span>
+<span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="n">age</span>
+<span class="w"> </span><span class="c1">---- ---</span>
+<span class="w"> </span><span class="n">Fred</span><span class="w">  </span><span class="mi">50</span>
+<span class="w">  </span><span class="n">Dan</span><span class="w">  </span><span class="mi">50</span>
+
+<span class="c1">-- Since subquery has `NULL` value in the result set, the `NOT IN`</span>
+<span class="c1">-- predicate would return UNKNOWN. Hence, no rows are</span>
+<span class="c1">-- qualified for this query.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">person</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">50</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="n">sub</span><span class="p">(</span><span class="n">age</span><span class="p">));</span>
+<span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="n">age</span>
+<span class="w"> </span><span class="c1">---- ---</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

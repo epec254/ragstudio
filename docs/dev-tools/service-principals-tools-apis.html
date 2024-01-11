@@ -1,0 +1,577 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use Terraform to provision service principals for Databricks automation scenarios." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Provision a service principal for Databricks automation - Terraform">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Provision a service principal for Databricks automation - Terraform &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/dev-tools/service-principals-tools-apis.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/dev-tools/service-principals-tools-apis.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/dev-tools/service-principals-tools-apis.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/dev-tools/service-principals-tools-apis.html" class="notranslate">English</option>
+    <option value="../../ja/dev-tools/service-principals-tools-apis.html" class="notranslate">日本語</option>
+    <option value="../../pt/dev-tools/service-principals-tools-apis.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Provision a service principal for Databricks automation - Terraform</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="provision-a-service-principal-for-databricks-automation---terraform">
+<h1>Provision a service principal for Databricks automation - Terraform<a class="headerlink" href="#provision-a-service-principal-for-databricks-automation---terraform" title="Permalink to this headline"> </a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To provision a Databricks service principal by using the Databricks user interface instead, see <a class="reference internal" href="service-principals.html"><span class="doc">Provision a service principal for Databricks automation - Databricks UI</span></a>.</p>
+</div>
+<p>A <a class="reference internal" href="../administration-guide/users-groups/service-principals.html"><span class="doc">service principal</span></a> is an identity for automated tools and systems like scripts, apps, and CI/CD platforms. Databricks recommends using a service principal and its OAuth token or personal access token instead of your Databricks user account and personal access token. Benefits include:</p>
+<ul class="simple">
+<li><p>Granting and restricting access to resources independently of a user.</p></li>
+<li><p>Enabling users to better protect their own access tokens.</p></li>
+<li><p>Disabling or deleting a service principal without affecting other users.</p></li>
+<li><p>Removing a user when they leave the organization without impacting any service principal.</p></li>
+</ul>
+<p>Follow these instructions to use the <a class="reference internal" href="terraform/index.html"><span class="doc">Databricks Terraform provider</span></a> to create a Databricks service principal in your Databricks workspace and then create a Databricks access token for the Databricks service principal.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul>
+<li><p>A Databricks personal access token to allow the Databricks Terraform provider to call the Databricks APIs on behalf of your Databricks user account within the Databricks workspace. To create a personal access token, do the following:</p>
+<ol class="arabic simple">
+<li><p>In your Databricks workspace, click your Databricks username in the top bar, and then select <strong>User Settings</strong> from the drop down.</p></li>
+<li><p>Click <strong>Developer</strong>.</p></li>
+<li><p>Next to <strong>Access tokens</strong>, click <strong>Manage</strong>.</p></li>
+<li><p>Click <strong>Generate new token</strong>.</p></li>
+<li><p>(Optional) Enter a comment that helps you to identify this token in the future, and change the token’s default lifetime of 90 days. To create a token with no lifetime (not recommended), leave the <strong>Lifetime (days)</strong> box empty (blank).</p></li>
+<li><p>Click <strong>Generate</strong>.</p></li>
+<li><p>Copy the displayed token to a secure location, and then click <strong>Done</strong>.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Be sure to save the copied token in a secure location. Do not share your copied token with others. If you lose the copied token, you cannot regenerate that exact same token. Instead, you must repeat this procedure to create a new token. If you lose the copied token, or you believe that the token has been compromised, Databricks strongly recommends that you immediately delete that token from your workspace by clicking the trash can (<strong>Revoke</strong>) icon next to the token on the <strong>Access tokens</strong> page.</p>
+<p>If you are not able to create or use tokens in your workspace, this might be because your workspace administrator has disabled tokens or has not given you permission to create or use tokens. See your workspace administrator or the following:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../administration-guide/access-control/tokens.html#enable-tokens"><span class="std std-ref">Enable or disable personal access token authentication for the workspace</span></a></p></li>
+<li><p><a class="reference internal" href="../security/auth-authz/api-access-permissions.html#pat"><span class="std std-ref">Personal access token permissions</span></a></p></li>
+</ul>
+</div>
+</li>
+<li><p>Databricks CLI version 0.205 or above, configured with a Databricks authentication configuration profile that references the corresponding Databricks personal access token. To create this configuration profile, do the following:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The following procedure uses the <a class="reference internal" href="cli/install.html"><span class="doc">Databricks CLI</span></a> to create a Databricks <a class="reference internal" href="auth/index.html#config-profiles"><span class="std std-ref">configuration profile</span></a> with the name <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code>. If you already have a <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> configuration profile, this procedure overwrites your existing <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> configuration profile.</p>
+<p>To check whether you already have a <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> configuration profile, and to view this profile’s settings if it exists, use the Databricks CLI to run the command <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">auth</span> <span class="pre">env</span> <span class="pre">--profile</span> <span class="pre">DEFAULT</span></code>.</p>
+<p>To create a configuration profile with a name other than <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code>, replace the <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> part of <code class="docutils literal notranslate"><span class="pre">--profile</span> <span class="pre">DEFAULT</span></code> in the following <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">configure</span></code> command with a different name for the configuration profile.</p>
+</div>
+<ol class="arabic">
+<li><p>Use the <a class="reference internal" href="cli/install.html"><span class="doc">Databricks CLI</span></a> to create a Databricks <a class="reference internal" href="auth/index.html#config-profiles"><span class="std std-ref">configuration profile</span></a> named <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> that uses Databricks personal access token authentication. To do this, run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>databricks<span class="w"> </span>configure<span class="w"> </span>--profile<span class="w"> </span>DEFAULT
+</pre></div>
+</div>
+</li>
+<li><p>For the prompt <strong>Databricks Host</strong>, enter your Databricks <a class="reference internal" href="../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace instance URL</span></a>, for example <code class="docutils literal notranslate"><span class="pre">https://dbc-a1b2345c-d6e7.cloud.databricks.com</span></code>.</p></li>
+<li><p>For the prompt <strong>Personal Access Token</strong>, enter the Databricks personal access token for your workspace.</p></li>
+</ol>
+</li>
+<li><p>The Terraform CLI. See <a class="reference external" href="https://www.terraform.io/downloads.html">Download Terraform</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="create-the-databricks-service-principal-and-databricks-access-token">
+<span id="requirements"></span><h2>Create the Databricks service principal and Databricks access token<a class="headerlink" href="#create-the-databricks-service-principal-and-databricks-access-token" title="Permalink to this headline"> </a></h2>
+<ol class="arabic">
+<li><p>In your terminal, create an empty directory and then switch to it. Each separate set of Terraform configuration files must be in its own directory. For example: <code class="docutils literal notranslate"><span class="pre">mkdir</span> <span class="pre">terraform_service_principal_demo</span> <span class="pre">&amp;&amp;</span> <span class="pre">cd</span> <span class="pre">terraform_service_principal_demo</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>terraform_service_principal_demo<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>terraform_service_principal_demo
+</pre></div>
+</div>
+</li>
+<li><p>In this empty directory, create a file named <code class="docutils literal notranslate"><span class="pre">main.tf</span></code>. Add the following content to this file, and then save the file.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The following content contains the statement <code class="docutils literal notranslate"><span class="pre">authorization</span> <span class="pre">=</span> <span class="pre">&quot;tokens&quot;</span></code>. There can be only one <code class="docutils literal notranslate"><span class="pre">authorization</span> <span class="pre">=</span> <span class="pre">&quot;tokens&quot;</span></code> permissions resource per Databricks workspace. After applying the following changes, users who previously had either <code class="docutils literal notranslate"><span class="pre">CAN_USE</span></code> or <code class="docutils literal notranslate"><span class="pre">CAN_MANAGE</span></code> permission will have their access to token-based authentication revoked. Their active tokens are also immediately deleted (revoked). Because of the potentially disruptive nature of this operation, the related configuration is commented out in the <code class="docutils literal notranslate"><span class="pre">main.tf</span></code> file.</p>
+<p>Alternatively, you can use the Databricks user interface to enable the Databricks service principal to use a Databricks access token. See <a class="reference internal" href="../security/auth-authz/api-access-permissions.html"><span class="doc">Manage access to Databricks automation</span></a>. You can also use the Databricks user interface to generate a Databricks access token for the Databricks service principal. See <a class="reference internal" href="../administration-guide/users-groups/service-principals.html#personal-access-tokens"><span class="std std-ref">Manage tokens for a service principal</span></a>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The following content creates a service principal at the Databricks workspace level. If your Databricks workspace is enabled for <a class="reference internal" href="../administration-guide/users-groups/index.html#enable-identity-federation"><span class="std std-ref">identity federation</span></a>, then the following content also automatically synchronizes the service principal to the related Databricks account (see <a class="reference internal" href="../administration-guide/users-groups/index.html#assign-users-to-workspaces"><span class="std std-ref">How do admins assign users to workspaces?</span></a>). To create a service principal at the Databricks account level only instead of at the workspace level, see the “Creating service principal in AWS Databricks account” section of <a class="reference external" href="https://registry.terraform.io/providers/databrickslabs/databricks/latest/docs/resources/service_principal">databricks_service_principal Resource</a> in the Databricks Terraform provider documentation.</p>
+<p>If you choose to uncomment the following resources and output, a personal access token is also generated. This personal access token can be used by the service principal for automation only within the specified Databricks workspace.</p>
+<p>You cannot use personal access tokens with service principals for Databricks account-level automation. If you attempt to generate a personal access token for a service principal at the Databricks account level, the attempt will fail.</p>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>variable &quot;databricks_connection_profile&quot; {
+  description = &quot;The name of the Databricks authentication configuration profile to use.&quot;
+  type        = string
+}
+
+variable &quot;service_principal_display_name&quot; {
+  description = &quot;The display name for the service principal.&quot;
+  type        = string
+}
+
+variable &quot;service_principal_access_token_lifetime&quot; {
+  description = &quot;The lifetime of the service principal&#39;s access token, in seconds.&quot;
+  type        = number
+  default     = 3600
+}
+
+terraform {
+  required_providers {
+    databricks = {
+      source = &quot;databricks/databricks&quot;
+    }
+  }
+}
+
+provider &quot;databricks&quot; {
+  profile = var.databricks_connection_profile
+}
+
+resource &quot;databricks_service_principal&quot; &quot;sp&quot; {
+  provider     = databricks
+  display_name = var.service_principal_display_name
+}
+
+# Uncomment the following &quot;databricks_permissions&quot; resource
+# if you want to enable the service principal to use
+# personal access tokens.
+#
+# Warning: uncommenting the following &quot;databricks_permissions&quot; resource
+# causes users who previously had either CAN_USE or CAN_MANAGE permission
+# to have their access to token-based authentication revoked.
+# Their active tokens are also immediately deleted (revoked).
+#
+# Alternatively, you can enable this later through the Databricks user interface.
+#
+# resource &quot;databricks_permissions&quot; &quot;token_usage&quot; {
+#   authorization    = &quot;tokens&quot;
+#   access_control {
+#     service_principal_name = databricks_service_principal.sp.application_id
+#     permission_level       = &quot;CAN_USE&quot;
+#   }
+# }
+#
+# Uncomment the following &quot;databricks_obo_token&quot; resource and
+# &quot;service_principal_access_token&quot; output if you want to generate
+# a personal access token for service principal and then see the
+# generated personal access token.
+#
+# If you uncomment the following &quot;databricks_obo_token&quot; resource and
+# &quot;service_principal_access_token&quot; output, you must also
+# uncomment the preceding &quot;databricks_permissions&quot; resource.
+#
+# Alternatively, you can generate a personal access token later through the
+# Databricks user interface.
+#
+# resource &quot;databricks_obo_token&quot; &quot;this&quot; {
+#   depends_on       = [databricks_permissions.token_usage]
+#   application_id   = databricks_service_principal.sp.application_id
+#   comment          = &quot;Personal access token on behalf of ${databricks_service_principal.sp.display_name}&quot;
+#   lifetime_seconds = var.service_principal_access_token_lifetime
+# }
+
+output &quot;service_principal_name&quot; {
+  value = databricks_service_principal.sp.display_name
+}
+
+output &quot;service_principal_id&quot; {
+  value = databricks_service_principal.sp.application_id
+}
+
+# Uncomment the following &quot;service_principal_access_token&quot; output if
+# you want to see the generated personal access token for the service principal.
+#
+# If you uncomment the following &quot;service_principal_access_token&quot; output, you must
+# also uncomment the preceding &quot;service_principal_access_token&quot; resource and
+# &quot;databricks_obo_token&quot; resource.
+#
+# output &quot;service_principal_access_token&quot; {
+#   value     = databricks_obo_token.this.token_value
+#   sensitive = true
+# }
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To add this service principal to Databricks workspace groups, and to add Databricks workspace entitlements to this service principal, see <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/service_principal">databricks_service_principal</a> on the Terraform website.</p>
+</div>
+</li>
+<li><p>In the same directory, create a file named <code class="docutils literal notranslate"><span class="pre">terraform.tfvars</span></code>. Add the following content to this file, replacing the following values, and then save the file:</p>
+<ul class="simple">
+<li><p>Replace the <code class="docutils literal notranslate"><span class="pre">databricks_connection_profile</span></code> value with the name of your authentication configuration profile from the requirements.</p></li>
+<li><p>Replace the <code class="docutils literal notranslate"><span class="pre">service_principal_display_name</span></code> value with a display name for the service principal.</p></li>
+<li><p>Replace the <code class="docutils literal notranslate"><span class="pre">service_principal_access_token_lifetime</span></code> value with the number of seconds for the lifetime of the access token for the service principal.</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>databricks_connection_profile           = &quot;&lt;Databricks authentication configuration profile name&gt;&quot;
+service_principal_display_name          = &quot;&lt;Service principal display name&gt;&quot;
+service_principal_access_token_lifetime = 3600
+</pre></div>
+</div>
+</li>
+<li><p>Initialize the working directory containing the <code class="docutils literal notranslate"><span class="pre">main.tf</span></code> file by running the <code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">init</span></code> command. For more information, see <a class="reference external" href="https://www.terraform.io/docs/cli/commands/init.html">Command: init</a> on the Terraform website.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>terraform<span class="w"> </span>init
+</pre></div>
+</div>
+</li>
+<li><p>Check whether there are any syntax errors in the configuration by running the <code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">validate</span></code> command. For more information, see <a class="reference external" href="https://www.terraform.io/docs/cli/commands/validate.html">Command: validate</a> on the Terraform website.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>terraform<span class="w"> </span>validate
+</pre></div>
+</div>
+</li>
+<li><p>Apply the changes required to reach the desired state of the configuration by running the <code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">apply</span></code> command.  For more information, see <a class="reference external" href="https://www.terraform.io/docs/cli/commands/apply.html">Command: apply</a> on the Terraform website.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>terraform<span class="w"> </span>apply
+</pre></div>
+</div>
+</li>
+<li><p>If you uncommented the <code class="docutils literal notranslate"><span class="pre">databricks_permissions</span></code> resource, the <code class="docutils literal notranslate"><span class="pre">databricks_obo_token</span></code> resource, and the <code class="docutils literal notranslate"><span class="pre">service_principal_access_token</span></code> output, then to get the service principal’s access token, see the value of <code class="docutils literal notranslate"><span class="pre">outputs.service_principal_access_token.value</span></code> in the <code class="docutils literal notranslate"><span class="pre">terraform.tfstate</span></code> file, which is in the working directory containing the <code class="docutils literal notranslate"><span class="pre">main.tf</span></code> file.</p></li>
+</ol>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

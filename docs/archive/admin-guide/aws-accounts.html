@@ -1,0 +1,748 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to configure an AWS account in which Databricks creates and manages compute and VPC resources." name="description" />
+<meta content="noindex" name="robots" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Configure your AWS cross-account IAM role (legacy)">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Configure your AWS cross-account IAM role (legacy) &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/archive/admin-guide/aws-accounts.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/archive/admin-guide/aws-accounts.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/archive/admin-guide/aws-accounts.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/archive/admin-guide/aws-accounts.html" class="notranslate">English</option>
+    <option value="../../../ja/archive/admin-guide/aws-accounts.html" class="notranslate">日本語</option>
+    <option value="../../../pt/archive/admin-guide/aws-accounts.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Configure your AWS cross-account IAM role (legacy)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="configure-your-aws-cross-account-iam-role-legacy">
+<h1>Configure your AWS cross-account IAM role (legacy)<a class="headerlink" href="#configure-your-aws-cross-account-iam-role-legacy" title="Permalink to this headline"> </a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This documentation has been retired and might not be updated. The products, services, or technologies mentioned in this content are no longer supported. To view current admin documentation, see <a class="reference internal" href="../../administration-guide/account-settings/index.html"><span class="doc">Manage your Databricks account</span></a>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This article describes how to configure a cross-account IAM role using the legacy account console. All new Databricks accounts and most existing accounts should use <a class="reference internal" href="../../administration-guide/account-settings-e2/credentials.html"><span class="doc">Create an IAM role for workspace deployment</span></a>.</p>
+</div>
+<p>To set up Databricks you must grant Databricks permission to access an AWS account in which it will create and manage compute and VPC resources. Databricks can use either <a class="reference external" href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html">a cross-account role</a> or <a class="reference external" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html">access keys</a>. This article describes how to configure Databricks to use either method. For both methods you configure settings in both the AWS Console and the Databricks account console.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<ul class="simple">
+<li><p>Although both roles and access keys are supported, Databricks <em>strongly recommends</em> that you use a cross-account role to enable access to your AWS account.</p></li>
+<li><p>You can change the AWS account. However, changing the AWS account causes cluster termination, VPC deletion, and the invalidation of any <a class="reference internal" href="../../connect/storage/tutorial-s3-instance-profile.html"><span class="doc">instance profiles</span></a> you have set up.</p></li>
+<li><p>Changes to the AWS account or to the type and configuration of AWS permissions can result in a downtime of 2-10 minutes.</p></li>
+</ul>
+</div>
+<div class="section" id="use-a-cross-account-role">
+<h2>Use a cross-account role<a class="headerlink" href="#use-a-cross-account-role" title="Permalink to this headline"> </a></h2>
+<p>This section describes how to configure access to an AWS account using a cross-account role.</p>
+<div class="section" id="step-1-configure-databricks-to-use-a-cross-account-role">
+<h3>Step 1: Configure Databricks to use a cross-account role<a class="headerlink" href="#step-1-configure-databricks-to-use-a-cross-account-role" title="Permalink to this headline"> </a></h3>
+<ol class="arabic">
+<li><p>As the Databricks account owner, log in to the <a class="reference internal" href="account-console.html"><span class="doc">account console</span></a>.</p></li>
+<li><p>Click the <strong>AWS Account</strong> tab.</p></li>
+<li><p>Select the <strong>Deploy to AWS using Cross Account Role</strong> radio button.</p>
+<div class="figure align-default">
+<img alt="Cross-account role" src="../../_images/iam-role-empty.png" />
+</div>
+</li>
+<li><p>If this is the first time you are configuring the account, in the AWS Region drop-down, select an AWS region.</p></li>
+<li><p>Copy the <strong>External ID</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="step-2-create-a-cross-account-role-and-an-access-policy">
+<span id="ec2-policy"></span><h3>Step 2: Create a cross-account role and an access policy<a class="headerlink" href="#step-2-create-a-cross-account-role-and-an-access-policy" title="Permalink to this headline"> </a></h3>
+<ol class="arabic">
+<li><p>In the AWS Console, go to the <strong>IAM</strong> service.</p></li>
+<li><p>Click the <strong>Roles</strong> tab in the sidebar.</p></li>
+<li><p>Click <strong>Create role</strong>.</p>
+<ol class="loweralpha">
+<li><p>In <strong>Select type of trusted entity</strong>, click the <strong>Another AWS account</strong> tile.</p>
+<div class="figure align-default">
+<img alt="Trusted entity type" src="../../_images/trusted-entity.png" />
+</div>
+</li>
+<li><p>In the Account ID field, enter the Databricks account ID <code class="docutils literal notranslate"><span class="pre">414351767826</span></code>.</p></li>
+<li><p>Select the <strong>Require external ID</strong> checkbox.</p></li>
+<li><p>In the <strong>External ID</strong> field, paste the Databricks External ID you copied in Step 1.</p></li>
+<li><p>Click the <strong>Next: Permissions</strong> button.</p></li>
+<li><p>Click the <strong>Next: Tags</strong> button.</p></li>
+<li><p>Click the <strong>Next: Review</strong> button.</p></li>
+<li><p>In the <strong>Role name</strong> field, enter a role name.</p>
+<div class="figure align-default">
+<img alt="Role name" src="../../_images/role-name.png" />
+</div>
+</li>
+<li><p>Click <strong>Create role</strong>. The list of roles displays.</p></li>
+</ol>
+</li>
+<li><p>In the list of roles, click the role you created.</p></li>
+<li><p>Add an inline policy.</p>
+<ol class="loweralpha">
+<li><p>On the Permissions tab, click <strong>Add inline policy</strong>.</p>
+<div class="figure align-default">
+<img alt="Inline policy" src="../../_images/inline-policy.png" />
+</div>
+</li>
+<li><p>In the policy editor, click the <strong>JSON</strong> tab.</p>
+<div class="figure align-default">
+<img alt="JSON editor" src="../../_images/policy-editor.png" />
+</div>
+</li>
+<li><p>Paste this access policy into the editor:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Stmt1403287045000&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;ec2:AssociateDhcpOptions&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:AssociateIamInstanceProfile&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:AssociateRouteTable&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:AttachInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:AttachVolume&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:AuthorizeSecurityGroupEgress&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:AuthorizeSecurityGroupIngress&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CancelSpotInstanceRequests&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateDhcpOptions&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateKeyPair&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateRoute&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateSecurityGroup&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateSubnet&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateTags&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateVolume&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateVpc&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateVpcPeeringConnection&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteKeyPair&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteRoute&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteRouteTable&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteSecurityGroup&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteSubnet&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteTags&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteVolume&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteVpc&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeAvailabilityZones&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeIamInstanceProfileAssociations&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeInstanceStatus&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeInstances&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribePrefixLists&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeReservedInstancesOfferings&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeRouteTables&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeSecurityGroups&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeSpotInstanceRequests&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeSpotPriceHistory&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeSubnets&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeVolumes&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeVpcs&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeVpcAttribute&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeNetworkAcls&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeNatGateways&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeInternetGateways&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DetachInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DisassociateIamInstanceProfile&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:ModifyVpcAttribute&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:ReplaceIamInstanceProfileAssociation&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:RequestSpotInstances&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:RevokeSecurityGroupEgress&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:RevokeSecurityGroupIngress&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:RunInstances&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:TerminateInstances&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;*&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;iam:CreateServiceLinkedRole&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;iam:PutRolePolicy&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::*:role/aws-service-role/spot.amazonaws.com/AWSServiceRoleForEC2Spot&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;StringLike&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;iam:AWSServiceName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spot.amazonaws.com&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Click <strong>Review policy</strong>.</p></li>
+<li><p>In the <strong>Name</strong> field, enter a policy name.</p></li>
+<li><p>Click <strong>Create policy</strong>.</p></li>
+</ol>
+</li>
+<li><p>In the role summary, copy the <strong>Role ARN</strong>.</p>
+<div class="figure align-default">
+<img alt="Role ARN" src="../../_images/role-arn.png" />
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="step-3-configure-the-cross-account-role-in-your-databricks-account">
+<h3>Step 3: Configure the cross-account role in your Databricks account<a class="headerlink" href="#step-3-configure-the-cross-account-role-in-your-databricks-account" title="Permalink to this headline"> </a></h3>
+<ol class="arabic">
+<li><p>In the Databricks account console, return to the <strong>AWS Account</strong> tab.</p></li>
+<li><p>In the <strong>Role ARN</strong> field, paste the Role ARN you copied in Step 2.</p>
+<div class="figure align-default">
+<img alt="First role ARN" src="../../_images/role-arn-first.png" />
+</div>
+</li>
+<li><p>Click <strong>Next Step</strong>. If you are changing the authentication method rather than configuring your authentication for the first time, this button is labeled <strong>Apply Changes</strong>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you are changing the authentication method and you provide a <em>different AWS account ID</em> than was used to originally set up the account, a warning displays about the effect of that change, including cluster termination, VPC deletion, and the invalidation of any <a class="reference internal" href="../../connect/storage/tutorial-s3-instance-profile.html"><span class="doc">instance profiles</span></a> you have set up. To proceed, click <strong>Change AWS Account</strong>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="use-access-keys">
+<h2>Use access keys<a class="headerlink" href="#use-access-keys" title="Permalink to this headline"> </a></h2>
+<p>This section describes how to configure access to an AWS account using access keys.</p>
+<div class="section" id="step-1-create-an-access-policy-and-a-user-with-access-keys">
+<h3>Step 1: Create an access policy and a user with access keys<a class="headerlink" href="#step-1-create-an-access-policy-and-a-user-with-access-keys" title="Permalink to this headline"> </a></h3>
+<ol class="arabic">
+<li><p>In the AWS Console, go to the <strong>IAM</strong> service.</p></li>
+<li><p>Click the <strong>Policies</strong> tab in the sidebar.</p></li>
+<li><p>Click <strong>Create policy</strong>.</p>
+<ol class="loweralpha">
+<li><p>In the policy editor, click the <strong>JSON</strong> tab.</p>
+<div class="figure align-default">
+<img alt="JSON editor" src="../../_images/policy-editor.png" />
+</div>
+</li>
+<li><p>Paste this access policy into the editor:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Stmt1403287045000&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="s2">&quot;ec2:AssociateDhcpOptions&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:AssociateIamInstanceProfile&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:AssociateRouteTable&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:AttachInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:AttachVolume&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:AuthorizeSecurityGroupEgress&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:AuthorizeSecurityGroupIngress&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CancelSpotInstanceRequests&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateDhcpOptions&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateKeyPair&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateRoute&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateSecurityGroup&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateSubnet&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateTags&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateVolume&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateVpc&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:CreateVpcPeeringConnection&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteKeyPair&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteRoute&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteRouteTable&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteSecurityGroup&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteSubnet&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteTags&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteVolume&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DeleteVpc&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeAvailabilityZones&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeIamInstanceProfileAssociations&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeInstanceStatus&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeInstances&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribePrefixLists&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeReservedInstancesOfferings&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeRouteTables&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeSecurityGroups&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeSpotInstanceRequests&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeSpotPriceHistory&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeSubnets&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeVolumes&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DescribeVpcs&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DetachInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:DisassociateIamInstanceProfile&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:ModifyVpcAttribute&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:ReplaceIamInstanceProfileAssociation&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:RequestSpotInstances&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:RevokeSecurityGroupEgress&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:RevokeSecurityGroupIngress&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:RunInstances&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ec2:TerminateInstances&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;*&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;iam:CreateServiceLinkedRole&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;iam:PutRolePolicy&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::*:role/aws-service-role/spot.amazonaws.com/AWSServiceRoleForEC2Spot&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;StringLike&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;iam:AWSServiceName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spot.amazonaws.com&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Click <strong>Review policy</strong>.</p></li>
+<li><p>In the <strong>Name</strong> field, enter a policy name.</p></li>
+<li><p>Click <strong>Create policy</strong>.</p></li>
+</ol>
+</li>
+<li><p>Click the <strong>Users</strong> tab in the sidebar.</p></li>
+<li><p>Click <strong>Add User</strong>.</p>
+<ol class="loweralpha">
+<li><p>Enter a user name.</p></li>
+<li><p>For <strong>Access type</strong>, select <strong>Programmatic access</strong>.</p>
+<div class="figure align-default">
+<img alt="Programmatic access" src="../../_images/user-access.png" />
+</div>
+</li>
+<li><p>Click <strong>Next Permissions</strong>.</p></li>
+<li><p>Select <strong>Attach existing policies directly</strong>.</p>
+<div class="figure align-default">
+<img alt="Attach policy" src="../../_images/set-user-permissions.png" />
+</div>
+</li>
+<li><p>In the Policy type filter, select <strong>Customer managed</strong>.</p>
+<div class="figure align-default">
+<img alt="Customer managed policy" src="../../_images/customer-managed-policy.png" />
+</div>
+</li>
+<li><p>Select the checkbox next to the policy you created.</p></li>
+<li><p>Click <strong>Next Review</strong>.</p></li>
+<li><p>Click <strong>Create user</strong>.</p></li>
+</ol>
+</li>
+<li><p>Click <strong>Download .csv</strong>, downloads a CSV file containing the access key ID and secret access key you need for the next step.</p>
+<div class="figure align-default">
+<img alt="Download CSV" src="../../_images/download-csv.png" />
+</div>
+</li>
+<li><p>Click <strong>Close</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="step-2-configure-access-keys-in-your-databricks-account">
+<h3>Step 2: Configure access keys in your Databricks account<a class="headerlink" href="#step-2-configure-access-keys-in-your-databricks-account" title="Permalink to this headline"> </a></h3>
+<ol class="arabic simple">
+<li><p>As the Databricks account owner, log in to the <a class="reference internal" href="account-console.html"><span class="doc">account console</span></a>.</p></li>
+<li><p>Click the <strong>AWS Account</strong> tab.</p></li>
+<li><p>Select the <strong>Deploy to AWS using Access Key</strong> radio button. The process varies depending on whether you are configuring your authentication for the first time or changing the authentication method.</p></li>
+</ol>
+<ul>
+<li><p><strong>First</strong></p>
+<ol class="loweralpha">
+<li><p>In the AWS Region drop-down, select an AWS region.</p></li>
+<li><p>In the AWS Account ID field, enter your AWS account ID. See <a class="reference external" href="https://docs.aws.amazon.com/general/latest/gr/acct-identifiers.html">AWS Account Identifiers</a> for information on how to find your account ID.</p></li>
+<li><p>Enter your access key ID and secret access key from the CSV file you downloaded in Step 1 into their respective fields.</p>
+<div class="figure align-default">
+<img alt="First access keys" src="../../_images/aws-key-first.png" />
+</div>
+</li>
+<li><p>Click <strong>Next Step</strong>.</p></li>
+</ol>
+</li>
+<li><p><strong>Change</strong></p>
+<ol class="loweralpha">
+<li><p>Click the <strong>Edit AWS Settings</strong> button.</p></li>
+<li><p>Optionally enter a new AWS account ID.</p></li>
+<li><p>Enter your access key ID and secret access key from the CSV file you downloaded in Step 1 into their respective fields.</p>
+<div class="figure align-default">
+<img alt="Change access keys" src="../../_images/aws-key.png" />
+</div>
+</li>
+<li><p>Click <strong>Apply Changes</strong>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you provide a <em>different AWS account ID</em> than used to originally set up the account, a warning displays about the effect of that change, including cluster termination, VPC deletion, and the invalidation of any <a class="reference internal" href="../../connect/storage/tutorial-s3-instance-profile.html"><span class="doc">instanceprofiles</span></a> you have set up. To proceed, click <strong>Change AWS Account</strong>.</p>
+</div>
+</li>
+</ol>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>Check that AWS account billing information is complete. If it is not, Databricks may not be able to validate credentials.</p></li>
+<li><p>To confirm that there are no issues with your AWS account, verify that you can launch an EC2 instance.</p></li>
+<li><p>It can take a minute or two for IAM to propagate the permissions set on the IAM role or user. If validation fails, retry the configuration in the Databricks account.</p></li>
+</ul>
+</div>
+<div class="section" id="next-step">
+<h2>Next step<a class="headerlink" href="#next-step" title="Permalink to this headline"> </a></h2>
+<p>The first time you set up your account you must also configure your AWS storage. See <a class="reference internal" href="aws-storage.html"><span class="doc">Configure AWS storage (legacy)</span></a>.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

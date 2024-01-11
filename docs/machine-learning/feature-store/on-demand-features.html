@@ -1,0 +1,527 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn about using on-demand features with Databricks Feature Store. Compute features on demand using Python user-defined functions." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Compute features on demand using Python user-defined functions">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Compute features on demand using Python user-defined functions &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/machine-learning/feature-store/on-demand-features.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/machine-learning/feature-store/on-demand-features.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/machine-learning/feature-store/on-demand-features.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/machine-learning/feature-store/on-demand-features.html" class="notranslate">English</option>
+    <option value="../../../ja/machine-learning/feature-store/on-demand-features.html" class="notranslate">日本語</option>
+    <option value="../../../pt/machine-learning/feature-store/on-demand-features.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Compute features on demand using Python user-defined functions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="compute-features-on-demand-using-python-user-defined-functions">
+<h1>Compute features on demand using Python user-defined functions<a class="headerlink" href="#compute-features-on-demand-using-python-user-defined-functions" title="Permalink to this headline"> </a></h1>
+<p>This article describes how to create and use on-demand features in Databricks.</p>
+<p>Machine learning models for real-time applications often require the most recent feature values. In the example shown in the diagram, one feature for a restaurant recommendation model is the user’s current distance from a restaurant. This feature must be calculated “on demand”—that is, at the time of the scoring request. Upon receiving a scoring request, the model looks up the restaurant’s location, and then applies a pre-defined function to calculate the distance between the user’s current location and the restaurant. That distance is passed as an input to the model, along with other precomputed features from the feature store.</p>
+<div class="figure align-default">
+<img alt="compute features on demand workflow" src="../../_images/on-demand-feature.png" />
+</div>
+<p>To use on-demand features, your workspace must be enabled for <a class="reference internal" href="../../data-governance/unity-catalog/index.html"><span class="doc">Unity Catalog</span></a> and you must use Databricks Runtime 13.3 LTS ML or above.</p>
+<div class="section" id="what-are-on-demand-features">
+<h2>What are on-demand features?<a class="headerlink" href="#what-are-on-demand-features" title="Permalink to this headline"> </a></h2>
+<p>“On-demand” refers to features whose values are not known ahead of time, but are calculated at the time of inference. In Databricks, you use <a class="reference internal" href="../../udf/unity-catalog.html#register-a-python-udf-to-unity-catalog"><span class="std std-ref">Python user-defined functions (UDFs)</span></a> to specify how to calculate on-demand features. These functions are governed by Unity Catalog and discoverable through <a class="reference internal" href="../../catalog-explorer/index.html"><span class="doc">Catalog Explorer</span></a>.</p>
+</div>
+<div class="section" id="workflow">
+<h2>Workflow<a class="headerlink" href="#workflow" title="Permalink to this headline"> </a></h2>
+<p>To compute features on-demand, you specify a Python user-defined function (UDF) that describes how to calculate the feature values.</p>
+<ul class="simple">
+<li><p>During training, you provide this function and its input bindings in the <code class="docutils literal notranslate"><span class="pre">feature_lookups</span></code> parameter of the <code class="docutils literal notranslate"><span class="pre">create_training_set</span></code> API.</p></li>
+<li><p>You must log the trained model using the Feature Store method <code class="docutils literal notranslate"><span class="pre">log_model</span></code>. This ensures that the model automatically evaluates on-demand features when it is used for inference.</p></li>
+<li><p>For batch scoring, the <code class="docutils literal notranslate"><span class="pre">score_batch</span></code> API automatically calculates and returns all feature values, including on-demand features.</p></li>
+<li><p>When you serve a model with <a class="reference internal" href="../model-serving/index.html"><span class="doc">Databricks Model Serving</span></a>, the model automatically uses the Python UDF to compute on-demand features for each scoring request.</p></li>
+</ul>
+</div>
+<div class="section" id="create-a-python-udf">
+<h2>Create a Python UDF<a class="headerlink" href="#create-a-python-udf" title="Permalink to this headline"> </a></h2>
+<p>You can create a Python UDF in a notebook or in Databricks SQL.</p>
+<p>For example, running the following code in a notebook cell creates the Python UDF <code class="docutils literal notranslate"><span class="pre">example_feature</span></code> in the catalog <code class="docutils literal notranslate"><span class="pre">main</span></code> and schema <code class="docutils literal notranslate"><span class="pre">default</span></code>.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>%sql
+CREATE FUNCTION main.default.example_feature(x INT, y INT)
+RETURNS INT
+LANGUAGE PYTHON
+COMMENT &#39;add two numbers&#39;
+AS $$
+def add_numbers(n1: int, n2: int) -&gt; int:
+  return n1 + n2
+
+return add_numbers(x, y)
+$$
+</pre></div>
+</div>
+<p>After running the code, you can navigate through the three-level namespace in <a class="reference internal" href="../../catalog-explorer/index.html"><span class="doc">Catalog Explorer</span></a> to view the function definition:</p>
+<div class="figure align-default">
+<img alt="function in Catalog Explorer" src="../../_images/example_feature_func.png" />
+</div>
+<p>For more details about creating Python UDFs, see <a class="reference internal" href="../../udf/unity-catalog.html#register-a-python-udf-to-unity-catalog"><span class="std std-ref">Register a Python UDF to Unity Catalog</span></a> and <a class="reference internal" href="../../sql/language-manual/sql-ref-syntax-ddl-create-sql-function.html"><span class="doc">the SQL language manual</span></a>.</p>
+</div>
+<div class="section" id="train-a-model-using-on-demand-features">
+<h2>Train a model using on-demand features<a class="headerlink" href="#train-a-model-using-on-demand-features" title="Permalink to this headline"> </a></h2>
+<p>To train the model, you use a <code class="docutils literal notranslate"><span class="pre">FeatureFunction</span></code>, which is passed to the <code class="docutils literal notranslate"><span class="pre">create_training_set</span></code> API in the <code class="docutils literal notranslate"><span class="pre">feature_lookups</span></code> parameter.</p>
+<p>The following example code uses the Python UDF <code class="docutils literal notranslate"><span class="pre">main.default.example_feature</span></code> that was defined in the previous section.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install databricks-feature-engineering first with:</span>
+<span class="c1"># %pip install databricks-feature-engineering</span>
+<span class="c1"># dbutils.library.restartPython()</span>
+
+<span class="kn">from</span> <span class="nn">databricks.feature_engineering</span> <span class="kn">import</span> <span class="n">FeatureEngineeringClient</span>
+<span class="kn">from</span> <span class="nn">databricks.feature_engineering</span> <span class="kn">import</span> <span class="n">FeatureFunction</span><span class="p">,</span> <span class="n">FeatureLookup</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">linear_model</span>
+
+<span class="n">fe</span> <span class="o">=</span> <span class="n">FeatureEngineeringClient</span><span class="p">()</span>
+
+<span class="n">features</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="c1"># The feature &#39;on_demand_feature&#39; is computed as the sum of the the input value &#39;new_source_input&#39;</span>
+  <span class="c1"># and the pre-materialized feature &#39;materialized_feature_value&#39;.</span>
+  <span class="c1"># - &#39;new_source_input&#39; must be included in base_df and also provided at inference time.</span>
+  <span class="c1">#   - For batch inference, it must be included in the DataFrame passed to &#39;FeatureEngineeringClient.score_batch&#39;.</span>
+  <span class="c1">#   - For real-time inference, it must be included in the request.</span>
+  <span class="c1"># - &#39;materialized_feature_value&#39; is looked up from a feature table.</span>
+
+  <span class="n">FeatureFunction</span><span class="p">(</span>
+      <span class="n">udf_name</span><span class="o">=</span><span class="s2">&quot;main.default.example_feature&quot;</span><span class="p">,</span>    <span class="c1"># UDF must be in Unity Catalog so uses a three-level namespace</span>
+      <span class="n">input_bindings</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="s2">&quot;new_source_input&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="s2">&quot;materialized_feature_value&quot;</span>
+      <span class="p">},</span>
+      <span class="n">output_name</span><span class="o">=</span><span class="s2">&quot;on_demand_feature&quot;</span><span class="p">,</span>
+  <span class="p">),</span>
+  <span class="c1"># retrieve the prematerialized feature</span>
+  <span class="n">FeatureLookup</span><span class="p">(</span>
+    <span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;main.default.table&#39;</span><span class="p">,</span>
+    <span class="n">feature_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;materialized_feature_value&#39;</span><span class="p">],</span>
+    <span class="n">lookup_key</span> <span class="o">=</span> <span class="s1">&#39;id&#39;</span>
+  <span class="p">)</span>
+<span class="p">]</span>
+
+<span class="c1"># base_df includes the columns &#39;id&#39;, &#39;new_source_input&#39;, and &#39;label&#39;</span>
+<span class="n">training_set</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">create_training_set</span><span class="p">(</span>
+  <span class="n">df</span><span class="o">=</span><span class="n">base_df</span><span class="p">,</span>
+  <span class="n">feature_lookups</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
+  <span class="n">label</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">,</span>
+  <span class="n">exclude_columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;new_source_input&#39;</span><span class="p">,</span> <span class="s1">&#39;materialized_feature_value&#39;</span><span class="p">]</span>     <span class="c1"># drop the columns not used for training</span>
+<span class="p">)</span>
+
+<span class="c1"># The training set contains the columns &#39;on_demand_feature&#39; and &#39;label&#39;.</span>
+<span class="n">training_df</span> <span class="o">=</span> <span class="n">training_set</span><span class="o">.</span><span class="n">load_df</span><span class="p">()</span><span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+
+<span class="c1"># training_df columns [&#39;materialized_feature_value&#39;, &#39;label&#39;]</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">training_df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;label&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">training_df</span><span class="o">.</span><span class="n">label</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">linear_model</span><span class="o">.</span><span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="log-the-model-and-register-it-to-unity-catalog">
+<span id="log-the-model-and-register-it-to-uc"></span><h2>Log the model and register it to Unity Catalog<a class="headerlink" href="#log-the-model-and-register-it-to-unity-catalog" title="Permalink to this headline"> </a></h2>
+<p>Models packaged with feature metadata can be <a class="reference internal" href="../manage-model-lifecycle/index.html"><span class="doc">registered to Unity Catalog</span></a>. The feature tables used to create the model must be stored in Unity Catalog.</p>
+<p>To ensure that the model automatically evaluates on-demand features when it is used for inference, you must set the registry URI and then log the model, as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mlflow</span>
+<span class="n">mlflow</span><span class="o">.</span><span class="n">set_registry_uri</span><span class="p">(</span><span class="s2">&quot;databricks-uc&quot;</span><span class="p">)</span>
+
+<span class="n">fe</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">artifact_path</span><span class="o">=</span><span class="s2">&quot;main.default.model&quot;</span><span class="p">,</span>
+    <span class="n">flavor</span><span class="o">=</span><span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="p">,</span>
+    <span class="n">training_set</span><span class="o">=</span><span class="n">training_set</span><span class="p">,</span>
+    <span class="n">registered_model_name</span><span class="o">=</span><span class="s2">&quot;main.default.recommender_model&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>If the Python UDF that defines the on-demand features imports any Python packages, you must specify these packages using the argument <code class="docutils literal notranslate"><span class="pre">extra_pip_requirements</span></code>. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mlflow</span>
+<span class="n">mlflow</span><span class="o">.</span><span class="n">set_registry_uri</span><span class="p">(</span><span class="s2">&quot;databricks-uc&quot;</span><span class="p">)</span>
+
+<span class="n">fe</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">artifact_path</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span>
+    <span class="n">flavor</span><span class="o">=</span><span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="p">,</span>
+    <span class="n">training_set</span><span class="o">=</span><span class="n">training_set</span><span class="p">,</span>
+    <span class="n">registered_model_name</span><span class="o">=</span><span class="s2">&quot;main.default.recommender_model&quot;</span><span class="p">,</span>
+    <span class="n">extra_pip_requirements</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;scikit-learn==1.20.3&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="limitation">
+<h2>Limitation<a class="headerlink" href="#limitation" title="Permalink to this headline"> </a></h2>
+<p>On-demand features can output all <a class="reference internal" href="uc/feature-tables-uc.html#supported-data-types"><span class="std std-ref">data types supported by Feature Store</span></a> except MapType and ArrayType.</p>
+</div>
+<div class="section" id="notebook-examples-on-demand-features">
+<span id="examples"></span><h2>Notebook examples: On-demand features<a class="headerlink" href="#notebook-examples-on-demand-features" title="Permalink to this headline"> </a></h2>
+<p>The following notebook shows an example of how to train and score a model that uses an on-demand feature.</p>
+<div class="embedded-notebook-section section" id="basic-on-demand-features-demo-notebook">
+<span id="on-demand-basic-demo"></span><h3>Basic on-demand features demo notebook<a class="headerlink" href="#basic-on-demand-features-demo-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/machine-learning/on-demand-basic-demo.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/machine-learning/on-demand-basic-demo.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/machine-learning/on-demand-basic-demo.html"            id="a4cb74583acc2ceffde14ffe7717c94555e8b8c0f18cf660f2f7f25d979b6aef" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+<p>The following notebook shows an example of a restaurant recommendation model. The restaurant’s location is looked up from a pre-materialized feature table published to an online store. The user’s current location is sent as part of the scoring request. The model uses an on-demand feature to compute the real-time distance from the user to the restaurant. That distance is then used as an input to the model.</p>
+<div class="embedded-notebook-section section" id="restaurant-recommendation-on-demand-features-demo-notebook">
+<span id="on-demand-restaurant-recommendation-demo-dynamodb"></span><h3>Restaurant recommendation on-demand features demo notebook<a class="headerlink" href="#restaurant-recommendation-on-demand-features-demo-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/machine-learning/on-demand-restaurant-recommendation-demo-dynamodb.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/machine-learning/on-demand-restaurant-recommendation-demo-dynamodb.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/machine-learning/on-demand-restaurant-recommendation-demo-dynamodb.html"            id="ae9db8b2b868a1217512e5fac8169383e2704b59ec2f8500acb69c43fbf77460" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

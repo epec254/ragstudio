@@ -1,0 +1,732 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use adaptive query execution in Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Adaptive query execution">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Adaptive query execution &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/optimizations/aqe.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/optimizations/aqe.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/optimizations/aqe.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/optimizations/aqe.html" class="notranslate">English</option>
+    <option value="../../ja/optimizations/aqe.html" class="notranslate">日本語</option>
+    <option value="../../pt/optimizations/aqe.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Adaptive query execution</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="adaptive-query-execution">
+<h1>Adaptive query execution<a class="headerlink" href="#adaptive-query-execution" title="Permalink to this headline"> </a></h1>
+<p>Adaptive query execution (AQE) is query re-optimization that occurs during query execution.</p>
+<p>The motivation for runtime re-optimization is that Databricks has the most up-to-date accurate statistics at the end of a shuffle and broadcast exchange (referred to as a query stage in AQE). As a result, Databricks can opt for a better physical strategy, pick an optimal post-shuffle partition size and number, or do optimizations that used to require hints, for example, skew join handling.</p>
+<p>This can be very useful when statistics collection is not turned on or when statistics are stale. It is also useful in places where statically derived statistics are inaccurate, such as in the middle of a complicated query, or after the occurrence of data skew.</p>
+<div class="section" id="capabilities">
+<h2>Capabilities<a class="headerlink" href="#capabilities" title="Permalink to this headline"> </a></h2>
+<p>AQE is enabled by default. It has 4 major features:</p>
+<ul class="simple">
+<li><p>Dynamically changes sort merge join into broadcast hash join.</p></li>
+<li><p>Dynamically coalesces partitions (combine small partitions into reasonably sized partitions) after shuffle exchange. Very small tasks have worse I/O throughput and tend to suffer more from scheduling overhead and task setup overhead. Combining small tasks saves resources and improves cluster throughput.</p></li>
+<li><p>Dynamically handles skew in sort merge join and shuffle hash join by splitting (and replicating if needed) skewed tasks into roughly evenly sized tasks.</p></li>
+<li><p>Dynamically detects and propagates empty relations.</p></li>
+</ul>
+<p></p>
+</div>
+<div class="section" id="application">
+<h2>Application<a class="headerlink" href="#application" title="Permalink to this headline"> </a></h2>
+<p>AQE applies to all queries that are:</p>
+<ul class="simple">
+<li><p>Non-streaming</p></li>
+<li><p>Contain at least one exchange (usually when there’s a join, aggregate, or window), one sub-query, or both.</p></li>
+</ul>
+<p>Not all AQE-applied queries are necessarily re-optimized. The re-optimization might or might not come up with a different query plan than the one statically compiled. To determine whether a query’s plan has been changed by AQE, see the following section, <a class="reference internal" href="#query-plans"><span class="std std-ref">Query plans</span></a>.</p>
+</div>
+<div class="section" id="query-plans">
+<h2>Query plans<a class="headerlink" href="#query-plans" title="Permalink to this headline"> </a></h2>
+<p>This section discusses how you can examine query plans in different ways.</p>
+<div class="contents local topic" id="in-this-section">
+<p class="topic-title first">In this section:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#spark-ui" id="id5">Spark UI</a></p></li>
+<li><p><a class="reference internal" href="#dataframeexplain" id="id6"><code class="docutils literal notranslate"><span class="pre">DataFrame.explain()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#sql-explain" id="id7"><code class="docutils literal notranslate"><span class="pre">SQL</span> <span class="pre">EXPLAIN</span></code></a></p></li>
+</ul>
+</div>
+<div class="section" id="spark-ui">
+<h3><a class="toc-backref" href="#id5">Spark UI</a><a class="headerlink" href="#spark-ui" title="Permalink to this headline"> </a></h3>
+<div class="section" id="adaptivesparkplan-node">
+<h4><code class="docutils literal notranslate"><span class="pre">AdaptiveSparkPlan</span></code> node<a class="headerlink" href="#adaptivesparkplan-node" title="Permalink to this headline"> </a></h4>
+<p>AQE-applied queries contain one or more <code class="docutils literal notranslate"><span class="pre">AdaptiveSparkPlan</span></code> nodes, usually as the root node of each main query or sub-query.
+Before the query runs or when it is running, the <code class="docutils literal notranslate"><span class="pre">isFinalPlan</span></code> flag of the corresponding <code class="docutils literal notranslate"><span class="pre">AdaptiveSparkPlan</span></code> node shows as <code class="docutils literal notranslate"><span class="pre">false</span></code>; after the query execution completes, the <code class="docutils literal notranslate"><span class="pre">isFinalPlan</span></code> flag changes to <code class="docutils literal notranslate"><span class="pre">true.</span></code></p>
+</div>
+<div class="section" id="evolving-plan">
+<h4>Evolving plan<a class="headerlink" href="#evolving-plan" title="Permalink to this headline"> </a></h4>
+<p>The query plan diagram evolves as the execution progresses and reflects the most current plan that is being executed. Nodes that have already been executed (in which metrics are available) will not change, but those that haven’t can change over time as the result of re-optimizations.</p>
+<p>The following is a query plan diagram example:</p>
+<div class="figure align-default">
+<img alt="Query plan diagram" src="../_images/query-plan-diagram.png" />
+</div>
+</div>
+</div>
+<div class="section" id="dataframeexplain">
+<h3><a class="toc-backref" href="#id6"><code class="docutils literal notranslate"><span class="pre">DataFrame.explain()</span></code></a><a class="headerlink" href="#dataframeexplain" title="Permalink to this headline"> </a></h3>
+<div class="section" id="adaptivesparkplan-node">
+<span id="adaptivesparkplan-node-1"></span><h4><code class="docutils literal notranslate"><span class="pre">AdaptiveSparkPlan</span></code> node<a class="headerlink" href="#adaptivesparkplan-node" title="Permalink to this headline"> </a></h4>
+<p>AQE-applied queries contain one or more <code class="docutils literal notranslate"><span class="pre">AdaptiveSparkPlan</span></code> nodes, usually as the root node of each main query or sub-query. Before the query runs or when it is running, the <code class="docutils literal notranslate"><span class="pre">isFinalPlan</span></code> flag of the corresponding <code class="docutils literal notranslate"><span class="pre">AdaptiveSparkPlan</span></code> node shows as <code class="docutils literal notranslate"><span class="pre">false</span></code>; after the query execution completes, the <code class="docutils literal notranslate"><span class="pre">isFinalPlan</span></code> flag changes to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</div>
+<div class="section" id="current-and-initial-plan">
+<h4>Current and initial plan<a class="headerlink" href="#current-and-initial-plan" title="Permalink to this headline"> </a></h4>
+<p>Under each <code class="docutils literal notranslate"><span class="pre">AdaptiveSparkPlan</span></code> node there will be both the initial plan (the plan before applying any AQE optimizations) and the current or the final plan, depending on whether the execution has completed. The current plan will evolve as the execution progresses.</p>
+</div>
+<div class="section" id="runtime-statistics">
+<h4>Runtime statistics<a class="headerlink" href="#runtime-statistics" title="Permalink to this headline"> </a></h4>
+<p>Each shuffle and broadcast stage contains data statistics.</p>
+<p>Before the stage runs or when the stage is running, the statistics are compile-time estimates, and the flag <code class="docutils literal notranslate"><span class="pre">isRuntime</span></code> is <code class="docutils literal notranslate"><span class="pre">false</span></code>, for example: <code class="docutils literal notranslate"><span class="pre">Statistics(sizeInBytes=1024.0</span> <span class="pre">KiB,</span> <span class="pre">rowCount=4,</span> <span class="pre">isRuntime=false);</span></code></p>
+<p>After the stage execution completes, the statistics are those collected at runtime, and the flag <code class="docutils literal notranslate"><span class="pre">isRuntime</span></code> will become <code class="docutils literal notranslate"><span class="pre">true</span></code>, for example: <code class="docutils literal notranslate"><span class="pre">Statistics(sizeInBytes=658.1</span> <span class="pre">KiB,</span> <span class="pre">rowCount=2.81E+4,</span> <span class="pre">isRuntime=true)</span></code></p>
+<p>The following is a <code class="docutils literal notranslate"><span class="pre">DataFrame.explain</span></code> example:</p>
+<ul>
+<li><p>Before the execution</p>
+<div class="figure align-default">
+<img alt="Before execution" src="../_images/before-execution.png" />
+</div>
+</li>
+<li><p>During the execution</p>
+<div class="figure align-default">
+<img alt="During execution" src="../_images/during-execution.png" />
+</div>
+</li>
+<li><p>After the execution</p>
+<div class="figure align-default">
+<img alt="After execution" src="../_images/after-execution.png" />
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="sql-explain">
+<h3><a class="toc-backref" href="#id7"><code class="docutils literal notranslate"><span class="pre">SQL</span> <span class="pre">EXPLAIN</span></code></a><a class="headerlink" href="#sql-explain" title="Permalink to this headline"> </a></h3>
+<div class="section" id="adaptivesparkplan-node">
+<span id="adaptivesparkplan-node-2"></span><h4><code class="docutils literal notranslate"><span class="pre">AdaptiveSparkPlan</span></code> node<a class="headerlink" href="#adaptivesparkplan-node" title="Permalink to this headline"> </a></h4>
+<p>AQE-applied queries contain one or more AdaptiveSparkPlan nodes, usually as the root node of each main query or sub-query.</p>
+</div>
+<div class="section" id="no-current-plan">
+<h4>No current plan<a class="headerlink" href="#no-current-plan" title="Permalink to this headline"> </a></h4>
+<p>As <code class="docutils literal notranslate"><span class="pre">SQL</span> <span class="pre">EXPLAIN</span></code> does not execute the query, the current plan is always the same as the initial plan and does not reflect what would eventually get executed by AQE.</p>
+<p>The following is a SQL explain example:</p>
+<div class="figure align-default">
+<img alt="SQL explain" src="../_images/sql-explain.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="effectiveness">
+<h2>Effectiveness<a class="headerlink" href="#effectiveness" title="Permalink to this headline"> </a></h2>
+<p>The query plan will change if one or more AQE optimizations take effect. The effect of these AQE optimizations is demonstrated by the difference between the current and final plans and the initial plan and specific plan nodes in the current and final plans.</p>
+<ul>
+<li><p>Dynamically change sort merge join into broadcast hash join: different physical join nodes between the current/final plan and the initial plan</p>
+<div class="figure align-default">
+<img alt="Join strategy string" src="../_images/join-strategy-string.png" />
+</div>
+</li>
+<li><p>Dynamically coalesce partitions: node <code class="docutils literal notranslate"><span class="pre">CustomShuffleReader</span></code> with property <code class="docutils literal notranslate"><span class="pre">Coalesced</span></code></p>
+<div class="figure align-default">
+<img alt="Custom shuffle reader" src="../_images/custom-shuffle-reader.png" />
+</div>
+<div class="figure align-default">
+<img alt="Custom shuffle reader string" src="../_images/custom-shuffle-reader-string.png" />
+</div>
+</li>
+<li><p>Dynamically handle skew join: node <code class="docutils literal notranslate"><span class="pre">SortMergeJoin</span></code> with field <code class="docutils literal notranslate"><span class="pre">isSkew</span></code> as true.</p>
+<div class="figure align-default">
+<img alt="Skew join plan" src="../_images/skew-join-plan.png" />
+</div>
+<div class="figure align-default">
+<img alt="Skew join string" src="../_images/skew-join-string.png" />
+</div>
+</li>
+<li><p>Dynamically detect and propagate empty relations: part of (or entire) the plan is replaced by node LocalTableScan with the relation field as empty.</p>
+<div class="figure align-default">
+<img alt="Local table scan" src="../_images/local-table-scan.png" />
+</div>
+<div class="figure align-default">
+<img alt="Local table scan string" src="../_images/local-table-scan-string.png" />
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline"> </a></h2>
+<div class="contents local topic" id="id3">
+<p class="topic-title first">In this section:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#enable-and-disable-adaptive-query-execution" id="id8">Enable and disable adaptive query execution</a></p></li>
+<li><p><a class="reference internal" href="#enable-auto-optimized-shuffle" id="id9">Enable auto-optimized shuffle</a></p></li>
+<li><p><a class="reference internal" href="#dynamically-change-sort-merge-join-into-broadcast-hash-join" id="id10">Dynamically change sort merge join into broadcast hash join</a></p></li>
+<li><p><a class="reference internal" href="#dynamically-coalesce-partitions" id="id11">Dynamically coalesce partitions</a></p></li>
+<li><p><a class="reference internal" href="#dynamically-handle-skew-join" id="id12">Dynamically handle skew join</a></p></li>
+<li><p><a class="reference internal" href="#dynamically-detect-and-propagate-empty-relations" id="id13">Dynamically detect and propagate empty relations</a></p></li>
+</ul>
+</div>
+<div class="section" id="enable-and-disable-adaptive-query-execution">
+<h3><a class="toc-backref" href="#id8">Enable and disable adaptive query execution</a><a class="headerlink" href="#enable-and-disable-adaptive-query-execution" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>spark.databricks.optimizer.adaptive.enabled</strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to enable or disable adaptive query execution.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="enable-auto-optimized-shuffle">
+<h3><a class="toc-backref" href="#id9">Enable auto-optimized shuffle</a><a class="headerlink" href="#enable-auto-optimized-shuffle" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>spark.sql.shuffle.partitions</strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Integer</span></code></p>
+<p>The default number of partitions to use when shuffling data for joins or
+aggregations. Setting the value <code class="docutils literal notranslate"><span class="pre">auto</span></code> enables auto-optimized shuffle, which
+automatically determines this number based on the query plan and the query
+input data size.</p>
+<p>Note: For Structured Streaming, this configuration cannot be changed between query restarts
+from the same checkpoint location.</p>
+<p>Default value: 200</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="dynamically-change-sort-merge-join-into-broadcast-hash-join">
+<h3><a class="toc-backref" href="#id10">Dynamically change sort merge join into broadcast hash join</a><a class="headerlink" href="#dynamically-change-sort-merge-join-into-broadcast-hash-join" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>spark.databricks.adaptive.autoBroadcastJoinThreshold</strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Byte</span> <span class="pre">String</span></code></p>
+<p>The threshold to trigger switching to broadcast join at runtime.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">30MB</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="dynamically-coalesce-partitions">
+<h3><a class="toc-backref" href="#id11">Dynamically coalesce partitions</a><a class="headerlink" href="#dynamically-coalesce-partitions" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>spark.sql.adaptive.coalescePartitions.enabled</strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to enable or disable partition coalescing.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong>spark.sql.adaptive.advisoryPartitionSizeInBytes</strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Byte</span> <span class="pre">String</span></code></p>
+<p>The target size after coalescing. The coalesced partition
+sizes will be close to but no bigger than this target size.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">64MB</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong>spark.sql.adaptive.coalescePartitions.minPartitionSize</strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Byte</span> <span class="pre">String</span></code></p>
+<p>The minimum size of partitions after coalescing.
+The coalesced partition sizes will be no smaller than this size.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">1MB</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong>spark.sql.adaptive.coalescePartitions.minPartitionNum</strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Integer</span></code></p>
+<p>The minimum number of partitions after coalescing.
+Not recommended, because setting explicitly overrides
+<code class="docutils literal notranslate"><span class="pre">spark.sql.adaptive.coalescePartitions.minPartitionSize</span></code>.</p>
+<p>Default value: 2x no. of cluster cores</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="dynamically-handle-skew-join">
+<h3><a class="toc-backref" href="#id12">Dynamically handle skew join</a><a class="headerlink" href="#dynamically-handle-skew-join" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>spark.sql.adaptive.skewJoin.enabled</strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to enable or disable skew join handling.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong>spark.sql.adaptive.skewJoin.skewedPartitionFactor</strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Integer</span></code></p>
+<p>A factor that when multiplied by the median partition size
+contributes to determining whether a partition is skewed.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">5</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong>spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes</strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Byte</span> <span class="pre">String</span></code></p>
+<p>A threshold that contributes to determining whether a partition is skewed.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">256MB</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>A partition is considered skewed when both <code class="docutils literal notranslate"><span class="pre">(partition</span> <span class="pre">size</span> <span class="pre">&gt;</span> <span class="pre">skewedPartitionFactor</span> <span class="pre">*</span> <span class="pre">median</span> <span class="pre">partition</span> <span class="pre">size)</span></code> and <code class="docutils literal notranslate"><span class="pre">(partition</span> <span class="pre">size</span> <span class="pre">&gt;</span> <span class="pre">skewedPartitionThresholdInBytes)</span></code> are <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</div>
+<div class="section" id="dynamically-detect-and-propagate-empty-relations">
+<h3><a class="toc-backref" href="#id13">Dynamically detect and propagate empty relations</a><a class="headerlink" href="#dynamically-detect-and-propagate-empty-relations" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>spark.databricks.adaptive.emptyRelationPropagation.enabled</strong></p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Whether to enable or disable dynamic empty relation propagation.</p>
+<p>Default value: <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="frequently-asked-questions-faq">
+<h2>Frequently asked questions (FAQ)<a class="headerlink" href="#frequently-asked-questions-faq" title="Permalink to this headline"> </a></h2>
+<div class="contents local topic" id="id4">
+<p class="topic-title first">In this section:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#why-didnt-aqe-broadcast-a-small-join-table" id="id14">Why didn’t AQE broadcast a small join table?</a></p></li>
+<li><p><a class="reference internal" href="#should-i-still-use-a-broadcast-join-strategy-hint-with-aqe-enabled" id="id15">Should I still use a broadcast join strategy hint with AQE enabled?</a></p></li>
+<li><p><a class="reference internal" href="#what-is-the-difference-between-skew-join-hint-and-aqe-skew-join-optimization-which-one-should-i-use" id="id16">What is the difference between skew join hint and AQE skew join optimization? Which one should I use?</a></p></li>
+<li><p><a class="reference internal" href="#why-didnt-aqe-adjust-my-join-ordering-automatically" id="id17">Why didn’t AQE adjust my join ordering automatically?</a></p></li>
+<li><p><a class="reference internal" href="#why-didnt-aqe-detect-my-data-skew" id="id18">Why didn’t AQE detect my data skew?</a></p></li>
+</ul>
+</div>
+<div class="section" id="why-didnt-aqe-broadcast-a-small-join-table">
+<h3><a class="toc-backref" href="#id14">Why didn’t AQE broadcast a small join table?</a><a class="headerlink" href="#why-didnt-aqe-broadcast-a-small-join-table" title="Permalink to this headline"> </a></h3>
+<p>If the size of the relation expected to be broadcast does fall under this threshold but is still not broadcast:</p>
+<ul class="simple">
+<li><p>Check the join type. Broadcast is not supported for certain join types, for example, the left relation of a <code class="docutils literal notranslate"><span class="pre">LEFT</span> <span class="pre">OUTER</span> <span class="pre">JOIN</span></code> cannot be broadcast.</p></li>
+<li><p>It can also be that the relation contains a lot of empty partitions, in which case the majority of the tasks can finish quickly with sort merge join or it can potentially be optimized with skew join handling. AQE avoids changing such sort merge joins to broadcast hash joins if the percentage of non-empty partitions is lower than <code class="docutils literal notranslate"><span class="pre">spark.sql.adaptive.nonEmptyPartitionRatioForBroadcastJoin</span></code>.</p></li>
+</ul>
+</div>
+<div class="section" id="should-i-still-use-a-broadcast-join-strategy-hint-with-aqe-enabled">
+<h3><a class="toc-backref" href="#id15">Should I still use a broadcast join strategy hint with AQE enabled?</a><a class="headerlink" href="#should-i-still-use-a-broadcast-join-strategy-hint-with-aqe-enabled" title="Permalink to this headline"> </a></h3>
+<p>Yes. A statically planned broadcast join is usually more performant than a dynamically planned one by AQE as AQE might not switch to broadcast join until after performing shuffle for both sides of the join (by which time the actual relation sizes are obtained). So using a broadcast hint can still be a good choice if you know your query well. AQE will respect query hints the same way as static optimization does, but can still apply dynamic optimizations that are not affected by the hints.</p>
+</div>
+<div class="section" id="what-is-the-difference-between-skew-join-hint-and-aqe-skew-join-optimization-which-one-should-i-use">
+<h3><a class="toc-backref" href="#id16">What is the difference between skew join hint and AQE skew join optimization? Which one should I use?</a><a class="headerlink" href="#what-is-the-difference-between-skew-join-hint-and-aqe-skew-join-optimization-which-one-should-i-use" title="Permalink to this headline"> </a></h3>
+<p>It is recommended to rely on AQE skew join handling rather than use the skew join hint, because AQE skew join is completely automatic and in general performs better than the hint counterpart.</p>
+</div>
+<div class="section" id="why-didnt-aqe-adjust-my-join-ordering-automatically">
+<h3><a class="toc-backref" href="#id17">Why didn’t AQE adjust my join ordering automatically?</a><a class="headerlink" href="#why-didnt-aqe-adjust-my-join-ordering-automatically" title="Permalink to this headline"> </a></h3>
+<p>Dynamic join reordering is not part of AQE.</p>
+</div>
+<div class="section" id="why-didnt-aqe-detect-my-data-skew">
+<h3><a class="toc-backref" href="#id18">Why didn’t AQE detect my data skew?</a><a class="headerlink" href="#why-didnt-aqe-detect-my-data-skew" title="Permalink to this headline"> </a></h3>
+<p>There are two size conditions that must be satisfied for AQE to detect a partition as a skewed partition:</p>
+<ul class="simple">
+<li><p>The partition size is larger than the <code class="docutils literal notranslate"><span class="pre">spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes</span></code> (default 256MB)</p></li>
+<li><p>The partition size is larger than the median size of all partitions times the skewed partition factor <code class="docutils literal notranslate"><span class="pre">spark.sql.adaptive.skewJoin.skewedPartitionFactor</span></code> (default 5)</p></li>
+</ul>
+<p>In addition, skew handling support is limited for certain join types, for example, in <code class="docutils literal notranslate"><span class="pre">LEFT</span> <span class="pre">OUTER</span> <span class="pre">JOIN</span></code>, only skew on the left side can be optimized.</p>
+</div>
+</div>
+<div class="section" id="legacy">
+<h2>Legacy<a class="headerlink" href="#legacy" title="Permalink to this headline"> </a></h2>
+<p>The term “Adaptive Execution” has existed since Spark 1.6, but the new AQE in Spark 3.0 is fundamentally different. In terms of functionality, Spark 1.6 does only the “dynamically coalesce partitions” part. In terms of technical architecture, the new AQE is a framework of dynamic planning and replanning of queries based on runtime stats, which supports a variety of optimizations such as the ones we have described in this article and can be extended to enable more potential optimizations.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

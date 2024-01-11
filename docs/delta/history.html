@@ -1,0 +1,1013 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Review and navigate Delta Lake table versions using table history and time travel commands." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Work with Delta Lake table history">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Work with Delta Lake table history &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/delta/history.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/delta/history.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/delta/history.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/delta/history.html" class="notranslate">English</option>
+    <option value="../../ja/delta/history.html" class="notranslate">日本語</option>
+    <option value="../../pt/delta/history.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Work with Delta Lake table history</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="work-with-delta-lake-table-history">
+<span id="work-with-delta-table-history"></span><h1>Work with Delta Lake table history<a class="headerlink" href="#work-with-delta-lake-table-history" title="Permalink to this headline"> </a></h1>
+<p>Each operation that modifies a Delta Lake table creates a new table version. You can use history information to audit operations, rollback a table, or query a table at a specific point in time using time travel.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Databricks does not recommend using Delta Lake table history as a long-term backup solution for data archival. Databricks recommends using only the past 7 days for time travel operations unless you have set both data and log retention configurations to a larger value.</p>
+</div>
+<div class="section" id="retrieve-delta-table-history">
+<h2>Retrieve Delta table history<a class="headerlink" href="#retrieve-delta-table-history" title="Permalink to this headline"> </a></h2>
+<p>You can retrieve information including the operations, user, and timestamp for each write to a Delta table by running the <code class="docutils literal notranslate"><span class="pre">history</span></code> command. The operations are returned in reverse chronological order.</p>
+<p>Table history retention is determined by the table setting <code class="docutils literal notranslate"><span class="pre">delta.logRetentionDuration</span></code>, which is 30 days by default.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Time travel and table history are controlled by different retention thresholds. See <a class="reference internal" href="#time-travel"><span class="std std-ref">What is Delta Lake time travel?</span></a>.</p>
+</div>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DESCRIBE</span><span class="w"> </span><span class="n">HISTORY</span><span class="w"> </span><span class="s1">&#39;/data/events/&#39;</span><span class="w">          </span><span class="c1">-- get the full history of the table</span>
+
+<span class="k">DESCRIBE</span><span class="w"> </span><span class="n">HISTORY</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`/</span><span class="k">data</span><span class="o">/</span><span class="n">events</span><span class="o">/`</span>
+
+<span class="k">DESCRIBE</span><span class="w"> </span><span class="n">HISTORY</span><span class="w"> </span><span class="s1">&#39;/data/events/&#39;</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">1</span><span class="w">  </span><span class="c1">-- get the last operation only</span>
+
+<span class="k">DESCRIBE</span><span class="w"> </span><span class="n">HISTORY</span><span class="w"> </span><span class="n">eventsTable</span>
+</pre></div>
+</div>
+<p>For Spark SQL syntax details, see <a class="reference internal" href="../sql/language-manual/delta-describe-history.html"><span class="doc">DESCRIBE HISTORY</span></a>.</p>
+<p>See the <a class="reference internal" href="index.html#delta-api"><span class="std std-ref">Delta Lake API documentation</span></a> for Scala/Java/Python syntax details.</p>
+<p><a class="reference internal" href="../catalog-explorer/index.html"><span class="doc">Catalog Explorer</span></a> provides a visual view of this detailed table information and history for Delta tables. In addition to the table schema and sample data, you can click the <strong>History</strong> tab to see the table history that displays with <code class="docutils literal notranslate"><span class="pre">DESCRIBE</span> <span class="pre">HISTORY</span></code>.</p>
+</div>
+<div class="section" id="history-schema">
+<h2>History schema<a class="headerlink" href="#history-schema" title="Permalink to this headline"> </a></h2>
+<p>The output of the <code class="docutils literal notranslate"><span class="pre">history</span></code> operation has the following columns.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 9%" />
+<col style="width: 73%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> version</p></td>
+<td><p> long</p></td>
+<td><p> Table version generated by the operation.</p></td>
+</tr>
+<tr class="row-odd"><td><p> timestamp</p></td>
+<td><p> timestamp</p></td>
+<td><p> When this version was committed.</p></td>
+</tr>
+<tr class="row-even"><td><p> userId</p></td>
+<td><p> string</p></td>
+<td><p> ID of the user that ran the operation.</p></td>
+</tr>
+<tr class="row-odd"><td><p> userName</p></td>
+<td><p> string</p></td>
+<td><p> Name of the user that ran the operation.</p></td>
+</tr>
+<tr class="row-even"><td><p> operation</p></td>
+<td><p> string</p></td>
+<td><p> Name of the operation.</p></td>
+</tr>
+<tr class="row-odd"><td><p> operationParameters</p></td>
+<td><p> map</p></td>
+<td><p> Parameters of the operation (for example, predicates.)</p></td>
+</tr>
+<tr class="row-even"><td><p> job</p></td>
+<td><p> struct</p></td>
+<td><p> Details of the job that ran the operation.</p></td>
+</tr>
+<tr class="row-odd"><td><p> notebook</p></td>
+<td><p> struct</p></td>
+<td><p> Details of notebook from which the operation was run.</p></td>
+</tr>
+<tr class="row-even"><td><p> clusterId</p></td>
+<td><p> string</p></td>
+<td><p> ID of the cluster on which the operation ran.</p></td>
+</tr>
+<tr class="row-odd"><td><p> readVersion</p></td>
+<td><p> long</p></td>
+<td><p> Version of the table that was read to perform the write operation.</p></td>
+</tr>
+<tr class="row-even"><td><p> isolationLevel</p></td>
+<td><p> string</p></td>
+<td><p> Isolation level used for this operation.</p></td>
+</tr>
+<tr class="row-odd"><td><p> isBlindAppend</p></td>
+<td><p> boolean</p></td>
+<td><p> Whether this operation appended data.</p></td>
+</tr>
+<tr class="row-even"><td><p> operationMetrics</p></td>
+<td><p> map</p></td>
+<td><p> Metrics of the operation (for example, number of rows and files modified.)</p></td>
+</tr>
+<tr class="row-odd"><td><p> userMetadata</p></td>
+<td><p> string</p></td>
+<td><p> User-defined commit metadata if it was specified</p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+-------+-------------------+------+--------+---------+--------------------+----+--------+---------+-----------+-----------------+-------------+--------------------+
+|version|          timestamp|userId|userName|operation| operationParameters| job|notebook|clusterId|readVersion|   isolationLevel|isBlindAppend|    operationMetrics|
++-------+-------------------+------+--------+---------+--------------------+----+--------+---------+-----------+-----------------+-------------+--------------------+
+|      5|2019-07-29 14:07:47|   ###|     ###|   DELETE|[predicate -&gt; [&quot;(...|null|     ###|      ###|          4|WriteSerializable|        false|[numTotalRows -&gt; ...|
+|      4|2019-07-29 14:07:41|   ###|     ###|   UPDATE|[predicate -&gt; (id...|null|     ###|      ###|          3|WriteSerializable|        false|[numTotalRows -&gt; ...|
+|      3|2019-07-29 14:07:29|   ###|     ###|   DELETE|[predicate -&gt; [&quot;(...|null|     ###|      ###|          2|WriteSerializable|        false|[numTotalRows -&gt; ...|
+|      2|2019-07-29 14:06:56|   ###|     ###|   UPDATE|[predicate -&gt; (id...|null|     ###|      ###|          1|WriteSerializable|        false|[numTotalRows -&gt; ...|
+|      1|2019-07-29 14:04:31|   ###|     ###|   DELETE|[predicate -&gt; [&quot;(...|null|     ###|      ###|          0|WriteSerializable|        false|[numTotalRows -&gt; ...|
+|      0|2019-07-29 14:01:40|   ###|     ###|    WRITE|[mode -&gt; ErrorIfE...|null|     ###|      ###|       null|WriteSerializable|         true|[numFiles -&gt; 2, n...|
++-------+-------------------+------+--------+---------+--------------------+----+--------+---------+-----------+-----------------+-------------+--------------------+
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>A few of the other columns are not available if you write into a Delta table using the following methods:</p>
+<ul>
+<li><p><a class="reference internal" href="../integrations/jdbc-odbc-bi.html"><span class="doc">JDBC or ODBC</span></a></p></li>
+<li><p><a class="reference external" href="https://docs.databricks.com/api/workspace/commandexecution/execute">Run a command using the REST API</a></p></li>
+<li><p><a class="reference external" href="https://docs.databricks.com/api/workspace/jobs/create">Some task types for jobs</a></p></li>
+</ul>
+</li>
+<li><p>Columns added in the future will always be added after the last column.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="operation-metrics-keys">
+<span id="delta-history-metrics"></span><h2>Operation metrics keys<a class="headerlink" href="#operation-metrics-keys" title="Permalink to this headline"> </a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">history</span></code> operation returns a collection of operations metrics in the <code class="docutils literal notranslate"><span class="pre">operationMetrics</span></code> column map.</p>
+<p>The following tables list the map key definitions by operation.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Operation</p></th>
+<th class="head"><p>Metric name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>WRITE, CREATE TABLE AS SELECT, REPLACE TABLE AS SELECT, COPY INTO</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numFiles</p></td>
+<td><p>Number of files written.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>numOutputBytes</p></td>
+<td><p>Size in bytes of the written contents.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numOutputRows</p></td>
+<td><p>Number of rows written.</p></td>
+</tr>
+<tr class="row-even"><td><p>STREAMING UPDATE</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numAddedFiles</p></td>
+<td><p>Number of files added.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>numRemovedFiles</p></td>
+<td><p>Number of files removed.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numOutputRows</p></td>
+<td><p>Number of rows written.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>numOutputBytes</p></td>
+<td><p>Size of write in bytes.</p></td>
+</tr>
+<tr class="row-odd"><td><p>DELETE</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>numAddedFiles</p></td>
+<td><p>Number of files added. Not provided when partitions of the table are deleted.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numRemovedFiles</p></td>
+<td><p>Number of files removed.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>numDeletedRows</p></td>
+<td><p>Number of rows removed. Not provided when partitions of the table are deleted.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numCopiedRows</p></td>
+<td><p>Number of rows copied in the process of deleting files.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>executionTimeMs</p></td>
+<td><p>Time taken to execute the entire operation.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>scanTimeMs</p></td>
+<td><p>Time taken to scan the files for matches.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>rewriteTimeMs</p></td>
+<td><p>Time taken to rewrite the matched files.</p></td>
+</tr>
+<tr class="row-odd"><td><p>TRUNCATE</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>numRemovedFiles</p></td>
+<td><p>Number of files removed.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>executionTimeMs</p></td>
+<td><p>Time taken to execute the entire operation.</p></td>
+</tr>
+<tr class="row-even"><td><p>MERGE</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numSourceRows</p></td>
+<td><p>Number of rows in the source DataFrame.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>numTargetRowsInserted</p></td>
+<td><p>Number of rows inserted into the target table.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numTargetRowsUpdated</p></td>
+<td><p>Number of rows updated in the target table.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>numTargetRowsDeleted</p></td>
+<td><p>Number of rows deleted in the target table.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numTargetRowsCopied</p></td>
+<td><p>Number of target rows copied.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>numOutputRows</p></td>
+<td><p>Total number of rows written out.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numTargetFilesAdded</p></td>
+<td><p>Number of files added to the sink(target).</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>numTargetFilesRemoved</p></td>
+<td><p>Number of files removed from the sink(target).</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>executionTimeMs</p></td>
+<td><p>Time taken to execute the entire operation.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>scanTimeMs</p></td>
+<td><p>Time taken to scan the files for matches.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>rewriteTimeMs</p></td>
+<td><p>Time taken to rewrite the matched files.</p></td>
+</tr>
+<tr class="row-even"><td><p>UPDATE</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numAddedFiles</p></td>
+<td><p>Number of files added.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>numRemovedFiles</p></td>
+<td><p>Number of files removed.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numUpdatedRows</p></td>
+<td><p>Number of rows updated.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>numCopiedRows</p></td>
+<td><p>Number of rows just copied over in the process of updating files.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>executionTimeMs</p></td>
+<td><p>Time taken to execute the entire operation.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>scanTimeMs</p></td>
+<td><p>Time taken to scan the files for matches.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>rewriteTimeMs</p></td>
+<td><p>Time taken to rewrite the matched files.</p></td>
+</tr>
+<tr class="row-even"><td><p>FSCK</p></td>
+<td><p>numRemovedFiles</p></td>
+<td><p>Number of files removed.</p></td>
+</tr>
+<tr class="row-odd"><td><p>CONVERT</p></td>
+<td><p>numConvertedFiles</p></td>
+<td><p>Number of Parquet files that have been converted.</p></td>
+</tr>
+<tr class="row-even"><td><p>OPTIMIZE</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numAddedFiles</p></td>
+<td><p>Number of files added.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>numRemovedFiles</p></td>
+<td><p>Number of files optimized.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numAddedBytes</p></td>
+<td><p>Number of bytes added after the table was optimized.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>numRemovedBytes</p></td>
+<td><p>Number of bytes removed.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>minFileSize</p></td>
+<td><p>Size of the smallest file after the table was optimized.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>p25FileSize</p></td>
+<td><p>Size of the 25th percentile file after the table was optimized.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>p50FileSize</p></td>
+<td><p>Median file size after the table was optimized.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>p75FileSize</p></td>
+<td><p>Size of the 75th percentile file after the table was optimized.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>maxFileSize</p></td>
+<td><p>Size of the largest file after the table was optimized.</p></td>
+</tr>
+<tr class="row-even"><td><p>CLONE</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>sourceTableSize</p></td>
+<td><p>Size in bytes of the source table at the version that’s cloned.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>sourceNumOfFiles</p></td>
+<td><p>Number of files in the source table at the version that’s cloned.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numRemovedFiles</p></td>
+<td><p>Number of files removed from the target table if a previous Delta table was replaced.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>removedFilesSize</p></td>
+<td><p>Total size in bytes of the files removed from the target table if a previous Delta table was replaced.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numCopiedFiles</p></td>
+<td><p>Number of files that were copied over to the new location. 0 for shallow clones.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>copiedFilesSize</p></td>
+<td><p>Total size in bytes of the files that were copied over to the new location. 0 for shallow clones.</p></td>
+</tr>
+<tr class="row-odd"><td><p>RESTORE</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>tableSizeAfterRestore</p></td>
+<td><p>Table size in bytes after restore.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numOfFilesAfterRestore</p></td>
+<td><p>Number of files in the table after restore.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>numRemovedFiles</p></td>
+<td><p>Number of files removed by the restore operation.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numRestoredFiles</p></td>
+<td><p>Number of files that were added as a result of the restore.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>removedFilesSize</p></td>
+<td><p>Size in bytes of files removed by the restore.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>restoredFilesSize</p></td>
+<td><p>Size in bytes of files added by the restore.</p></td>
+</tr>
+<tr class="row-even"><td><p>VACUUM</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numDeletedFiles</p></td>
+<td><p>Number of deleted files.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>numVacuumedDirectories</p></td>
+<td><p>Number of vacuumed directories.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>numFilesToDelete</p></td>
+<td><p>Number of files to delete.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="what-is-delta-lake-time-travel">
+<span id="what-is-delta-time-travel"></span><span id="time-travel"></span><h2>What is Delta Lake time travel?<a class="headerlink" href="#what-is-delta-lake-time-travel" title="Permalink to this headline"> </a></h2>
+<p>Delta Lake time travel supports querying previous table versions based on timestamp or table version (as recorded in the transaction log). You can use time travel for applications such as the following:</p>
+<ul class="simple">
+<li><p>Re-creating analyses, reports, or outputs (for example, the output of a machine learning model). This could be useful for debugging or auditing, especially in regulated industries.</p></li>
+<li><p>Writing complex temporal queries.</p></li>
+<li><p>Fixing mistakes in your data.</p></li>
+<li><p>Providing snapshot isolation for a set of queries for fast changing tables.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Table versions accessible with time travel are determined by a combination of the retention threshold for transaction log files and the frequency and specified retention for <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> operations. If you run <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> daily with the default values, 7 days of data is available for time travel.</p>
+</div>
+</div>
+<div class="section" id="delta-time-travel-syntax">
+<h2>Delta time travel syntax<a class="headerlink" href="#delta-time-travel-syntax" title="Permalink to this headline"> </a></h2>
+<p>You query a Delta table with time travel by adding a clause after the table name specification.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">timestamp_expression</span></code> can be any one of:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'2018-10-18T22:15:12.013Z'</span></code>, that is, a string that can be cast to a timestamp</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cast('2018-10-18</span> <span class="pre">13:36:32</span> <span class="pre">CEST'</span> <span class="pre">as</span> <span class="pre">timestamp)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'2018-10-18'</span></code>, that is, a date string</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">current_timestamp()</span> <span class="pre">-</span> <span class="pre">interval</span> <span class="pre">12</span> <span class="pre">hours</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">date_sub(current_date(),</span> <span class="pre">1)</span></code></p></li>
+<li><p>Any other expression that is or can be cast to a timestamp</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">version</span></code> is a long value that can be obtained from the output of <code class="docutils literal notranslate"><span class="pre">DESCRIBE</span> <span class="pre">HISTORY</span> <span class="pre">table_spec</span></code>.</p></li>
+</ul>
+<p>Neither <code class="docutils literal notranslate"><span class="pre">timestamp_expression</span></code> nor <code class="docutils literal notranslate"><span class="pre">version</span></code> can be subqueries.</p>
+<p>Only date or timestamp strings are accepted. For example, <code class="docutils literal notranslate"><span class="pre">&quot;2019-01-01&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;2019-01-01T00:00:00.000Z&quot;</span></code>. See the following code for example syntax:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">people10m</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="s1">&#39;2018-10-18T22:15:12.013Z&#39;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`/</span><span class="n">tmp</span><span class="o">/</span><span class="n">delta</span><span class="o">/</span><span class="n">people10m</span><span class="o">`</span><span class="w"> </span><span class="k">VERSION</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="mi">123</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;timestampAsOf&quot;</span><span class="p">,</span> <span class="s2">&quot;2019-01-01&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;people10m&quot;</span><span class="p">)</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;versionAsOf&quot;</span><span class="p">,</span> <span class="mi">123</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;/tmp/delta/people10m&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>You can also use the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> syntax to specify the timestamp or version as part of the table name. The timestamp must be in <code class="docutils literal notranslate"><span class="pre">yyyyMMddHHmmssSSS</span></code> format. You can specify a version after <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> by prepending a <code class="docutils literal notranslate"><span class="pre">v</span></code> to the version. See the following code for example syntax:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">people10m</span><span class="o">@</span><span class="mi">20190101000000000</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">people10m</span><span class="o">@</span><span class="n">v123</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;people10m@20190101000000000&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;people10m@v123&quot;</span><span class="p">)</span>
+
+<span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;/tmp/delta/people10m@20190101000000000&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;/tmp/delta/people10m@v123&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="what-are-transaction-log-checkpoints">
+<span id="transaction-log-checkpoints"></span><h2>What are transaction log checkpoints?<a class="headerlink" href="#what-are-transaction-log-checkpoints" title="Permalink to this headline"> </a></h2>
+<p>Delta Lake records table versions as JSON files within the <code class="docutils literal notranslate"><span class="pre">_delta_log</span></code> directory, which is stored alongside table data. To optimize checkpoint querying, Delta Lake aggregates table versions to Parquet checkpoint files, preventing the need to read all JSON versions of table history. Databricks optimizes checkpointing frequency for data size and workload. Users should not need to interact with checkpoints directly. The checkpoint frequency is subject to change without notice.</p>
+</div>
+<div class="section" id="configure-data-retention-for-time-travel-queries">
+<span id="data-retention"></span><h2>Configure data retention for time travel queries<a class="headerlink" href="#configure-data-retention-for-time-travel-queries" title="Permalink to this headline"> </a></h2>
+<p>To query a previous table version, you must retain <em>both</em> the log and the data files for that version.</p>
+<p>Data files are deleted when <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> runs against a table. Delta Lake manages log file removal automatically after checkpointing table versions.</p>
+<p>Because most Delta tables have <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> run against them regularly, point-in-time queries should respect the retention threshold for <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code>, which is 7 days by default.</p>
+<p>In order to increase the data retention threshold for Delta tables, you must configure the following table properties:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">delta.logRetentionDuration</span> <span class="pre">=</span> <span class="pre">&quot;interval</span> <span class="pre">&lt;interval&gt;&quot;</span></code>: controls how long the history for a table is kept. The default is <code class="docutils literal notranslate"><span class="pre">interval</span> <span class="pre">30</span> <span class="pre">days</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">delta.deletedFileRetentionDuration</span> <span class="pre">=</span> <span class="pre">&quot;interval</span> <span class="pre">&lt;interval&gt;&quot;</span></code>: determines the threshold <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> uses to remove data files no longer referenced in the current table version. The default is <code class="docutils literal notranslate"><span class="pre">interval</span> <span class="pre">7</span> <span class="pre">days</span></code>.</p></li>
+</ul>
+<p>You can specify Delta properties during table creation or set them with an <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span></code> statement. See <a class="reference internal" href="table-properties.html"><span class="doc">Delta table properties reference</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You must set both of these properties to ensure table history is retained for longer duration for tables with frequent <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> operations. For example, to access 30 days of historical data, set <code class="docutils literal notranslate"><span class="pre">delta.deletedFileRetentionDuration</span> <span class="pre">=</span> <span class="pre">&quot;interval</span> <span class="pre">30</span> <span class="pre">days&quot;</span></code> (which matches the default setting for <code class="docutils literal notranslate"><span class="pre">delta.logRetentionDuration</span></code>).</p>
+<p>Increasing data retention threshold can cause your storage costs to go up, as more data files are maintained.</p>
+</div>
+</div>
+<div class="section" id="restore-a-delta-table-to-an-earlier-state">
+<span id="restore"></span><h2>Restore a Delta table to an earlier state<a class="headerlink" href="#restore-a-delta-table-to-an-earlier-state" title="Permalink to this headline"> </a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Available in Databricks Runtime 7.4 and above.</p>
+</div>
+<p>You can restore a Delta table to its earlier state by using the <code class="docutils literal notranslate"><span class="pre">RESTORE</span></code> command. A Delta table internally maintains historic versions of the table that enable it to be restored to an earlier state.
+A version corresponding to the earlier state or a timestamp of when the earlier state was created are supported as options by the <code class="docutils literal notranslate"><span class="pre">RESTORE</span></code> command.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<ul class="simple">
+<li><p>You can restore an already restored table.</p></li>
+<li><p>You can restore a <a class="reference internal" href="clone.html"><span class="doc">cloned</span></a> table.</p></li>
+<li><p>You must have <code class="docutils literal notranslate"><span class="pre">MODIFY</span></code> permission on the table being restored.</p></li>
+<li><p>You cannot restore a table to an older version where the data files were deleted manually or by <code class="docutils literal notranslate"><span class="pre">vacuum</span></code>. Restoring to this version partially is still possible if <code class="docutils literal notranslate"><span class="pre">spark.sql.files.ignoreMissingFiles</span></code> is set to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
+<li><p>The timestamp format for restoring to an earlier state is <code class="docutils literal notranslate"><span class="pre">yyyy-MM-dd</span> <span class="pre">HH:mm:ss</span></code>. Providing only a date(<code class="docutils literal notranslate"><span class="pre">yyyy-MM-dd</span></code>) string is also supported.</p></li>
+</ul>
+</div>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">RESTORE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">db</span><span class="p">.</span><span class="n">target_table</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="k">VERSION</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="o">&lt;</span><span class="k">version</span><span class="o">&gt;</span>
+<span class="n">RESTORE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`/</span><span class="k">data</span><span class="o">/</span><span class="n">target</span><span class="o">/`</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="o">&lt;</span><span class="k">timestamp</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>For syntax details, see <a class="reference internal" href="../sql/language-manual/delta-restore.html"><span class="doc">RESTORE</span></a>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Restore is considered a data-changing operation. Delta Lake log entries added by the <code class="docutils literal notranslate"><span class="pre">RESTORE</span></code> command contain <a class="reference external" href="https://github.com/delta-io/delta/blob/master/PROTOCOL.md#add-file-and-remove-file">dataChange</a> set to true. If there is a downstream application, such as a <a class="reference external" href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html">Structured streaming</a> job that processes the updates to a Delta Lake table, the data change log entries added by the restore operation are considered as new data updates, and processing them may result in duplicate data.</p>
+<p>For example:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Table version</p></th>
+<th class="head"><p>Operation</p></th>
+<th class="head"><p>Delta log updates</p></th>
+<th class="head"><p>Records in data change log updates</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>INSERT</p></td>
+<td><p>AddFile(/path/to/file-1, dataChange = true)</p></td>
+<td><p>(name = Viktor, age = 29, (name = George, age = 55)</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>INSERT</p></td>
+<td><p>AddFile(/path/to/file-2, dataChange = true)</p></td>
+<td><p>(name = George, age = 39)</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>OPTIMIZE</p></td>
+<td><p>AddFile(/path/to/file-3, dataChange = false), RemoveFile(/path/to/file-1), RemoveFile(/path/to/file-2)</p></td>
+<td><p>(No records as Optimize compaction does not change the data in the table)</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>RESTORE(version=1)</p></td>
+<td><p>RemoveFile(/path/to/file-3), AddFile(/path/to/file-1, dataChange = true), AddFile(/path/to/file-2, dataChange = true)</p></td>
+<td><p>(name = Viktor, age = 29), (name = George, age = 55), (name = George, age = 39)</p></td>
+</tr>
+</tbody>
+</table>
+<p>In the preceding example, the <code class="docutils literal notranslate"><span class="pre">RESTORE</span></code> command results in updates that were already seen when reading the Delta table version 0 and 1. If a streaming query was reading this table, then these files will be considered as newly added data and will be processed again.</p>
+</div>
+</div>
+<div class="section" id="restore-metrics">
+<h2>Restore metrics<a class="headerlink" href="#restore-metrics" title="Permalink to this headline"> </a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">RESTORE</span></code> reports the following metrics as a single row DataFrame once the operation is complete:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">table_size_after_restore</span></code>: The size of the table after restoring.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num_of_files_after_restore</span></code>: The number of files in the table after restoring.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num_removed_files</span></code>: Number of files removed (logically deleted) from the table.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num_restored_files</span></code>: Number of files restored due to rolling back.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">removed_files_size</span></code>: Total size in bytes of the files that are removed from the table.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">restored_files_size</span></code>: Total size in bytes of the files that are restored.</p>
+<div class="figure align-default">
+<img alt="Restore metrics example" src="../_images/restore-metrics.png" />
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="examples-of-using-delta-lake-time-travel">
+<span id="examples-of-using-delta-time-travel"></span><h2>Examples of using Delta Lake time travel<a class="headerlink" href="#examples-of-using-delta-lake-time-travel" title="Permalink to this headline"> </a></h2>
+<ul>
+<li><p>Fix accidental deletes to a table for the user <code class="docutils literal notranslate"><span class="pre">111</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">my_table</span>
+<span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">my_table</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="n">date_sub</span><span class="p">(</span><span class="k">current_date</span><span class="p">(),</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">111</span>
+</pre></div>
+</div>
+</li>
+<li><p>Fix accidental incorrect updates to a table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">MERGE</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">my_table</span><span class="w"> </span><span class="n">target</span>
+<span class="w">  </span><span class="k">USING</span><span class="w"> </span><span class="n">my_table</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="n">date_sub</span><span class="p">(</span><span class="k">current_date</span><span class="p">(),</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">source</span>
+<span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="k">source</span><span class="p">.</span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">target</span><span class="p">.</span><span class="n">userId</span>
+<span class="w">  </span><span class="k">WHEN</span><span class="w"> </span><span class="n">MATCHED</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="o">*</span>
+</pre></div>
+</div>
+</li>
+<li><p>Query the number of new customers added over the last week.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">distinct</span><span class="w"> </span><span class="n">userId</span><span class="p">)</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">my_table</span><span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">distinct</span><span class="w"> </span><span class="n">userId</span><span class="p">)</span>
+<span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="n">my_table</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="n">date_sub</span><span class="p">(</span><span class="k">current_date</span><span class="p">(),</span><span class="w"> </span><span class="mi">7</span><span class="p">))</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="how-do-i-find-the-last-commits-version-in-the-spark-session">
+<h2>How do I find the last commit’s version in the Spark session?<a class="headerlink" href="#how-do-i-find-the-last-commits-version-in-the-spark-session" title="Permalink to this headline"> </a></h2>
+<p>To get the version number of the last commit written by the current <code class="docutils literal notranslate"><span class="pre">SparkSession</span></code> across all threads
+and all tables, query the SQL configuration <code class="docutils literal notranslate"><span class="pre">spark.databricks.delta.lastCommitVersionInSession</span></code>.</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SET</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">databricks</span><span class="p">.</span><span class="n">delta</span><span class="p">.</span><span class="n">lastCommitVersionInSession</span>
+</pre></div>
+</div>
+<div class="compound-middle highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;spark.databricks.delta.lastCommitVersionInSession&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;spark.databricks.delta.lastCommitVersionInSession&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>If no commits have been made by the <code class="docutils literal notranslate"><span class="pre">SparkSession</span></code>, querying the key returns an empty value.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you share the same <code class="docutils literal notranslate"><span class="pre">SparkSession</span></code> across multiple threads, it’s similar to sharing a variable
+across multiple threads; you may hit race conditions as the configuration value is updated
+concurrently.</p>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

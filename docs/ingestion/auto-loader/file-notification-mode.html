@@ -1,0 +1,891 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Configure Auto Loader to use file notification mode to incrementally discover and ingest cloud data." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="What is Auto Loader file notification mode?">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>What is Auto Loader file notification mode? &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/ingestion/auto-loader/file-notification-mode.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/ingestion/auto-loader/file-notification-mode.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/ingestion/auto-loader/file-notification-mode.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/ingestion/auto-loader/file-notification-mode.html" class="notranslate">English</option>
+    <option value="../../../ja/ingestion/auto-loader/file-notification-mode.html" class="notranslate">日本語</option>
+    <option value="../../../pt/ingestion/auto-loader/file-notification-mode.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>What is Auto Loader file notification mode?</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="what-is-auto-loader-file-notification-mode">
+<span id="what-is-al-file-notification-mode"></span><h1>What is Auto Loader file notification mode?<a class="headerlink" href="#what-is-auto-loader-file-notification-mode" title="Permalink to this headline"> </a></h1>
+<p>In file notification mode, Auto Loader automatically sets up a notification service and queue service that subscribes to file events from the input directory. You can use file notifications to scale Auto Loader to ingest millions of files an hour. When compared to directory listing mode, file notification mode is more performant and scalable for large input directories or a high volume of files but requires additional cloud permissions.</p>
+<p>You can switch between file notifications and directory listing at any time and still maintain exactly-once data processing guarantees.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><a class="reference internal" href="directory-listing-mode.html#change-location"><span class="std std-ref">Changing the source path for Auto Loader</span></a> is not supported for file notification mode. If file notification mode is used and the path is changed, you might fail to ingest files that are already present in the new directory at the time of the directory update.</p>
+</div>
+<div class="section" id="cloud-resources-used-in-auto-loader-file-notification-mode">
+<span id="cloud-resources-used-in-al-file-notification-mode"></span><span id="file-notification"></span><h2>Cloud resources used in Auto Loader file notification mode<a class="headerlink" href="#cloud-resources-used-in-auto-loader-file-notification-mode" title="Permalink to this headline"> </a></h2>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You need elevated permissions to automatically configure cloud infrastructure for file notification mode. Contact your cloud administrator or workspace admin. See:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#permissions-azure"><span class="std std-ref">Required permissions for configuring file notification for ADLS Gen2 and Azure Blob Storage</span></a></p></li>
+<li><p><a class="reference internal" href="#permissions-s3"><span class="std std-ref">Required permissions for configuring file notification for AWS S3</span></a></p></li>
+<li><p><a class="reference internal" href="#permissions-gcs"><span class="std std-ref">Required permissions for configuring file notification for GCS</span></a></p></li>
+</ul>
+</div>
+<p>Auto Loader can set up file notifications for you automatically when you set the option <code class="docutils literal notranslate"><span class="pre">cloudFiles.useNotifications</span></code> to <code class="docutils literal notranslate"><span class="pre">true</span></code> and provide the necessary permissions to create cloud resources. In addition, you might need to provide <a class="reference internal" href="options.html#file-notification-options"><span class="std std-ref">additional options</span></a> to grant Auto Loader authorization to create these resources.</p>
+<p>The following table summarizes which resources are created by Auto Loader.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 20%" />
+<col style="width: 18%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Cloud Storage</p></th>
+<th class="head"><p>Subscription Service</p></th>
+<th class="head"><p>Queue Service</p></th>
+<th class="head"><p>Prefix *</p></th>
+<th class="head"><p>Limit **</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>AWS S3</p></td>
+<td><p>AWS SNS</p></td>
+<td><p>AWS SQS</p></td>
+<td><p>databricks-auto-ingest</p></td>
+<td><p>100 per S3 bucket</p></td>
+</tr>
+<tr class="row-odd"><td><p>ADLS Gen2</p></td>
+<td><p>Azure Event Grid</p></td>
+<td><p>Azure Queue Storage</p></td>
+<td><p>databricks</p></td>
+<td><p>500 per storage account</p></td>
+</tr>
+<tr class="row-even"><td><p>GCS</p></td>
+<td><p>Google Pub/Sub</p></td>
+<td><p>Google Pub/Sub</p></td>
+<td><p>databricks-auto-ingest</p></td>
+<td><p>100 per GCS bucket</p></td>
+</tr>
+<tr class="row-odd"><td><p>Azure Blob Storage</p></td>
+<td><p>Azure Event Grid</p></td>
+<td><p>Azure Queue Storage</p></td>
+<td><p>databricks</p></td>
+<td><p>500 per storage account</p></td>
+</tr>
+</tbody>
+</table>
+<p>* Auto Loader names the resources with this prefix.</p>
+<p>** How many concurrent file notification pipelines can be launched</p>
+<p>If you require running more than the limited number of file notification pipelines for a given storage account, you can:</p>
+<ul class="simple">
+<li><p>Leverage a service such as AWS Lambda, Azure Functions, or Google Cloud Functions to fan out notifications from a single queue that listens to an entire container or bucket into directory specific queues.</p></li>
+</ul>
+<div class="section" id="file-notification-events">
+<h3>File notification events<a class="headerlink" href="#file-notification-events" title="Permalink to this headline"> </a></h3>
+<p>AWS S3 provides an <code class="docutils literal notranslate"><span class="pre">ObjectCreated</span></code> event when a file is uploaded to an S3 bucket regardless of whether it was uploaded by a put or multi-part upload.</p>
+<p>ADLS Gen2 provides different event notifications for files appearing in your Gen2 container.</p>
+<ul class="simple">
+<li><p>Auto Loader listens for the <code class="docutils literal notranslate"><span class="pre">FlushWithClose</span></code> event for processing a file.</p></li>
+<li><p>Auto Loader streams support the <code class="docutils literal notranslate"><span class="pre">RenameFile</span></code> action for discovering files. <code class="docutils literal notranslate"><span class="pre">RenameFile</span></code> actions require an API request to the storage system to get the size of the renamed file.</p></li>
+<li><p>Auto Loader streams created with Databricks Runtime 9.0 and after support the <code class="docutils literal notranslate"><span class="pre">RenameDirectory</span></code> action for discovering files. <code class="docutils literal notranslate"><span class="pre">RenameDirectory</span></code> actions require API requests to the storage system to list the contents of the renamed directory.</p></li>
+</ul>
+<p>Google Cloud Storage provides an <code class="docutils literal notranslate"><span class="pre">OBJECT_FINALIZE</span></code> event when a file is uploaded, which includes overwrites and file copies. Failed uploads do not generate this event.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Cloud providers do not guarantee 100% delivery of all file events under very rare conditions and do not provide strict SLAs on the latency of the file events. Databricks recommends that you trigger regular backfills with Auto Loader by using the <code class="docutils literal notranslate"><span class="pre">cloudFiles.backfillInterval</span></code> option to guarantee that all files are discovered within a given SLA if data completeness is a requirement. Triggering regular backfills does not cause duplicates.</p>
+</div>
+</div>
+</div>
+<div class="section" id="required-permissions-for-configuring-file-notification-for-adls-gen2-and-azure-blob-storage">
+<span id="permissions-azure"></span><h2>Required permissions for configuring file notification for ADLS Gen2 and Azure Blob Storage<a class="headerlink" href="#required-permissions-for-configuring-file-notification-for-adls-gen2-and-azure-blob-storage" title="Permalink to this headline"> </a></h2>
+<p>You must have read permissions for the input directory. See <a class="reference internal" href="../../connect/storage/azure-storage.html"><span class="doc">Azure Blob Storage</span></a>.</p>
+<p>To use file notification mode, you must provide authentication credentials for setting up and accessing the event notification services.
+In Databricks Runtime 8.1 and above, you only need a service principal for authentication. For Databricks Runtime 8.0 and below, you must provide both a service principal and a connection string.</p>
+<ul>
+<li><p>Service principal - using Azure built-in roles</p>
+<p>Create <a class="reference external" href="https://learn.microsoft.com/azure/active-directory/develop/howto-create-service-principal-portal">a Microsoft Entra ID app and service principal</a> in the form of client ID and client secret.</p>
+<p>Assign this app the following roles to the storage account in which the input path resides:</p>
+<ul class="simple">
+<li><p><strong><a class="reference external" href="https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#storage-account-contributor">Contributor</a></strong>: This role is for setting up resources in your storage account, such as queues and event subscriptions.</p></li>
+<li><p><strong><a class="reference external" href="https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#storage-queue-data-contributor">Storage Queue Data Contributor</a></strong>: This role is for performing queue operations such as retrieving and deleting messages from the queues. This role is required in Databricks Runtime 8.1 and above only when you provide a service principal without a connection string.</p></li>
+</ul>
+<p>Assign this app the following role to the related resource group:</p>
+<ul class="simple">
+<li><p><strong><a class="reference external" href="https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#eventgrid-eventsubscription-contributor">EventGrid EventSubscription Contributor</a></strong>: This role is for performing event grid subscription operations such as creating or listing event subscriptions.</p></li>
+</ul>
+<p>For more information, see <a class="reference external" href="https://learn.microsoft.com/azure/role-based-access-control/role-assignments-portal">Assign Azure roles using the Azure portal</a>.</p>
+</li>
+<li><p>Service principal - using custom role</p>
+<p>If you are concerned with the excessive permissions required for the preceding roles, you can create a <strong><a class="reference external" href="https://learn.microsoft.com/azure/role-based-access-control/custom-roles-portal">Custom Role</a></strong> with at least the following permissions, listed below in Azure role JSON format:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;actions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;Microsoft.EventGrid/eventSubscriptions/write&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;Microsoft.EventGrid/eventSubscriptions/read&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;Microsoft.EventGrid/eventSubscriptions/delete&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;Microsoft.EventGrid/locations/eventSubscriptions/read&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;Microsoft.Storage/storageAccounts/read&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;Microsoft.Storage/storageAccounts/write&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;Microsoft.Storage/storageAccounts/queueServices/read&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;Microsoft.Storage/storageAccounts/queueServices/write&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;Microsoft.Storage/storageAccounts/queueServices/queues/write&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;Microsoft.Storage/storageAccounts/queueServices/queues/read&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;Microsoft.Storage/storageAccounts/queueServices/queues/delete&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;notActions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">    </span><span class="nt">&quot;dataActions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;Microsoft.Storage/storageAccounts/queueServices/queues/messages/delete&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;Microsoft.Storage/storageAccounts/queueServices/queues/messages/read&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;Microsoft.Storage/storageAccounts/queueServices/queues/messages/write&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;Microsoft.Storage/storageAccounts/queueServices/queues/messages/process/action&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;notDataActions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>Then, you can assign this custom role to your app.</p>
+<p>For more information, see <a class="reference external" href="https://learn.microsoft.com/azure/role-based-access-control/role-assignments-portal">Assign Azure roles using the Azure portal</a>.</p>
+</li>
+<li><p>Connection string</p>
+<p>Auto Loader requires a <a class="reference external" href="https://learn.microsoft.com/azure/storage/common/storage-configure-connection-string">connection string</a>to authenticate for Azure Queue Storage operations, such as creating a queue and reading and deleting messages from the queue. The queue is created in the same storage account where the input directory path is located. You can find your connection string in your <a class="reference external" href="https://learn.microsoft.com/azure/storage/common/storage-account-keys-manage">account key</a> or <a class="reference external" href="https://learn.microsoft.com/azure/storage/common/storage-sas-overview">shared access signature (SAS)</a>.</p>
+<p>If you are using Databricks Runtime 8.1 or above, you do not need a connection string.</p>
+<p>If you are using Databricks Runtime 8.0 or below, you must provide a <a class="reference external" href="https://learn.microsoft.com/azure/storage/common/storage-configure-connection-string">connection string</a> to authenticate for Azure Queue Storage operations, such as creating a queue and retrieving and deleting messages from the queue. The queue is created in the same storage account in which the input path resides. You can find your connection string in your <a class="reference external" href="https://learn.microsoft.com/azure/storage/common/storage-account-keys-manage">account key</a> or <a class="reference external" href="https://learn.microsoft.com/azure/storage/common/storage-sas-overview">shared access signature (SAS)</a>. When configuring an SAS token, you must provide the following permissions:</p>
+</li>
+</ul>
+<div class="figure align-default">
+<img alt="Auto loader permissions" src="../../_images/auto-loader-permissions.png" />
+</div>
+<div class="section" id="troubleshooting-common-errors">
+<h3>Troubleshooting common errors<a class="headerlink" href="#troubleshooting-common-errors" title="Permalink to this headline"> </a></h3>
+<p><strong>Error:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">java</span><span class="o">.</span><span class="n">lang</span><span class="o">.</span><span class="n">RuntimeException</span><span class="p">:</span> <span class="n">Failed</span> <span class="n">to</span> <span class="n">create</span> <span class="n">event</span> <span class="n">grid</span> <span class="n">subscription</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>If you see this error message when you run Auto Loader for the first time, the Event Grid is not registered as a Resource Provider in your Azure subscription. To register this on Azure portal:</p>
+<ol class="arabic simple">
+<li><p>Go to your subscription.</p></li>
+<li><p>Click <strong>Resource Providers</strong> under the Settings section.</p></li>
+<li><p>Register the provider <code class="docutils literal notranslate"><span class="pre">Microsoft.EventGrid</span></code>.</p></li>
+</ol>
+<p><strong>Error:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">403</span> <span class="n">Forbidden</span> <span class="o">...</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">have</span> <span class="n">authorization</span> <span class="n">to</span> <span class="n">perform</span> <span class="n">action</span> <span class="s1">&#39;Microsoft.EventGrid/eventSubscriptions/[read|write]&#39;</span> <span class="n">over</span> <span class="n">scope</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>If you see this error message when you run Auto Loader for the first time, ensure you have given the <strong>Contributor</strong> role to your service principal for Event Grid as well as your storage account.</p>
+</div>
+</div>
+<div class="section" id="required-permissions-for-configuring-file-notification-for-aws-s3">
+<span id="permissions-s3"></span><h2>Required permissions for configuring file notification for AWS S3<a class="headerlink" href="#required-permissions-for-configuring-file-notification-for-aws-s3" title="Permalink to this headline"> </a></h2>
+<p>You must have read permissions for the input directory. See <a class="reference internal" href="../../connect/storage/amazon-s3.html"><span class="doc">S3 connection details</span></a> for more details.</p>
+<p>To use file notification mode, attach the following JSON policy document to your <a class="reference internal" href="../../connect/storage/tutorial-s3-instance-profile.html"><span class="doc">IAM user or role</span></a>.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DatabricksAutoLoaderSetup&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;s3:GetBucketNotification&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;s3:PutBucketNotification&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sns:ListSubscriptionsByTopic&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sns:GetTopicAttributes&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sns:SetTopicAttributes&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sns:CreateTopic&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sns:TagResource&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sns:Publish&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sns:Subscribe&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sqs:CreateQueue&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sqs:DeleteMessage&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sqs:ReceiveMessage&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sqs:SendMessage&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sqs:GetQueueUrl&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sqs:GetQueueAttributes&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sqs:SetQueueAttributes&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sqs:TagQueue&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sqs:ChangeMessageVisibility&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;arn:aws:s3:::&lt;bucket-name&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;arn:aws:sqs:&lt;region&gt;:&lt;account-number&gt;:databricks-auto-ingest-*&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;arn:aws:sns:&lt;region&gt;:&lt;account-number&gt;:databricks-auto-ingest-*&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DatabricksAutoLoaderList&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;sqs:ListQueues&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sqs:ListQueueTags&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sns:ListTopics&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DatabricksAutoLoaderTeardown&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;sns:Unsubscribe&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sns:DeleteTopic&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sqs:DeleteQueue&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;arn:aws:sqs:&lt;region&gt;:&lt;account-number&gt;:databricks-auto-ingest-*&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;arn:aws:sns:&lt;region&gt;:&lt;account-number&gt;:databricks-auto-ingest-*&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;bucket-name&gt;</span></code>: The S3 bucket name where your stream will read files, for example, <code class="docutils literal notranslate"><span class="pre">auto-logs</span></code>. You can use <code class="docutils literal notranslate"><span class="pre">*</span></code> as a wildcard, for example, <code class="docutils literal notranslate"><span class="pre">databricks-*-logs</span></code>. To find out the underlying S3 bucket for your DBFS path, you can list all the DBFS mount points in a notebook by running <code class="docutils literal notranslate"><span class="pre">%fs</span> <span class="pre">mounts</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;region&gt;</span></code>: The AWS region where the S3 bucket resides, for example, <code class="docutils literal notranslate"><span class="pre">us-west-2</span></code>. If you don’t want to specify the region, use <code class="docutils literal notranslate"><span class="pre">*</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;account-number&gt;</span></code>: The AWS account number that owns the S3 bucket, for example, <code class="docutils literal notranslate"><span class="pre">123456789012</span></code>. If don’t want to specify the account number, use <code class="docutils literal notranslate"><span class="pre">*</span></code>.</p></li>
+</ul>
+<p>The string <code class="docutils literal notranslate"><span class="pre">databricks-auto-ingest-*</span></code> in the SQS and SNS ARN specification is the name prefix that the <code class="docutils literal notranslate"><span class="pre">cloudFiles</span></code> source uses when creating SQS and SNS services. Since Databricks sets up the notification services in the initial run of the stream, you can use a policy with reduced permissions after the initial run (for example, stop the stream and then restart it).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The preceding policy is concerned only with the permissions needed for setting up file notification services, namely S3 bucket notification, SNS, and SQS services and assumes you already have read access to the S3 bucket. If you need to add S3 read-only permissions, add the following to the <code class="docutils literal notranslate"><span class="pre">Action</span></code> list in the <code class="docutils literal notranslate"><span class="pre">DatabricksAutoLoaderSetup</span></code> statement in the JSON document:</p>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">s3:ListBucket</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">s3:GetObject</span></code></p></li>
+</ul>
+<div class="section" id="reduced-permissions-after-initial-setup">
+<h3>Reduced permissions after initial setup<a class="headerlink" href="#reduced-permissions-after-initial-setup" title="Permalink to this headline"> </a></h3>
+<p>The resource setup permissions described above are required only during the initial run of the stream. After the first run, you can switch to the following IAM policy with reduced permissions.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>With the reduced permissions, you can’t start new streaming queries or recreate resources in case of failures (for example, the SQS queue has been accidentally deleted); you also can’t use the cloud resource management API to list or tear down resources.</p>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DatabricksAutoLoaderUse&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">       </span><span class="s2">&quot;s3:GetBucketNotification&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;sns:ListSubscriptionsByTopic&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;sns:GetTopicAttributes&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;sns:TagResource&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;sns:Publish&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;sqs:DeleteMessage&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;sqs:ReceiveMessage&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;sqs:SendMessage&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;sqs:GetQueueUrl&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;sqs:GetQueueAttributes&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;sqs:TagQueue&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;sqs:ChangeMessageVisibility&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">       </span><span class="s2">&quot;arn:aws:sqs:&lt;region&gt;:&lt;account-number&gt;:&lt;queue-name&gt;&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;arn:aws:sns:&lt;region&gt;:&lt;account-number&gt;:&lt;topic-name&gt;&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;arn:aws:s3:::&lt;bucket-name&gt;&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">       </span><span class="s2">&quot;s3:GetBucketLocation&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;s3:ListBucket&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">       </span><span class="s2">&quot;arn:aws:s3:::&lt;bucket-name&gt;&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">       </span><span class="s2">&quot;s3:PutObject&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;s3:PutObjectAcl&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;s3:GetObject&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;s3:DeleteObject&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">       </span><span class="s2">&quot;arn:aws:s3:::&lt;bucket-name&gt;/*&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DatabricksAutoLoaderListTopics&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">       </span><span class="s2">&quot;sqs:ListQueues&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;sqs:ListQueueTags&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;sns:ListTopics&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:sns:&lt;region&gt;:&lt;account-number&gt;:*&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="securely-ingest-data-in-a-different-aws-account">
+<span id="reduced-permissions-after-initial-setup"></span><span id="aws-cross-account"></span><h3>Securely ingest data in a different AWS account<a class="headerlink" href="#securely-ingest-data-in-a-different-aws-account" title="Permalink to this headline"> </a></h3>
+<p>Auto Loader can load data across AWS accounts by assuming an IAM role. After setting the temporary security credentials created by <code class="docutils literal notranslate"><span class="pre">AssumeRole</span></code>, you can have Auto Loader load cloud files cross-accounts. To set up the Auto Loader for cross-AWS accounts, follow the doc: <a class="reference internal" href="../../archive/admin-guide/assume-role.html"><span class="doc">Access cross-account S3 buckets with an AssumeRole policy</span></a>. Make sure you:</p>
+<ul>
+<li><p>Verify that you have the AssumeRole meta role assigned to the cluster.</p></li>
+<li><p>Configure the cluster’s Spark configuration to include the following properties:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">fs.s3a.credentialsType AssumeRole</span>
+<span class="na">fs.s3a.stsAssumeRole.arn arn</span><span class="o">:</span><span class="s">aws:iam::&lt;bucket-owner-acct-id&gt;:role/MyRoleB</span>
+<span class="na">fs.s3a.acl.default BucketOwnerFullControl</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="required-permissions-for-configuring-file-notification-for-gcs">
+<span id="permissions-gcs"></span><h2>Required permissions for configuring file notification for GCS<a class="headerlink" href="#required-permissions-for-configuring-file-notification-for-gcs" title="Permalink to this headline"> </a></h2>
+<p>You must have <code class="docutils literal notranslate"><span class="pre">list</span></code> and <code class="docutils literal notranslate"><span class="pre">get</span></code> permissions on your GCS bucket and on all the objects. For details, see the Google documentation on <a class="reference external" href="https://cloud.google.com/storage/docs/access-control/iam-permissions">IAM permissions</a>.</p>
+<p>To use file notification mode, you need to add permissions for the <a class="reference internal" href="#finding-the-gcs-service-account"><span class="std std-ref">GCS service account</span></a> and the account used to access the Google Cloud Pub/Sub resources.</p>
+<p>Add the <code class="docutils literal notranslate"><span class="pre">Pub/Sub</span> <span class="pre">Publisher</span></code> role to the GCS service account. This allows the account to publish event notification messages from your GCS buckets to Google Cloud Pub/Sub.</p>
+<p>As for the service account used for the Google Cloud Pub/Sub resources, you need to add the following permissions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pubsub</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">consume</span>
+<span class="n">pubsub</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">create</span>
+<span class="n">pubsub</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">delete</span>
+<span class="n">pubsub</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">get</span>
+<span class="n">pubsub</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">list</span>
+<span class="n">pubsub</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">update</span>
+<span class="n">pubsub</span><span class="o">.</span><span class="n">topics</span><span class="o">.</span><span class="n">attachSubscription</span>
+<span class="n">pubsub</span><span class="o">.</span><span class="n">topics</span><span class="o">.</span><span class="n">create</span>
+<span class="n">pubsub</span><span class="o">.</span><span class="n">topics</span><span class="o">.</span><span class="n">delete</span>
+<span class="n">pubsub</span><span class="o">.</span><span class="n">topics</span><span class="o">.</span><span class="n">get</span>
+<span class="n">pubsub</span><span class="o">.</span><span class="n">topics</span><span class="o">.</span><span class="n">list</span>
+<span class="n">pubsub</span><span class="o">.</span><span class="n">topics</span><span class="o">.</span><span class="n">update</span>
+</pre></div>
+</div>
+<p>To do this, you can either <a class="reference internal" href="#custom-gcp-role"><span class="std std-ref">create an IAM custom role</span></a> with these permissions or assign <a class="reference external" href="https://cloud.google.com/pubsub/docs/access-control#roles">pre-existing GCP roles</a> to cover these permissions.</p>
+<div class="section" id="finding-the-gcs-service-account">
+<h3>Finding the GCS Service Account<a class="headerlink" href="#finding-the-gcs-service-account" title="Permalink to this headline"> </a></h3>
+<p>In the Google Cloud Console for the corresponding project, navigate to <code class="docutils literal notranslate"><span class="pre">Cloud</span> <span class="pre">Storage</span> <span class="pre">&gt;</span> <span class="pre">Settings</span></code>.
+The section “Cloud Storage Service Account” contains the email of the GCS service account.</p>
+<p>  <img alt="GCS Service Account" src="../../_images/google-gcs-service-account.png" /></p>
+</div>
+<div class="section" id="creating-a-custom-google-cloud-iam-role-for-file-notification-mode">
+<span id="creating-a-custom-gcp-iam-role-for-file-notification-mode"></span><span id="custom-gcp-role"></span><h3>Creating a Custom Google Cloud IAM Role for File Notification Mode<a class="headerlink" href="#creating-a-custom-google-cloud-iam-role-for-file-notification-mode" title="Permalink to this headline"> </a></h3>
+<p>In the Google Cloud console for the corresponding project, navigate to <code class="docutils literal notranslate"><span class="pre">IAM</span> <span class="pre">&amp;</span> <span class="pre">Admin</span> <span class="pre">&gt;</span> <span class="pre">Roles</span></code>. Then, either create a role at the top or update an existing role. In the screen for role creation or edit, click <code class="docutils literal notranslate"><span class="pre">Add</span> <span class="pre">Permissions</span></code>. A menu appears in which you can add the desired permissions to the role.</p>
+<p>  <img alt="GCP IAM Custom Roles" src="../../_images/google-gcp-custom-role.png" /></p>
+</div>
+</div>
+<div class="section" id="manually-configure-or-manage-file-notification-resources">
+<span id="cloud-resource-management"></span><h2>Manually configure or manage file notification resources<a class="headerlink" href="#manually-configure-or-manage-file-notification-resources" title="Permalink to this headline"> </a></h2>
+<p>Privileged users can manually configure or manage file notification resources.</p>
+<ul class="simple">
+<li><p>Set up the file notification services manually through the cloud provider and manually specify the queue identifier. See <a class="reference internal" href="options.html#file-notification-options"><span class="std std-ref">File notification options</span></a> for more details.</p></li>
+<li><p>Use Scala APIs to create or manage the notifications and queuing services, as shown in the following example:</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You must have appropriate permissions to configure or modify cloud infrastructure. See permissions documentation for <a class="reference internal" href="#permissions-azure"><span class="std std-ref">Azure</span></a>, <a class="reference internal" href="#permissions-s3"><span class="std std-ref">S3</span></a>, or <a class="reference internal" href="#permissions-gcs"><span class="std std-ref">GCS</span></a>.</p>
+</div>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Databricks notebook source</span>
+<span class="c1"># MAGIC %md ## Python bindings for CloudFiles Resource Managers for all 3 clouds</span>
+
+<span class="c1"># COMMAND ----------</span>
+
+<span class="c1">#####################################</span>
+<span class="c1">## Creating a ResourceManager in AWS</span>
+<span class="c1">#####################################</span>
+
+<span class="n">manager</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">_jvm</span><span class="o">.</span><span class="n">com</span><span class="o">.</span><span class="n">databricks</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">CloudFilesAWSResourceManager</span> \
+  <span class="o">.</span><span class="n">newManager</span><span class="p">()</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;cloudFiles.region&quot;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">region</span><span class="o">&gt;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">specific</span><span class="o">-</span><span class="n">bucket</span><span class="o">-</span><span class="ow">and</span><span class="o">-</span><span class="n">folder</span><span class="o">&gt;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">create</span><span class="p">()</span>
+
+<span class="c1">#######################################</span>
+<span class="c1">## Creating a ResourceManager in Azure</span>
+<span class="c1">#######################################</span>
+
+<span class="n">manager</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">_jvm</span><span class="o">.</span><span class="n">com</span><span class="o">.</span><span class="n">databricks</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">CloudFilesAzureResourceManager</span> \
+  <span class="o">.</span><span class="n">newManager</span><span class="p">()</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;cloudFiles.connectionString&quot;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">connection</span><span class="o">-</span><span class="n">string</span><span class="o">&gt;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;cloudFiles.resourceGroup&quot;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">resource</span><span class="o">-</span><span class="n">group</span><span class="o">&gt;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;cloudFiles.subscriptionId&quot;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">subscription</span><span class="o">-</span><span class="nb">id</span><span class="o">&gt;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;cloudFiles.tenantId&quot;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">tenant</span><span class="o">-</span><span class="nb">id</span><span class="o">&gt;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;cloudFiles.clientId&quot;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">service</span><span class="o">-</span><span class="n">principal</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="nb">id</span><span class="o">&gt;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;cloudFiles.clientSecret&quot;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">service</span><span class="o">-</span><span class="n">principal</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">secret</span><span class="o">&gt;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">specific</span><span class="o">-</span><span class="n">container</span><span class="o">-</span><span class="ow">and</span><span class="o">-</span><span class="n">folder</span><span class="o">&gt;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">create</span><span class="p">()</span>
+
+<span class="c1">#######################################</span>
+<span class="c1">## Creating a ResourceManager in GCP</span>
+<span class="c1">#######################################</span>
+<span class="n">manager</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">_jvm</span><span class="o">.</span><span class="n">com</span><span class="o">.</span><span class="n">databricks</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">CloudFilesGCPResourceManager</span> \
+  <span class="o">.</span><span class="n">newManager</span><span class="p">()</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">specific</span><span class="o">-</span><span class="n">bucket</span><span class="o">-</span><span class="ow">and</span><span class="o">-</span><span class="n">folder</span><span class="o">&gt;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">create</span><span class="p">()</span>
+
+<span class="c1"># Set up a queue and a topic subscribed to the path provided in the manager.</span>
+<span class="n">manager</span><span class="o">.</span><span class="n">setUpNotificationServices</span><span class="p">(</span><span class="o">&lt;</span><span class="n">resource</span><span class="o">-</span><span class="n">suffix</span><span class="o">&gt;</span><span class="p">)</span>
+
+<span class="c1"># List notification services created by &lt;AL&gt;</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">listNotificationServices</span><span class="p">())</span>
+
+<span class="c1"># Tear down the notification services created for a specific stream ID.</span>
+<span class="c1"># Stream ID is a GUID string that you can find in the list result above.</span>
+<span class="n">manager</span><span class="o">.</span><span class="n">tearDownNotificationServices</span><span class="p">(</span><span class="o">&lt;</span><span class="n">stream</span><span class="o">-</span><span class="nb">id</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">/////////////////////////////////////</span>
+<span class="c1">// Creating a ResourceManager in AWS</span>
+<span class="c1">/////////////////////////////////////</span>
+
+<span class="k">import</span><span class="w"> </span><span class="nn">com</span><span class="p">.</span><span class="nn">databricks</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nc">CloudFilesAWSResourceManager</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">manager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">CloudFilesAWSResourceManager</span>
+<span class="w">    </span><span class="p">.</span><span class="n">newManager</span>
+<span class="w">    </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;cloudFiles.region&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">region</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="c1">// optional, will use the region of the EC2 instances by default</span>
+<span class="w">    </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;path&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">path</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">specific</span><span class="o">-</span><span class="n">bucket</span><span class="o">-</span><span class="n">and</span><span class="o">-</span><span class="n">folder</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="c1">// required only for setUpNotificationServices</span>
+<span class="w">    </span><span class="p">.</span><span class="n">create</span><span class="p">()</span>
+
+<span class="c1">///////////////////////////////////////</span>
+<span class="c1">// Creating a ResourceManager in Azure</span>
+<span class="c1">///////////////////////////////////////</span>
+
+<span class="k">import</span><span class="w"> </span><span class="nn">com</span><span class="p">.</span><span class="nn">databricks</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nc">CloudFilesAzureResourceManager</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">manager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">CloudFilesAzureResourceManager</span>
+<span class="w">  </span><span class="p">.</span><span class="n">newManager</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;cloudFiles.connectionString&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">connection</span><span class="o">-</span><span class="n">string</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;cloudFiles.resourceGroup&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">resource</span><span class="o">-</span><span class="n">group</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;cloudFiles.subscriptionId&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">subscription</span><span class="o">-</span><span class="n">id</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;cloudFiles.tenantId&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">tenant</span><span class="o">-</span><span class="n">id</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;cloudFiles.clientId&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">service</span><span class="o">-</span><span class="n">principal</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">id</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;cloudFiles.clientSecret&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">service</span><span class="o">-</span><span class="n">principal</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">secret</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;path&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">path</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">specific</span><span class="o">-</span><span class="n">container</span><span class="o">-</span><span class="n">and</span><span class="o">-</span><span class="n">folder</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="c1">// required only for setUpNotificationServices</span>
+<span class="w">  </span><span class="p">.</span><span class="n">create</span><span class="p">()</span>
+
+<span class="c1">///////////////////////////////////////</span>
+<span class="c1">// Creating a ResourceManager in GCP</span>
+<span class="c1">///////////////////////////////////////</span>
+
+<span class="k">import</span><span class="w"> </span><span class="nn">com</span><span class="p">.</span><span class="nn">databricks</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nc">CloudFilesGCPResourceManager</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">manager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">CloudFilesGCPResourceManager</span>
+<span class="w">    </span><span class="p">.</span><span class="n">newManager</span>
+<span class="w">    </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;path&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">path</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">specific</span><span class="o">-</span><span class="n">bucket</span><span class="o">-</span><span class="n">and</span><span class="o">-</span><span class="n">folder</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="c1">// Required only for setUpNotificationServices.</span>
+<span class="w">    </span><span class="p">.</span><span class="n">create</span><span class="p">()</span>
+
+<span class="c1">// Set up a queue and a topic subscribed to the path provided in the manager.</span>
+<span class="n">manager</span><span class="p">.</span><span class="n">setUpNotificationServices</span><span class="p">(</span><span class="o">&lt;</span><span class="n">resource</span><span class="o">-</span><span class="n">suffix</span><span class="o">&gt;</span><span class="p">)</span>
+
+<span class="c1">// List notification services created by &lt;AL&gt;</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">manager</span><span class="p">.</span><span class="n">listNotificationServices</span><span class="p">()</span>
+
+<span class="c1">// Tear down the notification services created for a specific stream ID.</span>
+<span class="c1">// Stream ID is a GUID string that you can find in the list result above.</span>
+<span class="n">manager</span><span class="p">.</span><span class="n">tearDownNotificationServices</span><span class="p">(</span><span class="o">&lt;</span><span class="n">stream</span><span class="o">-</span><span class="n">id</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">setUpNotificationServices(&lt;resource-suffix&gt;)</span></code> to create a queue and a subscription with the name <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;-&lt;resource-suffix&gt;</span></code> (the prefix depends on the storage system summarized in <a class="reference internal" href="#file-notification"><span class="std std-ref">Cloud resources used in Auto Loader file notification mode</span></a>. If there is an existing resource with the same name, Databricks reuses the existing resource instead of creating a new one. This function returns a queue identifier that you can pass to the <code class="docutils literal notranslate"><span class="pre">cloudFiles</span></code> source using the identifier in <a class="reference internal" href="options.html#file-notification-options"><span class="std std-ref">File notification options</span></a>. This enables the <code class="docutils literal notranslate"><span class="pre">cloudFiles</span></code> source user to have fewer permissions than the user who creates the resources.</p>
+<p>Provide the <code class="docutils literal notranslate"><span class="pre">&quot;path&quot;</span></code> option to <code class="docutils literal notranslate"><span class="pre">newManager</span></code> only if calling <code class="docutils literal notranslate"><span class="pre">setUpNotificationServices</span></code>; it is not needed for <code class="docutils literal notranslate"><span class="pre">listNotificationServices</span></code> or <code class="docutils literal notranslate"><span class="pre">tearDownNotificationServices</span></code>. This is the same <code class="docutils literal notranslate"><span class="pre">path</span></code> that you use when running a streaming query.</p>
+<p>The following matrix indicates which API methods are supported in which Databricks Runtime for each type of storage:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Cloud Storage</p></th>
+<th class="head"><p>Setup API</p></th>
+<th class="head"><p>List API</p></th>
+<th class="head"><p>Tear down API</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>AWS S3</p></td>
+<td><p>All versions</p></td>
+<td><p>All versions</p></td>
+<td><p>All versions</p></td>
+</tr>
+<tr class="row-odd"><td><p>ADLS Gen2</p></td>
+<td><p>All versions</p></td>
+<td><p>All versions</p></td>
+<td><p>All versions</p></td>
+</tr>
+<tr class="row-even"><td><p>GCS</p></td>
+<td><p>Databricks Runtime 9.1 and above</p></td>
+<td><p>Databricks Runtime 9.1 and above</p></td>
+<td><p>Databricks Runtime 9.1 and above</p></td>
+</tr>
+<tr class="row-odd"><td><p>Azure Blob Storage</p></td>
+<td><p>All versions</p></td>
+<td><p>All versions</p></td>
+<td><p>All versions</p></td>
+</tr>
+<tr class="row-even"><td><p>ADLS Gen1</p></td>
+<td><p>Unsupported</p></td>
+<td><p>Unsupported</p></td>
+<td><p>Unsupported</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

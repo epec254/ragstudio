@@ -1,0 +1,857 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use audit logs to view Delta Sharing events in Databricks that are of interest to a data provider." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Audit and monitor data sharing using Delta Sharing (for providers)">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Audit and monitor data sharing using Delta Sharing (for providers) &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/data-sharing/audit-logging-provider.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/data-sharing/audit-logging-provider.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/data-sharing/audit-logging-provider.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/data-sharing/audit-logging-provider.html" class="notranslate">English</option>
+    <option value="../../ja/data-sharing/audit-logging-provider.html" class="notranslate">日本語</option>
+    <option value="../../pt/data-sharing/audit-logging-provider.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Audit and monitor data sharing using Delta Sharing (for providers)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="audit-and-monitor-data-sharing-using-delta-sharing-for-providers">
+<span id="audit-and-monitor-data-sharing-using-ds-for-providers"></span><h1>Audit and monitor data sharing using Delta Sharing (for providers)<a class="headerlink" href="#audit-and-monitor-data-sharing-using-delta-sharing-for-providers" title="Permalink to this headline"> </a></h1>
+<p>This article describes how data providers can use Databricks audit logs to monitor Delta Sharing events, including:</p>
+<ul class="simple">
+<li><p>When someone creates, modifies, updates, or deletes a share or a recipient</p></li>
+<li><p>When a recipient accesses an activation link and downloads the credential</p></li>
+<li><p>When a recipient accesses shares.</p></li>
+<li><p>When a recipient accesses data in shared tables or volumes.</p></li>
+<li><p>When a recipient’s credential is rotated or expires.</p></li>
+</ul>
+<p>For information about how data <em>recipients</em> can audit Delta Sharing events to understand who is accessing which data, see <a class="reference internal" href="audit-logging-recipient.html"><span class="doc">Audit and monitor data access using Delta Sharing (for recipients)</span></a>.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<p>To access audit logs, an account admin must enable the audit log system table for your Databricks account. See <a class="reference internal" href="../administration-guide/system-tables/index.html#enable"><span class="std std-ref">Enable system tables</span></a>. For information on the audit log system table, see <a class="reference internal" href="../administration-guide/system-tables/audit-logs.html"><span class="doc">Audit log system table reference</span></a>.</p>
+<p>If you are not an account admin or metastore admin, you must be given access to <code class="docutils literal notranslate"><span class="pre">system.access.audit</span></code> to read audit logs.</p>
+</div>
+<div class="section" id="view-delta-sharing-events-in-the-audit-log">
+<span id="view-ds-events-in-the-audit-log"></span><h2>View Delta Sharing events in the audit log<a class="headerlink" href="#view-delta-sharing-events-in-the-audit-log" title="Permalink to this headline"> </a></h2>
+<p>If your account has system tables enabled, audit logs are stored in <code class="docutils literal notranslate"><span class="pre">system.access.audit</span></code>. If, alternatively, your account has an <a class="reference internal" href="../administration-guide/account-settings/audit-log-delivery.html"><span class="doc">audit log delivery setup</span></a>, you need to know the bucket and path where the logs are delivered.</p>
+<p>Delta Sharing events have <code class="docutils literal notranslate"><span class="pre">unityCatalog</span></code> as their <code class="docutils literal notranslate"><span class="pre">serviceName</span></code>. Actions that are performed by recipients start with the <code class="docutils literal notranslate"><span class="pre">deltaSharing</span></code> prefix.</p>
+<div class="section" id="logged-event-examples">
+<h3>Logged event examples<a class="headerlink" href="#logged-event-examples" title="Permalink to this headline"> </a></h3>
+<p> The following audit event logs an update to the recipient token lifetime. In this example, redacted values are replaced with <code class="docutils literal notranslate"><span class="pre">&lt;redacted&gt;</span></code>.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;auditLevel&quot;</span><span class="p">:</span><span class="s2">&quot;ACCOUNT_LEVEL&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="mi">1629775584891</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;orgId&quot;</span><span class="p">:</span><span class="s2">&quot;3049059095686970&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;shardName&quot;</span><span class="p">:</span><span class="s2">&quot;example-workspace&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;accountId&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;redacted&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;sourceIPAddress&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;redacted&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;userAgent&quot;</span><span class="p">:</span><span class="s2">&quot;curl/7.64.1&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;sessionId&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;redacted&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;userIdentity&quot;</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;redacted&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;subjectName&quot;</span><span class="p">:</span><span class="kc">null</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;serviceName&quot;</span><span class="p">:</span><span class="s2">&quot;unityCatalog&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;actionName&quot;</span><span class="p">:</span><span class="s2">&quot;updateMetastore&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;requestId&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;redacted&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;requestParams&quot;</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">&quot;metastore_id&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;redacted&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;delta_sharing_scope&quot;</span><span class="p">:</span><span class="nt">&quot;INTERNAL_AND_EXTERNAL&quot;</span>
+<span class="w">        </span><span class="nt">&quot;delta_sharing_recipient_token_lifetime_in_seconds&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">31536000</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;response&quot;</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="mi">200</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;errorMessage&quot;</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="kc">null</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;MAX_LOG_MESSAGE_LENGTH&quot;</span><span class="p">:</span><span class="mi">16384</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The following audit event logs a recipient’s action to query a table that you, as the provider, have shared with them.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;auditLevel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ACCOUNT_LEVEL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;Timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1635235341950</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;orgId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;shardName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;example-workspace&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;accountId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;redacted&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;sourceIPAddress&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;redacted&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;userAgent&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;sessionId&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;userIdentity&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;serviceName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;unityCatalog&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;actionName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;deltaSharingQueriedTable&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;requestId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;redacted&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;requestParams&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;Metastore_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;redacted&gt;&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;Options&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{}&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;Recipient_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ip_recipient&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;Response&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;errorMessage&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;Result&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                                </span><span class="nt">&quot;checkpointBytes&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="w">                                </span><span class="nt">&quot;maxRemoveFiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="w">                                </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file: example/s3/path/golden/snapshot-data0/_delta_log&quot;</span><span class="p">,</span>
+<span class="w">                                </span><span class="nt">&quot;scannedAddFileSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1300&quot;</span><span class="p">,</span>
+<span class="w">                                </span><span class="nt">&quot;jsonLogFileNum&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="w">                                </span><span class="nt">&quot;scannedJsonLogActionNum&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+<span class="w">                                </span><span class="nt">&quot;jsonLogFileBytes&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;914&quot;</span><span class="p">,</span>
+<span class="w">                                </span><span class="nt">&quot;checkpointFileNum&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="w">                                </span><span class="nt">&quot;metastoreId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;redacted&gt;&quot;</span><span class="p">,</span>
+<span class="w">                                </span><span class="nt">&quot;limitHint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Some(1)&quot;</span><span class="p">,</span>
+<span class="w">                                </span><span class="nt">&quot;tableName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tableName&quot;</span><span class="p">,</span>
+<span class="w">                                </span><span class="nt">&quot;tableId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="w">                                </span><span class="nt">&quot;activeAddFiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2&quot;</span><span class="p">,</span>
+<span class="w">                                </span><span class="nt">&quot;scannedCheckpointActionNum&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="w">                                </span><span class="nt">&quot;deltaSharingRecipientIdHash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;recipient_hash_id&quot;</span><span class="p">,</span>
+<span class="w">                                </span><span class="nt">&quot;tableVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;MAX_LOG_MESSAGE_LENGTH&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">16384</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="logged-event-details">
+<h3>Logged event details<a class="headerlink" href="#logged-event-details" title="Permalink to this headline"> </a></h3>
+<p>The following table lists audited Delta Sharing actions that are delivered to data provider logs. Recipient-initiated events are marked “Recipient action.” Provider-initiated events are marked “Provider action.”</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 78%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>actionName</p></th>
+<th class="head"><p>requestParams</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">deltaSharingListShares</span></code></p>
+<p>Recpient action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">options</span></code>: The pagination options provided with this request.</p>
+<p><code class="docutils literal notranslate"><span class="pre">recipient_name</span></code>: Indicates the recipient executing the action.</p>
+<p><code class="docutils literal notranslate"><span class="pre">is_ip_access_denied</span></code>: None if there is no IP access list configured. Otherwise, <code class="docutils literal notranslate"><span class="pre">true</span></code> if the request was denied and
+<code class="docutils literal notranslate"><span class="pre">false</span></code> if the request was not denied. <code class="docutils literal notranslate"><span class="pre">sourceIPaddress</span></code> is the recipient IP address.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">deltaSharingGetShare</span></code></p>
+<p>Recpient action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">share</span></code>: The name of the share.</p>
+<p><code class="docutils literal notranslate"><span class="pre">recipient_name</span></code>: Indicates the recipient executing the action.</p>
+<p><code class="docutils literal notranslate"><span class="pre">is_ip_access_denied</span></code>: None if there is no IP access list configured. Otherwise, <code class="docutils literal notranslate"><span class="pre">true</span></code> if the request was denied and
+<code class="docutils literal notranslate"><span class="pre">false</span></code> if the request was not denied. <code class="docutils literal notranslate"><span class="pre">sourceIPaddress</span></code> is the recipient IP address.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">deltaSharingListSchemas</span></code></p>
+<p>Recpient action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">share</span></code>: The name of the share.</p>
+<p><code class="docutils literal notranslate"><span class="pre">recipient_name</span></code>: Indicates the recipient executing the action.</p>
+<p><code class="docutils literal notranslate"><span class="pre">options</span></code>: The pagination options provided with this request.</p>
+<p><code class="docutils literal notranslate"><span class="pre">is_ip_access_denied</span></code>: None if there is no IP access list configured. Otherwise, <code class="docutils literal notranslate"><span class="pre">true</span></code> if the request was denied and
+<code class="docutils literal notranslate"><span class="pre">false</span></code> if the request was not denied. <code class="docutils literal notranslate"><span class="pre">sourceIPaddress</span></code> is the recipient IP address.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">deltaSharingListAllTables</span></code></p>
+<p>Recpient action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">share</span></code>: The name of the share.</p>
+<p><code class="docutils literal notranslate"><span class="pre">recipient_name</span></code>: Indicates the recipient executing the action.</p>
+<p><code class="docutils literal notranslate"><span class="pre">is_ip_access_denied</span></code>: None if there is no IP access list configured. Otherwise, <code class="docutils literal notranslate"><span class="pre">true</span></code> if the request was denied and
+<code class="docutils literal notranslate"><span class="pre">false</span></code> if the request was not denied. <code class="docutils literal notranslate"><span class="pre">sourceIPaddress</span></code> is the recipient IP address.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">deltaSharingListTables</span></code></p>
+<p>Recpient action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">share</span></code>: The name of the share.</p>
+<p><code class="docutils literal notranslate"><span class="pre">recipient_name</span></code>: Indicates the recipient executing the action.</p>
+<p><code class="docutils literal notranslate"><span class="pre">options</span></code>: The pagination options provided with this request.</p>
+<p><code class="docutils literal notranslate"><span class="pre">is_ip_access_denied</span></code>: None if there is no IP access list configured. Otherwise, <code class="docutils literal notranslate"><span class="pre">true</span></code> if the request was denied and
+<code class="docutils literal notranslate"><span class="pre">false</span></code> if the request was not denied. <code class="docutils literal notranslate"><span class="pre">sourceIPaddress</span></code> is the recipient IP address.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">deltaSharingGetTableMetadata</span></code></p>
+<p>Recpient action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">share</span></code>: The name of the share.</p>
+<p><code class="docutils literal notranslate"><span class="pre">recipient_name</span></code>: Indicates the recipient executing the action.</p>
+<p><code class="docutils literal notranslate"><span class="pre">schema</span></code>: The name of the schema.</p>
+<p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the table.</p>
+<p><code class="docutils literal notranslate"><span class="pre">predicateHints</span></code>: The predicates included in the query.</p>
+<p><code class="docutils literal notranslate"><span class="pre">limitHints</span></code>: The maximum number of rows to return.</p>
+<p><code class="docutils literal notranslate"><span class="pre">is_ip_access_denied</span></code>: None if there is no IP access list configured. Otherwise, <code class="docutils literal notranslate"><span class="pre">true</span></code> if the request was denied and
+<code class="docutils literal notranslate"><span class="pre">false</span></code> if the request was not denied. <code class="docutils literal notranslate"><span class="pre">sourceIPaddress</span></code> is the recipient IP address.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">deltaSharingGetTableVersion</span></code></p>
+<p>Recpient action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">share</span></code>: The name of the share.</p>
+<p><code class="docutils literal notranslate"><span class="pre">recipient_name</span></code>: Indicates the recipient executing the action.</p>
+<p><code class="docutils literal notranslate"><span class="pre">schema</span></code>: The name of the schema.</p>
+<p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the table.</p>
+<p><code class="docutils literal notranslate"><span class="pre">is_ip_access_denied</span></code>: None if there is no IP access list configured. Otherwise, <code class="docutils literal notranslate"><span class="pre">true</span></code> if the request was denied and
+<code class="docutils literal notranslate"><span class="pre">false</span></code> if the request was not denied. <code class="docutils literal notranslate"><span class="pre">sourceIPaddress</span></code> is the recipient IP address.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">deltaSharingQueryTable</span></code></p>
+<p>Recpient action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">share</span></code>: The name of the share.</p>
+<p><code class="docutils literal notranslate"><span class="pre">recipient_name</span></code>: Indicates the recipient executing the action.</p>
+<p><code class="docutils literal notranslate"><span class="pre">schema</span></code>: The name of the schema.</p>
+<p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the table.</p>
+<p><code class="docutils literal notranslate"><span class="pre">predicateHints</span></code>: The predicates included in the query.</p>
+<p><code class="docutils literal notranslate"><span class="pre">limitHint</span></code>: The maximum number of rows to return.</p>
+<p><code class="docutils literal notranslate"><span class="pre">is_ip_access_denied</span></code>: None if there is no IP access list configured. Otherwise, <code class="docutils literal notranslate"><span class="pre">true</span></code> if the request was denied and
+<code class="docutils literal notranslate"><span class="pre">false</span></code> if the request was not denied. <code class="docutils literal notranslate"><span class="pre">sourceIPaddress</span></code> is the recipient IP address.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">deltaSharingQueryTableChanges</span></code></p>
+<p>Recpient action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">share</span></code>: The name of the share.</p>
+<p><code class="docutils literal notranslate"><span class="pre">recipient_name</span></code>: Indicates the recipient executing the action.</p>
+<p><code class="docutils literal notranslate"><span class="pre">schema</span></code>: The name of the schema.</p>
+<p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the table.</p>
+<p><code class="docutils literal notranslate"><span class="pre">cdf_options</span></code>: Change data feed options.</p>
+<p><code class="docutils literal notranslate"><span class="pre">is_ip_access_denied</span></code>: None if there is no IP access list configured. Otherwise, <code class="docutils literal notranslate"><span class="pre">true</span></code> if the request was denied and
+<code class="docutils literal notranslate"><span class="pre">false</span></code> if the request was not denied. <code class="docutils literal notranslate"><span class="pre">sourceIPaddress</span></code> is the recipient IP address.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">deltaSharingQueriedTable</span></code></p>
+<p>Recpient action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">recipient_name</span></code>: Indicates the recipient executing the action.</p>
+<p><code class="docutils literal notranslate"><span class="pre">is_ip_access_denied</span></code>: None if there is no IP access list configured. Otherwise, <code class="docutils literal notranslate"><span class="pre">true</span></code> if the request was denied and
+<code class="docutils literal notranslate"><span class="pre">false</span></code> if the request was not denied. <code class="docutils literal notranslate"><span class="pre">sourceIPaddress</span></code> is the recipient IP address.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">deltaSharingQueriedTableChanges</span></code></p>
+<p>Recpient action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">recipient_name</span></code>: Indicates the recipient executing the action.</p>
+<p><code class="docutils literal notranslate"><span class="pre">is_ip_access_denied</span></code>: None if there is no IP access list configured. Otherwise, <code class="docutils literal notranslate"><span class="pre">true</span></code> if the request was denied and
+<code class="docutils literal notranslate"><span class="pre">false</span></code> if the request was not denied. <code class="docutils literal notranslate"><span class="pre">sourceIPaddress</span></code> is the recipient IP address.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">updateMetastore</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">delta_sharing_scope</span></code>: values can be “INTERNAL” or “INTERNAL_AND_EXTERNAL”</p>
+<p><code class="docutils literal notranslate"><span class="pre">delta_sharing_recipient_token_lifetime_in_seconds</span></code>: If present, indicates that the recipient token lifetime was updated.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">createRecipient</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the recipient.</p>
+<p><code class="docutils literal notranslate"><span class="pre">comment</span></code>: The comment for the recipient.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ip_access_list.allowed_ip_addresses</span></code>: Recipient IP address allowlist.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">deleteRecipient</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the recipient.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">getRecipient</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the recipient.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">listRecipients</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p>none</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">rotateRecipientToken</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the recipient.</p>
+<p><code class="docutils literal notranslate"><span class="pre">comment</span></code>: The comment given in the rotation command.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">updateRecipient</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the recipient.</p>
+<p><code class="docutils literal notranslate"><span class="pre">updates</span></code>: A JSON representation of recipient attributes that were added or removed from the share.
+Each item includes <code class="docutils literal notranslate"><span class="pre">action</span></code> (add or remove) and can include <code class="docutils literal notranslate"><span class="pre">name</span></code> (the new recipient name), <code class="docutils literal notranslate"><span class="pre">owner</span></code> (new owner),
+<code class="docutils literal notranslate"><span class="pre">comment</span></code>, and <code class="docutils literal notranslate"><span class="pre">ip_access_list.allowed_ip_addresses</span></code> (recipient IP address allowlist).</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">createShare</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the share.</p>
+<p><code class="docutils literal notranslate"><span class="pre">comment</span></code>: The comment for the share.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">deleteShare</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the share.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">getShare</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the share.</p>
+<p><code class="docutils literal notranslate"><span class="pre">include_shared_objects</span></code>: Whether the share’s table names were included in the request.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">updateShare</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the share.</p>
+<p><code class="docutils literal notranslate"><span class="pre">updates</span></code>: A JSON representation of data assets that were added or removed from the share.
+Each item includes <code class="docutils literal notranslate"><span class="pre">action</span></code> (add or remove), <code class="docutils literal notranslate"><span class="pre">name</span></code> (the actual name of the table), <code class="docutils literal notranslate"><span class="pre">shared_as</span></code> (the name the schema,
+volume, or table were shared as, if different from <code class="docutils literal notranslate"><span class="pre">name</span></code>), and <code class="docutils literal notranslate"><span class="pre">partition_specification</span></code> (if a partition specification
+was provided).</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">listShares</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p>none</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">getSharePermissions</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the share.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">updateSharePermissions</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the share.</p>
+<p><code class="docutils literal notranslate"><span class="pre">changes</span></code>: A JSON representation of the updated permissions. Each change includes <code class="docutils literal notranslate"><span class="pre">principal</span></code> (the user or group to whom
+permission is granted or revoked), <code class="docutils literal notranslate"><span class="pre">add</span></code> (the list of permissions that were granted), <code class="docutils literal notranslate"><span class="pre">remove</span></code> (the list of permissions
+that were revoked).</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">getRecipientSharePermissions</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the share.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">getActivationUrlInfo</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">recipient_name</span></code>: The name of the recipient who opened the activation URL.</p>
+<p><code class="docutils literal notranslate"><span class="pre">is_ip_access_denied</span></code>: None if there is no IP access list configured. Otherwise, <code class="docutils literal notranslate"><span class="pre">true</span></code> if the request was denied and
+<code class="docutils literal notranslate"><span class="pre">false</span></code> if the request was not denied. <code class="docutils literal notranslate"><span class="pre">sourceIPaddress</span></code> is the recipient IP address.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">retrieveRecipientToken</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">recipient_name</span></code>: The name of the recipient who downloaded the token.</p>
+<p><code class="docutils literal notranslate"><span class="pre">is_ip_access_denied</span></code>: None if there is no IP access list configured. Otherwise, <code class="docutils literal notranslate"><span class="pre">true</span></code> if the request was denied and
+<code class="docutils literal notranslate"><span class="pre">false</span></code> if the request was not denied. <code class="docutils literal notranslate"><span class="pre">sourceIPaddress</span></code> is the recipient IP address.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">generateTemporaryVolumeCredential</span></code></p>
+<p>Provider action</p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ShareName</span></code>: The name of the share through which the recipient requests.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ShareId</span></code>: The ID of the share.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ShareOwner</span></code>: The owner of the share.</p>
+<p><code class="docutils literal notranslate"><span class="pre">RecipientName</span></code>: The name of the recipient who requests the credential.</p>
+<p><code class="docutils literal notranslate"><span class="pre">RecipientId</span></code>: The ID of the recipient.</p>
+<p><code class="docutils literal notranslate"><span class="pre">VolumeFullName</span></code>: The full 3-level name of the volume.</p>
+<p><code class="docutils literal notranslate"><span class="pre">VolumeId</span></code>: The ID of the volume.</p>
+<p><code class="docutils literal notranslate"><span class="pre">VolumeStorageLocation</span></code>: The cloud path of the volume root.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Operation</span></code>: Either <code class="docutils literal notranslate"><span class="pre">READ_VOLUME</span></code> or <code class="docutils literal notranslate"><span class="pre">WRITE_VOLUME</span></code>. For volume sharing, only <code class="docutils literal notranslate"><span class="pre">READ_VOLUME</span></code> is supported.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CredentialId</span></code>: The ID of the credential.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CredentialType</span></code>: The type of the credential. It’s always <code class="docutils literal notranslate"><span class="pre">StorageCredential</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">AwsAccessKeyIdv</span></code>: The redacted ID of the AWS access key, issued by AWS.</p>
+<p><code class="docutils literal notranslate"><span class="pre">WorkspaceId</span></code>: It’s always 0 when the request is for shared volumes.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>In addition to the actions and parameters included in the table, the following are also logged:</p>
+<ul class="simple">
+<li><p>Catalog, schema, and table access events. See <a class="reference internal" href="../administration-guide/account-settings/audit-logs.html#uc"><span class="std std-ref">Unity Catalog events</span></a>.</p></li>
+<li><p>Request parameters that are always present in the audit log for each action:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">userIdentity.email</span></code>: The ID of the user who initiated the activity.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">requestParams.metastore_id</span></code>: the Unity Catalog metastore that manages the shared data.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="response-fields-for-recipient-initiated-events">
+<h3>Response fields for recipient-initiated events<a class="headerlink" href="#response-fields-for-recipient-initiated-events" title="Permalink to this headline"> </a></h3>
+<p>Responses can include the following key-value pairs under <code class="docutils literal notranslate"><span class="pre">Result:</span></code>. Values here are examples only. This list is not exhaustive.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;checkpointBytes&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="nt">&quot;earlyTermination&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="nt">&quot;maxRemoveFiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file: example/s3/path/golden/snapshot-data0/_delta_log&quot;</span><span class="p">,</span>
+<span class="nt">&quot;deltaSharingPartitionFilteringAccessed&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="nt">&quot;deltaSharingRecipientId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;redacted&gt;&quot;</span><span class="p">,</span>
+<span class="nt">&quot;deltaSharingRecipientIdHash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;recipient-hash-id&gt;&quot;</span><span class="p">,</span>
+<span class="nt">&quot;jsonLogFileNum&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="nt">&quot;scannedJsonLogActionNum&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+<span class="nt">&quot;numRecords&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3&quot;</span><span class="p">,</span>
+<span class="nt">&quot;deltaSharingRecipientMetastoreId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;redacted&gt;&quot;</span><span class="p">,</span>
+<span class="nt">&quot;userAgent&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Delta-Sharing-Unity-Catalog-Databricks-Auth/1.0 Linux/4.15.0-2068-azure-fips OpenJDK_64-Bit_Server_VM/11.0.7+10-jvmci-20.1-b02 java/11.0.7 scala/2.12.15 java_vendor/GraalVM_Community&quot;</span><span class="p">,</span>
+<span class="nt">&quot;jsonLogFileBytes&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2846&quot;</span><span class="p">,</span>
+<span class="nt">&quot;checkpointFileNum&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="nt">&quot;metastoreId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;redacted&gt;&quot;</span><span class="p">,</span>
+<span class="nt">&quot;limitHint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Some(1)&quot;</span><span class="p">,</span>
+<span class="nt">&quot;tableName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cookie_ingredients&quot;</span><span class="p">,</span>
+<span class="nt">&quot;tableId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1234567c-6d8b-45fd-9565-32e9fc23f8f3&quot;</span><span class="p">,</span>
+<span class="nt">&quot;activeAddFiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// number of AddFiles returned in the query</span>
+<span class="nt">&quot;numAddFiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// number of AddFiles returned in the query</span>
+<span class="nt">&quot;numAddCDCFiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// number of AddFiles returned in the CDF query</span>
+<span class="nt">&quot;numRemoveFiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// number of RemoveFiles returned in the query</span>
+<span class="nt">&quot;numSeenAddFiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3&quot;</span><span class="p">,</span>
+<span class="nt">&quot;scannedAddFileSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1300&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// file size in bytes for the AddFile returned in the query</span>
+<span class="nt">&quot;scannedAddCDCFileSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1300&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// file size in bytes for the AddCDCFile returned in the CDF query</span>
+<span class="nt">&quot;scannedRemoveFileSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1300&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// file size in bytes for the RemoveFile returned in the query</span>
+<span class="nt">&quot;scannedCheckpointActionNum&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="nt">&quot;tableVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="logged-errors">
+<h2>Logged errors<a class="headerlink" href="#logged-errors" title="Permalink to this headline"> </a></h2>
+<p>Delta Sharing logs the following errors for data providers. Items between <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> characters represent placeholder text.</p>
+<ul>
+<li><p>Delta Sharing is not enabled on the selected metastore.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DatabricksServiceException</span><span class="p">:</span> <span class="n">FEATURE_DISABLED</span><span class="p">:</span>
+<span class="n">Delta</span> <span class="n">Sharing</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">enabled</span>
+</pre></div>
+</div>
+</li>
+<li><p>An operation was attempted on a catalog that does not exist.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DatabricksServiceException: CATALOG_DOES_NOT_EXIST:
+Catalog ‘&lt;catalog&gt;’ does not exist.
+</pre></div>
+</div>
+</li>
+<li><p>A user who is not an account admin or metastore admin attempted to perform a privileged operation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DatabricksServiceException</span><span class="p">:</span> <span class="n">PERMISSION_DENIED</span><span class="p">:</span>
+<span class="n">Only</span> <span class="n">administrators</span> <span class="n">can</span> <span class="o">&lt;</span><span class="n">operation</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">operation</span><span class="o">-</span><span class="n">target</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p>An operation was attempted on a metastore from a workspace to which the metastore is not assigned.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DatabricksServiceException</span><span class="p">:</span> <span class="n">INVALID_STATE</span><span class="p">:</span>
+<span class="n">Workspace</span> <span class="o">&lt;</span><span class="n">workspace</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span> <span class="ow">is</span> <span class="n">no</span> <span class="n">longer</span> <span class="n">assigned</span> <span class="n">to</span> <span class="n">this</span> <span class="n">metastore</span>
+</pre></div>
+</div>
+</li>
+<li><p>A request was missing the recipient name or share name.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DatabricksServiceException</span><span class="p">:</span> <span class="n">INVALID_PARAMETER_VALUE</span><span class="p">:</span> <span class="n">CreateRecipient</span><span class="o">/</span><span class="n">CreateShare</span> <span class="n">Missing</span> <span class="n">required</span> <span class="n">field</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">recipient</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;/&lt;</span><span class="n">share</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p>A request included an invalid recipient name or share name.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DatabricksServiceException</span><span class="p">:</span> <span class="n">INVALID_PARAMETER_VALUE</span><span class="p">:</span> <span class="n">CreateRecipient</span><span class="o">/</span><span class="n">CreateShare</span> <span class="o">&lt;</span><span class="n">recipient</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;/&lt;</span><span class="n">share</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">a</span> <span class="n">valid</span> <span class="n">name</span>
+</pre></div>
+</div>
+</li>
+<li><p>A user attempted to share a table that is not in a Unity Catalog metastore.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DatabricksServiceException</span><span class="p">:</span> <span class="n">INVALID_PARAMETER_VALUE</span><span class="p">:</span> <span class="n">Only</span> <span class="n">managed</span> <span class="ow">or</span> <span class="n">external</span> <span class="n">table</span> <span class="n">on</span> <span class="n">Unity</span> <span class="n">Catalog</span> <span class="n">can</span> <span class="n">be</span> <span class="n">added</span> <span class="n">to</span> <span class="n">a</span> <span class="n">share</span>
+</pre></div>
+</div>
+</li>
+<li><p>A user attempted to rotate a recipient that was already in a rotated state and whose previous token had not yet expired.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DatabricksServiceException</span><span class="p">:</span> <span class="n">INVALID_PARAMETER_VALUE</span><span class="p">:</span> <span class="n">There</span> <span class="n">are</span> <span class="n">already</span> <span class="n">two</span> <span class="n">active</span> <span class="n">tokens</span> <span class="k">for</span> <span class="n">recipient</span> <span class="o">&lt;</span><span class="n">recipient</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p>A user attempted to create a new recipient or share with the same name as an existing one.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DatabricksServiceException: RECIPIENT_ALREADY_EXISTS/SHARE_ALREADY_EXISTS: Recipient/Share &lt;name&gt; already exists`
+</pre></div>
+</div>
+</li>
+<li><p>A user attempted to perform an operation on a recipient or share that does not exist.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DatabricksServiceException</span><span class="p">:</span> <span class="n">RECIPIENT_DOES_NOT_EXIST</span><span class="o">/</span><span class="n">SHARE_DOES_NOT_EXIST</span><span class="p">:</span> <span class="n">Recipient</span><span class="o">/</span><span class="n">Share</span> <span class="s1">&#39;&lt;name&gt;&#39;</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">exist</span>
+</pre></div>
+</div>
+</li>
+<li><p>A user attempted to add a table to a share, but the table had already been added.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DatabricksServiceException</span><span class="p">:</span> <span class="n">RESOURCE_ALREADY_EXISTS</span><span class="p">:</span> <span class="n">Shared</span> <span class="n">Table</span> <span class="s1">&#39;&lt;name&gt;&#39;</span> <span class="n">already</span> <span class="n">exists</span>
+</pre></div>
+</div>
+</li>
+<li><p>A user attempted to perform an operation that referenced a table that does not exist.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DatabricksServiceException</span><span class="p">:</span> <span class="n">TABLE_DOES_NOT_EXIST</span><span class="p">:</span> <span class="n">Table</span> <span class="s1">&#39;&lt;name&gt;&#39;</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">exist</span>
+</pre></div>
+</div>
+</li>
+<li><p>A user attempted to perform an operation that referenced a schema that did not exist.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DatabricksServiceException</span><span class="p">:</span> <span class="n">SCHEMA_DOES_NOT_EXIST</span><span class="p">:</span> <span class="n">Schema</span> <span class="s1">&#39;&lt;name&gt;&#39;</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">exist</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>For a list of auditable events and errors logged for data recipients, see <a class="reference internal" href="audit-logging-recipient.html"><span class="doc">Audit and monitor data access using Delta Sharing (for recipients)</span></a>.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

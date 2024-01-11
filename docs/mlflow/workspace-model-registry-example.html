@@ -1,0 +1,886 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use the Workspace MLflow Model Registry to build a machine learning application that forecasts the daily power output of a wind farm." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Workspace Model Registry example">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Workspace Model Registry example &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/mlflow/workspace-model-registry-example.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/mlflow/workspace-model-registry-example.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/mlflow/workspace-model-registry-example.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/mlflow/workspace-model-registry-example.html" class="notranslate">English</option>
+    <option value="../../ja/mlflow/workspace-model-registry-example.html" class="notranslate">日本語</option>
+    <option value="../../pt/mlflow/workspace-model-registry-example.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Workspace Model Registry example</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="workspace-model-registry-example">
+<h1>Workspace Model Registry example<a class="headerlink" href="#workspace-model-registry-example" title="Permalink to this headline"> </a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This documentation covers the Workspace Model Registry. Databricks recommends using <a class="reference internal" href="../machine-learning/manage-model-lifecycle/index.html"><span class="doc">Models in Unity Catalog</span></a>. Models in Unity Catalog provides centralized model governance, cross-workspace access, lineage, and deployment. Workspace Model Registry will be deprecated in the future.</p>
+</div>
+<p>This example illustrates how to use the Workspace Model Registry to build a machine learning application that forecasts the daily power output of a wind farm. The example shows how to:</p>
+<ul class="simple">
+<li><p>Track and log models with MLflow</p></li>
+<li><p>Register models with the Model Registry</p></li>
+<li><p>Describe models and make model version stage transitions</p></li>
+<li><p>Integrate registered models with production applications</p></li>
+<li><p>Search and discover models in the Model Registry</p></li>
+<li><p>Archive and delete models</p></li>
+</ul>
+<p>The article describes how to perform these steps using the MLflow Tracking and MLflow Model Registry UIs and APIs.</p>
+<p>For a notebook that performs all these steps using the MLflow Tracking and Registry APIs, see the <a class="reference internal" href="#notebook"><span class="std std-ref">Model Registry example notebook</span></a>.</p>
+<div class="section" id="load-dataset-train-model-and-track-with-mlflow-tracking">
+<h2>Load dataset, train model, and track with MLflow Tracking<a class="headerlink" href="#load-dataset-train-model-and-track-with-mlflow-tracking" title="Permalink to this headline"> </a></h2>
+<p>Before you can register a model in the Model Registry, you must first train and log the <a class="reference internal" href="models.html"><span class="doc">model</span></a> during an <a class="reference internal" href="experiments.html"><span class="doc">experiment run</span></a>. This section shows how to load the wind farm dataset, train a model, and log the training run to MLflow.</p>
+<div class="section" id="load-dataset">
+<h3>Load dataset<a class="headerlink" href="#load-dataset" title="Permalink to this headline"> </a></h3>
+<p>The following code loads a dataset containing weather data and power output information for a wind farm in the United States. The dataset contains <code class="docutils literal notranslate"><span class="pre">wind</span> <span class="pre">direction</span></code>, <code class="docutils literal notranslate"><span class="pre">wind</span> <span class="pre">speed</span></code>, and <code class="docutils literal notranslate"><span class="pre">air</span> <span class="pre">temperature</span></code> features sampled every six hours (once at <code class="docutils literal notranslate"><span class="pre">00:00</span></code>, once at <code class="docutils literal notranslate"><span class="pre">08:00</span></code>, and once at <code class="docutils literal notranslate"><span class="pre">16:00</span></code>), as well as daily aggregate power output (<code class="docutils literal notranslate"><span class="pre">power</span></code>), over several years.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">wind_farm_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://github.com/dbczumar/model-registry-demo-notebook/raw/master/dataset/windfarm_data.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_training_data</span><span class="p">():</span>
+  <span class="n">training_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">wind_farm_data</span><span class="p">[</span><span class="s2">&quot;2014-01-01&quot;</span><span class="p">:</span><span class="s2">&quot;2018-01-01&quot;</span><span class="p">])</span>
+  <span class="n">X</span> <span class="o">=</span> <span class="n">training_data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;power&quot;</span><span class="p">)</span>
+  <span class="n">y</span> <span class="o">=</span> <span class="n">training_data</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">]</span>
+  <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span>
+
+<span class="k">def</span> <span class="nf">get_validation_data</span><span class="p">():</span>
+  <span class="n">validation_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">wind_farm_data</span><span class="p">[</span><span class="s2">&quot;2018-01-01&quot;</span><span class="p">:</span><span class="s2">&quot;2019-01-01&quot;</span><span class="p">])</span>
+  <span class="n">X</span> <span class="o">=</span> <span class="n">validation_data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;power&quot;</span><span class="p">)</span>
+  <span class="n">y</span> <span class="o">=</span> <span class="n">validation_data</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">]</span>
+  <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span>
+
+<span class="k">def</span> <span class="nf">get_weather_and_forecast</span><span class="p">():</span>
+  <span class="n">format_date</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">pd_date</span> <span class="p">:</span> <span class="n">pd_date</span><span class="o">.</span><span class="n">date</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="n">today</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s1">&#39;today&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+  <span class="n">week_ago</span> <span class="o">=</span> <span class="n">today</span> <span class="o">-</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+  <span class="n">week_later</span> <span class="o">=</span> <span class="n">today</span> <span class="o">+</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+  <span class="n">past_power_output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">wind_farm_data</span><span class="p">)[</span><span class="n">format_date</span><span class="p">(</span><span class="n">week_ago</span><span class="p">):</span><span class="n">format_date</span><span class="p">(</span><span class="n">today</span><span class="p">)]</span>
+  <span class="n">weather_and_forecast</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">wind_farm_data</span><span class="p">)[</span><span class="n">format_date</span><span class="p">(</span><span class="n">week_ago</span><span class="p">):</span><span class="n">format_date</span><span class="p">(</span><span class="n">week_later</span><span class="p">)]</span>
+  <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">weather_and_forecast</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+    <span class="n">past_power_output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">wind_farm_data</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span>
+    <span class="n">weather_and_forecast</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">wind_farm_data</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">:]</span>
+
+  <span class="k">return</span> <span class="n">weather_and_forecast</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;power&quot;</span><span class="p">),</span> <span class="n">past_power_output</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="train-model">
+<h3>Train model<a class="headerlink" href="#train-model" title="Permalink to this headline"> </a></h3>
+<p>The following code trains a neural network using TensorFlow Keras to predict power output based on the weather features in the dataset. MLflow is used to track the model’s hyperparameters, performance metrics, source code, and artifacts.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train_keras_model</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+  <span class="kn">import</span> <span class="nn">tensorflow.keras</span>
+  <span class="kn">from</span> <span class="nn">tensorflow.keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+  <span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+
+  <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+  <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],),</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;hidden_layer&quot;</span><span class="p">))</span>
+  <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s2">&quot;mse&quot;</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;adam&quot;</span><span class="p">)</span>
+
+  <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">validation_split</span><span class="o">=</span><span class="mf">.2</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">model</span>
+
+<span class="kn">import</span> <span class="nn">mlflow</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">get_training_data</span><span class="p">()</span>
+
+<span class="k">with</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">start_run</span><span class="p">():</span>
+  <span class="c1"># Automatically capture the model&#39;s parameters, metrics, artifacts,</span>
+  <span class="c1"># and source code with the `autolog()` function</span>
+  <span class="n">mlflow</span><span class="o">.</span><span class="n">tensorflow</span><span class="o">.</span><span class="n">autolog</span><span class="p">()</span>
+
+  <span class="n">train_keras_model</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+  <span class="n">run_id</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">active_run</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">run_id</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="register-and-manage-the-model-using-the-mlflow-ui">
+<h2>Register and manage the model using the MLflow UI<a class="headerlink" href="#register-and-manage-the-model-using-the-mlflow-ui" title="Permalink to this headline"> </a></h2>
+<div class="contents local topic" id="in-this-section">
+<p class="topic-title first">In this section:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#create-a-new-registered-model" id="id2">Create a new registered model</a></p></li>
+<li><p><a class="reference internal" href="#explore-the-model-registry-ui" id="id3">Explore the Model Registry UI</a></p></li>
+<li><p><a class="reference internal" href="#add-model-descriptions" id="id4">Add model descriptions</a></p></li>
+<li><p><a class="reference internal" href="#transition-a-model-version" id="id5">Transition a model version</a></p></li>
+</ul>
+</div>
+<div class="section" id="create-a-new-registered-model">
+<h3><a class="toc-backref" href="#id2">Create a new registered model</a><a class="headerlink" href="#create-a-new-registered-model" title="Permalink to this headline"> </a></h3>
+<ol class="arabic">
+<li><p>Navigate to the MLflow Experiment Runs sidebar by clicking the <strong>Experiment</strong> icon <img alt="Experiment icon" src="../_images/experiment.png" /> in the Databricks notebook’s right sidebar.</p>
+<div class="figure align-default">
+<img alt="Runs sidebar" src="../_images/notebook-toolbar.png" />
+</div>
+</li>
+<li><p>Locate the MLflow Run corresponding to the TensorFlow Keras model training session, and open it in the MLflow Run UI by clicking the <strong>View Run Detail</strong> icon.</p></li>
+<li><p>In the MLflow UI, scroll down to the <strong>Artifacts</strong> section and click the directory named <strong>model</strong>. Click the <strong>Register Model</strong> button that appears.</p>
+<div class="figure align-default">
+<img alt="Register model" src="../_images/mlflow_ui_register_model.png" />
+</div>
+</li>
+<li><p>Select <strong>Create New Model</strong> from the drop-down menu, and input the following model name: <code class="docutils literal notranslate"><span class="pre">power-forecasting-model</span></code>.</p></li>
+<li><p>Click <strong>Register</strong>. This registers a new model called <code class="docutils literal notranslate"><span class="pre">power-forecasting-model</span></code> and creates a new model version: <code class="docutils literal notranslate"><span class="pre">Version</span> <span class="pre">1</span></code>.</p>
+<div class="figure align-default">
+<img alt="New model version" src="../_images/register_model_confirm.png" />
+</div>
+<p>After a few moments, the MLflow UI displays a link to the new registered model. Follow this link to open the new model version in the MLflow Model Registry UI.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="explore-the-model-registry-ui">
+<h3><a class="toc-backref" href="#id3">Explore the Model Registry UI</a><a class="headerlink" href="#explore-the-model-registry-ui" title="Permalink to this headline"> </a></h3>
+<p>The model version page in the MLflow Model Registry UI provides information about <code class="docutils literal notranslate"><span class="pre">Version</span> <span class="pre">1</span></code> of the registered forecasting model, including its author, creation time, and its current stage.</p>
+<div class="figure align-default">
+<img alt="Model version page" src="../_images/registry_version_page.png" />
+</div>
+<p>The model version page also provides a <strong>Source Run</strong> link, which opens the MLflow Run that was used to create the model in the MLflow Run UI. From the MLflow Run UI, you can access the <strong>Source</strong> notebook link to view a snapshot of the Databricks notebook that was used to train the model.</p>
+<div class="figure align-default">
+<img alt="Source run" src="../_images/source_run_link.png" />
+</div>
+<div class="figure align-default">
+<img alt="Source notebook" src="../_images/source_notebook_link.png" />
+</div>
+<p>To navigate back to the MLflow Model Registry, click <img alt="Models Icon" src="../_images/models-icon.png" /> <strong>Models</strong> in sidebar.</p>
+<p>The resulting MLflow Model Registry home page displays a list of all the registered models in your Databricks workspace, including their versions and stages.</p>
+<p>Click the <strong>power-forecasting-model</strong> link to open the registered model page, which displays all of the versions of the forecasting model.</p>
+</div>
+<div class="section" id="add-model-descriptions">
+<h3><a class="toc-backref" href="#id4">Add model descriptions</a><a class="headerlink" href="#add-model-descriptions" title="Permalink to this headline"> </a></h3>
+<p>You can add descriptions to registered models and model versions. Registered model descriptions are useful for recording information that applies to multiple model versions (e.g., a general overview of the modeling problem and dataset). Model version descriptions are useful for detailing the unique attributes of a particular model version (e.g., the methodology and algorithm used to develop the model).</p>
+<ol class="arabic">
+<li><p>Add a high-level description to the registered power forecasting model. Click the <img alt="Edit Icon" src="../_images/edit-icon.png" /> icon and enter the following description:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>This model forecasts the power output of a wind farm based on weather data. The weather data consists of three features: wind speed, wind direction, and air temperature.
+</pre></div>
+</div>
+<div class="figure align-default">
+<img alt="Add model description" src="../_images/model_description.png" />
+</div>
+</li>
+<li><p>Click <strong>Save</strong>.</p></li>
+<li><p>Click the <strong>Version 1</strong> link from the registered model page to navigate back to the model version page.</p></li>
+<li><p>Click the <img alt="Edit Icon" src="../_images/edit-icon.png" /> icon and enter the following description:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>This model version was built using TensorFlow Keras. It is a feed-forward neural network with one hidden layer.
+</pre></div>
+</div>
+<div class="figure align-default">
+<img alt="Add model version description" src="../_images/model_version_description.png" />
+</div>
+</li>
+<li><p>Click <strong>Save</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="transition-a-model-version">
+<h3><a class="toc-backref" href="#id5">Transition a model version</a><a class="headerlink" href="#transition-a-model-version" title="Permalink to this headline"> </a></h3>
+<p>The MLflow Model Registry defines several model stages: <strong>None</strong>, <strong>Staging</strong>, <strong>Production</strong>, and <code class="docutils literal notranslate"><span class="pre">Archived</span></code>. Each stage has a unique meaning. For example, <strong>Staging</strong> is meant for model testing, while <strong>Production</strong> is for models that have completed the testing or review processes and have been deployed to applications.</p>
+<ol class="arabic">
+<li><p>Click the <strong>Stage</strong> button to display the list of available model stages and your available stage transition options.</p></li>
+<li><p>Select <strong>Transition to -&gt; Production</strong> and press <strong>OK</strong> in the stage transition confirmation window to transition the model to <strong>Production</strong>.</p>
+<div class="figure align-default">
+<img alt="Transition to production" src="../_images/stage_transition_prod.png" />
+</div>
+<p>After the model version is transitioned to <strong>Production</strong>, the current stage is displayed in the UI, and an entry is added to the activity log to reflect the transition.</p>
+<div class="figure align-default">
+<img alt="Production stage" src="../_images/stage_production.png" />
+</div>
+<div class="figure align-default">
+<img alt="Model version activity" src="../_images/activity_production.png" />
+</div>
+</li>
+</ol>
+<p>The MLflow Model Registry allows multiple model versions to share the same stage. When referencing a model by stage, the Model Registry uses the latest model version (the model version with the largest version ID). The registered model page displays all of the versions of a particular model.</p>
+<div class="figure align-default">
+<img alt="Registered model page" src="../_images/model_registry_versions.png" />
+</div>
+</div>
+</div>
+<div class="section" id="register-and-manage-the-model-using-the--mlflow-api">
+<h2>Register and manage the model using the  MLflow API<a class="headerlink" href="#register-and-manage-the-model-using-the--mlflow-api" title="Permalink to this headline"> </a></h2>
+<div class="contents local topic" id="id1">
+<p class="topic-title first">In this section:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#define-the-models-name-programmatically" id="id6">Define the model’s name programmatically</a></p></li>
+<li><p><a class="reference internal" href="#register-the-model" id="id7">Register the model</a></p></li>
+<li><p><a class="reference internal" href="#add-model-and-model-version-descriptions-using-the-api" id="id8">Add model and model version descriptions using the API</a></p></li>
+<li><p><a class="reference internal" href="#transition-a-model-version-and-retrieve-details-using-the-api" id="id9">Transition a model version and retrieve details using the API</a></p></li>
+</ul>
+</div>
+<div class="section" id="define-the-models-name-programmatically">
+<h3><a class="toc-backref" href="#id6">Define the model’s name programmatically</a><a class="headerlink" href="#define-the-models-name-programmatically" title="Permalink to this headline"> </a></h3>
+<p>Now that the model has been registered and transitioned to <strong>Production</strong>, you can reference it using MLflow programmatic APIs. Define the registered model’s name as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;power-forecasting-model&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="register-the-model">
+<h3><a class="toc-backref" href="#id7">Register the model</a><a class="headerlink" href="#register-the-model" title="Permalink to this headline"> </a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_name</span> <span class="o">=</span> <span class="n">get_model_name</span><span class="p">()</span>
+
+<span class="kn">import</span> <span class="nn">mlflow</span>
+
+<span class="c1"># The default path where the MLflow autologging function stores the TensorFlow Keras model</span>
+<span class="n">artifact_path</span> <span class="o">=</span> <span class="s2">&quot;model&quot;</span>
+<span class="n">model_uri</span> <span class="o">=</span> <span class="s2">&quot;runs:/</span><span class="si">{run_id}</span><span class="s2">/</span><span class="si">{artifact_path}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span> <span class="n">artifact_path</span><span class="o">=</span><span class="n">artifact_path</span><span class="p">)</span>
+
+<span class="n">model_details</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">register_model</span><span class="p">(</span><span class="n">model_uri</span><span class="o">=</span><span class="n">model_uri</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">model_name</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">mlflow.tracking.client</span> <span class="kn">import</span> <span class="n">MlflowClient</span>
+<span class="kn">from</span> <span class="nn">mlflow.entities.model_registry.model_version_status</span> <span class="kn">import</span> <span class="n">ModelVersionStatus</span>
+
+<span class="c1"># Wait until the model is ready</span>
+<span class="k">def</span> <span class="nf">wait_until_ready</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_version</span><span class="p">):</span>
+  <span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+  <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">model_version_details</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_model_version</span><span class="p">(</span>
+      <span class="n">name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+      <span class="n">version</span><span class="o">=</span><span class="n">model_version</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">ModelVersionStatus</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">model_version_details</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model status: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">ModelVersionStatus</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">status</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">ModelVersionStatus</span><span class="o">.</span><span class="n">READY</span><span class="p">:</span>
+      <span class="k">break</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">wait_until_ready</span><span class="p">(</span><span class="n">model_details</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">model_details</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-model-and-model-version-descriptions-using-the-api">
+<h3><a class="toc-backref" href="#id8">Add model and model version descriptions using the API</a><a class="headerlink" href="#add-model-and-model-version-descriptions-using-the-api" title="Permalink to this headline"> </a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlflow.tracking.client</span> <span class="kn">import</span> <span class="n">MlflowClient</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">update_registered_model</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="n">model_details</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+  <span class="n">description</span><span class="o">=</span><span class="s2">&quot;This model forecasts the power output of a wind farm based on weather data. The weather data consists of three features: wind speed, wind direction, and air temperature.&quot;</span>
+<span class="p">)</span>
+
+<span class="n">client</span><span class="o">.</span><span class="n">update_model_version</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="n">model_details</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+  <span class="n">version</span><span class="o">=</span><span class="n">model_details</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+  <span class="n">description</span><span class="o">=</span><span class="s2">&quot;This model version was built using TensorFlow Keras. It is a feed-forward neural network with one hidden layer.&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="transition-a-model-version-and-retrieve-details-using-the-api">
+<h3><a class="toc-backref" href="#id9">Transition a model version and retrieve details using the API</a><a class="headerlink" href="#transition-a-model-version-and-retrieve-details-using-the-api" title="Permalink to this headline"> </a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">transition_model_version_stage</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="n">model_details</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+  <span class="n">version</span><span class="o">=</span><span class="n">model_details</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+  <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;production&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">model_version_details</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_model_version</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="n">model_details</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+  <span class="n">version</span><span class="o">=</span><span class="n">model_details</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The current model stage is: &#39;</span><span class="si">{stage}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stage</span><span class="o">=</span><span class="n">model_version_details</span><span class="o">.</span><span class="n">current_stage</span><span class="p">))</span>
+
+<span class="n">latest_version_info</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_latest_versions</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">stages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;production&quot;</span><span class="p">])</span>
+<span class="n">latest_production_version</span> <span class="o">=</span> <span class="n">latest_version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">version</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The latest production version of the model &#39;</span><span class="si">%s</span><span class="s2">&#39; is &#39;</span><span class="si">%s</span><span class="s2">&#39;.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">latest_production_version</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="load-versions-of-the-registered-model-using-the-api">
+<h2>Load versions of the registered model using the API<a class="headerlink" href="#load-versions-of-the-registered-model-using-the-api" title="Permalink to this headline"> </a></h2>
+<p>The MLflow Models component defines functions for loading models from several machine learning frameworks. For example, <code class="docutils literal notranslate"><span class="pre">mlflow.tensorflow.load_model()</span></code> is used to load TensorFlow models that were saved in MLflow format, and <code class="docutils literal notranslate"><span class="pre">mlflow.sklearn.load_model()</span></code> is used to load scikit-learn models that were saved in MLflow format.</p>
+<p>These functions can load models from the MLflow Model Registry.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mlflow.pyfunc</span>
+
+<span class="n">model_version_uri</span> <span class="o">=</span> <span class="s2">&quot;models:/</span><span class="si">{model_name}</span><span class="s2">/1&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading registered model version from URI: &#39;</span><span class="si">{model_uri}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_uri</span><span class="o">=</span><span class="n">model_version_uri</span><span class="p">))</span>
+<span class="n">model_version_1</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">pyfunc</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">model_version_uri</span><span class="p">)</span>
+
+<span class="n">model_production_uri</span> <span class="o">=</span> <span class="s2">&quot;models:/</span><span class="si">{model_name}</span><span class="s2">/production&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading registered model version from URI: &#39;</span><span class="si">{model_uri}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_uri</span><span class="o">=</span><span class="n">model_production_uri</span><span class="p">))</span>
+<span class="n">model_production</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">pyfunc</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">model_production_uri</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="forecast-power-output-with-the-production-model">
+<h2>Forecast power output with the production model<a class="headerlink" href="#forecast-power-output-with-the-production-model" title="Permalink to this headline"> </a></h2>
+<p>In this section, the production model is used to evaluate weather forecast data for the wind farm. The <code class="docutils literal notranslate"><span class="pre">forecast_power()</span></code> application loads the latest version of the forecasting model from the specified stage and uses it to forecast power production over the next five days.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_stage</span><span class="p">,</span> <span class="n">model_version</span><span class="p">,</span> <span class="n">power_predictions</span><span class="p">,</span> <span class="n">past_power_output</span><span class="p">):</span>
+  <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+  <span class="kn">import</span> <span class="nn">matplotlib.dates</span> <span class="k">as</span> <span class="nn">mdates</span>
+  <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+  <span class="n">index</span> <span class="o">=</span> <span class="n">power_predictions</span><span class="o">.</span><span class="n">index</span>
+  <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+  <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+  <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+  <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Power</span><span class="se">\n</span><span class="s2">output</span><span class="se">\n</span><span class="s2">(MW)&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+  <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">17</span><span class="p">)</span>
+  <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">mdates</span><span class="o">.</span><span class="n">DateFormatter</span><span class="p">(</span><span class="s1">&#39;%m/</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">))</span>
+  <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">index</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">past_power_output</span><span class="p">)],</span> <span class="n">past_power_output</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">power_predictions</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Predicted by &#39;</span><span class="si">%s</span><span class="s2">&#39;</span><span class="se">\n</span><span class="s2">in stage &#39;</span><span class="si">%s</span><span class="s2">&#39; (Version </span><span class="si">%d</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_stage</span><span class="p">,</span> <span class="n">model_version</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+  <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="mi">3500</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">power_predictions</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.3</span><span class="p">)))</span>
+  <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Wind farm power output and projections&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+  <span class="n">display</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">())</span>
+
+<span class="k">def</span> <span class="nf">forecast_power</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_stage</span><span class="p">):</span>
+  <span class="kn">from</span> <span class="nn">mlflow.tracking.client</span> <span class="kn">import</span> <span class="n">MlflowClient</span>
+  <span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+  <span class="n">model_version</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_latest_versions</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">stages</span><span class="o">=</span><span class="p">[</span><span class="n">model_stage</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">version</span>
+  <span class="n">model_uri</span> <span class="o">=</span> <span class="s2">&quot;models:/</span><span class="si">{model_name}</span><span class="s2">/</span><span class="si">{model_stage}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_stage</span><span class="o">=</span><span class="n">model_stage</span><span class="p">)</span>
+  <span class="n">model</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">pyfunc</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">model_uri</span><span class="p">)</span>
+  <span class="n">weather_data</span><span class="p">,</span> <span class="n">past_power_output</span> <span class="o">=</span> <span class="n">get_weather_and_forecast</span><span class="p">()</span>
+  <span class="n">power_predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">weather_data</span><span class="p">))</span>
+  <span class="n">power_predictions</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">weather_data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">power_predictions</span><span class="p">)</span>
+  <span class="n">plot</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_stage</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">model_version</span><span class="p">),</span> <span class="n">power_predictions</span><span class="p">,</span> <span class="n">past_power_output</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-a-new-model-version">
+<h2>Create a new model version<a class="headerlink" href="#create-a-new-model-version" title="Permalink to this headline"> </a></h2>
+<p>Classical machine learning techniques are also effective for power forecasting. The following code trains a random forest model using scikit-learn and registers it with the MLflow Model Registry via the <code class="docutils literal notranslate"><span class="pre">mlflow.sklearn.log_model()</span></code> function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mlflow.sklearn</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
+
+<span class="k">with</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">start_run</span><span class="p">():</span>
+  <span class="n">n_estimators</span> <span class="o">=</span> <span class="mi">300</span>
+  <span class="n">mlflow</span><span class="o">.</span><span class="n">log_param</span><span class="p">(</span><span class="s2">&quot;n_estimators&quot;</span><span class="p">,</span> <span class="n">n_estimators</span><span class="p">)</span>
+
+  <span class="n">rand_forest</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">)</span>
+  <span class="n">rand_forest</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+  <span class="n">val_x</span><span class="p">,</span> <span class="n">val_y</span> <span class="o">=</span> <span class="n">get_validation_data</span><span class="p">()</span>
+  <span class="n">mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">rand_forest</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">val_x</span><span class="p">),</span> <span class="n">val_y</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Validation MSE: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">mse</span><span class="p">)</span>
+  <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&quot;mse&quot;</span><span class="p">,</span> <span class="n">mse</span><span class="p">)</span>
+
+  <span class="c1"># Specify the `registered_model_name` parameter of the `mlflow.sklearn.log_model()`</span>
+  <span class="c1"># function to register the model with the MLflow Model Registry. This automatically</span>
+  <span class="c1"># creates a new model version</span>
+  <span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span>
+    <span class="n">sk_model</span><span class="o">=</span><span class="n">rand_forest</span><span class="p">,</span>
+    <span class="n">artifact_path</span><span class="o">=</span><span class="s2">&quot;sklearn-model&quot;</span><span class="p">,</span>
+    <span class="n">registered_model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+  <span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="fetch-the-new-model-version-id-using-mlflow-model-registry-search">
+<h3>Fetch the new model version ID using MLflow Model Registry search<a class="headerlink" href="#fetch-the-new-model-version-id-using-mlflow-model-registry-search" title="Permalink to this headline"> </a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlflow.tracking.client</span> <span class="kn">import</span> <span class="n">MlflowClient</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+
+<span class="n">model_version_infos</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search_model_versions</span><span class="p">(</span><span class="s2">&quot;name = &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">model_name</span><span class="p">)</span>
+<span class="n">new_model_version</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">model_version_info</span><span class="o">.</span><span class="n">version</span> <span class="k">for</span> <span class="n">model_version_info</span> <span class="ow">in</span> <span class="n">model_version_infos</span><span class="p">])</span>
+
+<span class="n">wait_until_ready</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">new_model_version</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-a-description-to-the-new-model-version">
+<h3>Add a description to the new model version<a class="headerlink" href="#add-a-description-to-the-new-model-version" title="Permalink to this headline"> </a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">update_model_version</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+  <span class="n">version</span><span class="o">=</span><span class="n">new_model_version</span><span class="p">,</span>
+  <span class="n">description</span><span class="o">=</span><span class="s2">&quot;This model version is a random forest containing 100 decision trees that was trained in scikit-learn.&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="transition-the-new-model-version-to-staging-and-test-the-model">
+<h3>Transition the new model version to Staging and test the model<a class="headerlink" href="#transition-the-new-model-version-to-staging-and-test-the-model" title="Permalink to this headline"> </a></h3>
+<p>Before deploying a model to a production application, it is often best practice to test it in a staging environment. The following code transitions the new model version to <strong>Staging</strong> and evaluates its performance.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">transition_model_version_stage</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+  <span class="n">version</span><span class="o">=</span><span class="n">new_model_version</span><span class="p">,</span>
+  <span class="n">stage</span><span class="o">=</span><span class="s2">&quot;Staging&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">forecast_power</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="s2">&quot;Staging&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="deploy-the-new-model-version-to-production">
+<h3>Deploy the new model version to Production<a class="headerlink" href="#deploy-the-new-model-version-to-production" title="Permalink to this headline"> </a></h3>
+<p>After verifying that the new model version performs well in staging, the following code transitions the model to <strong>Production</strong> and uses the exact same application code from the <a class="reference internal" href="#forecast-power-output-with-the-production-model"><span class="std std-ref">Forecast power output with the production model</span></a> section to produce a power forecast.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">transition_model_version_stage</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+  <span class="n">version</span><span class="o">=</span><span class="n">new_model_version</span><span class="p">,</span>
+  <span class="n">stage</span><span class="o">=</span><span class="s2">&quot;production&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">forecast_power</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="s2">&quot;production&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>There are now two model versions of the forecasting model in the <strong>Production</strong> stage: the model version trained in Keras model and the version trained in scikit-learn.</p>
+<div class="figure align-default">
+<img alt="Product model versions" src="../_images/multiple_prod_stage.png" />
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When referencing a model by stage, the MLflow Model Model Registry automatically uses the latest production version. This enables you to update your production models without changing any application code.</p>
+</div>
+</div>
+</div>
+<div class="section" id="archive-and-delete-models">
+<h2>Archive and delete models<a class="headerlink" href="#archive-and-delete-models" title="Permalink to this headline"> </a></h2>
+<p>When a model version is no longer being used, you can archive it or delete it. You can also delete an entire registered model; this removes all of its associated model versions.</p>
+<div class="section" id="archive-version-1-of-the-power-forecasting-model">
+<h3>Archive <code class="docutils literal notranslate"><span class="pre">Version</span> <span class="pre">1</span></code> of the power forecasting model<a class="headerlink" href="#archive-version-1-of-the-power-forecasting-model" title="Permalink to this headline"> </a></h3>
+<p>Archive <code class="docutils literal notranslate"><span class="pre">Version</span> <span class="pre">1</span></code> of the power forecasting model because it is no longer being used. You can archive models in the MLflow Model Registry UI or via the MLflow API.</p>
+</div>
+<div class="section" id="archive-version-1-in-the-mlflow-ui">
+<h3>Archive <code class="docutils literal notranslate"><span class="pre">Version</span> <span class="pre">1</span></code> in the MLflow UI<a class="headerlink" href="#archive-version-1-in-the-mlflow-ui" title="Permalink to this headline"> </a></h3>
+<p>To archive <code class="docutils literal notranslate"><span class="pre">Version</span> <span class="pre">1</span></code> of the power forecasting model:</p>
+<ol class="arabic">
+<li><p>Open its corresponding model version page in the MLflow Model Registry UI:</p>
+<div class="figure align-default">
+<img alt="Transition to archived" src="../_images/stage_transition_archived.png" />
+</div>
+</li>
+<li><p>Click the <strong>Stage</strong> button, select <strong>Transition To -&gt; Archived</strong>:</p>
+<div class="figure align-default">
+<img alt="Archived stage" src="../_images/confirm_archived_transition.png" />
+</div>
+</li>
+<li><p>Press <strong>OK</strong> in the stage transition confirmation window.</p>
+<div class="figure align-default">
+<img alt="Archived model version" src="../_images/stage_archived.png" />
+</div>
+</li>
+</ol>
+<div class="section" id="archive-version-1-using-the-mlflow-api">
+<h4>Archive <code class="docutils literal notranslate"><span class="pre">Version</span> <span class="pre">1</span></code> using the MLflow API<a class="headerlink" href="#archive-version-1-using-the-mlflow-api" title="Permalink to this headline"> </a></h4>
+<p>The following code uses the <code class="docutils literal notranslate"><span class="pre">MlflowClient.update_model_version()</span></code> function to archive <code class="docutils literal notranslate"><span class="pre">Version</span> <span class="pre">1</span></code> of the power forecasting model.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlflow.tracking.client</span> <span class="kn">import</span> <span class="n">MlflowClient</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">transition_model_version_stage</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+  <span class="n">version</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+  <span class="n">stage</span><span class="o">=</span><span class="s2">&quot;Archived&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="delete-version-1-of-the-power-forecasting-model">
+<h4>Delete <code class="docutils literal notranslate"><span class="pre">Version</span> <span class="pre">1</span></code> of the power forecasting model<a class="headerlink" href="#delete-version-1-of-the-power-forecasting-model" title="Permalink to this headline"> </a></h4>
+<p>You can also use the MLflow UI or MLflow API to delete model versions.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Model version deletion is permanent and cannot be undone.</p>
+</div>
+<div class="section" id="delete-version-1-in-the-mlflow-ui">
+<h5>Delete <code class="docutils literal notranslate"><span class="pre">Version</span> <span class="pre">1</span></code> in the MLflow UI<a class="headerlink" href="#delete-version-1-in-the-mlflow-ui" title="Permalink to this headline"> </a></h5>
+<p>To delete <code class="docutils literal notranslate"><span class="pre">Version</span> <span class="pre">1</span></code> of the power forecasting model:</p>
+<ol class="arabic">
+<li><p>Open its corresponding model version page in the MLflow Model Registry UI.</p>
+<div class="figure align-default">
+<img alt="Delete model version" src="../_images/delete_version.png" />
+</div>
+</li>
+<li><p>Select the drop-down arrow next to the version identifier and click <strong>Delete</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="delete-version-1-using-the-mlflow-api">
+<h5>Delete <code class="docutils literal notranslate"><span class="pre">Version</span> <span class="pre">1</span></code> using the MLflow API<a class="headerlink" href="#delete-version-1-using-the-mlflow-api" title="Permalink to this headline"> </a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">delete_model_version</span><span class="p">(</span>
+   <span class="n">name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+   <span class="n">version</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="delete-the-model-using-the-mlflow-api">
+<h5>Delete the model using the MLflow API<a class="headerlink" href="#delete-the-model-using-the-mlflow-api" title="Permalink to this headline"> </a></h5>
+<p>You must first transition all remaining model version stages to <strong>None</strong> or <strong>Archived</strong>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlflow.tracking.client</span> <span class="kn">import</span> <span class="n">MlflowClient</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">transition_model_version_stage</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+  <span class="n">version</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+  <span class="n">stage</span><span class="o">=</span><span class="s2">&quot;Archived&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">delete_registered_model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">model_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="notebook">
+<h2>Notebook<a class="headerlink" href="#notebook" title="Permalink to this headline"> </a></h2>
+<div class="embedded-notebook-section section" id="mlflow-model-registry-example-notebook">
+<span id="mlflow-model-registry-example"></span><h3>MLflow Model Registry example notebook<a class="headerlink" href="#mlflow-model-registry-example-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/mlflow/mlflow-model-registry-example.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/mlflow/mlflow-model-registry-example.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/mlflow/mlflow-model-registry-example.html"            id="ad797b3169e818113f9e23a540a578bea0124a2bf896e46520ff82721b85ffbb" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

@@ -1,0 +1,526 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use COPY INTO with Spark SQL on Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Tutorial: COPY INTO with Spark SQL">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Tutorial: COPY INTO with Spark SQL &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/ingestion/copy-into/tutorial-notebook.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/ingestion/copy-into/tutorial-notebook.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/ingestion/copy-into/tutorial-notebook.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/ingestion/copy-into/tutorial-notebook.html" class="notranslate">English</option>
+    <option value="../../../ja/ingestion/copy-into/tutorial-notebook.html" class="notranslate">日本語</option>
+    <option value="../../../pt/ingestion/copy-into/tutorial-notebook.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Tutorial: COPY INTO with Spark SQL</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="tutorial-copy-into-with-spark-sql">
+<h1>Tutorial: COPY INTO with Spark SQL<a class="headerlink" href="#tutorial-copy-into-with-spark-sql" title="Permalink to this headline"> </a></h1>
+<p>Databricks recommends that you use the <a class="reference internal" href="index.html"><span class="doc">COPY INTO</span></a> command for incremental and bulk data loading for data sources that contain thousands of files. Databricks recommends that you use <a class="reference internal" href="../auto-loader/index.html"><span class="doc">Auto Loader</span></a> for advanced use cases.</p>
+<p>In this tutorial, you use the <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code> command to load data from cloud object storage into a table in your Databricks workspace.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ol class="arabic simple">
+<li><p>A Databricks account, and a Databricks workspace in your account. To create these, see <a class="reference internal" href="../../getting-started/index.html"><span class="doc">Get started: Account and workspace setup</span></a>.</p></li>
+<li><p>An all-purpose <a class="reference internal" href="../../compute/index.html"><span class="doc">cluster</span></a> in your workspace running Databricks Runtime 11.0 or above. To create an all-purpose cluster, see <a class="reference internal" href="../../compute/configure.html"><span class="doc">Create a cluster</span></a>.</p></li>
+<li><p>Familiarity with the Databricks workspace user interface. See <a class="reference internal" href="../../workspace/index.html"><span class="doc">Navigate the workspace</span></a>.</p></li>
+<li><p>Familiarity working with <a class="reference internal" href="../../notebooks/index.html"><span class="doc">Databricks notebooks</span></a>.</p></li>
+<li><p>A location you can write data to; this demo uses the DBFS root as an example, but Databricks recommends an external storage location configured with Unity Catalog.</p></li>
+</ol>
+</div>
+<div class="section" id="step-1-configure-your-environment-and-create-a-data-generator">
+<h2>Step 1. Configure your environment and create a data generator<a class="headerlink" href="#step-1-configure-your-environment-and-create-a-data-generator" title="Permalink to this headline"> </a></h2>
+<p>This tutorial assumes basic familiarity with Databricks and a default workspace configuration. If you are unable to run the code provided, contact your workspace administrator to make sure you have access to compute resources and a location to which you can write data.</p>
+<p>Note that the provided code uses a <code class="docutils literal notranslate"><span class="pre">source</span></code> parameter to specify the location you’ll configure as your <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code> data source. As written, this code points to a location on DBFS root. If you have write permissions on an external object storage location, replace the <code class="docutils literal notranslate"><span class="pre">dbfs:/</span></code> portion of the source string with the path to your object storage. Because this code block also does a recursive delete to reset this demo, make sure that you don’t point this at production data and that you keep the <code class="docutils literal notranslate"><span class="pre">/user/{username}/copy-into-demo</span></code> nested directory to avoid overwriting or deleting existing data.</p>
+<ol class="arabic">
+<li><p><a class="reference internal" href="../../notebooks/notebooks-manage.html#create-a-notebook"><span class="std std-ref">Create a new SQL notebook</span></a> and <a class="reference internal" href="../../notebooks/notebook-ui.html#attach"><span class="std std-ref">attach it to a cluster</span></a> running Databricks Runtime 11.0 or above.</p></li>
+<li><p>Copy and run the following code to reset the storage location and database used in this tutorial:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">python</span>
+<span class="c1"># Set parameters for isolation in workspace and reset demo</span>
+
+<span class="n">username</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT regexp_replace(current_user(), &#39;[^a-zA-Z0-9]&#39;, &#39;_&#39;)&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">database</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;copyinto_</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">_db&quot;</span>
+<span class="n">source</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;dbfs:/user/</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">/copy-into-demo&quot;</span>
+
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SET c.username=&#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SET c.database=</span><span class="si">{</span><span class="n">database</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SET c.source=&#39;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;DROP DATABASE IF EXISTS $</span><span class="si">{c.database}</span><span class="s2"> CASCADE&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;CREATE DATABASE $</span><span class="si">{c.database}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;USE $</span><span class="si">{c.database}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">dbutils</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">rm</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Copy and run the following code to configure some tables and functions that will be used to randomly generate data:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Configure random data generator</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">user_ping_raw</span>
+<span class="p">(</span><span class="n">user_id</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span><span class="w"> </span><span class="n">ping</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span><span class="w"> </span><span class="k">time</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">)</span>
+<span class="k">USING</span><span class="w"> </span><span class="n">json</span>
+<span class="k">LOCATION</span><span class="w"> </span><span class="err">${</span><span class="k">c</span><span class="p">.</span><span class="k">source</span><span class="err">}</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">user_ids</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="w"> </span><span class="n">STRING</span><span class="p">);</span>
+
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">user_ids</span><span class="w"> </span><span class="k">VALUES</span>
+<span class="p">(</span><span class="ss">&quot;potato_luver&quot;</span><span class="p">),</span>
+<span class="p">(</span><span class="ss">&quot;beanbag_lyfe&quot;</span><span class="p">),</span>
+<span class="p">(</span><span class="ss">&quot;default_username&quot;</span><span class="p">),</span>
+<span class="p">(</span><span class="ss">&quot;the_king&quot;</span><span class="p">),</span>
+<span class="p">(</span><span class="ss">&quot;n00b&quot;</span><span class="p">),</span>
+<span class="p">(</span><span class="ss">&quot;frodo&quot;</span><span class="p">),</span>
+<span class="p">(</span><span class="ss">&quot;data_the_kid&quot;</span><span class="p">),</span>
+<span class="p">(</span><span class="ss">&quot;el_matador&quot;</span><span class="p">),</span>
+<span class="p">(</span><span class="ss">&quot;the_wiz&quot;</span><span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">get_ping</span><span class="p">()</span>
+<span class="w">    </span><span class="k">RETURNS</span><span class="w"> </span><span class="nb">INT</span>
+<span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">rand</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">250</span><span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">is_active</span><span class="p">()</span>
+<span class="w">    </span><span class="k">RETURNS</span><span class="w"> </span><span class="nb">BOOLEAN</span>
+<span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="k">CASE</span>
+<span class="w">        </span><span class="k">WHEN</span><span class="w"> </span><span class="n">rand</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="p">.</span><span class="mi">25</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="k">true</span>
+<span class="w">        </span><span class="k">ELSE</span><span class="w"> </span><span class="k">false</span>
+<span class="w">        </span><span class="k">END</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="step-2-write-the-sample-data-to-cloud-storage">
+<h2>Step 2: Write the sample data to cloud storage<a class="headerlink" href="#step-2-write-the-sample-data-to-cloud-storage" title="Permalink to this headline"> </a></h2>
+<p>Writing to data formats other than Delta Lake is rare on Databricks. The code provided here writes to JSON, simulating an external system that might dump results from another system into object storage.</p>
+<ol class="arabic">
+<li><p>Copy and run the following code to write a batch of raw JSON data:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Write a new batch of data to the data source</span>
+
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">user_ping_raw</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="p">,</span>
+<span class="w">  </span><span class="n">get_ping</span><span class="p">()</span><span class="w"> </span><span class="n">ping</span><span class="p">,</span>
+<span class="w">  </span><span class="k">current_timestamp</span><span class="p">()</span><span class="w"> </span><span class="k">time</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">user_ids</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">is_active</span><span class="p">()</span><span class="o">=</span><span class="k">true</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="step-3-use-copy-into-to-load-json-data-idempotently">
+<h2>Step 3: Use COPY INTO to load JSON data idempotently<a class="headerlink" href="#step-3-use-copy-into-to-load-json-data-idempotently" title="Permalink to this headline"> </a></h2>
+<p>You must create a target Delta Lake table before you can use <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code>. In Databricks Runtime 11.0 and above, you do not need to provide anything other than a table name in your <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> statement. For previous versions of Databricks Runtime, you must provide a schema when creating an empty table.</p>
+<ol class="arabic">
+<li><p>Copy and run the following code to create your target Delta table and load data from your source:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Create target table and load data</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">user_ping_target</span><span class="p">;</span>
+
+<span class="k">COPY</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">user_ping_target</span>
+<span class="k">FROM</span><span class="w"> </span><span class="err">${</span><span class="k">c</span><span class="p">.</span><span class="k">source</span><span class="err">}</span>
+<span class="n">FILEFORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JSON</span>
+<span class="n">FORMAT_OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="ss">&quot;mergeSchema&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;true&quot;</span><span class="p">)</span>
+<span class="n">COPY_OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="ss">&quot;mergeSchema&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;true&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>Because this action is idempotent, you can run it multiple times but data will only be loaded once.</p>
+</div>
+<div class="section" id="step-4-preview-the-contents-of-your-table">
+<h2>Step 4: Preview the contents of your table<a class="headerlink" href="#step-4-preview-the-contents-of-your-table" title="Permalink to this headline"> </a></h2>
+<p>You can run a simple SQL query to manually review the contents of this table.</p>
+<ol class="arabic">
+<li><p>Copy and execute the following code to preview your table:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Review updated table</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">user_ping_target</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="step-5-load-more-data-and-preview-results">
+<h2>Step 5: Load more data and preview results<a class="headerlink" href="#step-5-load-more-data-and-preview-results" title="Permalink to this headline"> </a></h2>
+<p>You can re-run steps 2-4 many times to land new batches of random raw JSON data in your source, idempotently load them to Delta Lake with <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code>, and preview the results. Try running these steps out of order or multiple times to simulate multiple batches of raw data being written or executing <code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">INTO</span></code> multiple times without new data having arrived.</p>
+</div>
+<div class="section" id="step-6-clean-up-tutorial">
+<h2>Step 6: Clean up tutorial<a class="headerlink" href="#step-6-clean-up-tutorial" title="Permalink to this headline"> </a></h2>
+<p>When you are done with this tutorial, you can clean up the associated resources if you no longer want to keep them.</p>
+<ol class="arabic">
+<li><p>Copy and run the following code to drop the database, tables, and remove all data:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">python</span>
+<span class="c1"># Drop database and tables and remove data</span>
+
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;DROP DATABASE IF EXISTS $</span><span class="si">{c.database}</span><span class="s2"> CASCADE&quot;</span><span class="p">)</span>
+<span class="n">dbutils</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">rm</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>To stop your compute resource, go to the <strong>Clusters</strong> tab and <strong>Terminate</strong> your cluster.</p></li>
+</ol>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>The <a class="reference internal" href="../../sql/language-manual/delta-copy-into.html"><span class="doc">COPY INTO</span></a> reference article</p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

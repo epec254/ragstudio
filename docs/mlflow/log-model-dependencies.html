@@ -1,0 +1,486 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to log a model and its dependencies alongside the model artifact to ensure they are available and reproducible in your production environment; for example when deploying a model from the MLflow Tracking Server or Model Registry." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Log model dependencies">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Log model dependencies &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/mlflow/log-model-dependencies.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/mlflow/log-model-dependencies.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/mlflow/log-model-dependencies.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/mlflow/log-model-dependencies.html" class="notranslate">English</option>
+    <option value="../../ja/mlflow/log-model-dependencies.html" class="notranslate">日本語</option>
+    <option value="../../pt/mlflow/log-model-dependencies.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Log model dependencies</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="log-model-dependencies">
+<h1>Log model dependencies<a class="headerlink" href="#log-model-dependencies" title="Permalink to this headline"> </a></h1>
+<p>In this article, you learn how to log a model and its dependencies as model artifacts, so they are available in your environment for production tasks like model serving.</p>
+<div class="section" id="log-python-package-model-dependencies">
+<h2>Log Python package model dependencies<a class="headerlink" href="#log-python-package-model-dependencies" title="Permalink to this headline"> </a></h2>
+<p>MLflow has native support for some Python ML libraries, where MLflow can reliably log dependencies for models that use these libraries. See <a class="reference external" href="https://mlflow.org/docs/latest/models.html#built-in-model-flavors">built-in model flavors</a>.</p>
+<p>For example, MLflow supports scikit-learn in the <a class="reference external" href="https://mlflow.org/docs/latest/python_api/mlflow.sklearn.html">mlflow.sklearn module</a>, and the command <a class="reference external" href="https://mlflow.org/docs/latest/python_api/mlflow.sklearn.html#mlflow.sklearn.log_model">mlflow.sklearn.log_model</a> logs the sklearn version. The same applies for <a class="reference external" href="https://mlflow.org/docs/latest/tracking.html#automatic-logging">autologging</a> with those ML libraries. See the <a class="reference external" href="https://github.com/mlflow/mlflow/tree/master/examples">MLflow github repository</a> for additional examples.</p>
+<p>For ML libraries that can be installed with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">PACKAGE_NAME==VERSION</span></code>, but do not have built-in MLflow model flavors, you can log those packages using the <a class="reference external" href="https://www.mlflow.org/docs/latest/python_api/mlflow.pyfunc.html#mlflow.pyfunc.log_model">mlflow.pyfunc.log_model</a> method. Be sure to log the requirements with the exact library version, for example, <code class="docutils literal notranslate"><span class="pre">f&quot;nltk=={nltk.__version__}&quot;</span></code> instead of just <code class="docutils literal notranslate"><span class="pre">nltk</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">mlflow.pyfunc.log_model</span></code> supports logging for:</p>
+<ul class="simple">
+<li><p>Public and custom libraries packaged as Python eggs or Python wheels.</p></li>
+<li><p>Public packages on PyPI and privately hosted packages on your own PyPI server.</p></li>
+</ul>
+<p>With <a class="reference external" href="https://www.mlflow.org/docs/latest/python_api/mlflow.pyfunc.html#mlflow.pyfunc.log_model">mlflow.pyfunc.log_model</a>, MLflow tries to infer the dependencies automatically. MLflow infers the dependencies using <a class="reference external" href="https://www.mlflow.org/docs/latest/python_api/mlflow.models.html#mlflow.models.infer_pip_requirements">mlflow.models.infer_pip_requirements</a>, and logs them to a <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file as a model artifact.</p>
+<p>In older versions, MLflow sometimes did not identify all Python requirements automatically, especially if the library was not a built-in model flavor.  In these cases, you can specify additional dependencies with the <code class="docutils literal notranslate"><span class="pre">extra_pip_requirements</span></code> parameter in the <code class="docutils literal notranslate"><span class="pre">log_model</span></code> command.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You can also overwrite the entire set of requirements with the <code class="docutils literal notranslate"><span class="pre">conda_env</span></code> and <code class="docutils literal notranslate"><span class="pre">pip_requirements</span></code> parameters, but doing so is generally discouraged because this overrides the dependencies which MLflow picks up automatically. See an example of how to use the <a class="reference external" href="https://www.mlflow.org/docs/latest/tutorials-and-examples/tutorial.html#pip-requirements-example">`pip_requirements` parameter to overwrite requirements</a>.</p>
+</div>
+<div class="section" id="customized-model-logging">
+<h3>Customized model logging<a class="headerlink" href="#customized-model-logging" title="Permalink to this headline"> </a></h3>
+<p>For scenarios where more customized model logging is necessary, you can either:</p>
+<ul class="simple">
+<li><p>Write a <a class="reference external" href="https://mlflow.org/docs/latest/models.html#custom-python-models">custom Python model</a>. Doing so allows you to subclass <code class="docutils literal notranslate"><span class="pre">mlflow.pyfunc.PythonModel</span></code> to customize initialization and prediction. This approach works well for customization of Python-only models.</p>
+<ul>
+<li><p>For a simple example, see the <a class="reference external" href="https://mlflow.org/docs/latest/models.html#example-creating-a-custom-add-n-model">add N model example</a>.</p></li>
+<li><p>For a more complex example, see the custom <a class="reference external" href="https://mlflow.org/docs/latest/models.html#example-saving-an-xgboost-model-in-mlflow-format">XGBoost model example</a>.</p></li>
+</ul>
+</li>
+<li><p>Write a <a class="reference external" href="https://mlflow.org/docs/latest/models.html#custom-flavors">custom flavor</a>. In this scenario, you can customize logging more than the generic <code class="docutils literal notranslate"><span class="pre">pyfunc</span></code> flavor, but doing so requires more work to implement.</p></li>
+</ul>
+</div>
+<div class="section" id="custom-python-code">
+<h3>Custom Python code<a class="headerlink" href="#custom-python-code" title="Permalink to this headline"> </a></h3>
+<p>You may have Python code dependencies that can’t be installed using the <code class="docutils literal notranslate"><span class="pre">%pip</span> <span class="pre">install</span></code> command, such as one or more <code class="docutils literal notranslate"><span class="pre">.py</span></code> files.</p>
+<p>When logging a model, you can tell MLflow that the model can find those dependencies at a specified path by using the <code class="docutils literal notranslate"><span class="pre">code_path</span></code> parameter in <a class="reference external" href="https://mlflow.org/docs/latest/python_api/mlflow.pyfunc.html#mlflow.pyfunc.log_model">mlflow.pyfunc.log_model</a>. MLflow stores any files or directories passed using <code class="docutils literal notranslate"><span class="pre">code_path</span></code> as artifacts along with the model in a code directory. When loading the model, MLflow adds these files or directories to the Python path. This route also works with custom Python wheels, which can be included in the model using <code class="docutils literal notranslate"><span class="pre">code_path</span></code>, just like <code class="docutils literal notranslate"><span class="pre">.py</span></code> files.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mlflow</span><span class="o">.</span><span class="n">pyfunc</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span> <span class="n">artifact_path</span><span class="o">=</span><span class="n">artifact_path</span><span class="p">,</span>
+                         <span class="n">code_path</span><span class="o">=</span><span class="p">[</span><span class="n">filename</span><span class="o">.</span><span class="n">py</span><span class="p">],</span>
+                         <span class="n">data_path</span><span class="o">=</span><span class="n">data_path</span><span class="p">,</span>
+                         <span class="n">conda_env</span><span class="o">=</span><span class="n">conda_env</span><span class="p">,</span>
+                       <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="log-non-python-package-model-dependencies">
+<span id="log-non-python"></span><h2>Log non-Python package model dependencies<a class="headerlink" href="#log-non-python-package-model-dependencies" title="Permalink to this headline"> </a></h2>
+<p>MLflow does not automatically pick up non-Python dependencies, such as Java packages, R packages, and native packages (such as Linux packages). For these packages, you need to log additional data.</p>
+<ul class="simple">
+<li><p>Dependency list: Databricks recommends logging an artifact with the model specifying these non-Python dependencies. This could be a simple <code class="docutils literal notranslate"><span class="pre">.txt</span></code> or <code class="docutils literal notranslate"><span class="pre">.json</span></code> file. <a class="reference external" href="https://mlflow.org/docs/latest/python_api/mlflow.pyfunc.html#mlflow.pyfunc.log_model">mlflow.pyfunc.log_model</a> allows you to specify this additional artifact using the <code class="docutils literal notranslate"><span class="pre">artifacts</span></code> argument.</p></li>
+<li><p>Custom packages: Just as for custom Python dependencies above, you need to ensure that the packages are available in your deployment environment. For packages in a central location such as Maven Central or your own repository, make sure that the location is available at scoring or serving time. For private packages not hosted elsewhere, you can log packages along with the model as artifacts.</p></li>
+</ul>
+</div>
+<div class="section" id="deploy-models-with-dependencies">
+<span id="deploy-dependencies"></span><h2>Deploy models with dependencies<a class="headerlink" href="#deploy-models-with-dependencies" title="Permalink to this headline"> </a></h2>
+<p>When deploying a model from the MLflow Tracking Server or Model Registry, you need to ensure that the deployment environment has the right dependencies installed. The simplest path may depend on your deployment mode: batch/streaming or online serving, and on the types of dependencies.</p>
+<p>For all deployment modes, Databricks recommends running inference on the same runtime version that you used during training, since the Databricks Runtime in which you created your model has various libraries already installed. MLflow in Databricks automatically saves that runtime version in the <code class="docutils literal notranslate"><span class="pre">MLmodel</span></code> metadata file in a <code class="docutils literal notranslate"><span class="pre">databricks_runtime</span></code> field, such as <code class="docutils literal notranslate"><span class="pre">databricks_runtime:</span> <span class="pre">10.2.x-cpu-ml-scala2.12</span></code>.</p>
+<div class="section" id="online-serving-databricks-model-serving">
+<h3>Online serving: Databricks model serving<a class="headerlink" href="#online-serving-databricks-model-serving" title="Permalink to this headline"> </a></h3>
+<p>Databricks offers <a class="reference internal" href="../machine-learning/model-serving/index.html"><span class="doc">Model Serving</span></a>, where your MLflow machine learning models are exposed as scalable REST API endpoints.</p>
+<p>For Python dependencies in the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file, Databricks and MLflow handle everything for public PyPI dependencies. Similarly, if you specified <code class="docutils literal notranslate"><span class="pre">.py</span></code> files or Python wheels when logging the model by using the <code class="docutils literal notranslate"><span class="pre">code_path</span></code> argument, MLflow loads those dependencies for you automatically.</p>
+<p>For these model serving scenarios, see the following:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../machine-learning/model-serving/private-libraries-model-serving.html"><span class="doc">Use custom Python libraries with Model Serving</span></a></p></li>
+<li><p><a class="reference internal" href="../machine-learning/model-serving/model-serving-custom-artifacts.html"><span class="doc">Package custom artifacts and files for Model Serving</span></a></p></li>
+</ul>
+<p>For Python dependencies in the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file, Databricks and MLflow handle everything for public PyPI dependencies. Similarly, if you specified <code class="docutils literal notranslate"><span class="pre">.py</span></code> files or Python wheels when logging the model by using the <code class="docutils literal notranslate"><span class="pre">code_path</span></code> argument, MLflow loads those dependencies for you automatically.</p>
+</div>
+<div class="section" id="online-serving-third-party-systems-or-docker-containers">
+<h3>Online serving: third-party systems or Docker containers<a class="headerlink" href="#online-serving-third-party-systems-or-docker-containers" title="Permalink to this headline"> </a></h3>
+<p>If your scenario requires serving to third-party serving solutions or your own Docker-based solution, you can export your model as a Docker container.</p>
+<p>Databricks recommends the following for third-party serving that automatically handles Python dependencies. However, for non-Python dependencies, the container needs to be modified to include them.</p>
+<ul class="simple">
+<li><p>MLflow’s Docker integration for Docker-based serving solution: <a class="reference external" href="https://mlflow.org/docs/latest/cli.html#mlflow-models-build-docker">MLflow models build-docker</a></p></li>
+</ul>
+<ul class="simple">
+<li><p>MLflow’s SageMaker integration: <a class="reference external" href="https://mlflow.org/docs/latest/python_api/mlflow.sagemaker.html">mlflow.sagemaker API</a></p></li>
+</ul>
+</div>
+<div class="section" id="batch-and-streaming-jobs">
+<h3>Batch and streaming jobs<a class="headerlink" href="#batch-and-streaming-jobs" title="Permalink to this headline"> </a></h3>
+<p>Batch and streaming scoring should be run as <a class="reference internal" href="../workflows/jobs/create-run-jobs.html"><span class="doc">Databricks Jobs</span></a>. A notebook job often suffices, and the simplest way to prepare code is to use the <a class="reference internal" href="../machine-learning/manage-model-lifecycle/workspace-model-registry.html#use-model-for-inference"><span class="std std-ref">Databricks Model Registry</span></a> to generate a scoring notebook.</p>
+<p>The following describes the process and the steps to follow to ensure dependencies are installed and applied accordingly:</p>
+<ol class="arabic">
+<li><p>Start your scoring cluster with the same Databricks Runtime version used during training. Read the <code class="docutils literal notranslate"><span class="pre">databricks_runtime</span></code> field from the <code class="docutils literal notranslate"><span class="pre">MLmodel</span></code> metadata file, and start a cluster with that runtime version.</p>
+<ul class="simple">
+<li><p>This can be done manually in the cluster configuration or automated with custom logic. For automation, the runtime version format that you read from the metadata file in the <a class="reference external" href="https://docs.databricks.com/api/workspace/jobs">Jobs API</a> and <a class="reference external" href="https://docs.databricks.com/api/workspace/clusters">Clusters API</a>.</p></li>
+</ul>
+</li>
+<li><p>Next, install any non-Python dependencies. To ensure your non-Python dependencies are accessible to your deployment environment, you can either:</p>
+<ul class="simple">
+<li><p>Manually install the non-Python dependencies of your model on the Databricks cluster as part of the cluster configuration before running inference.</p></li>
+<li><p>Alternatively, you can write custom logic in your scoring job deployment to automate the installation of the dependencies onto your cluster. Assuming you saved your non-Python dependencies as artifacts as described in <a class="reference internal" href="#log-non-python"><span class="std std-ref">Log non-Python package model dependencies</span></a>, this automation can install libraries using the <a class="reference external" href="https://docs.databricks.com/api/workspace/libraries">Libraries API</a>. Or, you can write specific code to generate a <a class="reference internal" href="../init-scripts/cluster-scoped.html"><span class="doc">cluster-scoped initialization script</span></a> to install the dependencies.</p></li>
+</ul>
+</li>
+<li><p>Your scoring job installs the Python dependencies in the job execution environment. In Databricks, the Model Registry allows you to generate a notebook for inference which does this for you.</p>
+<ul class="simple">
+<li><p>When you use the Databricks Model Registry to <a class="reference internal" href="../machine-learning/manage-model-lifecycle/workspace-model-registry.html#use-model-for-inference"><span class="std std-ref">generate a scoring notebook</span></a>, the notebook contains code to install the Python dependencies in the model’s <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file. For your notebook job for batch or streaming scoring, this code initializes your notebook environment, so that the model dependencies are installed and ready for your model.</p></li>
+</ul>
+</li>
+<li><p>MLflow handles any custom Python code included in the <code class="docutils literal notranslate"><span class="pre">code_path</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">log_model</span></code>. This code is added to the Python path when the model’s <code class="docutils literal notranslate"><span class="pre">predict()</span></code> method is called. You can also do this manually by either:</p>
+<ul class="simple">
+<li><p>Calling <a class="reference external" href="https://mlflow.org/docs/latest/python_api/mlflow.pyfunc.html#mlflow.pyfunc.spark_udf">mlflow.pyfunc.spark_udf</a> with the <code class="docutils literal notranslate"><span class="pre">env_manager=['virtualenv'/'conda']</span></code> argument.</p></li>
+<li><p>Extracting the requirements using <a class="reference external" href="https://mlflow.org/docs/latest/python_api/mlflow.pyfunc.html#mlflow.pyfunc.get_model_dependencies">mlflow.pyfunc.get_model_dependencies</a> and installing them using <a class="reference internal" href="../libraries/notebooks-python-libraries.html"><span class="doc">%pip install</span></a>.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you specified <code class="docutils literal notranslate"><span class="pre">.py</span></code> files or Python wheels when logging the model using the <code class="docutils literal notranslate"><span class="pre">code_path</span></code> argument, MLflow loads those dependencies for you automatically.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

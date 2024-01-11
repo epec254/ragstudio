@@ -1,0 +1,627 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to encrypt your workspace’s root DBFS and cluster instance EBS volumes with your own key." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Customer-managed keys for workspace storage">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Customer-managed keys for workspace storage &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/security/keys/customer-managed-keys-storage-aws.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/security/keys/customer-managed-keys-storage-aws.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/security/keys/customer-managed-keys-storage-aws.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/security/keys/customer-managed-keys-storage-aws.html" class="notranslate">English</option>
+    <option value="../../../ja/security/keys/customer-managed-keys-storage-aws.html" class="notranslate">日本語</option>
+    <option value="../../../pt/security/keys/customer-managed-keys-storage-aws.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Customer-managed keys for workspace storage</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <p></p>
+<div class="section" id="customer-managed-keys-for-workspace-storage">
+<h1>Customer-managed keys for workspace storage<a class="headerlink" href="#customer-managed-keys-for-workspace-storage" title="Permalink to this headline"> </a></h1>
+<p>To use customer-managed keys for workspace storage, the workspace must be on the <a class="reference internal" href="../../getting-started/overview.html#e2-architecture"><span class="std std-ref">E2 version of the Databricks platform</span></a>. This feature also requires the Enterprise pricing tier.</p>
+<p>For a list of regions that support customer-managed keys, see <a class="reference internal" href="../../resources/supported-regions.html"><span class="doc">Databricks clouds and regions</span></a>.</p>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"> </a></h2>
+<p>For additional control of your data, you can add your own key to protect and control access to some types of data. Databricks has two customer-managed key features that involve different types of data and locations. For a comparison, see <a class="reference internal" href="customer-managed-keys.html"><span class="doc">Customer-managed keys for encryption</span></a>.</p>
+<p>While Databricks may encrypt other data, you can add a customer-managed key for workspace storage to protect and control access to the following types of encrypted data:</p>
+<ul>
+<li><p><strong>Your workspace’s root S3 bucket</strong>: If you add a workspace storage encryption key, Databricks encrypts the data on the Amazon S3 bucket in your AWS account <a class="reference internal" href="../../administration-guide/account-settings-e2/storage.html"><span class="doc">that you specified when you set up your workspace</span></a>, which is sometimes called the workspace’s root S3 bucket. This bucket contains your workspace’s <a class="reference internal" href="../../dbfs/dbfs-root.html"><span class="doc">DBFS root</span></a>, which includes workspace libraries and the FileStore area, <a class="reference internal" href="../../mlflow/models.html"><span class="doc">MLflow Models</span></a>, and <a class="reference internal" href="../../delta-live-tables/index.html"><span class="doc">Delta Live Table</span></a> data in your DBFS root (not <a class="reference internal" href="../../dbfs/mounts.html"><span class="doc">DBFS mounts</span></a>). The bucket also includes your workspace’s system data, which includes job results, Databricks SQL results, notebook revisions, and some other workspace data.</p></li>
+<li><p><strong>Your cluster’s EBS volumes (optional)</strong>: For Databricks Runtime cluster nodes and other compute resources in the <a class="reference internal" href="../../getting-started/overview.html#e2-architecture"><span class="std std-ref">classic compute plane</span></a>, you can optionally use the key to encrypt the VM’s remote EBS volumes.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><a class="reference internal" href="../../compute/sql-warehouse/serverless.html"><span class="doc">Serverless SQL warehouses</span></a> do not use customer-managed keys for EBS storage encryption, which is an optional part of the customer-managed keys for workspace storage feature. Disks for serverless compute resources are short-lived and tied to the lifecycle of the serverless workload. For example, when serverless SQL warehouses are stopped or scaled down, the VMs and their storage are destroyed. See <a class="reference internal" href="customer-managed-keys.html#serverless"><span class="std std-ref">Serverless compute and customer-managed keys</span></a>.</p>
+</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This feature does not affect data in the <a class="reference internal" href="../../getting-started/overview.html"><span class="doc">control plane</span></a>. See customer-managed keys for <a class="reference internal" href="customer-managed-keys-managed-services-aws.html"><span class="doc">managed services</span></a>.</p>
+</div>
+<p>After you add a customer-managed key encryption for a workspace, Databricks uses your key to encrypt future write operations to your workspace storage data in your root S3 bucket. Existing data is not re-encrypted. If you choose to have your key help encrypt EBS instance volumes, the key applies only to new or restarted clusters.</p>
+<p>This feature affects your <a class="reference internal" href="../../dbfs/dbfs-root.html"><span class="doc">DBFS root</span></a> data in your root S3 bucket, but it’s not used for encrypting data on <a class="reference internal" href="../../dbfs/mounts.html"><span class="doc">additional DBFS mounts</span></a> such as additional S3 buckets. Your DBFS root contains workspace libraries and the FileStore area. Note that for S3 DBFS mounts, there are <a class="reference internal" href="../../dbfs/mounts.html#s3-encryption"><span class="std std-ref">other approaches to writing encrypted data with your keys</span></a>.</p>
+<p>To help diagnose issues, if you use this feature, Databricks recommends that you <a class="reference internal" href="../../administration-guide/account-settings-e2/storage.html#object-level-logging"><span class="std std-ref">enable CloudTrail S3 object-level logging on your root S3 bucket</span></a>.</p>
+<p>Additional notes about updating or sharing keys:</p>
+<ul class="simple">
+<li><p>After you add a customer-managed key for storage, you cannot later rotate the key by setting a different key ARN for the workspace. However, AWS provides <a class="reference external" href="https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html">automatic CMK master key rotation</a>, which rotates the underlying key without changing the key ARN <a class="reference external" href="https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html">as described in AWS docs</a>. Automatic CMK master key rotation is compatible with Databricks customer-managed keys for storage.</p></li>
+<li><p>You can share an <a class="reference internal" href="#key"><span class="std std-ref">AWS KMS key</span></a> or a Databricks <a class="reference internal" href="#key-config"><span class="std std-ref">key configuration</span></a> for workspace storage encryption across workspaces.</p></li>
+<li><p>You can optionally share a Databricks key configuration object (which references your key) between the two different encryption use cases: this feature (workspace storage) and <a class="reference internal" href="customer-managed-keys-managed-services-aws.html"><span class="doc">Customer-managed keys for managed services</span></a>. In both cases you can add the key and its Databricks key configuration to your Databricks workspace during <a class="reference internal" href="../../administration-guide/workspace/create-workspace-api.html"><span class="doc">workspace creation</span></a> or add it later, but only managed services supports rotating (updating) the key later.</p></li>
+<li><p>If you have already enabled managed services encryption for an existing workspace, you can share the key for workspace storage, but you must <em>create and register a new key configuration</em> that uses the same key ARN for workspace storage.</p></li>
+</ul>
+<p>This article describes how to add an encryption key for workspace storage to a running workspace. To create a new workspace with workspace storage encryption, instead see <a class="reference internal" href="../../administration-guide/workspace/create-workspace-api.html"><span class="doc">Create a workspace using the Account API</span></a>. That article describes how to optionally share a key configuration across the two encryption use cases: workspace storage and <a class="reference internal" href="customer-managed-keys-managed-services-aws.html"><span class="doc">Customer-managed keys for managed services</span></a>.</p>
+<p>You can also add an encryption key with the <a class="reference internal" href="../../dev-tools/terraform/index.html"><span class="doc">Databricks Terraform provider</span></a> and <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mws_customer_managed_keys">databricks_mws_customer_managed_keys</a>.</p>
+</div>
+<div class="section" id="step-1-create-or-select-a-key">
+<span id="key"></span><h2>Step 1: Create or select a key<a class="headerlink" href="#step-1-create-or-select-a-key" title="Permalink to this headline"> </a></h2>
+<ol class="arabic">
+<li><p>Create or select a symmetric key in AWS KMS, following the instructions in <a class="reference external" href="https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html#create-symmetric-cmk">Creating symmetric CMKs</a> or <a class="reference external" href="https://docs.aws.amazon.com/kms/latest/developerguide/viewing-keys.html">Viewing keys</a>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The KMS key must be in the same AWS region as your workspace.</p>
+</div>
+</li>
+<li><p>Copy these values, which you need in a later step:</p>
+<ul class="simple">
+<li><p><strong>Key ARN</strong>: Get the ARN from the console or the API (the <code class="docutils literal notranslate"><span class="pre">Arn</span></code> field in the JSON response).</p></li>
+<li><p><strong>Key alias</strong>: An alias specifies a display name for the CMK in AWS KMS. Use an alias to identify a CMK in cryptographic operations. For more information, see the AWS documentation: <a class="reference external" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kms-alias.html">AWS::KMS::Alias</a> and <a class="reference external" href="https://docs.aws.amazon.com/kms/latest/developerguide/programming-aliases.html">Working with aliases</a>.</p></li>
+</ul>
+</li>
+<li><p>On the <strong>Key policy</strong> tab, switch to the policy view. Edit the key policy so that Databricks can use the key to perform encryption and decryption operations.</p>
+<p>Select a tab below and click <strong>Copy</strong>. Select the second tab only if you do not want to use this key to encrypt cluster EBS volumes.</p>
+<p>Add the JSON to your key policy in the <code class="docutils literal notranslate"><span class="pre">&quot;Statement&quot;</span></code> section.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="Root&amp;nbsp;S3&amp;nbsp;bucket&amp;nbsp;and&amp;nbsp;EBS">
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow Databricks to use KMS key for DBFS&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Principal&quot;</span><span class="p">:{</span>
+<span class="w">    </span><span class="nt">&quot;AWS&quot;</span><span class="p">:</span><span class="s2">&quot;arn:aws:iam::414351767826:root&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;kms:Encrypt&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;kms:Decrypt&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;kms:ReEncrypt*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;kms:GenerateDataKey*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;kms:DescribeKey&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;StringEquals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;aws:PrincipalTag/DatabricksAccountId&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&lt;databricks-account-id&gt;(s)&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">},</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow Databricks to use KMS key for EBS&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;AWS&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;aws-arn-for-your-credentials&gt;&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;kms:Decrypt&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;kms:GenerateDataKey*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;kms:CreateGrant&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;kms:DescribeKey&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;ForAnyValue:StringLike&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;kms:ViaService&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ec2.*.amazonaws.com&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="Root&amp;nbsp;S3&amp;nbsp;bucket&amp;nbsp;only">
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow Databricks to use KMS key for DBFS&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Principal&quot;</span><span class="p">:{</span>
+<span class="w">    </span><span class="nt">&quot;AWS&quot;</span><span class="p">:</span><span class="s2">&quot;arn:aws:iam::414351767826:root&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;kms:Encrypt&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;kms:Decrypt&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;kms:ReEncrypt*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;kms:GenerateDataKey*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;kms:DescribeKey&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;StringEquals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;aws:PrincipalTag/DatabricksAccountId&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&lt;databricks-account-id&gt;(s)&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To retrieve your Databricks account ID, follow <a class="reference internal" href="../../administration-guide/account-settings/index.html#account-id"><span class="std std-ref">Locate your account ID</span></a>.</p>
+</div>
+<p>For more information, see the AWS article <a class="reference external" href="https://docs.aws.amazon.com/kms/latest/developerguide/editing-keys.html">Editing keys</a>.</p>
+</li>
+</ol>
+<p></p>
+</div>
+<div class="section" id="step-2-create-a-new-key-configuration-using-the-account-api">
+<span id="key-config"></span><h2>Step 2: Create a new key configuration using the Account API<a class="headerlink" href="#step-2-create-a-new-key-configuration-using-the-account-api" title="Permalink to this headline"> </a></h2>
+<ol class="arabic">
+<li><p>To register your KMS key with Databricks, call the <a class="reference external" href="https://docs.databricks.com/api/account/introduction">create customer-managed key configuration API</a> (<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/accounts/&lt;account-id&gt;/customer-managed-keys</span></code>), which creates a Databricks key configuration.</p>
+<p>Pass the following parameters:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">use_cases</span></code>: Set this to the following JSON array with one element <code class="docutils literal notranslate"><span class="pre">[&quot;STORAGE&quot;]</span></code>. Note that if you are creating new workspace, you can create a single key configuration for both use cases (see <a class="reference internal" href="../../administration-guide/workspace/create-workspace-api.html"><span class="doc">Create a workspace using the Account API</span></a>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">aws_key_info</span></code>: A JSON object with the following properties:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">key_arn</span></code>: AWS KMS key ARN. Note that Databricks infers the AWS region from the key ARN.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">key_alias</span></code>: (<strong>Optional</strong>) AWS KMS key alias.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reuse_key_for_cluster_volumes</span></code>: (<strong>Optional</strong>) If the <code class="docutils literal notranslate"><span class="pre">use_case</span></code> array contains <code class="docutils literal notranslate"><span class="pre">STORAGE</span></code>, this specifies whether to also use the key to encrypt cluster EBS volumes. The default value is <code class="docutils literal notranslate"><span class="pre">true</span></code>,  which means Databricks also uses the key for cluster volumes. If you set this to <code class="docutils literal notranslate"><span class="pre">false</span></code>, Databricks does not encrypt the EBS volumes with your specified key. In that case, your Databricks EBS volumes are encrypted either with default AWS SSE encryption or if you enabled <a class="reference external" href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html#encryption-by-default">AWS account-level EBS encryption by default</a>, AWS enforces account-level EBS encryption using a separate key that you provided to them. Note that if <code class="docutils literal notranslate"><span class="pre">reuse_key_for_cluster_volumes</span></code> is <code class="docutils literal notranslate"><span class="pre">true</span></code> and you revoke the permission for the key, it does not affect running clusters but affects new and restarted clusters.</p></li>
+</ul>
+<p>Example request:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-n<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s1">&#39;https://accounts.cloud.databricks.com/api/2.0/accounts/&lt;databricks-account-id&gt;/customer-managed-keys&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;use_cases&quot;: [&quot;STORAGE&quot;],</span>
+<span class="s1">  &quot;aws_key_info&quot;: {</span>
+<span class="s1">    &quot;key_arn&quot;: &quot;arn:aws:kms:us-west-2:&lt;aws-account-id&gt;:key/&lt;key-id&gt;&quot;,</span>
+<span class="s1">    &quot;key_alias&quot;: &quot;my-example-key&quot;,</span>
+<span class="s1">    &quot;reuse_key_for_cluster_volumes&quot;: true</span>
+<span class="s1">  }</span>
+<span class="s1">}&#39;</span>
+</pre></div>
+</div>
+<p>Example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;use_cases&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;STORAGE&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;customer_managed_key_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;aws-kms-key-id&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;creation_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1586447506984</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;account_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;databricks-account-id&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;aws_key_info&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="nt">&quot;key_arn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:kms:us-west-2:&lt;aws-account-id&gt;:key/&lt;key-id&gt;&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="nt">&quot;key_alias&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-example-key&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="nt">&quot;reuse_key_for_cluster_volumes&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">     </span><span class="nt">&quot;key_region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;us-west-2&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>From the response, copy the <code class="docutils literal notranslate"><span class="pre">customer_managed_key_id</span></code> for use in step 4.</p></li>
+</ol>
+</div>
+<div class="section" id="step-3-add-an-access-policy-to-your-cross-account-iam-role-optional">
+<span id="pause"></span><h2>Step 3: Add an access policy to your cross-account IAM role (Optional)<a class="headerlink" href="#step-3-add-an-access-policy-to-your-cross-account-iam-role-optional" title="Permalink to this headline"> </a></h2>
+<p>If your KMS key is in a different AWS account than the <a class="reference internal" href="../../administration-guide/account-settings-e2/credentials.html"><span class="doc">cross-account IAM role</span></a> used to deploy your workspace, then you must add a policy to that cross-account IAM role. This policy enables Databricks to access your key. If your KMS key is in the same AWS account as the cross-account IAM role used to deploy your workspace, then you do not need to do this step.</p>
+<ol class="arabic">
+<li><p>Log into the AWS Management Console as a user with administrator privileges and go to the <strong>IAM</strong> console.</p></li>
+<li><p>In the left navigation pane, click <strong>Roles</strong>.</p></li>
+<li><p>In the list of roles, click the <a class="reference internal" href="../../administration-guide/account-settings-e2/credentials.html"><span class="doc">cross-account IAM role</span></a> that you created for Databricks.</p></li>
+<li><p>Add an inline policy.</p>
+<ol class="loweralpha">
+<li><p>On the <strong>Permissions</strong> tab, click <strong>Add inline policy</strong>.</p>
+<div class="figure align-default">
+<img alt="Inline policy" src="../../_images/inline-policy.png" />
+</div>
+</li>
+<li><p>In the policy editor, click the <strong>JSON</strong> tab.</p>
+<div class="figure align-default">
+<img alt="JSON editor" src="../../_images/policy-editor.png" />
+</div>
+</li>
+<li><p>Copy the access policy below</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AllowUseOfCMKInAccount&lt; AccountIdOfCrossAccountIAMRole &gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;kms:Decrypt&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;kms:GenerateDataKey*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;kms:CreateGrant&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;kms:DescribeKey&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:kms:&lt;region&gt;:&lt;AccountIdOfKMSKey&gt;:key/&lt;KMSKeyId&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;ForAnyValue:StringLike&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;kms:ViaService&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ec2.*.amazonaws.com&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Click <strong>Review policy</strong>.</p></li>
+<li><p>In the <strong>Name</strong> field, enter a policy name.</p></li>
+<li><p>Click <strong>Create policy</strong>.</p></li>
+</ol>
+</li>
+</ol>
+</div>
+<div class="section" id="step-4-shut-down-all-clusters">
+<h2>Step 4: Shut down all clusters<a class="headerlink" href="#step-4-shut-down-all-clusters" title="Permalink to this headline"> </a></h2>
+<p>Terminate all running clusters, pools, and SQL warehouses.</p>
+</div>
+<div class="section" id="step-5-update-a-workspace-with-your-key-configuration-using-the-account-api">
+<span id="workspace-update"></span><h2>Step 5: Update a workspace with your key configuration using the Account API<a class="headerlink" href="#step-5-update-a-workspace-with-your-key-configuration-using-the-account-api" title="Permalink to this headline"> </a></h2>
+<p>Use the Databricks <a class="reference external" href="https://docs.databricks.com/api/account/introduction">Account API</a> to update your workspace.</p>
+<p>Call the Account API operation to <a class="reference external" href="https://docs.databricks.com/api/account/introduction">update a workspace</a> (<code class="docutils literal notranslate"><span class="pre">PATCH</span> <span class="pre">/accounts/{account_id}/workspaces/{workspace_id}</span></code>). The only request parameter you need to pass is <code class="docutils literal notranslate"><span class="pre">storage_customer_managed_key_id</span></code> property. Set it to the <code class="docutils literal notranslate"><span class="pre">customer_managed_key_id</span></code> from the JSON response when you <a class="reference internal" href="#key-config"><span class="std std-ref">registered your key configuration</span></a>.</p>
+<p>For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>-n<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s1">&#39;https://accounts.cloud.databricks.com/api/2.0/accounts/&lt;databricks-account-id&gt;/workspaces/&lt;workspace-id&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;storage_customer_managed_key_id&quot;: &quot;&lt;databricks-key-config-id&gt;&quot;,</span>
+<span class="s1">}&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-6-wait-for-the-key-information-to-propagate">
+<span id="propagate"></span><h2>Step 6: Wait for the key information to propagate<a class="headerlink" href="#step-6-wait-for-the-key-information-to-propagate" title="Permalink to this headline"> </a></h2>
+<p>Wait at least 20 mins after your API update before proceeding.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>During this time, you must not start any clusters.</p>
+</div>
+</div>
+<div class="section" id="step-7-restart-your-clusters">
+<span id="restart"></span><h2>Step 7: Restart your clusters<a class="headerlink" href="#step-7-restart-your-clusters" title="Permalink to this headline"> </a></h2>
+<p>Restart any clusters, pools, and SQL warehouses that you terminated in a previous step.</p>
+<p></p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

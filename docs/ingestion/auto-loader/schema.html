@@ -1,0 +1,653 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how schema inference and evolution work in Auto Loader." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Configure schema inference and evolution in Auto Loader">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Configure schema inference and evolution in Auto Loader &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/ingestion/auto-loader/schema.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/ingestion/auto-loader/schema.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/ingestion/auto-loader/schema.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/ingestion/auto-loader/schema.html" class="notranslate">English</option>
+    <option value="../../../ja/ingestion/auto-loader/schema.html" class="notranslate">日本語</option>
+    <option value="../../../pt/ingestion/auto-loader/schema.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Configure schema inference and evolution in Auto Loader</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="configure-schema-inference-and-evolution-in-auto-loader">
+<span id="configure-schema-inference-and-evolution-in-al"></span><h1>Configure schema inference and evolution in Auto Loader<a class="headerlink" href="#configure-schema-inference-and-evolution-in-auto-loader" title="Permalink to this headline"> </a></h1>
+<p>You can configure Auto Loader to automatically detect the schema of loaded data, allowing you to initialize tables without explicitly declaring the data schema and evolve the table schema as new columns are introduced. This eliminates the need to manually track and apply schema changes over time.</p>
+<p>Auto Loader can also “rescue” data that was unexpected (for example, of differing data types) in a JSON blob column, that you can choose to access later using the <a class="reference internal" href="../../optimizations/semi-structured.html"><span class="doc">semi-structured data access APIs</span></a>.</p>
+<p>The following formats are supported for schema inference and evolution:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 81%" />
+<col style="width: 19%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>File format</p></th>
+<th class="head"><p>Supported versions</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">JSON</span></code></p></td>
+<td><p>All versions</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CSV</span></code></p></td>
+<td><p>All versions</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">XML</span></code> (Private Preview: See <a class="reference external" href="../../_extras/documents/native-xml-private-preview.pdf">XML Format</a>)</p></td>
+<td><p>Databricks Runtime 14.1 and above</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Avro</span></code></p></td>
+<td><p>Databricks Runtime 10.2 and above</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Parquet</span></code></p></td>
+<td><p>Databricks Runtime 11.1 and above</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ORC</span></code></p></td>
+<td><p>Unsupported</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Text</span></code></p></td>
+<td><p>Not applicable
+(fixed-schema)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Binaryfile</span></code></p></td>
+<td><p>Not applicable
+(fixed-schema)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="syntax-for-schema-inference-and-evolution">
+<h2>Syntax for schema inference and evolution<a class="headerlink" href="#syntax-for-schema-inference-and-evolution" title="Permalink to this headline"> </a></h2>
+<p>Specifying a target directory for the option <code class="docutils literal notranslate"><span class="pre">cloudFiles.schemaLocation</span></code> enables schema inference and evolution. You can choose to use the same directory you specify for the <code class="docutils literal notranslate"><span class="pre">checkpointLocation</span></code>. If you use <a class="reference internal" href="../../delta-live-tables/index.html"><span class="doc">Delta Live Tables</span></a>, Databricks manages schema location and other checkpoint information automatically.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you have more than one source data location being loaded into the target table, each Auto Loader ingestion workload requires a separate streaming checkpoint.</p>
+</div>
+<p>The following example uses <code class="docutils literal notranslate"><span class="pre">parquet</span></code> for the <code class="docutils literal notranslate"><span class="pre">cloudFiles.format</span></code>. Use <code class="docutils literal notranslate"><span class="pre">csv</span></code>, <code class="docutils literal notranslate"><span class="pre">avro</span></code>, or <code class="docutils literal notranslate"><span class="pre">json</span></code> for other file sources. All other settings for read and write stay the same for the default behaviors for each format.</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">readStream</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;cloudFiles&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;cloudFiles.format&quot;</span><span class="p">,</span> <span class="s2">&quot;parquet&quot;</span><span class="p">)</span>
+  <span class="c1"># The schema location directory keeps track of your data schema over time</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;cloudFiles.schemaLocation&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;path-to-checkpoint&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;&lt;path-to-source-data&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">writeStream</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;checkpointLocation&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;path-to-checkpoint&gt;&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s2">&quot;&lt;path_to_target&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="p">.</span><span class="n">readStream</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;cloudFiles&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;cloudFiles.format&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;parquet&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">// The schema location directory keeps track of your data schema over time</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;cloudFiles.schemaLocation&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&lt;path-to-checkpoint&gt;&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;&lt;path-to-source-data&gt;&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">writeStream</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;checkpointLocation&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&lt;path-to-checkpoint&gt;&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">start</span><span class="p">(</span><span class="s">&quot;&lt;path_to_target&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="how-does-auto-loader-schema-inference-work">
+<span id="how-does-al-schema-inference-work"></span><span id="schema-inference"></span><h2>How does Auto Loader schema inference work?<a class="headerlink" href="#how-does-auto-loader-schema-inference-work" title="Permalink to this headline"> </a></h2>
+<p>To infer the schema when first reading data, Auto Loader samples the first 50 GB or 1000 files that it discovers, whichever limit is crossed first. Auto Loader stores the schema information in a directory <code class="docutils literal notranslate"><span class="pre">_schemas</span></code> at the configured <code class="docutils literal notranslate"><span class="pre">cloudFiles.schemaLocation</span></code> to track schema changes to the input data over time.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To change the size of the sample that’s used you can set the SQL configurations:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">databricks</span><span class="o">.</span><span class="n">cloudFiles</span><span class="o">.</span><span class="n">schemaInference</span><span class="o">.</span><span class="n">sampleSize</span><span class="o">.</span><span class="n">numBytes</span>
+</pre></div>
+</div>
+<p>(byte string, for example <code class="docutils literal notranslate"><span class="pre">10gb</span></code>)</p>
+<p>and</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">databricks</span><span class="o">.</span><span class="n">cloudFiles</span><span class="o">.</span><span class="n">schemaInference</span><span class="o">.</span><span class="n">sampleSize</span><span class="o">.</span><span class="n">numFiles</span>
+</pre></div>
+</div>
+<p>(integer)</p>
+</div>
+<p>By default, Auto Loader schema inference seeks to avoid schema evolution issues due to type mismatches. For formats that don’t encode data types (JSON and CSV), Auto Loader infers all columns as strings (including nested fields in JSON files). For formats with typed schema (Parquet and Avro), Auto Loader samples a subset of files and merges the schemas of individual files. This behavior is summarized in the following table:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 74%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>File format</p></th>
+<th class="head"><p>Default inferred data type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">JSON</span></code></p></td>
+<td><p> String</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">CSV</span></code></p></td>
+<td><p> String</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">Avro</span></code></p></td>
+<td><p> Types encoded in Avro schema</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">Parquet</span></code></p></td>
+<td><p> Types encoded in Parquet schema</p></td>
+</tr>
+</tbody>
+</table>
+<p>The Apache Spark DataFrameReader uses different behavior for schema inference, selecting data types for columns in JSON and CSV sources based on sample data. To enable this behavior with Auto Loader, set the option <code class="docutils literal notranslate"><span class="pre">cloudFiles.inferColumnTypes</span></code> to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When inferring the schema for CSV data, Auto Loader assumes that the files contain headers. If your CSV files do not contain headers, provide the option <code class="docutils literal notranslate"><span class="pre">.option(&quot;header&quot;,</span> <span class="pre">&quot;false&quot;)</span></code>. In addition, Auto Loader merges the schemas of all the files in the sample to come up with a global schema. Auto Loader can then read each file according to its header and parse the CSV correctly.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When a column has different data types in two Parquet files, Auto Loader chooses the widest type. You can use <a class="reference internal" href="#override-schema-inference-with-schema-hints"><span class="std std-ref">schemaHints</span></a> to override this choice. When you specify schema hints, Auto Loader doesn’t cast the column to the specified type, but rather tells the Parquet reader to read the column as the specified type. In the case of a mismatch, the column is rescued in the <a class="reference internal" href="#rescue"><span class="std std-ref">rescued data column</span></a>.</p>
+</div>
+</div>
+<div class="section" id="how-does-auto-loader-schema-evolution-work">
+<span id="how-does-al-schema-evolution-work"></span><span id="evolution"></span><h2>How does Auto Loader schema evolution work?<a class="headerlink" href="#how-does-auto-loader-schema-evolution-work" title="Permalink to this headline"> </a></h2>
+<p>Auto Loader detects the addition of new columns as it processes your data. When Auto Loader detects a new column, the stream stops with an <code class="docutils literal notranslate"><span class="pre">UnknownFieldException</span></code>. Before your stream throws this error, Auto Loader performs schema inference on the latest micro-batch of data and updates the schema location with the latest schema by merging new columns to the end of the schema. The data types of existing columns remain unchanged.</p>
+<p>Databricks recommends configuring Auto Loader streams with <a class="reference internal" href="../../workflows/index.html"><span class="doc">workflows</span></a> to restart automatically after such schema changes.</p>
+<p>Auto Loader supports the following modes for schema evolution, which you set in the option <code class="docutils literal notranslate"><span class="pre">cloudFiles.schemaEvolutionMode</span></code>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Mode</p></th>
+<th class="head"><p>Behavior on reading new column</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">addNewColumns</span></code> (default)</p></td>
+<td><p> Stream fails. New columns are added to the schema. Existing columns do not evolve data types.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">rescue</span></code></p></td>
+<td><p> Schema is never evolved and stream does not fail due to schema changes. All new columns are recorded in the <a class="reference internal" href="#rescue"><span class="std std-ref">rescued data column</span></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">failOnNewColumns</span></code></p></td>
+<td><p> Stream fails. Stream does not restart unless the provided schema is updated, or the offending data file is removed.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">none</span></code></p></td>
+<td><p> Does not evolve the schema, new columns are ignored, and data is not rescued unless the <code class="docutils literal notranslate"><span class="pre">rescuedDataColumn</span></code> option is set. Stream does not fail due to schema changes.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="how-do-partitions-work-with-auto-loader">
+<span id="how-do-partitions-work-with-al"></span><h2>How do partitions work with Auto Loader?<a class="headerlink" href="#how-do-partitions-work-with-auto-loader" title="Permalink to this headline"> </a></h2>
+<p>Auto Loader attempts to infer partition columns from the underlying directory structure of the data if the data is laid out in Hive style partitioning. For example, the file path <code class="docutils literal notranslate"><span class="pre">base_path/event=click/date=2021-04-01/f0.json</span></code> results in the inference of <code class="docutils literal notranslate"><span class="pre">date</span></code> and <code class="docutils literal notranslate"><span class="pre">event</span></code> as partition columns. If the underlying directory structure contains conflicting Hive partitions or doesn’t contain Hive style partitioning, partition columns are ignored.</p>
+<p>Binary file (<code class="docutils literal notranslate"><span class="pre">binaryFile</span></code>) and <code class="docutils literal notranslate"><span class="pre">text</span></code> file formats have fixed data schemas, but support partition column inference. Databricks recommends setting <code class="docutils literal notranslate"><span class="pre">cloudFiles.schemaLocation</span></code> for these file formats. This avoids any potential errors or information loss and prevents inference of partitions columns each time an Auto Loader begins.</p>
+<p>Partition columns are not considered for schema evolution. If you had an initial directory structure like <code class="docutils literal notranslate"><span class="pre">base_path/event=click/date=2021-04-01/f0.json</span></code>, and then start receiving new files as <code class="docutils literal notranslate"><span class="pre">base_path/event=click/date=2021-04-01/hour=01/f1.json</span></code>, Auto Loader ignores the hour column. To capture information for new partition columns, set <code class="docutils literal notranslate"><span class="pre">cloudFiles.partitionColumns</span></code> to <code class="docutils literal notranslate"><span class="pre">event,date,hour</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The option <code class="docutils literal notranslate"><span class="pre">cloudFiles.partitionColumns</span></code> takes a comma-separated list of column names. Only columns that exist as <code class="docutils literal notranslate"><span class="pre">key=value</span></code> pairs in your directory structure are parsed.</p>
+</div>
+</div>
+<div class="section" id="what-is-the-rescued-data-column">
+<span id="rescue"></span><h2>What is the rescued data column?<a class="headerlink" href="#what-is-the-rescued-data-column" title="Permalink to this headline"> </a></h2>
+<p>When Auto Loader infers the schema, a rescued data column is automatically added to your schema as <code class="docutils literal notranslate"><span class="pre">_rescued_data</span></code>. You can rename the column or include it in cases where you provide a schema by setting the option <code class="docutils literal notranslate"><span class="pre">rescuedDataColumn</span></code>.</p>
+<p>The rescued data column ensures that columns that don’t match with the schema are rescued instead of being dropped. The rescued data column contains any data that isn’t parsed for the following reasons:</p>
+<ul class="simple">
+<li><p>The column is missing from the schema.</p></li>
+<li><p>Type mismatches.</p></li>
+<li><p>Case mismatches.</p></li>
+</ul>
+<p>The rescued data column contains a JSON containing the rescued columns and the source file path of the record.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The JSON and CSV parsers support three modes when parsing records: <code class="docutils literal notranslate"><span class="pre">PERMISSIVE</span></code>, <code class="docutils literal notranslate"><span class="pre">DROPMALFORMED</span></code>, and <code class="docutils literal notranslate"><span class="pre">FAILFAST</span></code>. When used together with <code class="docutils literal notranslate"><span class="pre">rescuedDataColumn</span></code>, data type mismatches do not cause records to be dropped in <code class="docutils literal notranslate"><span class="pre">DROPMALFORMED</span></code> mode or throw an error in <code class="docutils literal notranslate"><span class="pre">FAILFAST</span></code> mode. Only corrupt records are dropped or throw errors, such as incomplete or malformed JSON or CSV. If you use <code class="docutils literal notranslate"><span class="pre">badRecordsPath</span></code> when parsing JSON or CSV, data type mismatches are not considered as bad records when using the <code class="docutils literal notranslate"><span class="pre">rescuedDataColumn</span></code>. Only incomplete and malformed JSON or CSV records are stored in <code class="docutils literal notranslate"><span class="pre">badRecordsPath</span></code>.</p>
+</div>
+</div>
+<div class="section" id="change-case-sensitive-behavior">
+<span id="casing"></span><h2>Change case-sensitive behavior<a class="headerlink" href="#change-case-sensitive-behavior" title="Permalink to this headline"> </a></h2>
+<p>Unless case sensitivity is enabled, the columns <code class="docutils literal notranslate"><span class="pre">abc</span></code>, <code class="docutils literal notranslate"><span class="pre">Abc</span></code>, and <code class="docutils literal notranslate"><span class="pre">ABC</span></code> are considered the same column for the purposes of schema inference. The case that is chosen is arbitrary and depends on the sampled data. You can use <a class="reference internal" href="#schema-hints"><span class="std std-ref">schema hints</span></a> to enforce which case should be used. Once a selection has been made and the schema is inferred, Auto Loader does not consider the casing variants that were not selected consistent with the schema.</p>
+<p>When <a class="reference internal" href="#rescue"><span class="std std-ref">rescued data column</span></a> is enabled, fields named in a case other than that of the schema are loaded to the <code class="docutils literal notranslate"><span class="pre">_rescued_data</span></code> column. Change this behavior by setting the option <code class="docutils literal notranslate"><span class="pre">readerCaseSensitive</span></code> to false, in which case Auto Loader reads data in a case-insensitive way.</p>
+</div>
+<div class="section" id="override-schema-inference-with-schema-hints">
+<span id="schema-hints"></span><h2>Override schema inference with schema hints<a class="headerlink" href="#override-schema-inference-with-schema-hints" title="Permalink to this headline"> </a></h2>
+<p>You can use schema hints to enforce the schema information that you know and expect on an inferred schema. When you know that a column is of a specific data type, or if you want to choose a more general data type (for example, a <code class="docutils literal notranslate"><span class="pre">double</span></code> instead of an <code class="docutils literal notranslate"><span class="pre">integer</span></code>), you can provide an arbitrary number of hints for column data types as a string using SQL schema specification syntax, such as the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;cloudFiles.schemaHints&quot;</span><span class="p">,</span> <span class="s2">&quot;tags map&lt;string,string&gt;, version int&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See the documentation on <a class="reference internal" href="../../sql/language-manual/sql-ref-datatypes.html#language-mappings"><span class="std std-ref">data types</span></a> for the list of supported data types.</p>
+<p>If a column is not present at the start of the stream, you can also use schema hints to add that column to the inferred schema.</p>
+<p>Here is an example of an inferred schema to see the behavior with schema hints.</p>
+<p>Inferred schema:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>|-- date: string
+|-- quantity: int
+|-- user_info: struct
+|    |-- id: string
+|    |-- name: string
+|    |-- dob: string
+|-- purchase_options: struct
+|    |-- delivery_address: string
+</pre></div>
+</div>
+<p>By specifying the following schema hints:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;cloudFiles.schemaHints&quot;</span><span class="p">,</span> <span class="s2">&quot;date DATE, user_info.dob DATE, purchase_options MAP&lt;STRING,STRING&gt;, time TIMESTAMP&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>you get:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>|-- date: string -&gt; date
+|-- quantity: int
+|-- user_info: struct
+|    |-- id: string
+|    |-- name: string
+|    |-- dob: string -&gt; date
+|-- purchase_options: struct -&gt; map&lt;string,string&gt;
+|-- time: timestamp
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Array and Map schema hints support is available in <a class="reference internal" href="../../release-notes/runtime/9.1lts.html"><span class="doc">Databricks Runtime 9.1 LTS</span></a> and above.</p>
+</div>
+<p>Here is an example of an inferred schema with complex datatypes to see the behavior with schema hints.</p>
+<p>Inferred schema:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>|-- products: array&lt;string&gt;
+|-- locations: array&lt;string&gt;
+|-- users: array&lt;struct&gt;
+|    |-- users.element: struct
+|    |    |-- id: string
+|    |    |-- name: string
+|    |    |-- dob: string
+|-- ids: map&lt;string,string&gt;
+|-- names: map&lt;string,string&gt;
+|-- prices: map&lt;string,string&gt;
+|-- discounts: map&lt;struct,string&gt;
+|    |-- discounts.key: struct
+|    |    |-- id: string
+|    |-- discounts.value: string
+|-- descriptions: map&lt;string,struct&gt;
+|    |-- descriptions.key: string
+|    |-- descriptions.value: struct
+|    |    |-- content: int
+</pre></div>
+</div>
+<p>By specifying the following schema hints:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;cloudFiles.schemaHints&quot;</span><span class="p">,</span> <span class="s2">&quot;products ARRAY&lt;INT&gt;, locations.element STRING, users.element.id INT, ids MAP&lt;STRING,INT&gt;, names.key INT, prices.value INT, discounts.key.id INT, descriptions.value.content STRING&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>you get:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>|-- products: array&lt;string&gt; -&gt; array&lt;int&gt;
+|-- locations: array&lt;int&gt; -&gt; array&lt;string&gt;
+|-- users: array&lt;struct&gt;
+|    |-- users.element: struct
+|    |    |-- id: string -&gt; int
+|    |    |-- name: string
+|    |    |-- dob: string
+|-- ids: map&lt;string,string&gt; -&gt; map&lt;string,int&gt;
+|-- names: map&lt;string,string&gt; -&gt; map&lt;int,string&gt;
+|-- prices: map&lt;string,string&gt; -&gt; map&lt;string,int&gt;
+|-- discounts: map&lt;struct,string&gt;
+|    |-- discounts.key: struct
+|    |    |-- id: string -&gt; int
+|    |-- discounts.value: string
+|-- descriptions: map&lt;string,struct&gt;
+|    |-- descriptions.key: string
+|    |-- descriptions.value: struct
+|    |    |-- content: int -&gt; string
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Schema hints are used only if you <em>do not</em> provide a schema to Auto Loader. You can use schema hints whether <code class="docutils literal notranslate"><span class="pre">cloudFiles.inferColumnTypes</span></code> is enabled or disabled.</p>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

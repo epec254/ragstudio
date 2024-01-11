@@ -1,0 +1,496 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn about cloud storage archival support in Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Archival support in Databricks">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Archival support in Databricks &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/optimizations/archive-delta.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/optimizations/archive-delta.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/optimizations/archive-delta.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/optimizations/archive-delta.html" class="notranslate">English</option>
+    <option value="../../ja/optimizations/archive-delta.html" class="notranslate">日本語</option>
+    <option value="../../pt/optimizations/archive-delta.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Archival support in Databricks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="archival-support-in-databricks">
+<h1>Archival support in Databricks<a class="headerlink" href="#archival-support-in-databricks" title="Permalink to this headline"> </a></h1>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in Public Preview for Databricks Runtime 13.2 and above.</p>
+</div>
+<p>Archival support in Databricks introduces a collection of capabilities that enable you to use cloud-based lifecycle policies on cloud object storage containing Delta tables.</p>
+<p>Without archival support, operations against Delta tables can break because data files or transaction log files have moved to archived locations and are not available when queried. Archival support introduces optimizations to avoid querying archived data when possible and adds new syntax to identify files that must be restored from archive to complete queries.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Databricks only has archival support for S3 Glacier Deep Archive and Glacier Flexible Retrieval. See <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/archived-objects.html">AWS docs on working with archived objects</a>.</p>
+</div>
+<div class="section" id="queries-optimized-for-archived-data">
+<h2>Queries optimized for archived data<a class="headerlink" href="#queries-optimized-for-archived-data" title="Permalink to this headline"> </a></h2>
+<p>Archival support in Databricks optimizes the following queries against Delta tables:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 61%" />
+<col style="width: 39%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Query</p></th>
+<th class="head"><p>New behavior</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">*</span> <span class="pre">FROM</span> <span class="pre">&lt;table_name&gt;</span> <span class="pre">LIMIT</span> <span class="pre">&lt;limit&gt;</span> <span class="pre">[WHERE</span> <span class="pre">&lt;partition_predicate&gt;]</span></code></p></td>
+<td><p> Automatically ignore archived files and return results from data in a non-archived storage tier.</p></td>
+</tr>
+<tr class="row-odd"><td><p> Delta Lake maintenance commands: <code class="docutils literal notranslate"><span class="pre">OPTIMIZE</span></code>, <code class="docutils literal notranslate"><span class="pre">ZORDER</span></code>, <code class="docutils literal notranslate"><span class="pre">ANALYZE</span></code>, <code class="docutils literal notranslate"><span class="pre">PURGE</span></code></p></td>
+<td><p> Automatically ignore archived files and run maintenance on rest of table.</p></td>
+</tr>
+<tr class="row-even"><td><p> DDL and DML statements that overwrite data or delete data, including the following: <code class="docutils literal notranslate"><span class="pre">REPLACE</span> <span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">INSERT</span> <span class="pre">OVERWRITE</span></code>, <code class="docutils literal notranslate"><span class="pre">TRUNCATE</span> <span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">TABLE</span></code></p></td>
+<td><p> Mark transaction log entries for target archived data files as deleted.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">FSCK</span> <span class="pre">REPAIR</span> <span class="pre">TABLE</span></code></p></td>
+<td><p> Ignore archived files and only check for files that haven’t reached life cycle policy.</p></td>
+</tr>
+</tbody>
+</table>
+<p>See <a class="reference internal" href="#limitations"><span class="std std-ref">Limitations</span></a>.</p>
+</div>
+<div class="section" id="early-failure-and-error-messages">
+<h2>Early failure and error messages<a class="headerlink" href="#early-failure-and-error-messages" title="Permalink to this headline"> </a></h2>
+<p>For queries that must scan archived files to generate correct results, configuring archival support for Delta Lake ensures the following:</p>
+<ul class="simple">
+<li><p>Queries fail early if they attempt to access files in archive, reducing wasted compute and allowing users to quickly adapt and re-run queries.</p></li>
+<li><p>Error messages inform users that a query has failed because the query attempted to access archived files.</p></li>
+</ul>
+<p>Users can generate a report of files that need to be restored using the <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">ARCHIVED</span> <span class="pre">FILES</span></code> syntax. See <a class="reference internal" href="#show"><span class="std std-ref">Show archived files</span></a>.</p>
+</div>
+<div class="section" id="enable-archival-support">
+<h2>Enable archival support<a class="headerlink" href="#enable-archival-support" title="Permalink to this headline"> </a></h2>
+<p>You enable archival support in Databricks for Delta tables by manually specifying the archival interval configured in the underlying cloud lifecycle management policy, as in the following example syntax:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table_name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">TBLPROPERTIES</span><span class="p">(</span><span class="n">delta</span><span class="p">.</span><span class="n">timeUntilArchived</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;X days&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Delta Lake does not directly interact with the lifecyle management policies configured in your cloud account. If you update the policy in your cloud account, you must update the policy on your Delta table. See <a class="reference internal" href="#change-rule"><span class="std std-ref">Change the lifecycle management transition rule</span></a>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Archival support relies entirely on compatible Databricks compute environments and only works for Delta tables. Configuring archival support does not change behavior, compatibility, or support in OSS Delta Lake clients or Databricks Runtime 13.1 and below.</p>
+</div>
+</div>
+<div class="section" id="show-archived-files">
+<span id="show"></span><h2>Show archived files<a class="headerlink" href="#show-archived-files" title="Permalink to this headline"> </a></h2>
+<p>To identify files that need to be restored to complete a given query, use <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">ARCHIVED</span> <span class="pre">FILES</span></code>, as in the following example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SHOW</span><span class="w"> </span><span class="n">ARCHIVED</span><span class="w"> </span><span class="n">FILES</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">predicate</span><span class="w"> </span><span class="p">];</span>
+</pre></div>
+</div>
+<p>This operation returns URIs for archived files as a Spark DataFrame.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Delta Lake only has access to the data statistics contained within the transaction log during this operation (minimum value, maximum value, null counts, and total number of records for the first 32 columns). The files returned include all archived files that need to be read to determine whether or not records fulfilling a predicate exist in the file. Databricks recommends providing predicates that include fields on which data is partitioned, z-ordered, or clustered, if possible, to reduce the number of files that need to be restored.</p>
+</div>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline"> </a></h2>
+<p>The following limitations exist:</p>
+<ul class="simple">
+<li><p>No support exists for lifecycle management policies that are not based on file creation time. This includes access-time-based policies and tag-based policies.</p></li>
+<li><p>You cannot use <code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">COLUMN</span></code> on a table with archived files.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">REORG</span> <span class="pre">TABLE</span> <span class="pre">APPLY</span> <span class="pre">PURGE</span></code> makes a best effort, but only works on deletion vector files and referenced data files that are not archived. <code class="docutils literal notranslate"><span class="pre">PURGE</span></code> cannot delete archived deletion vector files.</p></li>
+<li><p>Extending the lifecycle management transition rule results in unexpected behavior. See <a class="reference internal" href="#extend-rule"><span class="std std-ref">Extend the lifecycle management transition rule</span></a>.</p></li>
+</ul>
+</div>
+<div class="section" id="change-the-lifecycle-management-transition-rule">
+<span id="change-rule"></span><h2>Change the lifecycle management transition rule<a class="headerlink" href="#change-the-lifecycle-management-transition-rule" title="Permalink to this headline"> </a></h2>
+<p>If you change the time interval for your cloud lifecycle management transition rule, you must update the property <code class="docutils literal notranslate"><span class="pre">delta.timeUntilArchived</span></code>.</p>
+<p>If the time interval before archival is shortened (less time since file creation), archival support for the Delta table continues functioning normally after the table property is updated.</p>
+<div class="section" id="extend-the-lifecycle-management-transition-rule">
+<span id="extend-rule"></span><h3>Extend the lifecycle management transition rule<a class="headerlink" href="#extend-the-lifecycle-management-transition-rule" title="Permalink to this headline"> </a></h3>
+<p>If the time interval before archival is extended (more time since file creation), updating the property <code class="docutils literal notranslate"><span class="pre">delta.timeUntilArchived</span></code> to the new value can lead to errors. Cloud providers do not restore files out of archived storage automatically when data retention policies are changed. This means that files that previously were eligible for archival but now are not considered eligible for archival are still archived.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>To avoid errors, never set the property <code class="docutils literal notranslate"><span class="pre">delta.timeUntilArchived</span></code> to a value greater than the actual age of the most recently archived data.</p>
+</div>
+<p>Consider a scenario in which the time interval for archival is changed from 60 days to 90 days:</p>
+<ol class="arabic simple">
+<li><p>When the policy changes, all records between 60 and 90 days old are already archived.</p></li>
+<li><p>For 30 days, no new files are archived (the oldest non-archived files are 60 days old at the time the policy is extended).</p></li>
+<li><p>After 30 days have passed, the life cycle policy correctly describes all archived data.</p></li>
+</ol>
+<p>The <code class="docutils literal notranslate"><span class="pre">delta.timeUntilArchived</span></code> setting tracks the set time interval against the file creation time recorded by the Delta transaction log. It does not have explicit knowledge of the underlying policy. During the lag period between the old archival threshold and the new archival threshold, you can take one of the following approaches to avoid querying archived files:</p>
+<ol class="arabic simple">
+<li><p>You can leave the setting <code class="docutils literal notranslate"><span class="pre">delta.timeUntilArchived</span></code> with the old threshold until enough time has passed that all files are archived.</p>
+<ul class="simple">
+<li><p>Following with the example above, each day for the first 30 days another day’s worth of data would be considered archived by Databricks but not yet archived by the cloud provider. This does not result in error, but ignores some data files that could be queried.</p></li>
+<li><p>After 30 days, update the <code class="docutils literal notranslate"><span class="pre">delta.timeUntilArchived</span></code> to <code class="docutils literal notranslate"><span class="pre">90</span> <span class="pre">days</span></code>.</p></li>
+</ul>
+</li>
+<li><p>You can update the setting <code class="docutils literal notranslate"><span class="pre">delta.timeUntilArchived</span></code> each day to reflect the current interval during the lag period.</p>
+<ul class="simple">
+<li><p>While the cloud policy is set to 90 days, the actual age of archived data changes in real time. For example, after 7 days, setting <code class="docutils literal notranslate"><span class="pre">delta.timeUntilArchived</span></code> to <code class="docutils literal notranslate"><span class="pre">67</span> <span class="pre">days</span></code> accurately reflects the age of all data files in archive.</p></li>
+<li><p>This approach is only necessary if you need access to all data in hot tiers.</p></li>
+</ul>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Updating the value for <code class="docutils literal notranslate"><span class="pre">delta.timeUntilArchived</span></code> does not actually change which data is archived. It only changes which data Databricks treats as if it were archived.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

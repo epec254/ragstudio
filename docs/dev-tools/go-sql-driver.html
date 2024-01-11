@@ -1,0 +1,846 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Demonstrates how to use the Databricks SQL Driver for Go, a Go library that allows you to run SQL commands on Databricks compute resources." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Databricks SQL Driver for Go">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Databricks SQL Driver for Go &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/dev-tools/go-sql-driver.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/dev-tools/go-sql-driver.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/dev-tools/go-sql-driver.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/dev-tools/go-sql-driver.html" class="notranslate">English</option>
+    <option value="../../ja/dev-tools/go-sql-driver.html" class="notranslate">日本語</option>
+    <option value="../../pt/dev-tools/go-sql-driver.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Databricks SQL Driver for Go</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="databricks-sql-driver-for-go">
+<span id="dbsqldrivergo"></span><h1>Databricks SQL Driver for Go<a class="headerlink" href="#databricks-sql-driver-for-go" title="Permalink to this headline"> </a></h1>
+<p>The <a class="reference external" href="https://github.com/databricks/databricks-sql-go">Databricks SQL Driver for Go</a> is a <a class="reference external" href="https://go.dev/">Go</a> library that allows you to use Go code to run SQL commands on Databricks compute resources. This article supplements the Databricks SQL Driver for Go <a class="reference external" href="https://github.com/databricks/databricks-sql-go/blob/main/README.md">README</a>, <a class="reference external" href="https://pkg.go.dev/github.com/databricks/databricks-sql-go">API reference</a>, and <a class="reference external" href="https://github.com/databricks/databricks-sql-go/tree/main/examples">examples</a>.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>A development machine running Go, version 1.20 or above. To print the installed version of Go, run the command <code class="docutils literal notranslate"><span class="pre">go</span> <span class="pre">version</span></code>. <a class="reference external" href="https://go.dev/doc/install">Download and install Go</a>.</p></li>
+<li><p>An existing <a class="reference internal" href="../compute/configure.html"><span class="doc">cluster</span></a> or <a class="reference internal" href="../compute/sql-warehouse/create-sql-warehouse.html"><span class="doc">SQL warehouse</span></a>.</p></li>
+<li><p>The <strong>Server Hostname</strong>, <strong>Port</strong>, and <strong>HTTP Path</strong> values for the existing cluster or SQL warehouse.</p>
+<ul>
+<li><p><a class="reference internal" href="../integrations/jdbc-odbc-bi.html#connection-details-cluster"><span class="std std-ref">Get these values for a cluster</span></a>.</p></li>
+<li><p><a class="reference internal" href="../integrations/jdbc-odbc-bi.html#sql"><span class="std std-ref">Get these values for a SQL warehouse</span></a>.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="getting-started-with-the-databricks-sql-driver-for-go">
+<span id="getting-started-with-the-dbsqldrivergo"></span><h2>Getting started with the Databricks SQL Driver for Go<a class="headerlink" href="#getting-started-with-the-databricks-sql-driver-for-go" title="Permalink to this headline"> </a></h2>
+<ol class="arabic">
+<li><p>On your development machine with Go 1.20 or above already <a class="reference external" href="https://go.dev/doc/install">installed</a> and an existing Go code project already <a class="reference external" href="https://go.dev/doc/code">created</a>, create a <code class="docutils literal notranslate"><span class="pre">go.mod</span></code> file to track your Go code’s dependencies by running the <code class="docutils literal notranslate"><span class="pre">go</span> <span class="pre">mod</span> <span class="pre">init</span></code> command, for example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>go<span class="w"> </span>mod<span class="w"> </span>init<span class="w"> </span>sample
+</pre></div>
+</div>
+</li>
+<li><p>Take a dependency on the Databricks SQL Driver for Go package by running the <code class="docutils literal notranslate"><span class="pre">go</span> <span class="pre">mod</span> <span class="pre">edit</span> <span class="pre">-require</span></code> command, replacing <code class="docutils literal notranslate"><span class="pre">v1.5.2</span></code> with the latest version of the Databricks SQL Driver for Go package as listed in the <a class="reference external" href="https://github.com/databricks/databricks-sql-go/releases">Releases</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>go<span class="w"> </span>mod<span class="w"> </span>edit<span class="w"> </span>-require<span class="w"> </span>github.com/databricks/databricks-sql-go@v1.5.2
+</pre></div>
+</div>
+<p>Your <code class="docutils literal notranslate"><span class="pre">go.mod</span></code> file should now look like this:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">module</span><span class="w"> </span><span class="nx">sample</span>
+
+<span class="k">go</span><span class="w"> </span><span class="mf">1.20</span>
+
+<span class="nx">require</span><span class="w"> </span><span class="nx">github</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">databricks</span><span class="o">/</span><span class="nx">databricks</span><span class="o">-</span><span class="nx">sql</span><span class="o">-</span><span class="k">go</span><span class="w"> </span><span class="nx">v1</span><span class="mf">.5.2</span>
+</pre></div>
+</div>
+</li>
+<li><p>In your project, create a Go code file that imports the Databricks SQL Driver for Go. The following example, in a file named <code class="docutils literal notranslate"><span class="pre">main.go</span></code> with the following contents, lists all the clusters in your Databricks workspace:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span><span class="w"> </span><span class="nx">main</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="s">&quot;database/sql&quot;</span>
+<span class="w">  </span><span class="s">&quot;os&quot;</span>
+<span class="w">  </span><span class="nx">_</span><span class="w"> </span><span class="s">&quot;github.com/databricks/databricks-sql-go&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">dsn</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_DSN&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nx">dsn</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">panic</span><span class="p">(</span><span class="s">&quot;No connection string found. &quot;</span><span class="w"> </span><span class="o">+</span>
+<span class="w">     </span><span class="s">&quot;Set the DATABRICKS_DSN environment variable, and try again.&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nx">db</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">sql</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="s">&quot;databricks&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">dsn</span><span class="p">)</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">defer</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">Ping</span><span class="p">();</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Add any missing module dependencies by running the <code class="docutils literal notranslate"><span class="pre">go</span> <span class="pre">mod</span> <span class="pre">tidy</span></code> command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>go<span class="w"> </span>mod<span class="w"> </span>tidy
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you get the error <code class="docutils literal notranslate"><span class="pre">go:</span> <span class="pre">warning:</span> <span class="pre">&quot;all&quot;</span> <span class="pre">matched</span> <span class="pre">no</span> <span class="pre">packages</span></code>, you forgot to add a Go code file that imports the Databricks SQL Driver for Go.</p>
+</div>
+</li>
+<li><p>Make copies of all packages needed to support builds and tests of packages in your <code class="docutils literal notranslate"><span class="pre">main</span></code> module, by running the <code class="docutils literal notranslate"><span class="pre">go</span> <span class="pre">mod</span> <span class="pre">vendor</span></code> command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>go<span class="w"> </span>mod<span class="w"> </span>vendor
+</pre></div>
+</div>
+</li>
+<li><p>Modify your code as needed to set the <code class="docutils literal notranslate"><span class="pre">DATABRICKS_DSN</span></code> environment variable for Databricks <a class="reference internal" href="#authentication"><span class="std std-ref">authentication</span></a>. See also <a class="reference internal" href="#dsn-connect-string"><span class="std std-ref">Connect with a DSN connection string</span></a>.</p></li>
+<li><p>Run your Go code file, assuming a file named <code class="docutils literal notranslate"><span class="pre">main.go</span></code>, by running the <code class="docutils literal notranslate"><span class="pre">go</span> <span class="pre">run</span></code> command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>go<span class="w"> </span>run<span class="w"> </span>main.go
+</pre></div>
+</div>
+</li>
+<li><p>If no errors are returned, you have successfully authenticated the Databricks SQL Driver for Go with your Databricks workspace and connected to your running Databricks cluster or SQL warehouse in that workspace.</p></li>
+</ol>
+</div>
+<div class="section" id="connect-with-a-dsn-connection-string">
+<span id="dsn-connect-string"></span><h2>Connect with a DSN connection string<a class="headerlink" href="#connect-with-a-dsn-connection-string" title="Permalink to this headline"> </a></h2>
+<p>To access clusters and SQL warehouses, use <code class="docutils literal notranslate"><span class="pre">sql.Open()</span></code> to create a database handle through a data source name (DSN) connection string. This code example retrieves the DSN connection string from an environment variable named <code class="docutils literal notranslate"><span class="pre">DATABRICKS_DSN</span></code>:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span><span class="w"> </span><span class="nx">main</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="s">&quot;database/sql&quot;</span>
+<span class="w">  </span><span class="s">&quot;os&quot;</span>
+<span class="w">  </span><span class="nx">_</span><span class="w"> </span><span class="s">&quot;github.com/databricks/databricks-sql-go&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">dsn</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_DSN&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nx">dsn</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">panic</span><span class="p">(</span><span class="s">&quot;No connection string found. &quot;</span><span class="w"> </span><span class="o">+</span>
+<span class="w">          </span><span class="s">&quot;Set the DATABRICKS_DSN environment variable, and try again.&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nx">db</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">sql</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="s">&quot;databricks&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">dsn</span><span class="p">)</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">defer</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">Ping</span><span class="p">();</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>To specify the DSN connection string in the correct format, see the DSN connection string examples in <a class="reference internal" href="#authentication"><span class="std std-ref">Authentication</span></a>. For example, for Databricks personal access token authentication, use the following syntax, where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;personal-access-token&gt;</span></code> is your Databricks personal access token from the requirements.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;server-hostname&gt;</span></code> is the <strong>Server Hostname</strong> value from the requirements.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;port-number&gt;</span></code> is the <strong>Port</strong> value from the requirements, which is typically <code class="docutils literal notranslate"><span class="pre">443</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;http-path&gt;</span></code> is the <strong>HTTP Path</strong> value from the requirements.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;paramX=valueX&gt;</span></code> is one or more <a class="reference internal" href="#optional-parameters"><span class="std std-ref">Optional parameters</span></a> listed later in this article.</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>token:&lt;personal-access-token&gt;@&lt;server-hostname&gt;:&lt;port-number&gt;/&lt;http-path&gt;?&lt;param1=value1&gt;&amp;&lt;param2=value2&gt;
+</pre></div>
+</div>
+<p>For example, for a cluster:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>token:dapi12345678901234567890123456789012@dbc-a1b2345c-d6e7.cloud.databricks.com:443/sql/protocolv1/o/1234567890123456/1234-567890-abcdefgh
+</pre></div>
+</div>
+<p>For example, for a SQL warehouse:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>token:dapi12345678901234567890123456789012@dbc-a1b2345c-d6e7.cloud.databricks.com:443/sql/1.0/endpoints/a1b234c5678901d2
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As a security best practice, you should not hard-code this DSN connection string into your Go code. Instead, you should retrieve this DSN connection string from a secure location. For example, the code example earlier in this article used an environment variable.</p>
+</div>
+<div class="section" id="optional-parameters">
+<h3>Optional parameters<a class="headerlink" href="#optional-parameters" title="Permalink to this headline"> </a></h3>
+<ul class="simple">
+<li><p>Supported optional connection parameters can be specified in <code class="docutils literal notranslate"><span class="pre">&lt;param=value&gt;</span></code>. Some of the more frequently used ones include:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">catalog</span></code>: Sets the initial catalog name in the session.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">schema</span></code>: Sets the initial schema name in the session.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maxRows</span></code>: Sets up the maximum number of rows fetched per request. The default is <code class="docutils literal notranslate"><span class="pre">10000</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timeout</span></code>: Adds the timeout (in seconds) for the server query execution. The default is no timeout.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">userAgentEntry</span></code>: Used to identify partners. For more information, see your partner’s documentation.</p></li>
+</ul>
+</li>
+<li><p>Supported optional session parameters can be specified in <code class="docutils literal notranslate"><span class="pre">param=value</span></code>. Some of the more frequently used ones include:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">ansi_mode</span></code>: A Boolean string. <code class="docutils literal notranslate"><span class="pre">true</span></code> for session statements to adhere to rules specified by the ANSI SQL specification. The system default is false.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timezone</span></code>: A string, for example <code class="docutils literal notranslate"><span class="pre">America/Los_Angeles</span></code>. Sets the timezone of the session. The system default is UTC.</p></li>
+</ul>
+</li>
+</ul>
+<p>For example, for a SQL warehouse:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>token:dapi12345678901234567890123456789012@dbc-a1b2345c-d6e7.cloud.databricks.com:443/sql/1.0/endpoints/a1b234c5678901d2?catalog=hive_metastore&amp;schema=example&amp;maxRows=100&amp;timeout=60&amp;timezone=America/Sao_Paulo&amp;ansi_mode=true
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="connect-with-the-newconnector-function">
+<span id="new-connector-function"></span><h2>Connect with the <code class="docutils literal notranslate"><span class="pre">NewConnector</span></code> function<a class="headerlink" href="#connect-with-the-newconnector-function" title="Permalink to this headline"> </a></h2>
+<p>Alternatively, use <code class="docutils literal notranslate"><span class="pre">sql.OpenDB()</span></code> to create a database handle through a new connector object that is created with <code class="docutils literal notranslate"><span class="pre">dbsql.NewConnector()</span></code> (connecting to Databricks clusters and SQL warehouses with a new connector object requires v1.0.0 or higher of the Databricks SQL Driver for Go). For example:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span><span class="w"> </span><span class="nx">main</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="s">&quot;database/sql&quot;</span>
+<span class="w">  </span><span class="s">&quot;os&quot;</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="w"> </span><span class="s">&quot;github.com/databricks/databricks-sql-go&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">connector</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">NewConnector</span><span class="p">(</span>
+<span class="w">    </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithAccessToken</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_ACCESS_TOKEN&quot;</span><span class="p">)),</span>
+<span class="w">    </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithServerHostname</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_HOST&quot;</span><span class="p">)),</span>
+<span class="w">    </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithPort</span><span class="p">(</span><span class="mi">443</span><span class="p">),</span>
+<span class="w">    </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithHTTPPath</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_HTTP_PATH&quot;</span><span class="p">)),</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nx">db</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">sql</span><span class="p">.</span><span class="nx">OpenDB</span><span class="p">(</span><span class="nx">connector</span><span class="p">)</span>
+<span class="w">  </span><span class="k">defer</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">Ping</span><span class="p">();</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>To specify the correct set of <code class="docutils literal notranslate"><span class="pre">NewConnector</span></code> settings, see the examples in <a class="reference internal" href="#authentication"><span class="std std-ref">Authentication</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As a security best practice, you should not hard-code your <code class="docutils literal notranslate"><span class="pre">NewConnector</span></code> settings into your Go code. Instead, you should retrieve these values from a secure location. For example, the preceding code uses environment variables.</p>
+</div>
+<p>Some of the more frequently used functional options include:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">WithAccessToken(&lt;access-token&gt;)</span></code>: Your Databricks personal access token from the requirements. Required <code class="docutils literal notranslate"><span class="pre">string</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WithServerHostname(&lt;server-hostname&gt;)</span></code>: The <strong>Server Hostname</strong> value from the requirements. Required <code class="docutils literal notranslate"><span class="pre">string</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WithPort(&lt;port&gt;)</span></code>: The server’s port number, typically <code class="docutils literal notranslate"><span class="pre">443</span></code>. Required <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WithHTTPPath(&lt;http-path&gt;)</span></code>: The <strong>HTTP Path</strong> value from the requirements. Required <code class="docutils literal notranslate"><span class="pre">string</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WithInitialNamespace(&lt;catalog&gt;,</span> <span class="pre">&lt;schema&gt;)</span></code>:The catalog and schema name in the session. Optional <code class="docutils literal notranslate"><span class="pre">string,</span> <span class="pre">string</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WithMaxRows(&lt;max-rows&gt;)</span></code>: The maximum number of rows fetched per request. The default is <code class="docutils literal notranslate"><span class="pre">10000.</span></code> Optional <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WithSessionParams(&lt;params-map&gt;)</span></code>: The session parameters including “timezone” and “ansi_mode”. Optional <code class="docutils literal notranslate"><span class="pre">map[string]string</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WithTimeout(&lt;timeout&gt;)</span></code>. The timeout (in <code class="docutils literal notranslate"><span class="pre">time.Duration</span></code>) for the server query execution. The default is no timeout. Optional.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WithUserAgentEntry(&lt;isv-name-plus-product-name&gt;)</span></code>. Used to identify partners. For more information, see your partner’s documentation. Optional <code class="docutils literal notranslate"><span class="pre">string</span></code>.</p></li>
+</ul>
+<p>For example:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">connector</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">NewConnector</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithAccessToken</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_ACCESS_TOKEN&quot;</span><span class="p">)),</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithServerHostname</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_HOST&quot;</span><span class="p">)),</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithPort</span><span class="p">(</span><span class="mi">443</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithHTTPPath</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_HTTP_PATH&quot;</span><span class="p">)),</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithInitialNamespace</span><span class="p">(</span><span class="s">&quot;samples&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;nyctaxi&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithMaxRows</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">SessionParams</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;timezone&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;America/Sao_Paulo&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ansi_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">}),</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithTimeout</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Minute</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithUserAgentEntry</span><span class="p">(</span><span class="s">&quot;example-user&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="authentication">
+<h2>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline"> </a></h2>
+<p>The Databricks SQL Driver for Go supports the following Databricks authentication types:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#auth-pat"><span class="std std-ref">Databricks personal access token authentication</span></a></p></li>
+<li><p><a class="reference internal" href="#auth-u2m"><span class="std std-ref">OAuth user-to-machine (U2M) authentication</span></a></p></li>
+<li><p><a class="reference internal" href="#auth-m2m"><span class="std std-ref">OAuth machine-to-machine (M2M) authentication</span></a></p></li>
+</ul>
+<p>The Databricks SQL Driver for Go does not support Databricks username and password (also known as <em>basic</em>) authentication.</p>
+<div class="section" id="databricks-personal-access-token-authentication">
+<span id="auth-pat"></span><h3>Databricks personal access token authentication<a class="headerlink" href="#databricks-personal-access-token-authentication" title="Permalink to this headline"> </a></h3>
+</div>
+<p>To use the Databricks SQL Driver for Go with Databricks <a class="reference internal" href="auth/pat.html"><span class="doc">personal access token authentication</span></a>, you must first create a Databricks personal access token, as follows:</p>
+<ol class="arabic simple">
+<li><p>In your Databricks workspace, click your Databricks username in the top bar, and then select <strong>User Settings</strong> from the drop down.</p></li>
+<li><p>Click <strong>Developer</strong>.</p></li>
+<li><p>Next to <strong>Access tokens</strong>, click <strong>Manage</strong>.</p></li>
+<li><p>Click <strong>Generate new token</strong>.</p></li>
+<li><p>(Optional) Enter a comment that helps you to identify this token in the future, and change the token’s default lifetime of 90 days. To create a token with no lifetime (not recommended), leave the <strong>Lifetime (days)</strong> box empty (blank).</p></li>
+<li><p>Click <strong>Generate</strong>.</p></li>
+<li><p>Copy the displayed token to a secure location, and then click <strong>Done</strong>.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Be sure to save the copied token in a secure location. Do not share your copied token with others. If you lose the copied token, you cannot regenerate that exact same token. Instead, you must repeat this procedure to create a new token. If you lose the copied token, or you believe that the token has been compromised, Databricks strongly recommends that you immediately delete that token from your workspace by clicking the trash can (<strong>Revoke</strong>) icon next to the token on the <strong>Access tokens</strong> page.</p>
+<p>If you are not able to create or use tokens in your workspace, this might be because your workspace administrator has disabled tokens or has not given you permission to create or use tokens. See your workspace administrator or the following:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../administration-guide/access-control/tokens.html#enable-tokens"><span class="std std-ref">Enable or disable personal access token authentication for the workspace</span></a></p></li>
+<li><p><a class="reference internal" href="../security/auth-authz/api-access-permissions.html#pat"><span class="std std-ref">Personal access token permissions</span></a></p></li>
+</ul>
+</div>
+<p>To authenticate the Databricks SQL Driver for Go with a DSN connection string and the code example in <a class="reference internal" href="#dsn-connect-string"><span class="std std-ref">Connect with a DSN connection string</span></a>, use the following DSN connection string syntax, where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;personal-access-token&gt;</span></code> is your Databricks personal access token from the requirements.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;server-hostname&gt;</span></code> is the <strong>Server Hostname</strong> value from the requirements.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;port-number&gt;</span></code> is the <strong>Port</strong> value from the requirements, which is typically <code class="docutils literal notranslate"><span class="pre">443</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;http-path&gt;</span></code> is the <strong>HTTP Path</strong> value from the requirements.</p></li>
+</ul>
+<p>You can also append one or more <a class="reference internal" href="#optional-parameters"><span class="std std-ref">Optional parameters</span></a> listed previously in this article.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>token:&lt;personal-access-token&gt;@&lt;server-hostname&gt;:&lt;port-number&gt;/&lt;http-path&gt;
+</pre></div>
+</div>
+<p>To authenticate the Databricks SQL Driver for Go with the <code class="docutils literal notranslate"><span class="pre">NewConnector</span></code> function, use the following code snippet and the code example in <a class="reference internal" href="#new-connector-function"><span class="std std-ref">Connect with the NewConnector function</span></a>, which assumes that you have set the following environment variables:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_SERVER_HOSTNAME</span></code>set to the <strong>Server Hostname</strong> value for your cluster or SQL warehouse.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_HTTP_PATH</span></code>, set to <strong>HTTP Path</strong> value for your cluster or SQL warehouse.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_TOKEN</span></code>, set to the Databricks personal access token.</p></li>
+</ul>
+<p>To set environment variables, see your operating system’s documentation.</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">connector</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">NewConnector</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithServerHostname</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_SERVER_HOSTNAME&quot;</span><span class="p">)),</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithHTTPPath</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_HTTP_PATH&quot;</span><span class="p">)),</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithPort</span><span class="p">(</span><span class="mi">443</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithAccessToken</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_TOKEN&quot;</span><span class="p">)),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="oauth-user-to-machine-u2m-authentication">
+<span id="auth-u2m"></span><h3>OAuth user-to-machine (U2M) authentication<a class="headerlink" href="#oauth-user-to-machine-u2m-authentication" title="Permalink to this headline"> </a></h3>
+<p>Databricks SQL Driver for Go versions 1.5.0 and above support <a class="reference internal" href="auth/oauth-u2m.html"><span class="doc">OAuth user-to-machine (U2M) authentication</span></a>.</p>
+<p>To use the Databricks SQL Driver for Go with a DSN connection string and the code example in <a class="reference internal" href="#dsn-connect-string"><span class="std std-ref">Connect with a DSN connection string</span></a>, use the following DSN connection string syntax, where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;server-hostname&gt;</span></code> is the <strong>Server Hostname</strong> value from the requirements.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;port-number&gt;</span></code> is the <strong>Port</strong> value from the requirements, which is typically <code class="docutils literal notranslate"><span class="pre">443</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;http-path&gt;</span></code> is the <strong>HTTP Path</strong> value from the requirements.</p></li>
+</ul>
+<p>You can also append one or more <a class="reference internal" href="#optional-parameters"><span class="std std-ref">Optional parameters</span></a> listed previously in this article.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;server-hostname&gt;:&lt;port-number&gt;/&lt;http-path&gt;?authType=OauthU2M
+</pre></div>
+</div>
+<p>To authenticate the Databricks SQL Driver for Go with the <code class="docutils literal notranslate"><span class="pre">NewConnector</span></code> function, you must first add the following to your <code class="docutils literal notranslate"><span class="pre">import</span></code> declaration:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;github.com/databricks/databricks-sql-go/auth/oauth/u2m&quot;</span>
+</pre></div>
+</div>
+<p>Then use the following code snippet and the code example in <a class="reference internal" href="#new-connector-function"><span class="std std-ref">Connect with the NewConnector function</span></a>, which assumes that you have set the following environment variables:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_SERVER_HOSTNAME</span></code>set to the <strong>Server Hostname</strong> value for your cluster or SQL warehouse.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_HTTP_PATH</span></code>, set to <strong>HTTP Path</strong> value for your cluster or SQL warehouse.</p></li>
+</ul>
+<p>To set environment variables, see your operating system’s documentation.</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">authenticator</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">u2m</span><span class="p">.</span><span class="nx">NewAuthenticator</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_SERVER_HOSTNAME&quot;</span><span class="p">),</span><span class="w"> </span><span class="mi">1</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Minute</span><span class="p">)</span>
+<span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nx">connector</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">NewConnector</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithServerHostname</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_SERVER_HOSTNAME&quot;</span><span class="p">)),</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithHTTPPath</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_HTTP_PATH&quot;</span><span class="p">)),</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithPort</span><span class="p">(</span><span class="mi">443</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithAuthenticator</span><span class="p">(</span><span class="nx">authenticator</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oauth-machine-to-machine-m2m-authentication">
+<span id="auth-m2m"></span><h3>OAuth machine-to-machine (M2M) authentication<a class="headerlink" href="#oauth-machine-to-machine-m2m-authentication" title="Permalink to this headline"> </a></h3>
+<p>Databricks SQL Driver for Go versions 1.5.2 and above support <a class="reference internal" href="auth/oauth-m2m.html"><span class="doc">OAuth machine-to-machine (M2M) authentication</span></a>.</p>
+<p>To use the Databricks SQL Driver for Go with OAuth M2M authentication, you must do the following:</p>
+<ol class="arabic">
+<li><p>Create a Databricks service principal in your Databricks workspace, and create an OAuth secret for that service principal.</p>
+<p>To create the service principal and its OAuth secret, follow Steps 1-2 in <a class="reference internal" href="authentication-oauth.html"><span class="doc">Authentication using OAuth for service principals</span></a>. Make a note of the service principal’s <strong>UUID</strong> or <strong>Application ID</strong> value, and the <strong>Secret</strong> value for the service principal’s OAuth secret.</p>
+</li>
+<li><p>Give that service principal access to your cluster or warehouse.</p>
+<p>To give the service principal access to your cluster or warehouse, see <a class="reference internal" href="../security/auth-authz/access-control/cluster-acl.html#cluster-level-permissions"><span class="std std-ref">Cluster permissions</span></a> or <a class="reference internal" href="../security/auth-authz/access-control/sql-endpoint-acl.html"><span class="doc">SQL warehouse access control</span></a>.</p>
+</li>
+</ol>
+<p>To authenticate the Databricks SQL Driver for Go with a DSN connection string and the code example in <a class="reference internal" href="#dsn-connect-string"><span class="std std-ref">Connect with a DSN connection string</span></a>, use the following DSN connection string syntax, where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;server-hostname&gt;</span></code> is the <strong>Server Hostname</strong> value from the requirements.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;port-number&gt;</span></code> is the <strong>Port</strong> value from the requirements, which is typically <code class="docutils literal notranslate"><span class="pre">443</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;http-path&gt;</span></code> is the <strong>HTTP Path</strong> value from the requirements.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;client-id&gt;</span></code> is the service principal’s <strong>UUID</strong> or <strong>Application ID</strong> value.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;client-secret&gt;</span></code> is the <strong>Secret</strong> value for the service principal’s OAuth secret.</p></li>
+</ul>
+<p>You can also append one or more <a class="reference internal" href="#optional-parameters"><span class="std std-ref">Optional parameters</span></a> listed previously in this article.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;server-hostname&gt;:&lt;port-number&gt;/&lt;http-path&gt;?authType=OAuthM2M&amp;clientID=&lt;client-id&gt;&amp;clientSecret=&lt;client-secret&gt;
+</pre></div>
+</div>
+<p>To authenticate the Databricks SQL Driver for Go with the <code class="docutils literal notranslate"><span class="pre">NewConnector</span></code> function, you must first add the following to your <code class="docutils literal notranslate"><span class="pre">import</span></code> declaration:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;github.com/databricks/databricks-sql-go/auth/oauth/m2m&quot;</span>
+</pre></div>
+</div>
+<p>Then use the following code snippet and the code example in <a class="reference internal" href="#new-connector-function"><span class="std std-ref">Connect with the NewConnector function</span></a>, which assumes that you have set the following environment variables:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_SERVER_HOSTNAME</span></code>set to the <strong>Server Hostname</strong> value for your cluster or SQL warehouse.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_HTTP_PATH</span></code>, set to <strong>HTTP Path</strong> value for your cluster or SQL warehouse.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_CLIENT_ID</span></code>, set to the service principal’s <strong>UUID</strong> or <strong>Application ID</strong> value.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DATABRICKS_CLIENT_SECRET</span></code>, set to the <strong>Secret</strong> value for the service principal’s OAuth secret.</p></li>
+</ul>
+<p>To set environment variables, see your operating system’s documentation.</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">authenticator</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">m2m</span><span class="p">.</span><span class="nx">NewAuthenticator</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_CLIENT_ID&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_CLIENT_SECRET&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_SERVER_HOSTNAME&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="nx">connector</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">NewConnector</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithServerHostname</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_SERVER_HOSTNAME&quot;</span><span class="p">)),</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithHTTPPath</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_HTTP_PATH&quot;</span><span class="p">)),</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithPort</span><span class="p">(</span><span class="mi">443</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">dbsql</span><span class="p">.</span><span class="nx">WithAuthenticator</span><span class="p">(</span><span class="nx">authenticator</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="query-data">
+<h2>Query data<a class="headerlink" href="#query-data" title="Permalink to this headline"> </a></h2>
+<p>The following code example demonstrates how to call the Databricks SQL Driver for Go to run a basic SQL query on a Databricks compute resource. This command returns the first two rows from the <code class="docutils literal notranslate"><span class="pre">trips</span></code> table in the <code class="docutils literal notranslate"><span class="pre">samples</span></code> catalog’s <code class="docutils literal notranslate"><span class="pre">nyctaxi</span></code> schema.</p>
+<p>This code example retrieves the <a class="reference internal" href="#dsn-connect-string"><span class="std std-ref">DSN connection string</span></a> from an environment variable named <code class="docutils literal notranslate"><span class="pre">DATABRICKS_DSN</span></code>.</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span><span class="w"> </span><span class="nx">main</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="s">&quot;database/sql&quot;</span>
+<span class="w">  </span><span class="s">&quot;fmt&quot;</span>
+<span class="w">  </span><span class="s">&quot;os&quot;</span>
+<span class="w">  </span><span class="s">&quot;time&quot;</span>
+
+<span class="w">  </span><span class="nx">_</span><span class="w"> </span><span class="s">&quot;github.com/databricks/databricks-sql-go&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">dsn</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABRICKS_DSN&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nx">dsn</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">panic</span><span class="p">(</span><span class="s">&quot;No connection string found.&quot;</span><span class="w"> </span><span class="o">+</span>
+<span class="w">          </span><span class="s">&quot;Set the DATABRICKS_DSN environment variable, and try again.&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nx">db</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">sql</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="s">&quot;databricks&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">dsn</span><span class="p">)</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">defer</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+
+<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="nx">tpep_pickup_datetime</span><span class="w">  </span><span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
+<span class="w">    </span><span class="nx">tpep_dropoff_datetime</span><span class="w"> </span><span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
+<span class="w">    </span><span class="nx">trip_distance</span><span class="w">         </span><span class="kt">float64</span>
+<span class="w">    </span><span class="nx">fare_amount</span><span class="w">           </span><span class="kt">float64</span>
+<span class="w">    </span><span class="nx">pickup_zip</span><span class="w">            </span><span class="kt">int</span>
+<span class="w">    </span><span class="nx">dropoff_zip</span><span class="w">           </span><span class="kt">int</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="nx">rows</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">Query</span><span class="p">(</span><span class="s">&quot;SELECT * FROM samples.nyctaxi.trips LIMIT 2&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">defer</span><span class="w"> </span><span class="nx">rows</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+
+<span class="w">  </span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Print</span><span class="p">(</span><span class="s">&quot;tpep_pickup_datetime,&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;tpep_dropoff_datetime,&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;trip_distance,&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;fare_amount,&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;pickup_zip,&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;dropoff_zip\n&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="nx">rows</span><span class="p">.</span><span class="nx">Next</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">rows</span><span class="p">.</span><span class="nx">Scan</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">tpep_pickup_datetime</span><span class="p">,</span>
+<span class="w">      </span><span class="o">&amp;</span><span class="nx">tpep_dropoff_datetime</span><span class="p">,</span>
+<span class="w">      </span><span class="o">&amp;</span><span class="nx">trip_distance</span><span class="p">,</span>
+<span class="w">      </span><span class="o">&amp;</span><span class="nx">fare_amount</span><span class="p">,</span>
+<span class="w">      </span><span class="o">&amp;</span><span class="nx">pickup_zip</span><span class="p">,</span>
+<span class="w">      </span><span class="o">&amp;</span><span class="nx">dropoff_zip</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Print</span><span class="p">(</span><span class="nx">tpep_pickup_datetime</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;,&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">tpep_dropoff_datetime</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;,&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">trip_distance</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;,&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">fare_amount</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;,&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">pickup_zip</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;,&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">dropoff_zip</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">rows</span><span class="p">.</span><span class="nx">Err</span><span class="p">()</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>tpep_pickup_datetime,tpep_dropoff_datetime,trip_distance,fare_amount,pickup_zip,dropoff_zip
+2016-02-14 16:52:13 +0000 UTC,2016-02-14 17:16:04 +0000 UTC,4.94,19,10282,10171
+2016-02-04 18:44:19 +0000 UTC,2016-02-04 18:46:00 +0000 UTC,0.28,3.5,10110,10110
+</pre></div>
+</div>
+<p>For additional examples, see the <a class="reference external" href="https://github.com/databricks/databricks-sql-go/tree/main/examples">examples</a> folder in the databricks/databricks-sql-go repository on GitHub.</p>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>The <a class="reference external" href="https://github.com/databricks/databricks-sql-go">Databricks SQL Driver for Go</a> repository on GitHub</p></li>
+<li><p>The <a class="reference external" href="https://pkg.go.dev/database/sql">database/sql package</a> home page</p></li>
+<li><p>The Databricks SQL Driver for Go <a class="reference external" href="https://github.com/databricks/databricks-sql-go/tree/main/examples">examples</a> on GitHub</p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

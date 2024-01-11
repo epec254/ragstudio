@@ -1,0 +1,537 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use a feature store across multiple workspaces." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Share feature tables across workspaces (legacy)">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Share feature tables across workspaces (legacy) &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/archive/machine-learning/feature-store/multiple-workspaces.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/archive/machine-learning/feature-store/multiple-workspaces.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/archive/machine-learning/feature-store/multiple-workspaces.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../../en/archive/machine-learning/feature-store/multiple-workspaces.html" class="notranslate">English</option>
+    <option value="../../../../ja/archive/machine-learning/feature-store/multiple-workspaces.html" class="notranslate">日本語</option>
+    <option value="../../../../pt/archive/machine-learning/feature-store/multiple-workspaces.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Share feature tables across workspaces (legacy)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="share-feature-tables-across-workspaces-legacy">
+<h1>Share feature tables across workspaces (legacy)<a class="headerlink" href="#share-feature-tables-across-workspaces-legacy" title="Permalink to this headline"> </a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<ul class="simple">
+<li><p>This documentation has been retired and might not be updated.</p></li>
+<li><p>Databricks recommends using <a class="reference internal" href="../../../machine-learning/feature-store/uc/feature-tables-uc.html"><span class="doc">Feature Engineering in Unity Catalog</span></a> to share feature tables across workspaces. The approach in this article is deprecated.</p></li>
+</ul>
+</div>
+<p>Databricks supports sharing feature tables across multiple workspaces. For example, from your own workspace, you can create, write to, or read from a feature table in a centralized feature store. This is useful when multiple teams share access to feature tables or when your organization has multiple workspaces to handle different stages of development.</p>
+<p>For a centralized feature store, Databricks recommends that you designate a single workspace to store all feature store metadata, and create accounts for each user who needs access to the feature store.</p>
+<p>If your teams are also <a class="reference internal" href="../../../machine-learning/manage-model-lifecycle/multiple-workspaces.html"><span class="doc">sharing models across workspaces</span></a>, you may choose to dedicate the same centralized workspace for both feature tables and models, or you could specify different centralized workspaces for each.</p>
+<div class="figure align-default">
+<img alt="Multiple feature store workspaces" src="../../../_images/multiworkspace.png" />
+</div>
+<p>Access to the centralized feature store is controlled by tokens. Each user or script that needs access <a class="reference external" href="https://docs.databricks.com/api/workspace/tokenmanagement">creates a personal access token</a> in the centralized feature store and <a class="reference internal" href="../../dev-tools/cli/secrets-cli.html"><span class="doc">copies that token into the secret manager</span></a> of their local workspace. Each API request sent to the centralized feature store workspace must include the access token; the Feature Store client provides a simple mechanism to specify the secrets to be used when performing cross-workspace operations.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As a security best practice when you authenticate with automated tools, systems, scripts, and apps, Databricks recommends that you use OAuth tokens.</p>
+<p>If you use personal access token authentication, Databricks recommends using personal access tokens belonging to <a class="reference internal" href="../../../administration-guide/users-groups/service-principals.html"><span class="doc">service principals</span></a> instead of workspace users. To create tokens for service principals, see <a class="reference internal" href="../../../administration-guide/users-groups/service-principals.html#personal-access-tokens"><span class="std std-ref">Manage tokens for a service principal</span></a>.</p>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<p>Using a feature store across workspaces requires:</p>
+<ul class="simple">
+<li><p>Feature Store client v0.3.6 and above.</p></li>
+<li><p>Both workspaces must have access to the raw feature data. They must share the same <a class="reference internal" href="../../external-metastores/external-hive-metastore.html"><span class="doc">external Hive metastore</span></a> and have access to the same <a class="reference internal" href="../../../dbfs/index.html"><span class="doc">DBFS storage</span></a>.</p></li>
+<li><p>If <a class="reference internal" href="../../../security/network/front-end/ip-access-list-workspace.html"><span class="doc">IP access lists</span></a> are enabled, workspace IP addresses must be on access lists.</p></li>
+</ul>
+</div>
+<div class="section" id="set-up-the-api-token-for-a-remote-registry">
+<h2>Set up the API token for a remote registry<a class="headerlink" href="#set-up-the-api-token-for-a-remote-registry" title="Permalink to this headline"> </a></h2>
+<p>In this section, “Workspace B” refers to the centralized or remote feature store workspace.</p>
+<ol class="arabic">
+<li><p>In Workspace B, <a class="reference external" href="https://docs.databricks.com/api/workspace/tokenmanagement">create an access token</a>.</p></li>
+<li><p>In your local workspace, <a class="reference internal" href="../../dev-tools/cli/secrets-cli.html"><span class="doc">create secrets</span></a> to store the access token and information about Workspace B:</p>
+<ol class="loweralpha">
+<li><p>Create a secret scope: <code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">secrets</span> <span class="pre">create-scope</span> <span class="pre">--scope</span> <span class="pre">&lt;scope&gt;</span></code>.</p></li>
+<li><p>Pick a unique identifier for Workspace B, shown here as <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;</span></code>. Then <a class="reference internal" href="../../dev-tools/cli/secrets-cli.html#create-a-secret-scope"><span class="std std-ref">create</span></a> three secrets with the specified key names:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">secrets</span> <span class="pre">put</span> <span class="pre">--scope</span> <span class="pre">&lt;scope&gt;</span> <span class="pre">--key</span> <span class="pre">&lt;prefix&gt;-host</span></code> :
+Enter the hostname of Workspace B.  Use the following Python commands to get the hostname of a workspace:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mlflow</span>
+
+<span class="n">host_url</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">databricks_utils</span><span class="o">.</span><span class="n">get_webapp_url</span><span class="p">()</span>
+<span class="n">host_url</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">secrets</span> <span class="pre">put</span> <span class="pre">--scope</span> <span class="pre">&lt;scope&gt;</span> <span class="pre">--key</span> <span class="pre">&lt;prefix&gt;-token</span></code> :
+Enter the access token from Workspace B.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">databricks</span> <span class="pre">secrets</span> <span class="pre">put</span> <span class="pre">--scope</span> <span class="pre">&lt;scope&gt;</span> <span class="pre">--key</span> <span class="pre">&lt;prefix&gt;-workspace-id</span></code> :
+Enter the workspace ID for Workspace B which can be <a class="reference internal" href="../../../workspace/workspace-details.html#workspace-instance-names-urls-and-ids"><span class="std std-ref">found in the URL</span></a> of any page.</p></li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You may want to <a class="reference internal" href="../../../security/auth-authz/access-control/secret-acl.html"><span class="doc">share the secret scope</span></a> with other users, since there is a <a class="reference internal" href="../../../security/secrets/secret-scopes.html"><span class="doc">limit on the number of secret scopes per workspace</span></a>.</p>
+</div>
+</div>
+<div class="section" id="specify-a-remote-feature-store">
+<h2>Specify a remote feature store<a class="headerlink" href="#specify-a-remote-feature-store" title="Permalink to this headline"> </a></h2>
+<p>Based on the secret scope and name prefix you created for the remote feature store workspace, you can construct a feature store URI of the form:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">feature_store_uri</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;databricks://&lt;scope&gt;:&lt;prefix&gt;&#39;</span>
+</pre></div>
+</div>
+<p>Then, specify the URI explicitly when you instantiate a <code class="docutils literal notranslate"><span class="pre">FeatureStoreClient</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">(</span><span class="n">feature_store_uri</span><span class="o">=</span><span class="n">feature_store_uri</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-a-database-for-feature-tables-in-the-shared-dbfs-location">
+<h2>Create a database for feature tables in the shared DBFS location<a class="headerlink" href="#create-a-database-for-feature-tables-in-the-shared-dbfs-location" title="Permalink to this headline"> </a></h2>
+<p>Before you create feature tables in the remote feature store, you must create a database to store them. The database must exist in the shared DBFS location.</p>
+<p>For example, to create a database <code class="docutils literal notranslate"><span class="pre">recommender</span></code> in the shared location <code class="docutils literal notranslate"><span class="pre">/mnt/shared</span></code>, use the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">sql</span> <span class="n">CREATE</span> <span class="n">DATABASE</span> <span class="n">IF</span> <span class="n">NOT</span> <span class="n">EXISTS</span> <span class="n">recommender</span> <span class="n">LOCATION</span> <span class="s1">&#39;/mnt/shared&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-a-feature-table-in-the-remote-feature-store">
+<h2>Create a feature table in the remote feature store<a class="headerlink" href="#create-a-feature-table-in-the-remote-feature-store" title="Permalink to this headline"> </a></h2>
+<p>The API to create a feature table in a remote feature store depends on the Databricks runtime version you are using.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="v0.3.6&amp;nbsp;and&amp;nbsp;above">
+<p class="compound-first">Use the <code class="docutils literal notranslate"><span class="pre">FeatureStoreClient.create_table</span></code> API:</p>
+<div class="compound-last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">(</span><span class="n">feature_store_uri</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;databricks://&lt;scope&gt;:&lt;prefix&gt;&#39;</span><span class="p">)</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;recommender.customer_features&#39;</span><span class="p">,</span>
+  <span class="n">primary_keys</span><span class="o">=</span><span class="s1">&#39;customer_id&#39;</span><span class="p">,</span>
+  <span class="n">schema</span><span class="o">=</span><span class="n">customer_features_df</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span>
+  <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Customer-keyed features&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="v0.3.5&amp;nbsp;and&amp;nbsp;below">
+<p class="compound-first">Use the <code class="docutils literal notranslate"><span class="pre">FeatureStoreClient.create_feature_table</span></code> API:</p>
+<div class="compound-last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">(</span><span class="n">feature_store_uri</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;databricks://&lt;scope&gt;:&lt;prefix&gt;&#39;</span><span class="p">)</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">create_feature_table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;recommender.customer_features&#39;</span><span class="p">,</span>
+  <span class="n">keys</span><span class="o">=</span><span class="s1">&#39;customer_id&#39;</span><span class="p">,</span>
+  <span class="n">schema</span><span class="o">=</span><span class="n">customer_features_df</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span>
+  <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Customer-keyed features&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>For examples of other Feature Store methods, see <a class="reference internal" href="#example"><span class="std std-ref">Notebook example: Share feature tables across workspaces</span></a>.</p>
+</div>
+<div class="section" id="use-a-feature-table-from-the-remote-feature-store">
+<h2>Use a feature table from the remote feature store<a class="headerlink" href="#use-a-feature-table-from-the-remote-feature-store" title="Permalink to this headline"> </a></h2>
+<p>You can read a feature table in the remote feature store with the <code class="docutils literal notranslate"><span class="pre">FeatureStoreClient.read_table</span></code> method by first setting the <code class="docutils literal notranslate"><span class="pre">feature_store_uri</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">(</span><span class="n">feature_store_uri</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;databricks://&lt;scope&gt;:&lt;prefix&gt;&#39;</span><span class="p">)</span>
+<span class="n">customer_features_df</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;recommender.customer_features&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Other helper methods for accessing the feature table are also supported:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span><span class="o">.</span><span class="n">read_table</span><span class="p">()</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">get_feature_table</span><span class="p">()</span> <span class="c1"># in v0.3.5 and below</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">get_table</span><span class="p">()</span> <span class="c1"># in v0.3.6 and above</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">write_table</span><span class="p">()</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">publish_table</span><span class="p">()</span>
+<span class="n">fs</span><span class="o">.</span><span class="n">create_training_set</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-a-remote-model-registry">
+<h2>Use a remote model registry<a class="headerlink" href="#use-a-remote-model-registry" title="Permalink to this headline"> </a></h2>
+<p>In addition to specifying a remote feature store URI, you may also specify a remote model registry URI to <a class="reference internal" href="../../../machine-learning/manage-model-lifecycle/multiple-workspaces.html"><span class="doc">share models across workspaces</span></a>.</p>
+<p>To specify a remote model registry for model logging or scoring, you can use a model registry URI to instantiate a FeatureStoreClient.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">(</span><span class="n">model_registry_uri</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;databricks://&lt;scope&gt;:&lt;prefix&gt;&#39;</span><span class="p">)</span>
+<span class="n">customer_features_df</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span>
+    <span class="s2">&quot;recommendation_model&quot;</span><span class="p">,</span>
+    <span class="n">flavor</span><span class="o">=</span><span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="p">,</span>
+    <span class="n">training_set</span><span class="o">=</span><span class="n">training_set</span><span class="p">,</span>
+    <span class="n">registered_model_name</span><span class="o">=</span><span class="s2">&quot;recommendation_model&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Using <code class="docutils literal notranslate"><span class="pre">feature_store_uri</span></code> and <code class="docutils literal notranslate"><span class="pre">model_registry_uri</span></code>, you can train a model using any local or remote feature table, and then register the model in any local or remote model registry.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span> <span class="o">=</span> <span class="n">FeatureStoreClient</span><span class="p">(</span>
+    <span class="n">feature_store_uri</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;databricks://&lt;scope&gt;:&lt;prefix&gt;&#39;</span><span class="p">,</span>
+    <span class="n">model_registry_uri</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;databricks://&lt;scope&gt;:&lt;prefix&gt;&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="notebook-example-share-feature-tables-across-workspaces">
+<span id="example"></span><h2>Notebook example: Share feature tables across workspaces<a class="headerlink" href="#notebook-example-share-feature-tables-across-workspaces" title="Permalink to this headline"> </a></h2>
+<p>The following notebook shows how to work with a centralized feature store.</p>
+<div class="embedded-notebook-section section" id="centralized-feature-store-example-notebook">
+<span id="feature-store-multi-workspace"></span><h3>Centralized Feature Store example notebook<a class="headerlink" href="#centralized-feature-store-example-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/machine-learning/feature-store-multi-workspace.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/machine-learning/feature-store-multi-workspace.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/machine-learning/feature-store-multi-workspace.html"            id="eea13914efe365c2d50b0dccd0919389e168f52f784d263d3a1ba3cc4b6e75a5" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

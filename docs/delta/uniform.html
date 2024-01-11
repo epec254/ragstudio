@@ -1,0 +1,558 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Configure Delta tables to be read as Iceberg tables using Universal Format (UniForm)." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Universal Format (UniForm) for Iceberg compatibility with Delta tables">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Universal Format (UniForm) for Iceberg compatibility with Delta tables &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/delta/uniform.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/delta/uniform.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/delta/uniform.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/delta/uniform.html" class="notranslate">English</option>
+    <option value="../../ja/delta/uniform.html" class="notranslate">日本語</option>
+    <option value="../../pt/delta/uniform.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Universal Format (UniForm) for Iceberg compatibility with Delta tables</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="universal-format-uniform-for-iceberg-compatibility-with-delta-tables">
+<h1>Universal Format (UniForm) for Iceberg compatibility with Delta tables<a class="headerlink" href="#universal-format-uniform-for-iceberg-compatibility-with-delta-tables" title="Permalink to this headline"> </a></h1>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../release-notes/release-types.html"><span class="doc">Public Preview</span></a> in Databricks Runtime 13.2 and above.</p>
+</div>
+<p>Delta Universal Format (UniForm) allows you to read Delta tables with Iceberg reader clients.</p>
+<p>UniForm takes advantage of the fact that both Delta Lake and Iceberg consist of Parquet data files and a metadata layer. UniForm automatically generates Iceberg metadata asynchronously, without rewriting data, so that Iceberg clients can read Delta tables as if they were Iceberg tables. A single copy of the data files serves both formats.</p>
+<p>You can configure an external connection to have Unity Catalog act as an Iceberg catalog. See <a class="reference internal" href="#catalog-api"><span class="std std-ref">Read using the Unity Catalog Iceberg catalog endpoint</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>UniForm metadata generation runs asynchronously on the compute used to write data to Delta tables, which might increase the driver resource usage.</p>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<p>To enable UniForm, you must fulfill the following requirements:</p>
+<ul class="simple">
+<li><p>The Delta table must be registered to Unity Catalog. Both managed and external tables are supported.</p></li>
+<li><p>The table must have column mapping enabled. See <a class="reference internal" href="delta-column-mapping.html"><span class="doc">Rename and drop columns with Delta Lake column mapping</span></a>.</p></li>
+<li><p>The Delta table must have a <code class="docutils literal notranslate"><span class="pre">minReaderVersion</span></code> &gt;= 2 and <code class="docutils literal notranslate"><span class="pre">minWriterVersion</span></code> &gt;= 7. See <a class="reference internal" href="feature-compatibility.html"><span class="doc">How does Databricks manage Delta Lake feature compatibility?</span></a>.</p></li>
+<li><p>Writes to the table must use Databricks Runtime 13.2 or above.</p></li>
+</ul>
+</div>
+<div class="section" id="enable-delta-uniform">
+<h2>Enable Delta UniForm<a class="headerlink" href="#enable-delta-uniform" title="Permalink to this headline"> </a></h2>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Enabling Delta UniForm sets the Delta table feature <code class="docutils literal notranslate"><span class="pre">IcebergCompatV1</span></code>, a write protocol feature. Only clients that support this table feature can write to UniForm-enabled tables. You must use Databricks Runtime 13.2 or above to write to Delta tables with this feature enabled.</p>
+<p>You can turn off UniForm by unsetting the <code class="docutils literal notranslate"><span class="pre">delta.universalFormat.enabledFormats</span></code> table property. You cannot turn off column mapping after it has been enabled, and upgrades to Delta Lake reader and writer protocol versions cannot be undone.</p>
+</div>
+<p>The following table property enables UniForm support for Iceberg. <code class="docutils literal notranslate"><span class="pre">iceberg</span></code> is the only valid value.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;delta.universalFormat.enabledFormats&#39;</span> <span class="o">=</span> <span class="s1">&#39;iceberg&#39;</span>
+</pre></div>
+</div>
+<p>You must also enable <a class="reference internal" href="delta-column-mapping.html"><span class="doc">column mapping</span></a> and <code class="docutils literal notranslate"><span class="pre">IcebergCompatV1</span></code> to use UniForm. These are set automatically if you enable UniForm during table creation, as in the following example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">T</span><span class="p">(</span><span class="n">c1</span><span class="w"> </span><span class="nb">INT</span><span class="p">)</span><span class="w"> </span><span class="n">TBLPROPERTIES</span><span class="p">(</span>
+<span class="w">  </span><span class="s1">&#39;delta.universalFormat.enabledFormats&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;iceberg&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>If you create a new table with a CTAS statement, you must manually specify column mapping, as in the following example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">T</span>
+<span class="n">TBLPROPERTIES</span><span class="p">(</span>
+<span class="w">  </span><span class="s1">&#39;delta.columnMapping.mode&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;name&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">&#39;delta.universalFormat.enabledFormats&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;iceberg&#39;</span><span class="p">)</span>
+<span class="k">AS</span>
+<span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">source_table</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>If you are altering an existing table, you must specify all of these properties, as in the following example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">TBLPROPERTIES</span><span class="p">(</span>
+<span class="w">  </span><span class="s1">&#39;delta.columnMapping.mode&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;name&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">&#39;delta.enableIcebergCompatV1&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">&#39;delta.universalFormat.enabledFormats&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;iceberg&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>When you first enable UniForm, asynchronous metadata generation begins. This task must complete before external clients can query the table using Iceberg. See <a class="reference internal" href="#status"><span class="std std-ref">Check Iceberg metadata generation status</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you plan to use BigQuery as your Iceberg reader client, you must set <code class="docutils literal notranslate"><span class="pre">spark.databricks.delta.write.dataFilesToSubdir</span></code> to <code class="docutils literal notranslate"><span class="pre">true</span></code> on Databricks to accommodate a BigQuery requirement for data layout.</p>
+</div>
+<p>See <a class="reference internal" href="#limitations"><span class="std std-ref">Limitations</span></a>.</p>
+</div>
+<div class="section" id="when-does-uniform-generate-iceberg-metadata">
+<h2>When does UniForm generate Iceberg metadata?<a class="headerlink" href="#when-does-uniform-generate-iceberg-metadata" title="Permalink to this headline"> </a></h2>
+<p>Databricks triggers Iceberg metadata generation asynchronously after a Delta Lake write transaction completes using the same compute that completed the Delta transaction. You can also manually trigger Iceberg metadata generation. See <a class="reference internal" href="#manual-trigger"><span class="std std-ref">Manually trigger Iceberg metadata conversion</span></a>.</p>
+<p>To avoid write latencies associated with Iceberg metadata generation, Delta tables with frequent commits might bundle multiple Delta commits into a single Iceberg commit.</p>
+<p>Delta Lake ensures that only one Iceberg metadata generation process is in progress at any time. Commits that would trigger a second concurrent Iceberg metadata generation process will successfully commit to Delta, but they won’t trigger asynchronous Iceberg metadata generation. This prevents cascading latency for metadata generation for workloads with frequent commits (seconds to minutes between commits).</p>
+<p>See <a class="reference internal" href="#versions"><span class="std std-ref">Delta and Iceberg table versions</span></a>.</p>
+</div>
+<div class="section" id="check-iceberg-metadata-generation-status">
+<span id="status"></span><h2>Check Iceberg metadata generation status<a class="headerlink" href="#check-iceberg-metadata-generation-status" title="Permalink to this headline"> </a></h2>
+<p>UniForm adds the following fields to Unity Catalog and Iceberg table metadata to track metadata generation status:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 78%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metadata field</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">converted_delta_version</span></code></p></td>
+<td><p> The latest version of the Delta table for which Iceberg metadata was successfully generated.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">converted_delta_timestamp</span></code></p></td>
+<td><p> The timestamp of the latest Delta commit for which Iceberg metadata was successfully generated.</p></td>
+</tr>
+</tbody>
+</table>
+<p>On Databricks, you can review these metadata fields using Catalog Explorer. These fields and values are also returned when using the <a class="reference external" href="https://docs.databricks.com/api/workspace/tables/get">REST API to get a table</a>.</p>
+<p>See documentation for your Iceberg reader client for how to review table properties outside Databricks. For OSS Apache Spark, you can see these properties using the following syntax:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SHOW</span><span class="w"> </span><span class="n">TBLPROPERTIES</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="manually-trigger-iceberg-metadata-conversion">
+<span id="manual-trigger"></span><h2>Manually trigger Iceberg metadata conversion<a class="headerlink" href="#manually-trigger-iceberg-metadata-conversion" title="Permalink to this headline"> </a></h2>
+<p>You can manually trigger Iceberg metadata generation for the latest version of the Delta table. This operation runs synchronously, meaning that when it completes, the table contents available in Iceberg reflect the latest version of the Delta table available when the conversion process started.</p>
+<p>This operation should not be necessary under normal conditions, but can help if you encounter the following:</p>
+<ul class="simple">
+<li><p>A cluster terminates before automatic metadata generation succeeds.</p></li>
+<li><p>An error or job failure interrupts metadata generation.</p></li>
+<li><p>A client that does not support UniForm Iceberg metadata gneration writes to the Delta table.</p></li>
+</ul>
+<p>Use the following syntax to manually trigger Iceberg metadata generation:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">MSCK</span><span class="w"> </span><span class="n">REPAIR</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SYNC</span><span class="w"> </span><span class="n">METADATA</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="../sql/language-manual/sql-ref-syntax-ddl-repair-table.html"><span class="doc">REPAIR TABLE</span></a>.</p>
+</div>
+<div class="section" id="read-using-a-metadata-json-path">
+<h2>Read using a metadata JSON path<a class="headerlink" href="#read-using-a-metadata-json-path" title="Permalink to this headline"> </a></h2>
+<p>Some Iceberg clients require you provide a path to versioned metadata files to register external Iceberg tables. Each time UniForm converts a new version of the Delta table to Iceberg, it creates a new metadata JSON file.</p>
+<p>Clients that use metadata JSON paths for configuring Iceberg include BigQuery. Refer to documentation for the Iceberg reader client for configuration details.</p>
+<p>Delta Lake stores Iceberg metadata under the table directory, using the following pattern:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">table</span><span class="o">-</span><span class="n">path</span><span class="o">&gt;/</span><span class="n">metadata</span><span class="o">/&lt;</span><span class="n">version</span><span class="o">-</span><span class="n">number</span><span class="o">&gt;-&lt;</span><span class="n">uuid</span><span class="o">&gt;.</span><span class="n">metadata</span><span class="o">.</span><span class="n">json</span>
+</pre></div>
+</div>
+<p>You can find the path of this file using Catalog Explorer. For tables with UniForm enabled, the details for the Delta table include a field for the Iceberg metadata location.</p>
+<p>You can also use the REST API to get all details for a table, including the metadata location. Use the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GET</span> <span class="n">api</span><span class="o">/</span><span class="mf">2.1</span><span class="o">/</span><span class="n">unity</span><span class="o">-</span><span class="n">catalog</span><span class="o">/</span><span class="n">tables</span><span class="o">/&lt;</span><span class="n">catalog</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;.&lt;</span><span class="n">schame</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;.&lt;</span><span class="n">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The response includes the following information:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="o">...</span>
+          <span class="s2">&quot;delta_uniform_iceberg&quot;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s2">&quot;metadata_location&quot;</span><span class="p">:</span>  <span class="s2">&quot;&lt;cloud-storage-uri&gt;/metadata/v&lt;version-number&gt;-&lt;uuid&gt;.metadata.json&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Path-based Iceberg reader clients might require manually updating and refreshing metadata JSON paths to read current table versions. Users might encounter errors when querying Iceberg tables using out-of-date versions as Parquet data files are removed from the Delta table with <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code>.</p>
+</div>
+</div>
+<div class="section" id="read-using-the-unity-catalog-iceberg-catalog-endpoint">
+<span id="read-using-the-uc-iceberg-catalog-endpoint"></span><span id="catalog-api"></span><h2>Read using the Unity Catalog Iceberg catalog endpoint<a class="headerlink" href="#read-using-the-unity-catalog-iceberg-catalog-endpoint" title="Permalink to this headline"> </a></h2>
+<p>Some Iceberg clients can connect to an Iceberg REST catalog. Unity Catalog provides a read-only implementation of the Iceberg REST catalog API for Delta tables with UniForm enabled using the endpoint <code class="docutils literal notranslate"><span class="pre">/api/2.1/unity-catalog/iceberg</span></code>. See the <a class="reference external" href="https://github.com/apache/iceberg/blob/master/open-api/rest-catalog-open-api.yaml">Iceberg REST API spec</a> for details on using this REST API.</p>
+<p>Clients known to support the Iceberg catalog API include Apache Spark, Flink, and Trino. You must configure access to the underlying cloud object storage containing the Delta table with UniForm enabled. Refer to documentation for the Iceberg reader client for configuration details.</p>
+<p>You must generate and configure a Databricks personal access token to allow other services to connect to Unity Catalog. See <a class="reference internal" href="../dev-tools/auth/index.html"><span class="doc">Authentication for Databricks automation - overview</span></a>.</p>
+<p>The following is an example of the settings to configure OSS Apache Spark to read UniForm as Iceberg:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;spark.sql.extensions&quot;</span><span class="p">:</span> <span class="s2">&quot;org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions&quot;</span><span class="p">,</span>
+<span class="s2">&quot;spark.sql.catalog.unity&quot;</span><span class="o">=</span><span class="s2">&quot;org.apache.iceberg.spark.SparkCatalog&quot;</span><span class="p">,</span>
+<span class="s2">&quot;spark.sql.catalog.unity.catalog-impl&quot;</span><span class="p">:</span> <span class="s2">&quot;org.apache.iceberg.rest.RESTCatalog&quot;</span><span class="p">,</span>
+<span class="s2">&quot;spark.sql.catalog.unity.uri&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;api-root&gt;/api/2.1/unity-catalog/iceberg&quot;</span><span class="p">,</span>
+<span class="s2">&quot;spark.sql.catalog.unity.token&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;your_personal_access_token&gt;&quot;</span><span class="p">,</span>
+<span class="s2">&quot;spark.sql.catalog.unity.io-impl&quot;</span><span class="p">:</span> <span class="s2">&quot;org.apache.iceberg.aws.s3.S3FileIO</span>
+</pre></div>
+</div>
+<p>Substitute the full URL of the workspace in which you generated the personal access token for <code class="docutils literal notranslate"><span class="pre">&lt;api-root&gt;</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When querying tables in Unity Catalog using this method, object identifiers use the following pattern:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">unity</span><span class="o">.&lt;</span><span class="n">catalog</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;.&lt;</span><span class="n">schema</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;.&lt;</span><span class="n">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>This pattern uses the same three-tier namespacing present in Unity Catalog, but adds an additional prefix <code class="docutils literal notranslate"><span class="pre">unity</span></code>.</p>
+</div>
+</div>
+<div class="section" id="delta-and-iceberg-table-versions">
+<span id="versions"></span><h2>Delta and Iceberg table versions<a class="headerlink" href="#delta-and-iceberg-table-versions" title="Permalink to this headline"> </a></h2>
+<p>Both Delta Lake and Iceberg allow time travel queries using table versions or timestamps stored in table metadata.</p>
+<p>In general, Iceberg and Delta table versions do not align by either the commit timestamp or the version ID. If you wish to verify which version of a Delta table a given version of an Iceberg table corresponds to, you can use the corresponding table properties set on the Iceberg table. See <a class="reference internal" href="#status"><span class="std std-ref">Check Iceberg metadata generation status</span></a>.</p>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline"> </a></h2>
+<p>The following limitations exist:</p>
+<ul class="simple">
+<li><p>UniForm does not work on tables with deletion vectors enabled. See <a class="reference internal" href="deletion-vectors.html"><span class="doc">What are deletion vectors?</span></a>.</p></li>
+<li><p>Delta tables with UniForm enabled do not support <code class="docutils literal notranslate"><span class="pre">LIST</span></code>, <code class="docutils literal notranslate"><span class="pre">MAP</span></code>, and <code class="docutils literal notranslate"><span class="pre">VOID</span></code> types.</p></li>
+<li><p>Iceberg clients can only read from UniForm. Writes are not supported.</p></li>
+<li><p>Iceberg reader clients might have individual limitations, regardless of UniForm. See documentation for your chosen client.</p></li>
+<li><p>Iceberg reader clients version 1.2.0 and below do not support <code class="docutils literal notranslate"><span class="pre">INT96</span></code> timestamp type written by Apache Spark. Use the following code in notebooks that write to UniForm tables to avoid this limitation: <code class="docutils literal notranslate"><span class="pre">spark.conf.set(“spark.sql.parquet.outputTimestampType”,</span> <span class="pre">“TIMESTAMP_MICROS”)</span></code></p></li>
+<li><p>The public preview version of the Unity Catalog Iceberg endpoint is not meant for large-scale production workloads. You might experience rate-limiting if you exceed a threshold of 5 queries per second.</p></li>
+</ul>
+<p>The following Delta Lake features work for Delta clients when UniForm is enabled, but do not have support in Iceberg:</p>
+<ul class="simple">
+<li><p>Change Data Feed</p></li>
+<li><p>Delta Sharing</p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

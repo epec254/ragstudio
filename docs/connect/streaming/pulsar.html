@@ -1,0 +1,610 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="This article describes how you can configure a streaming read from Apache Pulsar on Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Stream from Apache Pulsar">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Stream from Apache Pulsar &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/connect/streaming/pulsar.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/connect/streaming/pulsar.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/connect/streaming/pulsar.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/connect/streaming/pulsar.html" class="notranslate">English</option>
+    <option value="../../../ja/connect/streaming/pulsar.html" class="notranslate">日本語</option>
+    <option value="../../../pt/connect/streaming/pulsar.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Stream from Apache Pulsar</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="stream-from-apache-pulsar">
+<h1>Stream from Apache Pulsar<a class="headerlink" href="#stream-from-apache-pulsar" title="Permalink to this headline"> </a></h1>
+<div class="preview admonition">
+<p class="admonition-title">Preview</p>
+<p>This feature is in <a class="reference internal" href="../../release-notes/release-types.html"><span class="doc">Public Preview</span></a>.</p>
+</div>
+<p>In Databricks Runtime 14.1 and above, you can use Structured Streaming to stream data from Apache Pulsar on Databricks.</p>
+<p>Structured Streaming provides exactly-once processing semantics for data read from Pulsar sources.</p>
+<div class="section" id="syntax-example">
+<h2>Syntax example<a class="headerlink" href="#syntax-example" title="Permalink to this headline"> </a></h2>
+<p>The following is a basic example of using Structured Streaming to read from Pulsar:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">readStream</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;pulsar&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;service.url&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pulsar://broker.example.com:6650&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;topics&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;topic1,topic2&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">load</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You must always provide a <code class="docutils literal notranslate"><span class="pre">service.url</span></code> and one of the following options to specify topics:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">topic</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">topics</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">topicsPattern</span></code></p></li>
+</ul>
+<p>For a complete list of options, see <a class="reference internal" href="#options"><span class="std std-ref">Configure options for Pulsar streaming read</span></a>.</p>
+</div>
+<div class="section" id="authenticate-to-pulsar">
+<span id="auth"></span><h2>Authenticate to Pulsar<a class="headerlink" href="#authenticate-to-pulsar" title="Permalink to this headline"> </a></h2>
+<p>Databricks supports truststore and keystore authentication to Pulsar. Databricks recommends using secrets when storing configuration details.</p>
+<p>You can set the following options during stream configuration:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pulsar.client.authPluginClassName</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pulsar.client.authParams</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pulsar.client.useKeyStoreTls</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pulsar.client.tlsTrustStoreType</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pulsar.client.tlsTrustStorePath</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pulsar.client.tlsTrustStorePassword</span></code></p></li>
+</ul>
+<p>If the stream uses a <code class="docutils literal notranslate"><span class="pre">PulsarAdmin</span></code>, also set the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pulsar.admin.authPluginClassName</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pulsar.admin.authParams</span></code></p></li>
+</ul>
+<p>The following example demonstrates configuring authentication options:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="n">clientAuthParams</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dbutils</span><span class="p">.</span><span class="n">secrets</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">scope</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;pulsar&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;clientAuthParams&quot;</span><span class="p">)</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">clientPw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dbutils</span><span class="p">.</span><span class="n">secrets</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">scope</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;pulsar&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;clientPw&quot;</span><span class="p">)</span>
+
+<span class="c1">// clientAuthParams is a comma-separated list of key-value pairs, such as:</span>
+<span class="c1">//&quot;keyStoreType:JKS,keyStorePath:/var/private/tls/client.keystore.jks,keyStorePassword:clientpw&quot;</span>
+
+<span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">readStream</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;pulsar&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;service.url&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pulsar://broker.example.com:6650&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;topics&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;topic1,topic2&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;startingOffsets&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">startingOffsets</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;pulsar.client.authPluginClassName&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;org.apache.pulsar.client.impl.auth.AuthenticationKeyStoreTls&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;pulsar.client.authParams&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">clientAuthParams</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;pulsar.client.useKeyStoreTls&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;pulsar.client.tlsTrustStoreType&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;JKS&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;pulsar.client.tlsTrustStorePath&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">trustStorePath</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;pulsar.client.tlsTrustStorePassword&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">clientPw</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">load</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="pulsar-schema">
+<h2>Pulsar schema<a class="headerlink" href="#pulsar-schema" title="Permalink to this headline"> </a></h2>
+<p>The schema of records read from Pulsar depends on how topics have their schemas encoded.</p>
+<ul class="simple">
+<li><p>For topics with Avro or JSON schema, field names and field types are preserved in the resulting Spark DataFrame.</p></li>
+<li><p>For topics without schema or with a simple data type in Pulsar, the payload is loaded to a <code class="docutils literal notranslate"><span class="pre">value</span></code> column.</p></li>
+<li><p>If the reader is configured to read multiple topics with different schemas, set <code class="docutils literal notranslate"><span class="pre">allowDifferentTopicSchemas</span></code> to load the raw content to a <code class="docutils literal notranslate"><span class="pre">value</span></code> column.</p></li>
+</ul>
+<p>Pulsar records have the following metadata fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">__key</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">binary</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">__topic</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">__messageId</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">binary</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">__publishTime</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">timestamp</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">__eventTime</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">timestamp</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">__messageProperties</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">map&lt;String,</span> <span class="pre">String&gt;</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="configure-options-for-pulsar-streaming-read">
+<span id="options"></span><h2>Configure options for Pulsar streaming read<a class="headerlink" href="#configure-options-for-pulsar-streaming-read" title="Permalink to this headline"> </a></h2>
+<p>All options are configured as part of a Structured Streaming read using <code class="docutils literal notranslate"><span class="pre">.option(&quot;&lt;optionName&gt;&quot;,</span> <span class="pre">&quot;&lt;optionValue&gt;&quot;)</span></code> syntax. You can also configure authentication using options. See <a class="reference internal" href="#auth"><span class="std std-ref">Authenticate to Pulsar</span></a>.</p>
+<p>The following table describes required configurations for Pulsar. You must specify only one of the options <code class="docutils literal notranslate"><span class="pre">topic</span></code>, <code class="docutils literal notranslate"><span class="pre">topics</span></code> or <code class="docutils literal notranslate"><span class="pre">topicsPattern</span></code>.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 15%" />
+<col style="width: 69%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Default value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">service.url</span></code></p></td>
+<td><p> none</p></td>
+<td><p> The Pulsar <code class="docutils literal notranslate"><span class="pre">serviceUrl</span></code> configuration for the Pulsar service.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">topic</span></code></p></td>
+<td><p> none</p></td>
+<td><p> A topic name string for the topic to consume.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">topics</span></code></p></td>
+<td><p> none</p></td>
+<td><p> A comma-separated list of the topics to consume.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">topicsPattern</span></code></p></td>
+<td><p> none</p></td>
+<td><p> A Java regex string to match on topics to consume.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The following table describes other options supported for Pulsar:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 5%" />
+<col style="width: 83%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Default value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">predefinedSubscription</span></code></p></td>
+<td><p> none</p></td>
+<td><p> The predefined subscription name used by the connector to track spark application progress.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">subscriptionPrefix</span></code></p></td>
+<td><p> none</p></td>
+<td><p> A prefix used by the connector to generate a random subscription to track spark application progress.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">pollTimeoutMs</span></code></p></td>
+<td><p> 120000</p></td>
+<td><p> The timeout for reading messages from Pulsar in milliseconds.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">waitingForNonExistedTopic</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">false</span></code></p></td>
+<td><p> Whether the connector should wait until the desired topics are created.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">failOnDataLoss</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">true</span></code></p></td>
+<td><p> Controls whether to fail a query when data is lost (for example, topics are deleted, or messages are deleted because of retention policy).</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">allowDifferentTopicSchemas</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">false</span></code></p></td>
+<td><p> If multiple topics with different schemas are read, use this parameter to turn off automatic schema-based topic value deserialization. Only the raw values are returned when this is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">startingOffsets</span></code></p></td>
+<td><p> <code class="docutils literal notranslate"><span class="pre">latest</span></code></p></td>
+<td><p> If <code class="docutils literal notranslate"><span class="pre">latest</span></code>, the reader reads the newest records after it starts running. If <code class="docutils literal notranslate"><span class="pre">earliest</span></code>, the reader reads from the earliest offset. The user can also specify a JSON string that specifies a specific offset.</p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">maxBytesPerTrigger</span></code></p></td>
+<td><p> none</p></td>
+<td><p> A soft limit of the maximum number of bytes we want to process per microbatch. If this is specified, <code class="docutils literal notranslate"><span class="pre">admin.url</span></code> also needs to be specified.</p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">admin.url</span></code></p></td>
+<td><p> none</p></td>
+<td><p> The Pulsar <code class="docutils literal notranslate"><span class="pre">serviceHttpUrl</span></code> configuration. Only needed when <code class="docutils literal notranslate"><span class="pre">maxBytesPerTrigger</span></code> is specified.</p></td>
+</tr>
+</tbody>
+</table>
+<p>You can also specify any Pulsar client, admin, and reader configurations using the following patterns:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 86%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Pattern</p></th>
+<th class="head"><p>Link to conifiguration options</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">pulsar.client.*</span></code></p></td>
+<td><p> <a class="reference external" href="https://pulsar.apache.org/docs/2.11.x/client-libraries-java/#client">Pulsar client configuration</a></p></td>
+</tr>
+<tr class="row-odd"><td><p> <code class="docutils literal notranslate"><span class="pre">pulsar.admin.*</span></code></p></td>
+<td><p> <a class="reference external" href="https://pulsar.apache.org/docs/2.10.x/admin-api-overview/">Pulsar admin configuration</a></p></td>
+</tr>
+<tr class="row-even"><td><p> <code class="docutils literal notranslate"><span class="pre">pulsar.reader.*</span></code></p></td>
+<td><p> <a class="reference external" href="https://pulsar.apache.org/docs/2.11.x/client-libraries-java/#configure-reader">Pulsar reader configuration</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="construct-starting-offsets-json">
+<h2>Construct starting offsets JSON<a class="headerlink" href="#construct-starting-offsets-json" title="Permalink to this headline"> </a></h2>
+<p>You can manually construct a message ID to specify a specific offset and pass this as a JSON to the <code class="docutils literal notranslate"><span class="pre">startingOffsets</span></code> option. The following code example demonstrates this syntax:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">pulsar</span><span class="p">.</span><span class="nc">JsonUtils</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">pulsar</span><span class="p">.</span><span class="nn">client</span><span class="p">.</span><span class="nn">api</span><span class="p">.</span><span class="nc">MessageId</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">pulsar</span><span class="p">.</span><span class="nn">client</span><span class="p">.</span><span class="nn">impl</span><span class="p">.</span><span class="nc">MessageIdImpl</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">topic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;my-topic&quot;</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">msgId</span><span class="p">:</span><span class="w"> </span><span class="nc">MessageId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">MessageIdImpl</span><span class="p">(</span><span class="n">ledgerId</span><span class="p">,</span><span class="w"> </span><span class="n">entryId</span><span class="p">,</span><span class="w"> </span><span class="n">partitionIndex</span><span class="p">)</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">startOffsets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">JsonUtils</span><span class="p">.</span><span class="n">topicOffsets</span><span class="p">(</span><span class="nc">Map</span><span class="p">(</span><span class="n">topic</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">msgId</span><span class="p">))</span>
+
+<span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">readStream</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;pulsar&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;service.url&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pulsar://broker.example.com:6650&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;topic&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">topic</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;startingOffsets&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">startOffsets</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">load</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

@@ -1,0 +1,728 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn about securable objects, privilege inheritance, and managing privilege types in Unity Catalog." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Unity Catalog privileges and securable objects">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Unity Catalog privileges and securable objects &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/data-governance/unity-catalog/manage-privileges/privileges.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/data-governance/unity-catalog/manage-privileges/privileges.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/data-governance/unity-catalog/manage-privileges/privileges.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../../en/data-governance/unity-catalog/manage-privileges/privileges.html" class="notranslate">English</option>
+    <option value="../../../../ja/data-governance/unity-catalog/manage-privileges/privileges.html" class="notranslate">日本語</option>
+    <option value="../../../../pt/data-governance/unity-catalog/manage-privileges/privileges.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Unity Catalog privileges and securable objects</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="unity-catalog-privileges-and-securable-objects">
+<span id="uc-privileges-and-securable-objects"></span><h1>Unity Catalog privileges and securable objects<a class="headerlink" href="#unity-catalog-privileges-and-securable-objects" title="Permalink to this headline"> </a></h1>
+<p>This article describes the Unity Catalog privilege model. To learn about how this model differs from the Hive metastore, see <a class="reference internal" href="../hive-metastore.html"><span class="doc">Work with Unity Catalog and the legacy Hive metastore</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This article refers to the Unity Catalog privileges and inheritance model in Privilege Model version 1.0. If you created your Unity Catalog metastore during the public preview (before August 25, 2022), you can upgrade to Privilege Model version 1.0 following <a class="reference internal" href="upgrade-privilege-model.html"><span class="doc">Upgrade to privilege inheritance</span></a></p>
+</div>
+<div class="section" id="who-can-manage-privileges">
+<h2>Who can manage privileges?<a class="headerlink" href="#who-can-manage-privileges" title="Permalink to this headline"> </a></h2>
+<p>Privileges can be granted by either a metastore admin, the owner of an object, or the owner of the catalog or schema that contains the object.</p>
+<p>If your workspace was enabled for Unity Catalog automatically, the workspace is attached to a metastore by default and a workspace catalog is created for your workspace in the metastore. Workspace admins are the default owners of the workspace catalog. As owners, they can manage privileges on the workspace catalog and all child objects.</p>
+<p>All workspace users receive the <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> privilege on the workspace catalog. Workspace users also receive the <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">VOLUME</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">MODEL</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">FUNCTION</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span></code> privileges on the <code class="docutils literal notranslate"><span class="pre">default</span></code> schema in the catalog.</p>
+<p>For more information, see <a class="reference internal" href="../get-started.html#enablement"><span class="std std-ref">Automatic enablement of Unity Catalog</span></a>.</p>
+</div>
+<div class="section" id="how-to-manage-privileges">
+<h2>How to manage privileges<a class="headerlink" href="#how-to-manage-privileges" title="Permalink to this headline"> </a></h2>
+<p>You can manage privileges for metastore objects by using SQL commands, <a class="reference internal" href="../../../archive/dev-tools/cli/unity-catalog-cli.html"><span class="doc">Unity Catalog CLI (legacy)</span></a>, or in Catalog Explorer. To learn how to use Catalog Explorer to manage privileges see, <a class="reference internal" href="../../../catalog-explorer/manage-permissions.html"><span class="doc">Manage Unity Catalog permissions in Catalog Explorer</span></a>.</p>
+<p>To manage privileges in SQL, you use <a class="reference internal" href="../../../sql/language-manual/security-grant.html"><span class="doc">GRANT</span></a> and <a class="reference internal" href="../../../sql/language-manual/security-revoke.html"><span class="doc">REVOKE</span></a> statements in a notebook or the Databricks SQL query editor, using the syntax:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">GRANT</span><span class="w"> </span><span class="n">privilege_type</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">securable_object</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">principal</span>
+</pre></div>
+</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">privilege_type</span></code> is a <a class="reference internal" href="#privilege-types"><span class="std std-ref">Unity Catalog privilege type</span></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">securable_object</span></code> is a <a class="reference internal" href="#securable-objects"><span class="std std-ref">securable object in the Unity Catalog</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">principal</span></code> is a user, service principal (represented by its applicationId value), or group. You must enclose users, service principals, and group names with <a class="reference internal" href="../../../sql/language-manual/sql-ref-identifiers.html#delimited-identifiers"><span class="std std-ref">special characters</span></a> in backticks (<code class="docutils literal notranslate"> <span class="pre">`</span> <span class="pre">`</span> </code>). See <a class="reference internal" href="../../../sql/language-manual/sql-ref-principal.html"><span class="doc">Principal</span></a>.</p></li>
+</ul>
+<p>For example, the following command grants a group named <em>finance-team</em> access to create tables in a schema named <em>default</em> with the parent catalog named <em>main</em>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">GRANT</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="n">main</span><span class="p">.</span><span class="k">default</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="o">`</span><span class="n">finance</span><span class="o">-</span><span class="n">team</span><span class="o">`</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Most statements that grant or revoke a privilege follow the syntax shown in the previous example, stating the securable object type (<code class="docutils literal notranslate"><span class="pre">SCHEMA</span></code>) followed by the securable object’s name (<code class="docutils literal notranslate"><span class="pre">main.default</span></code>). However, when you grant privileges on a metastore, you do not include the metastore name, because the metastore that is attached to your workspace is assumed:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">GRANT</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">CATALOG</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">METASTORE</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="o">`</span><span class="n">account</span><span class="w"> </span><span class="n">users</span><span class="o">`</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>For more information about granting privileges using SQL commands, see <a class="reference internal" href="../../../sql/language-manual/sql-ref-privileges.html"><span class="doc">Privileges and securable objects in Unity Catalog</span></a>.</p>
+<p>You can also manage privileges by using the <a class="reference internal" href="../../../dev-tools/terraform/index.html"><span class="doc">Databricks Terraform</span></a> provider and <a class="reference external" href="https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/grants#storage-location-grants">databricks_grants</a>.</p>
+</div>
+<div class="section" id="inheritance-model">
+<span id="inheritance"></span><h2>Inheritance model<a class="headerlink" href="#inheritance-model" title="Permalink to this headline"> </a></h2>
+<p>Securable objects in Unity Catalog are hierarchical and privileges are inherited downward. The highest level object that privileges are inherited from is the catalog. This means that granting a privilege on a catalog or schema automatically grants the privilege to all current and future objects within the catalog or schema. Privileges that are granted on a Unity Catalog metastore are not inherited.</p>
+<p>For example, the following command grants the <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> privilege on all tables and views in any schema in the catalog <em>main</em> to the group <em>finance</em>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">CATALOG</span><span class="w"> </span><span class="n">main</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">finance</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Similarly, you can perform grants on a schema for a smaller scope of access:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="n">main</span><span class="p">.</span><span class="k">default</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">finance</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The inheritance model provides an easy way to set up default access rules for your data. For example, the following commands enable the machine learning team to create tables within a schema and read each other’s tables:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">CATALOG</span><span class="w"> </span><span class="n">ml</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="n">ml</span><span class="p">.</span><span class="n">team_sandbox</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="n">USE_CATALOG</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">CATALOG</span><span class="w"> </span><span class="n">ml</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">ml_team</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="n">USE_SCHEMA</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="n">ml</span><span class="p">.</span><span class="n">team_sandbox</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">ml_team</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="n">ml</span><span class="p">.</span><span class="n">team_sandbox</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">ml_team</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="n">ml</span><span class="p">.</span><span class="n">team_sandbox</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">ml_team</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Owners of an object are automatically granted all privileges on that object. In addition, object owners can grant privileges on the object itself and on all of its child objects. This means that owners of a schema do not automatically have all privileges on the tables in the schema, but they can grant themselves privileges on the tables in the schema.</p>
+</div>
+<div class="section" id="securable-objects-in-unity-catalog">
+<span id="securable-objects-in-uc"></span><span id="securable-objects"></span><h2>Securable objects in Unity Catalog<a class="headerlink" href="#securable-objects-in-unity-catalog" title="Permalink to this headline"> </a></h2>
+<p>A securable object is an object defined in the Unity Catalog metastore on which privileges can be granted to a principal. Securable objects in Unity Catalog are hierarchical.</p>
+<div class="figure align-default">
+<img alt="Unity Catalog object hierarchy" src="../../../_images/object-hierarchy.png" />
+</div>
+<p>The securable objects are:</p>
+<ul class="simple">
+<li><p><strong>METASTORE</strong>: The top-level container for metadata. Each Unity Catalog metastore exposes a three-level namespace (<code class="docutils literal notranslate"><span class="pre">catalog</span></code>.<code class="docutils literal notranslate"><span class="pre">schema</span></code>.<code class="docutils literal notranslate"><span class="pre">table</span></code>) that organizes your data.</p></li>
+<li><p><strong>CATALOG</strong>: The first layer of the object hierarchy, used to organize your data assets. A <em>foreign catalog</em> is a special catalog type that mirrors a database in an external data system in a Lakehouse Federation scenario.</p></li>
+<li><p><strong>SCHEMA</strong>: Also known as databases, schemas are the second layer of the object hierarchy and contain tables and views.</p></li>
+<li><p><strong>TABLE</strong>: The lowest level in the object hierarchy, tables can be  <em>external</em> (stored in external locations in your cloud storage of choice) or <em>managed</em> tables (stored in a storage container in your cloud storage that you create expressly for Databricks).</p></li>
+<li><p><strong>VIEW</strong>: A read-only object created from one or more tables that is contained within a schema.</p></li>
+<li><p><strong>VOLUME</strong>: The lowest level in the object hierarchy, volumes can be  <em>external</em> (stored in external locations in your cloud storage of choice) or <em>managed</em> (stored in a storage container in your cloud storage that you create expressly for Databricks).</p></li>
+<li><p><strong>REGISTERED MODEL</strong>: An <a class="reference internal" href="../../../machine-learning/manage-model-lifecycle/index.html"><span class="doc">MLflow registered model</span></a> that is contained within a schema.</p></li>
+<li><p><strong>FUNCTION</strong>: A user-defined function that is contained within a schema. See <a class="reference internal" href="../../../udf/unity-catalog.html"><span class="doc">User-defined functions (UDFs) in Unity Catalog</span></a>.</p></li>
+<li><p><strong>EXTERNAL LOCATION</strong>: An object that contains a reference to a storage credential and a cloud storage path that is contained within a Unity Catalog metastore.</p></li>
+<li><p><strong>STORAGE CREDENTIAL</strong>: An object that encapsulates a long-term cloud credential that provides access to cloud storage that is contained within a Unity Catalog metastore.</p></li>
+<li><p><strong>CONNECTION</strong>: An object that specifies a path and credentials for accessing an external database system in a Lakehouse Federation scenario.</p></li>
+<li><p><strong>SHARE</strong>: A logical grouping for the tables you intend to share using Delta Sharing. A share is contained within a Unity Catalog metastore.</p></li>
+<li><p><strong>RECIPIENT</strong>: An object that identifies an organization or group of users that can have data shared with them using Delta Sharing. These objects are contained within a Unity Catalog metastore.</p></li>
+<li><p><strong>PROVIDER</strong>: An object that represents an organization that has made data available for sharing using Delta Sharing. These objects are contained within a Unity Catalog metastore.</p></li>
+</ul>
+</div>
+<div class="section" id="privilege-types-by-securable-object-in-unity-catalog">
+<span id="privilege-types-by-securable-object-in-uc"></span><span id="privilege-types"></span><h2>Privilege types by securable object in Unity Catalog<a class="headerlink" href="#privilege-types-by-securable-object-in-unity-catalog" title="Permalink to this headline"> </a></h2>
+<p>The following table lists the privilege types that apply to each securable object in Unity Catalog:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Securable</p></th>
+<th class="head"><p>Privileges</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Metastore</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">CATALOG</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">CONNECTION</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">LOCATION</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">PROVIDER</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">RECIPIENT</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">SHARE</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">STORAGE</span> <span class="pre">CREDENTIAL</span></code>, <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">SHARE</span> <span class="pre">PERMISSION</span></code>, <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">MARKETPLACE</span> <span class="pre">ASSETS</span></code>, <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">PROVIDER</span></code>, <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">RECIPIENT</span></code>, <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SHARE</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Catalog</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ALL</span> <span class="pre">PRIVILEGES</span></code>, <code class="docutils literal notranslate"><span class="pre">APPLY</span> <span class="pre">TAG</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">SCHEMA</span></code>, <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code></p>
+<p>All users have <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> on the <code class="docutils literal notranslate"><span class="pre">main</span></code> catalog by default.</p>
+<p>The following privilege types apply to securable objects in a catalog. You can grant these privileges at the catalog level to apply them to the pertinent current and future objects in the catalog.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">FUNCTION</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">MODEL</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">VOLUME</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">FOREIGN</span> <span class="pre">CATALOG</span></code>, <code class="docutils literal notranslate"><span class="pre">READ</span> <span class="pre">VOLUME</span></code>, <code class="docutils literal notranslate"><span class="pre">WRITE</span> <span class="pre">VOLUME</span></code>, <code class="docutils literal notranslate"><span class="pre">EXECUTE</span></code>, <code class="docutils literal notranslate"><span class="pre">MODIFY</span></code>, <code class="docutils literal notranslate"><span class="pre">SELECT</span></code>, <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p>Schema</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ALL</span> <span class="pre">PRIVILEGES</span></code>, <code class="docutils literal notranslate"><span class="pre">APPLY</span> <span class="pre">TAG</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">FUNCTION</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">MODEL</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">VOLUME</span></code>, <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code></p>
+<p>The following privilege types apply to securable objects within a schema. You can grant these privileges at the schema level to apply them to the pertinent current and future objects within the schema.</p>
+<p><code class="docutils literal notranslate"><span class="pre">EXECUTE</span></code>, <code class="docutils literal notranslate"><span class="pre">MODIFY</span></code>, <code class="docutils literal notranslate"><span class="pre">SELECT</span></code>, <code class="docutils literal notranslate"><span class="pre">READ</span> <span class="pre">VOLUME</span></code>, <code class="docutils literal notranslate"><span class="pre">WRITE</span> <span class="pre">VOLUME</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Table</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ALL</span> <span class="pre">PRIVILEGES</span></code>, <code class="docutils literal notranslate"><span class="pre">APPLY</span> <span class="pre">TAG</span></code>, <code class="docutils literal notranslate"><span class="pre">SELECT</span></code>, <code class="docutils literal notranslate"><span class="pre">MODIFY</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>View</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ALL</span> <span class="pre">PRIVILEGES</span></code>, <code class="docutils literal notranslate"><span class="pre">APPLY</span> <span class="pre">TAG</span></code>, <code class="docutils literal notranslate"><span class="pre">SELECT</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Volume</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ALL</span> <span class="pre">PRIVILEGES</span></code>, <code class="docutils literal notranslate"><span class="pre">READ</span> <span class="pre">VOLUME</span></code>, <code class="docutils literal notranslate"><span class="pre">WRITE</span> <span class="pre">VOLUME</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>External location</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ALL</span> <span class="pre">PRIVILEGES</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">VOLUME</span></code>, <code class="docutils literal notranslate"><span class="pre">READ</span> <span class="pre">FILES</span></code>, <code class="docutils literal notranslate"><span class="pre">WRITE</span> <span class="pre">FILES</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">MANAGED</span> <span class="pre">STORAGE</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Storage credential</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ALL</span> <span class="pre">PRIVILEGES</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">LOCATION</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">EXTERNAL</span> <span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">READ</span> <span class="pre">FILES</span></code>, <code class="docutils literal notranslate"><span class="pre">WRITE</span> <span class="pre">FILES</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Connection</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ALL</span> <span class="pre">PRIVILEGES</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">FOREIGN</span> <span class="pre">CATALOG</span></code>, <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CONNECTION</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Function</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ALL</span> <span class="pre">PRIVILEGES</span></code>, <code class="docutils literal notranslate"><span class="pre">EXECUTE</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Registered Model</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ALL</span> <span class="pre">PRIVILEGES</span></code>, <code class="docutils literal notranslate"><span class="pre">APPLY</span> <span class="pre">TAG</span></code>,  <code class="docutils literal notranslate"><span class="pre">EXECUTE</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Share</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SELECT</span></code> (Can be granted to <code class="docutils literal notranslate"><span class="pre">RECIPIENT</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p>Recipient</p></td>
+<td><p>None</p></td>
+</tr>
+<tr class="row-odd"><td><p>Provider</p></td>
+<td><p>None</p></td>
+</tr>
+</tbody>
+</table>
+<p>When you manage privileges on a metastore, you do not include the metastore name in a SQL command. Unity Catalog grants or revokes the privilege on the metastore attached to your workspace. For example, the following command grants a group named <em>engineering</em> the ability to create a catalog in the metastore attached to the workspace:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">GRANT</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">CATALOG</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">METASTORE</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">engineering</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="general-unity-catalog-privilege-types">
+<span id="general-uc-privilege-types"></span><span id="privilege-descriptions"></span><h2>General Unity Catalog privilege types<a class="headerlink" href="#general-unity-catalog-privilege-types" title="Permalink to this headline"> </a></h2>
+<p>This section provides details about the privilege types that apply generally to Unity Catalog.</p>
+<div class="section" id="all-privileges">
+<h3>ALL PRIVILEGES<a class="headerlink" href="#all-privileges" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">CATALOG</span></code>, <code class="docutils literal notranslate"><span class="pre">EXTERNAL</span> <span class="pre">LOCATION</span></code>, <code class="docutils literal notranslate"><span class="pre">STORAGE</span> <span class="pre">CREDENTIAL</span></code>, <code class="docutils literal notranslate"><span class="pre">SCHEMA</span></code>, <code class="docutils literal notranslate"><span class="pre">FUNCTION</span></code>, <code class="docutils literal notranslate"><span class="pre">REGISTERED</span> <span class="pre">MODEL</span></code>, <code class="docutils literal notranslate"><span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">VIEW</span></code></strong></p>
+<p>Used to grant or revoke all privileges applicable to the securable object and its child objects without explicitly specifying them.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">ALL</span> <span class="pre">PRIVILEGES</span></code> is granted on an object, it does not individually grant the user each applicable privilege at the time of the grant. Instead, it expands to all available privileges at the time permissions checks are made.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">ALL</span> <span class="pre">PRIVILEGES</span></code> is revoked, the <code class="docutils literal notranslate"><span class="pre">ALL</span> <span class="pre">PRIVILEGES</span></code> privilege is revoked and any explicit privileges granted to the user on the object are also revoked.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This privilege is powerful when applied at higher levels in the hierarchy. For example, GRANT ALL PRIVILEGES ON CATALOG main TO <code class="docutils literal notranslate"><span class="pre">analysts</span></code> would give the analyst team all privileges on every object (schemas, tables, views, functions) in the catalog.</p>
+</div>
+</div>
+<div class="section" id="apply-tag">
+<h3>APPLY TAG<a class="headerlink" href="#apply-tag" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">CATALOG</span></code>, <code class="docutils literal notranslate"><span class="pre">SCHEMA</span></code>, <code class="docutils literal notranslate"><span class="pre">REGISTERED</span> <span class="pre">MODEL</span></code>, <code class="docutils literal notranslate"><span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">VIEW</span></code></strong></p>
+<p>Allows a user to add and edit tags on an object. Granting <code class="docutils literal notranslate"><span class="pre">APPLY</span> <span class="pre">TAG</span></code> to a table or view also enables column tagging.</p>
+<p>The user must also have the <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> privilege on the parent catalog and <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> on the parent schema.</p>
+</div>
+<div class="section" id="create-catalog">
+<h3>CREATE CATALOG<a class="headerlink" href="#create-catalog" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: Unity Catalog metastore</strong></p>
+<p>Allows a user to create a catalog in a Unity Catalog metastore. To create a foreign catalog, you must also have the <a class="reference internal" href="#foreign-catalog"><span class="std std-ref">CREATE FOREIGN CATALOG</span></a> privilege on the connection that contains the foreign catalog or on the metastore.</p>
+</div>
+<div class="section" id="create-connection">
+<h3>CREATE CONNECTION<a class="headerlink" href="#create-connection" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: Unity Catalog metastore</strong></p>
+<p>Allows a user to create a connection to an external database in a Lakehouse Federation scenario.</p>
+</div>
+<div class="section" id="create-external-location">
+<h3>CREATE EXTERNAL LOCATION<a class="headerlink" href="#create-external-location" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: Unity Catalog metastore, <code class="docutils literal notranslate"><span class="pre">STORAGE</span> <span class="pre">CREDENTIAL</span></code></strong></p>
+<p>To create an external location, the user must have this privilege on both the metastore and the storage credential that is being referenced in the external location.</p>
+</div>
+<div class="section" id="create-external-table">
+<h3>CREATE EXTERNAL TABLE<a class="headerlink" href="#create-external-table" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">EXTERNAL</span> <span class="pre">LOCATION</span></code>, <code class="docutils literal notranslate"><span class="pre">STORAGE</span> <span class="pre">CREDENTIAL</span></code></strong></p>
+<p>Allows a user to create external tables directly in your cloud tenant using an external location or storage credential. Databricks recommends granting this privilege on an external location rather than storage credential (since it’s scoped to a path, it allows more control over where users can create external tables in your cloud tenant).</p>
+</div>
+<div class="section" id="create-external-volume">
+<h3>CREATE EXTERNAL VOLUME<a class="headerlink" href="#create-external-volume" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">EXTERNAL</span> <span class="pre">LOCATION</span></code></strong></p>
+<p>Allows a user to create external volumes using an external location.</p>
+</div>
+<div class="section" id="create-foreign-catalog">
+<span id="foreign-catalog"></span><h3>CREATE FOREIGN CATALOG<a class="headerlink" href="#create-foreign-catalog" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">CONNECTION</span></code></strong></p>
+<p>Allows a user to create foreign catalogs using a connection to an external database in a Lakehouse Federation scenario.</p>
+</div>
+<div class="section" id="create-function">
+<span id="function"></span><h3>CREATE FUNCTION<a class="headerlink" href="#create-function" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">SCHEMA</span></code>, <code class="docutils literal notranslate"><span class="pre">CATALOG</span></code></strong></p>
+<p>Allows a user to create a function in the schema. Since privileges are inherited, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">FUNCTION</span></code> can also be granted on a catalog, which allows a user to create a function in any existing or future schema in the catalog.</p>
+<p>The user must also have the <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> privilege on the parent catalog and <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> on the parent schema.</p>
+</div>
+<div class="section" id="create-model">
+<h3>CREATE MODEL<a class="headerlink" href="#create-model" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">SCHEMA</span></code>, <code class="docutils literal notranslate"><span class="pre">CATALOG</span></code></strong></p>
+<p>Allows a user to create an MLflow registered model in the schema. Since privileges are inherited, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">MODEL</span></code> can also be granted on a catalog, which allows a user to create a registered model in any existing or future schema in the catalog.</p>
+<p>The user must also have the <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> privilege on the parent catalog and <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> on the parent schema.</p>
+</div>
+<div class="section" id="create-managed-storage">
+<h3>CREATE MANAGED STORAGE<a class="headerlink" href="#create-managed-storage" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">EXTERNAL</span> <span class="pre">LOCATION</span></code></strong></p>
+<p>Allows a user to specify a location for storing managed tables at the catalog or schema level, overriding the default root storage for the metastore.</p>
+</div>
+<div class="section" id="create-schema">
+<h3>CREATE SCHEMA<a class="headerlink" href="#create-schema" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">CATALOG</span></code></strong></p>
+<p>Allows a user to create a schema. The user must also have the <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> privilege on the catalog.</p>
+</div>
+<div class="section" id="create-storage-credential">
+<span id="storage-credential"></span><h3>CREATE STORAGE CREDENTIAL<a class="headerlink" href="#create-storage-credential" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: Unity Catalog metastore</strong></p>
+<p>Allows a user to create a storage credential in a Unity Catalog metastore.</p>
+</div>
+<div class="section" id="create-table">
+<h3>CREATE TABLE<a class="headerlink" href="#create-table" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">SCHEMA</span></code>, <code class="docutils literal notranslate"><span class="pre">CATALOG</span></code></strong></p>
+<p>Allows a user to create a table or view in the schema. Since privileges are inherited, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> can also be granted on a catalog, which allows a user to create a table or view in any existing or future schema in the catalog.</p>
+<p>The user must also have the <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> privilege on its parent catalog and the <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> privilege on its parent schema.</p>
+</div>
+<div class="section" id="create-volume">
+<h3>CREATE VOLUME<a class="headerlink" href="#create-volume" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">SCHEMA</span></code>, <code class="docutils literal notranslate"><span class="pre">CATALOG</span></code></strong></p>
+<p>Allows a user to create a volume in the schema. Since privileges are inherited, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">VOLUME</span></code> can also be granted on a catalog, which allows a user to create a volume in any existing or future schema in the catalog.</p>
+<p>The user must also have the <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> privilege on the volume’s parent catalog and the <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> privilege on its parent schema.</p>
+</div>
+<div class="section" id="execute">
+<h3>EXECUTE<a class="headerlink" href="#execute" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">FUNCTION</span></code>, <code class="docutils literal notranslate"><span class="pre">REGISTERED</span> <span class="pre">MODEL</span></code></strong></p>
+<p>Allows a user to invoke a user defined function or load a model for inference, if the user also has <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> on its parent catalog and <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> on its parent schema. For functions, <code class="docutils literal notranslate"><span class="pre">EXECUTE</span></code> grants the ability to view the function definition and metadata. For registered models, <code class="docutils literal notranslate"><span class="pre">EXECUTE</span></code> grants the ability to view metadata for all versions of the registered model, and to download model files.</p>
+<p>Since privileges are inherited, you can grant a user the <code class="docutils literal notranslate"><span class="pre">EXECUTE</span></code> privilege on a catalog or schema, which automatically grants the user the <code class="docutils literal notranslate"><span class="pre">EXECUTE</span></code> privilege on all current and future functions in the catalog or schema.</p>
+</div>
+<div class="section" id="manage-allowlist">
+<h3>MANAGE ALLOWLIST<a class="headerlink" href="#manage-allowlist" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: Unity Catalog metastore</strong></p>
+<p>Allows a user to add or modify paths for init scripts, JARs, and Maven coordinates in the allowlist that governs Unity Catalog-enabled clusters with shared access mode. See <a class="reference internal" href="allowlist.html"><span class="doc">Allowlist libraries and init scripts on shared compute</span></a>.</p>
+</div>
+<div class="section" id="modify">
+<h3>MODIFY<a class="headerlink" href="#modify" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">TABLE</span></code></strong></p>
+<p>Allows a user to add, update, and delete data to or from the table if the user also has <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> on the table as well as <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> on its parent catalog and <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> on its parent schema.</p>
+<p>Since privileges are inherited, you can grant a user the <code class="docutils literal notranslate"><span class="pre">MODIFY</span></code> privilege on a catalog or schema, which automatically grants the user the <code class="docutils literal notranslate"><span class="pre">MODIFY</span></code> privilege on all current and future tables in the catalog or schema.</p>
+</div>
+<div class="section" id="read-files">
+<h3>READ FILES<a class="headerlink" href="#read-files" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">VOLUME</span></code>, <code class="docutils literal notranslate"><span class="pre">EXTERNAL</span> <span class="pre">LOCATION</span></code></strong></p>
+<p>Allows a user to read files directly from your cloud object storage. Databricks recommends granting this privilege on volumes and granting on external locations for limited use cases. For more guidance, see <a class="reference internal" href="../best-practices.html#manage-external"><span class="std std-ref">Manage external locations, external tables, and external volumes</span></a>.</p>
+<p></p>
+</div>
+<div class="section" id="read-volume">
+<h3>READ VOLUME<a class="headerlink" href="#read-volume" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">VOLUME</span></code>, <code class="docutils literal notranslate"><span class="pre">SCHEMA</span></code>, <code class="docutils literal notranslate"><span class="pre">CATALOG</span></code></strong></p>
+<p>Allows a user to read files and directories stored inside a volume if the user also has <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> on its parent catalog and <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> on its parent schema.</p>
+<p>Privileges are inherited. When you can grant a user the <code class="docutils literal notranslate"><span class="pre">READ</span> <span class="pre">VOLUME</span></code> privilege on a catalog or schema, you automatically grant the user the <code class="docutils literal notranslate"><span class="pre">READ</span> <span class="pre">VOLUME</span></code> privilege on all current and future volumes in the catalog or schema.</p>
+</div>
+<div class="section" id="select">
+<h3>SELECT<a class="headerlink" href="#select" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">VIEW</span></code>, <code class="docutils literal notranslate"><span class="pre">SHARE</span></code></strong></p>
+<p>If applied to a table or view, allows a user to select from the table or view, if the user also has <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> on its parent catalog and <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> on its parent schema. If applied to a share, allows a recipient to select from the share.</p>
+<p>Since privileges are inherited, you can grant a user the <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> privilege on a catalog or schema, which automatically grants the user <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> privilege on all current and future tables, and views in the catalog or schema.</p>
+</div>
+<div class="section" id="use-catalog">
+<h3>USE CATALOG<a class="headerlink" href="#use-catalog" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">CATALOG</span></code></strong></p>
+<p>This privilege does not grant access to the catalog itself, but is needed for a user to interact with any object within the catalog. For example, to select data from a table, users need to have the <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> privilege on that table and <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> privileges on its parent catalog as well as <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> privileges on its parent schema.</p>
+<p>This is useful for allowing catalog owners to be able to limit how far individual schema and table owners can share data they produce. For example, a table owner granting <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> to another user does not allow that user read access to the table unless they also have been granted <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> privileges on its parent catalog as well as <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> privileges on its parent schema.</p>
+</div>
+<div class="section" id="use-connection">
+<h3>USE CONNECTION<a class="headerlink" href="#use-connection" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">CONNECTION</span></code></strong></p>
+<p>Allows a user to list and view details about connections to an external database in a Lakehouse Federation scenario. To create foreign catalogs for a connection, you must have <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">FOREIGN</span> <span class="pre">CATALOG</span></code> on the connection or ownership of the connection.</p>
+</div>
+<div class="section" id="use-schema">
+<h3>USE SCHEMA<a class="headerlink" href="#use-schema" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">SCHEMA</span></code>, <code class="docutils literal notranslate"><span class="pre">CATALOG</span></code></strong></p>
+<p>This privilege does not grant access to the schema itself, but is needed for a user to interact with any object within the schema. For example, to select data from a table, users need to have the <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> privilege on that table and <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> on its parent schema as well as <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> on its parent catalog.</p>
+<p>Since privileges are inherited, you can grant a user the <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> privilege on a catalog, which automatically grants the user the <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> privilege on all current and future schemas in the catalog.</p>
+</div>
+<div class="section" id="write-files">
+<h3>WRITE FILES<a class="headerlink" href="#write-files" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">VOLUME</span></code>,<code class="docutils literal notranslate"><span class="pre">EXTERNAL</span> <span class="pre">LOCATION</span></code></strong></p>
+<p>Allows a user to write files directly into your cloud object storage. Databricks recommends granting this privilege on volumes. Grant this privilege sparingly on external locations. For more guidance, see <a class="reference internal" href="../best-practices.html#manage-external"><span class="std std-ref">Manage external locations, external tables, and external volumes</span></a>.</p>
+<p></p>
+</div>
+<div class="section" id="write-volume">
+<h3>WRITE VOLUME<a class="headerlink" href="#write-volume" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: <code class="docutils literal notranslate"><span class="pre">VOLUME</span></code>, <code class="docutils literal notranslate"><span class="pre">SCHEMA</span></code>, <code class="docutils literal notranslate"><span class="pre">CATALOG</span></code></strong></p>
+<p>Allows a user to add, remove, or modify files and directories stored inside a volume if the user also has <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">CATALOG</span></code> on its parent catalog and <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SCHEMA</span></code> on its parent schema.</p>
+<p>Privileges are inherited. When you can grant a user the <code class="docutils literal notranslate"><span class="pre">WRITE</span> <span class="pre">VOLUME</span></code> privilege on a catalog or schema,  you automatically grant the user the <code class="docutils literal notranslate"><span class="pre">WRITE</span> <span class="pre">VOLUME</span></code> privilege on all current and future volumes in the catalog or schema.</p>
+<p></p>
+</div>
+</div>
+<div class="section" id="privilege-types-that-apply-only-to-delta-sharing-or-databricks-marketplace">
+<span id="privilege-types-that-apply-only-to-ds-or-databricks-marketplace"></span><span id="delta-sharing"></span><h2>Privilege types that apply only to Delta Sharing or Databricks Marketplace<a class="headerlink" href="#privilege-types-that-apply-only-to-delta-sharing-or-databricks-marketplace" title="Permalink to this headline"> </a></h2>
+<p>This section provides details about the privilege types that apply only to Delta Sharing.</p>
+<div class="section" id="create-provider">
+<h3>CREATE PROVIDER<a class="headerlink" href="#create-provider" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: Unity Catalog metastore</strong></p>
+<p>Allows a user to create a Delta Sharing provider object in the metastore. A provider identifies an organization or group of users that have shared data using Delta Sharing. Provider creation is performed by a user in the recipient’s Databricks account. See <a class="reference internal" href="../../../data-sharing/index.html"><span class="doc">Share data securely using Delta Sharing</span></a>.</p>
+</div>
+<div class="section" id="create-recipient">
+<h3>CREATE RECIPIENT<a class="headerlink" href="#create-recipient" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: Unity Catalog metastore</strong></p>
+<p>Allows a user to create a Delta Sharing recipient object in the metastore. A recipient identifies an organization or group of users that can have data shared with them using Delta Sharing. Recipient creation is performed by a user in the provider’s Databricks account. See <a class="reference internal" href="../../../data-sharing/index.html"><span class="doc">Share data securely using Delta Sharing</span></a>.</p>
+</div>
+<div class="section" id="create-share">
+<h3>CREATE SHARE<a class="headerlink" href="#create-share" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: Unity Catalog metastore</strong></p>
+<p>Allows a user to create a share in the metastore. A share is a logical grouping for the tables you intend to share using Delta Sharing</p>
+</div>
+<div class="section" id="set-share-permission">
+<h3>SET SHARE PERMISSION<a class="headerlink" href="#set-share-permission" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: Unity Catalog metastore</strong></p>
+<p>In Delta Sharing, this privilege, combined with <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SHARE</span></code> and <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">RECIPIENT</span></code> (or recipient ownership), gives a provider user the ability to grant a recipient access to a share. Combined with <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">SHARE</span></code>, it gives the ability to transfer ownership of a share to another user, group, or service principal.</p>
+</div>
+<div class="section" id="use-marketplace-assets">
+<h3>USE MARKETPLACE ASSETS<a class="headerlink" href="#use-marketplace-assets" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: Unity Catalog metastore</strong></p>
+<p><em>Enabled by default for all Unity Catalog metastores.</em> In Databricks Marketplace, this privilege gives a user the ability to get instant access or request access for data products shared in a Marketplace listing. It also allows a user to access the read-only catalog that is created when a provider shares a data product. Without this privilege, the user would require the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">CATALOG</span></code> and <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">PROVIDER</span></code> privileges or the metastore admin role. This enables you to limit the number of users with those powerful permissions.</p>
+</div>
+<div class="section" id="use-provider">
+<h3>USE PROVIDER<a class="headerlink" href="#use-provider" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: Unity Catalog metastore</strong></p>
+<p>In Delta Sharing, gives a recipient user read-only access to all providers in a recipient metastore and their shares. Combined with the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">CATALOG</span></code> privilege, this privilege allows a recipient user who is not a metastore admin to mount a share as a catalog. This enables you to limit the number of users with the powerful metastore admin role.</p>
+</div>
+<div class="section" id="use-recipient">
+<h3>USE RECIPIENT<a class="headerlink" href="#use-recipient" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: Unity Catalog metastore</strong></p>
+<p>In Delta Sharing, gives a provider user read-only access to all recipients in a provider metastore and their shares. This allows a provider user who is not a metastore admin to view recipient details, recipient authentication status, and the list of shares that the provider has shared with the recipient.</p>
+<p>In <a class="reference internal" href="../../../marketplace/index.html"><span class="doc">Databricks Marketplace</span></a>, this gives provider users the ability to view listings and consumer requests in the Provider console.</p>
+</div>
+<div class="section" id="use-share">
+<h3>USE SHARE<a class="headerlink" href="#use-share" title="Permalink to this headline"> </a></h3>
+<p><strong>Applicable object types: Unity Catalog metastore</strong></p>
+<p>In Delta Sharing, gives a provider user read-only access to all shares defined in a provider metastore. This allows a provider user who is not a metastore admin to list shares and list the assets (tables and notebooks) in a share, along with the share’s recipients.</p>
+<p>In <a class="reference internal" href="../../../marketplace/index.html"><span class="doc">Databricks Marketplace</span></a>, this gives provider users the ability to view details about the data shared in a listing.</p>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

@@ -1,0 +1,578 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to clone tables in Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Clone a table on Databricks">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Clone a table on Databricks &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/delta/clone.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/delta/clone.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/delta/clone.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/delta/clone.html" class="notranslate">English</option>
+    <option value="../../ja/delta/clone.html" class="notranslate">日本語</option>
+    <option value="../../pt/delta/clone.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Clone a table on Databricks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="clone-a-table-on-databricks">
+<h1>Clone a table on Databricks<a class="headerlink" href="#clone-a-table-on-databricks" title="Permalink to this headline"> </a></h1>
+<p>You can create a copy of an existing Delta Lake table on Databricks at a specific version using the <code class="docutils literal notranslate"><span class="pre">clone</span></code> command. Clones can be either deep or shallow.</p>
+<p>Databricks also supports cloning Parquet and Iceberg tables. See <a class="reference internal" href="clone-parquet.html"><span class="doc">Incrementally clone Parquet and Iceberg tables to Delta Lake</span></a>.</p>
+<p>For details on using clone with Unity Catalog, see <a class="reference internal" href="clone-unity-catalog.html"><span class="doc">Shallow clone for Unity Catalog tables</span></a>.</p>
+<div class="section" id="clone-types">
+<h2>Clone types<a class="headerlink" href="#clone-types" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>A <em>deep clone</em> is a clone that copies the source table data to the clone target in addition to the metadata of the existing table. Additionally, stream metadata is also cloned such that a stream that writes to the Delta table can be stopped on a source table and continued on the target of a clone from where it left off.</p></li>
+<li><p>A <em>shallow clone</em> is a clone that does not copy the data files to the clone target. The table metadata is equivalent to the source. These clones are cheaper to create.</p></li>
+</ul>
+<p>The metadata that is cloned includes: schema, partitioning information, invariants, nullability. For deep clones only, stream and <a class="reference internal" href="../sql/language-manual/delta-copy-into.html"><span class="doc">COPY INTO</span></a> metadata are also cloned. Metadata not cloned are the table description and <a class="reference internal" href="custom-metadata.html"><span class="doc">user-defined commit metadata</span></a>.</p>
+</div>
+<div class="section" id="what-are-the-semantics-of-delta-clone-operations">
+<h2>What are the semantics of Delta clone operations?<a class="headerlink" href="#what-are-the-semantics-of-delta-clone-operations" title="Permalink to this headline"> </a></h2>
+<p>If you have working with a Delta table registered to the Hive metastore or a collection of files not registered as a table, clone has the following semantics:</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>In Databricks Runtime 13.1 and above, Unity Catalog managed tables have support for shallow clones. Clone semantics for Unity Catalog tables differ significantly from Delta Lake clone semantics in other environments. See <a class="reference internal" href="clone-unity-catalog.html"><span class="doc">Shallow clone for Unity Catalog tables</span></a>.</p>
+</div>
+<ul class="simple">
+<li><p>Any changes made to either deep or shallow clones affect only the clones themselves and not the source table.</p></li>
+<li><p>Shallow clones reference data files in the source directory. If you run <code class="docutils literal notranslate"><span class="pre">vacuum</span></code> on the source table, clients can no longer read the referenced data files and a <code class="docutils literal notranslate"><span class="pre">FileNotFoundException</span></code> is thrown. In this case, running clone with replace over the shallow clone repairs the clone. If this occurs often, consider using a deep clone instead which does not depend on the source table.</p></li>
+<li><p>Deep clones do not depend on the source from which they were cloned, but are expensive to create because a deep clone copies the data as well as the metadata.</p></li>
+<li><p>Cloning with <code class="docutils literal notranslate"><span class="pre">replace</span></code> to a target that already has a table at that path creates a Delta log if one does not exist at that path. You can clean up any existing data by running <code class="docutils literal notranslate"><span class="pre">vacuum</span></code>.</p></li>
+<li><p>For existing Delta tables, a new commit is created that includes the new metadata and new data from the source table. This new commit is incremental, meaning that only new changes since the last clone are committed to the table.</p></li>
+<li><p>Cloning a table is not the same as <code class="docutils literal notranslate"><span class="pre">Create</span> <span class="pre">Table</span> <span class="pre">As</span> <span class="pre">Select</span></code> or <code class="docutils literal notranslate"><span class="pre">CTAS</span></code>. A clone copies the metadata of the source table in addition to the data. Cloning also has simpler syntax: you don’t need to specify partitioning, format, invariants, nullability and so on as they are taken from the source table.</p></li>
+<li><p>A cloned table has an independent history from its source table. Time travel queries on a cloned table do not work with the same inputs as they work on its source table.</p></li>
+</ul>
+</div>
+<div class="section" id="example-clone-syntax">
+<h2>Example clone syntax<a class="headerlink" href="#example-clone-syntax" title="Permalink to this headline"> </a></h2>
+<p>The following code examples demonstrate syntax for creating deep and shallow clones:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`/</span><span class="k">data</span><span class="o">/</span><span class="n">target</span><span class="o">/`</span><span class="w"> </span><span class="n">CLONE</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`/</span><span class="k">data</span><span class="o">/</span><span class="k">source</span><span class="o">/`</span><span class="w"> </span><span class="c1">-- Create a deep clone of /data/source at /data/target</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">db</span><span class="p">.</span><span class="n">target_table</span><span class="w"> </span><span class="n">CLONE</span><span class="w"> </span><span class="n">db</span><span class="p">.</span><span class="n">source_table</span><span class="w"> </span><span class="c1">-- Replace the target</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`/</span><span class="k">data</span><span class="o">/</span><span class="n">target</span><span class="o">/`</span><span class="w"> </span><span class="n">CLONE</span><span class="w"> </span><span class="n">db</span><span class="p">.</span><span class="n">source_table</span><span class="w"> </span><span class="c1">-- No-op if the target table exists</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">db</span><span class="p">.</span><span class="n">target_table</span><span class="w"> </span><span class="n">SHALLOW</span><span class="w"> </span><span class="n">CLONE</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`/</span><span class="k">data</span><span class="o">/</span><span class="k">source</span><span class="o">`</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">db</span><span class="p">.</span><span class="n">target_table</span><span class="w"> </span><span class="n">SHALLOW</span><span class="w"> </span><span class="n">CLONE</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`/</span><span class="k">data</span><span class="o">/</span><span class="k">source</span><span class="o">`</span><span class="w"> </span><span class="k">VERSION</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="k">version</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">db</span><span class="p">.</span><span class="n">target_table</span><span class="w"> </span><span class="n">SHALLOW</span><span class="w"> </span><span class="n">CLONE</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`/</span><span class="k">data</span><span class="o">/</span><span class="k">source</span><span class="o">`</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="n">timestamp_expression</span><span class="w"> </span><span class="c1">-- timestamp can be like “2019-01-01” or like date_sub(current_date(), 1)</span>
+</pre></div>
+</div>
+<div class="compound-middle highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">delta.tables</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">deltaTable</span> <span class="o">=</span> <span class="n">DeltaTable</span><span class="o">.</span><span class="n">forPath</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="n">pathToTable</span><span class="p">)</span>  <span class="c1"># path-based tables, or</span>
+<span class="n">deltaTable</span> <span class="o">=</span> <span class="n">DeltaTable</span><span class="o">.</span><span class="n">forName</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="n">tableName</span><span class="p">)</span>    <span class="c1"># Hive metastore-based tables</span>
+
+<span class="n">deltaTable</span><span class="o">.</span><span class="n">clone</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">isShallow</span><span class="p">,</span> <span class="n">replace</span><span class="p">)</span> <span class="c1"># clone the source at latest version</span>
+
+<span class="n">deltaTable</span><span class="o">.</span><span class="n">cloneAtVersion</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">isShallow</span><span class="p">,</span> <span class="n">replace</span><span class="p">)</span> <span class="c1"># clone the source at a specific version</span>
+
+<span class="c1"># clone the source at a specific timestamp such as timestamp=“2019-01-01”</span>
+<span class="n">deltaTable</span><span class="o">.</span><span class="n">cloneAtTimestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">isShallow</span><span class="p">,</span> <span class="n">replace</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-middle highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">io</span><span class="p">.</span><span class="nn">delta</span><span class="p">.</span><span class="nn">tables</span><span class="p">.</span><span class="n">_</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">deltaTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">DeltaTable</span><span class="p">.</span><span class="n">forPath</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span><span class="w"> </span><span class="n">pathToTable</span><span class="p">)</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">deltaTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">DeltaTable</span><span class="p">.</span><span class="n">forName</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span><span class="w"> </span><span class="n">tableName</span><span class="p">)</span>
+
+<span class="n">deltaTable</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="n">isShallow</span><span class="p">,</span><span class="w"> </span><span class="n">replace</span><span class="p">)</span><span class="w"> </span><span class="c1">// clone the source at latest version</span>
+
+<span class="n">deltaTable</span><span class="p">.</span><span class="n">cloneAtVersion</span><span class="p">(</span><span class="n">version</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="n">isShallow</span><span class="p">,</span><span class="w"> </span><span class="n">replace</span><span class="p">)</span><span class="w"> </span><span class="c1">// clone the source at a specific version</span>
+
+<span class="n">deltaTable</span><span class="p">.</span><span class="n">cloneAtTimestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="n">isShallow</span><span class="p">,</span><span class="w"> </span><span class="n">replace</span><span class="p">)</span><span class="w"> </span><span class="c1">// clone the source at a specific timestamp</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">io.delta.tables.*</span><span class="p">;</span>
+
+<span class="n">DeltaTable</span><span class="w"> </span><span class="n">deltaTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DeltaTable</span><span class="p">.</span><span class="na">forPath</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span><span class="w"> </span><span class="n">pathToTable</span><span class="p">);</span>
+<span class="n">DeltaTable</span><span class="w"> </span><span class="n">deltaTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DeltaTable</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span><span class="w"> </span><span class="n">tableName</span><span class="p">);</span>
+
+<span class="n">deltaTable</span><span class="p">.</span><span class="na">clone</span><span class="p">(</span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="n">isShallow</span><span class="p">,</span><span class="w"> </span><span class="n">replace</span><span class="p">)</span><span class="w"> </span><span class="c1">// clone the source at latest version</span>
+
+<span class="n">deltaTable</span><span class="p">.</span><span class="na">cloneAtVersion</span><span class="p">(</span><span class="n">version</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="n">isShallow</span><span class="p">,</span><span class="w"> </span><span class="n">replace</span><span class="p">)</span><span class="w"> </span><span class="c1">// clone the source at a specific version</span>
+
+<span class="n">deltaTable</span><span class="p">.</span><span class="na">cloneAtTimestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="n">isShallow</span><span class="p">,</span><span class="w"> </span><span class="n">replace</span><span class="p">)</span><span class="w"> </span><span class="c1">// clone the source at a specific timestamp</span>
+</pre></div>
+</div>
+</div>
+<p>For syntax details, see <a class="reference internal" href="../sql/language-manual/delta-clone.html"><span class="doc">CREATE TABLE CLONE</span></a>.</p>
+</div>
+<div class="section" id="clone-metrics">
+<h2>Clone metrics<a class="headerlink" href="#clone-metrics" title="Permalink to this headline"> </a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">CLONE</span></code> reports the following metrics as a single row DataFrame once the operation is complete:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">source_table_size</span></code>: Size of the source table that’s being cloned in bytes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">source_num_of_files</span></code>: The number of files in the source table.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num_removed_files</span></code>: If the table is being replaced, how many files are removed from the current table.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num_copied_files</span></code>: Number of files that were copied from the source (0 for shallow clones).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">removed_files_size</span></code>: Size in bytes of the files that are being removed from the current table.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">copied_files_size</span></code>: Size in bytes of the files copied to the table.</p></li>
+</ul>
+<div class="figure align-default">
+<img alt="Clone metrics example" src="../_images/clone-metrics.png" />
+</div>
+</div>
+<div class="section" id="permissions">
+<h2>Permissions<a class="headerlink" href="#permissions" title="Permalink to this headline"> </a></h2>
+<p>You must configure permissions for Databricks table access control and your cloud provider.</p>
+<div class="section" id="table-access-control">
+<h3>Table access control<a class="headerlink" href="#table-access-control" title="Permalink to this headline"> </a></h3>
+<p>The following permissions are required for both deep and shallow clones:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SELECT</span></code> permission on the source table.</p></li>
+<li><p>If you are using <code class="docutils literal notranslate"><span class="pre">CLONE</span></code> to create a new table, <code class="docutils literal notranslate"><span class="pre">CREATE</span></code> permission on the database in which you are creating the table.</p></li>
+<li><p>If you are using <code class="docutils literal notranslate"><span class="pre">CLONE</span></code> to replace a table, you must have <code class="docutils literal notranslate"><span class="pre">MODIFY</span></code> permission on the table.</p></li>
+</ul>
+</div>
+<div class="section" id="cloud-provider-permissions">
+<h3>Cloud provider permissions<a class="headerlink" href="#cloud-provider-permissions" title="Permalink to this headline"> </a></h3>
+<p>If you have created a deep clone, any user that reads the deep clone must have read access to the clone’s directory. To make changes to the clone, users must have write access to the clone’s directory.</p>
+<p>If you have created a shallow clone, any user that reads the shallow clone needs permission to read the files in the original table, since the data files remain in the source table with shallow clones, as well as the clone’s directory. To make changes to the clone, users will need write access to the clone’s directory.</p>
+</div>
+</div>
+<div class="section" id="use-clone-for-data-archiving">
+<h2>Use clone for data archiving<a class="headerlink" href="#use-clone-for-data-archiving" title="Permalink to this headline"> </a></h2>
+<p>You can use deep clone to preserve the state of a table at a certain point in time for archival purposes. You can sync deep clones incrementally to maintain an updated state of a source table for disaster recovery.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Every month run</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`/</span><span class="k">some</span><span class="o">/</span><span class="n">archive</span><span class="o">/</span><span class="n">path</span><span class="o">`</span><span class="w"> </span><span class="n">CLONE</span><span class="w"> </span><span class="n">my_prod_table</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-clone-for-ml-model-reproduction">
+<h2>Use clone for ML model reproduction<a class="headerlink" href="#use-clone-for-ml-model-reproduction" title="Permalink to this headline"> </a></h2>
+<p>When doing machine learning, you may want to archive a certain version of a table on which you trained an ML model. Future models can be tested using this archived data set.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Trained model on version 15 of Delta table</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`/</span><span class="n">model</span><span class="o">/</span><span class="n">dataset</span><span class="o">`</span><span class="w"> </span><span class="n">CLONE</span><span class="w"> </span><span class="n">entire_dataset</span><span class="w"> </span><span class="k">VERSION</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="mi">15</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-clone-for-short-term-experiments-on-a-production-table">
+<h2>Use clone for short-term experiments on a production table<a class="headerlink" href="#use-clone-for-short-term-experiments-on-a-production-table" title="Permalink to this headline"> </a></h2>
+<p>To test a workflow on a production table without corrupting the table, you can easily create a shallow clone. This allows you to run arbitrary workflows on the cloned table that contains all the production data but does not affect any production workloads.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Perform shallow clone</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">my_test</span><span class="w"> </span><span class="n">SHALLOW</span><span class="w"> </span><span class="n">CLONE</span><span class="w"> </span><span class="n">my_prod_table</span><span class="p">;</span>
+
+<span class="k">UPDATE</span><span class="w"> </span><span class="n">my_test</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">invalid</span><span class="o">=</span><span class="k">true</span><span class="p">;</span>
+<span class="c1">-- Run a bunch of validations. Once happy:</span>
+
+<span class="c1">-- This should leverage the update information in the clone to prune to only</span>
+<span class="c1">-- changed files in the clone if possible</span>
+<span class="n">MERGE</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">my_prod_table</span>
+<span class="k">USING</span><span class="w"> </span><span class="n">my_test</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">my_test</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="o">&lt;=&gt;</span><span class="w"> </span><span class="n">my_prod_table</span><span class="p">.</span><span class="n">user_id</span>
+<span class="k">WHEN</span><span class="w"> </span><span class="n">MATCHED</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">my_test</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="o">*</span><span class="p">;</span>
+
+<span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">my_test</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-clone-for-data-sharing">
+<h2>Use clone for data sharing<a class="headerlink" href="#use-clone-for-data-sharing" title="Permalink to this headline"> </a></h2>
+<p>Other business units within a single organization may want to access the same data but may not require the latest updates. Instead of giving access to the source table directly, you can provide clones with different permissions for different business units. The performance of the clone can exceed that of a simple view.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Perform deep clone</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">shared_table</span><span class="w"> </span><span class="n">CLONE</span><span class="w"> </span><span class="n">my_prod_table</span><span class="p">;</span>
+
+<span class="c1">-- Grant other users access to the shared table</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">shared_table</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="o">`&lt;</span><span class="k">user</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;@&lt;</span><span class="k">user</span><span class="o">-</span><span class="k">domain</span><span class="o">&gt;</span><span class="p">.</span><span class="n">com</span><span class="o">`</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-clone-to-override-table-properties">
+<h2>Use clone to override table properties<a class="headerlink" href="#use-clone-to-override-table-properties" title="Permalink to this headline"> </a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Available in Databricks Runtime 7.5 and above.</p>
+</div>
+<p>Table property overrides are particularly useful for:</p>
+<ul class="simple">
+<li><p>Annotating tables with owner or user information when sharing data with different business units.</p></li>
+<li><p>Archiving Delta tables and table history or time travel is required. You can specify the data and log retention periods independently for the archive table. For example:</p></li>
+</ul>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">archive</span><span class="p">.</span><span class="n">my_table</span><span class="w"> </span><span class="n">CLONE</span><span class="w"> </span><span class="n">prod</span><span class="p">.</span><span class="n">my_table</span>
+<span class="n">TBLPROPERTIES</span><span class="w"> </span><span class="p">(</span>
+<span class="n">delta</span><span class="p">.</span><span class="n">logRetentionDuration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;3650 days&#39;</span><span class="p">,</span>
+<span class="n">delta</span><span class="p">.</span><span class="n">deletedFileRetentionDuration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;3650 days&#39;</span>
+<span class="p">)</span>
+<span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;xx://archive/my_table&#39;</span>
+</pre></div>
+</div>
+<div class="compound-middle highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dt</span> <span class="o">=</span> <span class="n">DeltaTable</span><span class="o">.</span><span class="n">forName</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="s2">&quot;prod.my_table&quot;</span><span class="p">)</span>
+<span class="n">tblProps</span> <span class="o">=</span> <span class="p">{</span>
+<span class="s2">&quot;delta.logRetentionDuration&quot;</span><span class="p">:</span> <span class="s2">&quot;3650 days&quot;</span><span class="p">,</span>
+<span class="s2">&quot;delta.deletedFileRetentionDuration&quot;</span><span class="p">:</span> <span class="s2">&quot;3650 days&quot;</span>
+<span class="p">}</span>
+<span class="n">dt</span><span class="o">.</span><span class="n">clone</span><span class="p">(</span><span class="s1">&#39;xx://archive/my_table&#39;</span><span class="p">,</span> <span class="n">isShallow</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tblProps</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="n">dt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">DeltaTable</span><span class="p">.</span><span class="n">forName</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;prod.my_table&quot;</span><span class="p">)</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">tblProps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="s">&quot;delta.logRetentionDuration&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;3650 days&quot;</span><span class="p">,</span>
+<span class="s">&quot;delta.deletedFileRetentionDuration&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;3650 days&quot;</span>
+<span class="p">)</span>
+<span class="n">dt</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="s">&quot;xx://archive/my_table&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">isShallow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">replace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="n">properties</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tblProps</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

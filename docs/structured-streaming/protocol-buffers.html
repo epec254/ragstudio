@@ -1,0 +1,704 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to use to_protobuf and from_protobuf functions in Structured Streaming processing." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Read and write protocol buffers">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Read and write protocol buffers &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/structured-streaming/protocol-buffers.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/structured-streaming/protocol-buffers.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/structured-streaming/protocol-buffers.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/structured-streaming/protocol-buffers.html" class="notranslate">English</option>
+    <option value="../../ja/structured-streaming/protocol-buffers.html" class="notranslate">日本語</option>
+    <option value="../../pt/structured-streaming/protocol-buffers.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Read and write protocol buffers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="read-and-write-protocol-buffers">
+<h1>Read and write protocol buffers<a class="headerlink" href="#read-and-write-protocol-buffers" title="Permalink to this headline"> </a></h1>
+<p>Databricks provides native support for serialization and deserialization between Apache Spark structs and protocol buffers (protobuf). Protobuf support is implemented as an Apache Spark DataFrame transformer and can be used with Structured Streaming or for batch operations.</p>
+<div class="section" id="how-to-deserialize-and-serialize-protocol-buffers">
+<h2>How to deserialize and serialize protocol buffers<a class="headerlink" href="#how-to-deserialize-and-serialize-protocol-buffers" title="Permalink to this headline"> </a></h2>
+<p>In Databricks Runtime 12.1 and above, you can use <code class="docutils literal notranslate"><span class="pre">from_protobuf</span></code> and <code class="docutils literal notranslate"><span class="pre">to_protobuf</span></code> functions to serialize and deserialize data. Protobuf serialization is commonly used in streaming workloads.</p>
+<p>The basic syntax for protobuf functions is similar for read and write functions. You must import these functions before use.</p>
+<p><code class="docutils literal notranslate"><span class="pre">from_protobuf</span></code> casts a binary column to a struct, and <code class="docutils literal notranslate"><span class="pre">to_protobuf</span></code> casts a struct column to binary. You must provide either a schema registry specified with the <code class="docutils literal notranslate"><span class="pre">options</span></code> argument or a descriptor file identified by the <code class="docutils literal notranslate"><span class="pre">descFilePath</span></code> argument.</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">from_protobuf</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="s1">&#39;ColumnOrName&#39;</span><span class="p">,</span> <span class="n">messageName</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">descFilePath</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+
+<span class="n">to_protobuf</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="s1">&#39;ColumnOrName&#39;</span><span class="p">,</span> <span class="n">messageName</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">descFilePath</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// While using with Schema registry:</span>
+<span class="n">from_protobuf</span><span class="p">(</span><span class="n">data</span><span class="p">:</span><span class="w"> </span><span class="nc">Column</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p">:</span><span class="w"> </span><span class="nc">Map</span><span class="p">[</span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="nc">String</span><span class="p">])</span>
+
+<span class="c1">// Or with Protobuf descriptor file:</span>
+<span class="n">from_protobuf</span><span class="p">(</span><span class="n">data</span><span class="p">:</span><span class="w"> </span><span class="nc">Column</span><span class="p">,</span><span class="w"> </span><span class="n">messageName</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">descFilePath</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p">:</span><span class="w"> </span><span class="nc">Map</span><span class="p">[</span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="nc">String</span><span class="p">])</span>
+
+<span class="c1">// While using with Schema registry:</span>
+<span class="n">to_protobuf</span><span class="p">(</span><span class="n">data</span><span class="p">:</span><span class="w"> </span><span class="nc">Column</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p">:</span><span class="w"> </span><span class="nc">Map</span><span class="p">[</span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="nc">String</span><span class="p">])</span>
+
+<span class="c1">// Or with Protobuf descriptor file:</span>
+<span class="n">to_protobuf</span><span class="p">(</span><span class="n">data</span><span class="p">:</span><span class="w"> </span><span class="nc">Column</span><span class="p">,</span><span class="w"> </span><span class="n">messageName</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">descFilePath</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p">:</span><span class="w"> </span><span class="nc">Map</span><span class="p">[</span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="nc">String</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<p>The following examples illustrate processing binary protobuf records with <code class="docutils literal notranslate"><span class="pre">from_protobuf()</span></code> and converting Spark SQL struct to binary protobuf with <code class="docutils literal notranslate"><span class="pre">to_protobuf()</span></code>.</p>
+</div>
+<div class="section" id="use-protobuf-with-confluent-schema-registry">
+<h2>Use protobuf with Confluent Schema Registry<a class="headerlink" href="#use-protobuf-with-confluent-schema-registry" title="Permalink to this headline"> </a></h2>
+<p>Databricks supports using the <a class="reference external" href="https://docs.confluent.io/platform/current/schema-registry/index.html">Confluent Schema Registry</a> to define Protobuf.</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.protobuf.functions</span> <span class="kn">import</span> <span class="n">to_protobuf</span><span class="p">,</span> <span class="n">from_protobuf</span>
+
+<span class="n">schema_registry_options</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;schema.registry.subject&quot;</span> <span class="p">:</span> <span class="s2">&quot;app-events-value&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;schema.registry.address&quot;</span> <span class="p">:</span> <span class="s2">&quot;https://schema-registry:8081/&quot;</span>
+<span class="p">}</span>
+
+<span class="c1"># Convert binary Protobuf to SQL struct with from_protobuf():</span>
+<span class="n">proto_events_df</span> <span class="o">=</span> <span class="p">(</span>
+  <span class="n">input_df</span>
+    <span class="o">.</span><span class="n">select</span><span class="p">(</span>
+      <span class="n">from_protobuf</span><span class="p">(</span><span class="s2">&quot;proto_bytes&quot;</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="n">schema_registry_options</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;proto_event&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Convert SQL struct to binary Protobuf with to_protobuf():</span>
+<span class="n">protobuf_binary_df</span> <span class="o">=</span> <span class="p">(</span>
+  <span class="n">proto_events_df</span>
+    <span class="o">.</span><span class="n">selectExpr</span><span class="p">(</span><span class="s2">&quot;struct(name, id, context) as event&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">select</span><span class="p">(</span>
+      <span class="n">to_protobuf</span><span class="p">(</span><span class="s2">&quot;event&quot;</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="n">schema_registry_options</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;proto_bytes&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">protobuf</span><span class="p">.</span><span class="nn">functions</span><span class="p">.</span><span class="n">_</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">scala</span><span class="p">.</span><span class="nn">collection</span><span class="p">.</span><span class="nc">JavaConverters</span><span class="p">.</span><span class="n">_</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">schemaRegistryOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;schema.registry.subject&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;app-events-value&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;schema.registry.address&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;https://schema-registry:8081/&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// Convert binary Protobuf to SQL struct with from_protobuf():</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">protoEventsDF</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inputDF</span>
+<span class="w">    </span><span class="p">.</span><span class="n">select</span><span class="p">(</span>
+<span class="w">        </span><span class="n">from_protobuf</span><span class="p">(</span><span class="n">$</span><span class="s">&quot;proto_bytes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">schemaRegistryOptions</span><span class="p">.</span><span class="n">asJava</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">as</span><span class="p">(</span><span class="s">&quot;proto_event&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+
+<span class="c1">// Convert SQL struct to binary Protobuf with to_protobuf():</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">protobufBinaryDF</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">protoEventsDF</span>
+<span class="w">    </span><span class="p">.</span><span class="n">selectExpr</span><span class="p">(</span><span class="s">&quot;struct(name, id, context) as event&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">select</span><span class="p">(</span>
+<span class="w">        </span><span class="n">to_protobuf</span><span class="p">(</span><span class="n">$</span><span class="s">&quot;event&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">schemaRegistryOptions</span><span class="p">.</span><span class="n">asJava</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">as</span><span class="p">(</span><span class="s">&quot;proto_bytes&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="authenticate-to-an-external-confluent-schema-registry">
+<span id="auth-registry"></span><h2>Authenticate to an external Confluent Schema Registry<a class="headerlink" href="#authenticate-to-an-external-confluent-schema-registry" title="Permalink to this headline"> </a></h2>
+<p>To authenticate to an external Confluent Schema Registry, update your schema registry options to include auth credentials and API keys.</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">schema_registry_options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;schema.registry.subject&quot;</span> <span class="p">:</span> <span class="s2">&quot;app-events-value&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;schema.registry.address&quot;</span> <span class="p">:</span> <span class="s2">&quot;https://remote-schema-registry-endpoint&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;confluent.schema.registry.basic.auth.credentials.source&quot;</span> <span class="p">:</span> <span class="s2">&quot;USER_INFO&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;confluent.schema.registry.basic.auth.user.info&quot;</span> <span class="p">:</span> <span class="s2">&quot;confluentApiKey:confluentApiSecret&quot;</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="n">schemaRegistryOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">      </span><span class="s">&quot;schema.registry.subject&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;app-events-value&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;schema.registry.address&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;https://remote-schema-registry-endpoint&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;confluent.schema.registry.basic.auth.credentials.source&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&quot;USER_INFO&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;confluent.schema.registry.basic.auth.user.info&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&quot;confluentApiKey:confluentApiSecret&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="use-protobuf-with-a-descriptor-file">
+<h2>Use Protobuf with a descriptor file<a class="headerlink" href="#use-protobuf-with-a-descriptor-file" title="Permalink to this headline"> </a></h2>
+<p>You can also reference a protobuf descriptor file that is available to your compute cluster. Make sure you have proper permissions to read the file, depending on its location.</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.protobuf.functions</span> <span class="kn">import</span> <span class="n">to_protobuf</span><span class="p">,</span> <span class="n">from_protobuf</span>
+
+<span class="n">descriptor_file</span> <span class="o">=</span> <span class="s2">&quot;/path/to/proto_descriptor.desc&quot;</span>
+
+<span class="n">proto_events_df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">input_df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+      <span class="n">from_protobuf</span><span class="p">(</span><span class="n">input_df</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;BasicMessage&quot;</span><span class="p">,</span> <span class="n">descFilePath</span><span class="o">=</span><span class="n">descriptor_file</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;proto&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">proto_binary_df</span> <span class="o">=</span> <span class="p">(</span>
+  <span class="n">proto_events_df</span>
+    <span class="o">.</span><span class="n">select</span><span class="p">(</span>
+      <span class="n">to_protobuf</span><span class="p">(</span><span class="n">proto_events_df</span><span class="o">.</span><span class="n">proto</span><span class="p">,</span> <span class="s2">&quot;BasicMessage&quot;</span><span class="p">,</span> <span class="n">descriptor_file</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;bytes&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">protobuf</span><span class="p">.</span><span class="nn">functions</span><span class="p">.</span><span class="n">_</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">descriptorFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/path/to/proto_descriptor.desc&quot;</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">protoEventsDF</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inputDF</span>
+<span class="w">  </span><span class="p">.</span><span class="n">select</span><span class="p">(</span>
+<span class="w">    </span><span class="n">from_protobuf</span><span class="p">(</span><span class="n">$</span><span class="s">&quot;value&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;BasicMessage&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">descFilePath</span><span class="o">=</span><span class="n">descriptorFile</span><span class="p">).</span><span class="n">as</span><span class="p">(</span><span class="s">&quot;proto&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">protoBytesDF</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">protoEventsDF</span>
+<span class="w">  </span><span class="p">.</span><span class="n">select</span><span class="p">(</span>
+<span class="w">    </span><span class="n">to_protobuf</span><span class="p">(</span><span class="n">$</span><span class="s">&quot;proto&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;BasicMessage&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">descriptorFile</span><span class="p">).</span><span class="n">as</span><span class="p">(</span><span class="s">&quot;bytes&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="supported-options-in-protobuf-functions">
+<h2>Supported options in Protobuf functions<a class="headerlink" href="#supported-options-in-protobuf-functions" title="Permalink to this headline"> </a></h2>
+<p>The following options are supported in Protobuf functions.</p>
+<ul>
+<li><p><strong>mode</strong>: Determines how errors while deserializing Protobuf records are handled. The errors might be caused by various types of malformed records including a mismatch between the actual schema of the record and the expected schema provided in <code class="docutils literal notranslate"><span class="pre">from_protobuf()</span></code>.</p>
+<ul class="simple">
+<li><p><strong>Values</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">FAILFAST</span></code>(default): An error is thrown when a malformed record is encountered and the task fails.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PERMISSIVE</span></code>: A NULL is returned for malformed records. Use this option carefully since it can result in dropping many records. This is useful when a small fraction of the records in the source are incorrect.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>recursive.fields.max.depth</strong>: Adds support for recursive fields. Spark SQL schemas do not support recursive fields. When this option is not specified, recursive fields are not permitted. In order to support recursive fields in Protobufs, they need to be expanding to a specified depth.</p>
+<ul>
+<li><p><strong>Values</strong>:</p>
+<ul>
+<li><p>-1 (default): Recursive fields are not allowed.</p></li>
+<li><p>0: Recursive fields are dropped.</p></li>
+<li><p>1: Allows a single level of recursion.</p></li>
+<li><p>[2-10]: Specify a threshold for multiple recursion, up to 10 levels.</p>
+<p>Setting a value to greater than 0 allows recursive fields by expanding the nested fields to the configured depth. Values larger than 10 are not allowed in order to avoid inadvertently creating very large schemas. If a Protobuf message has depth beyond the configured limit, the Spark struct returned is truncated after the recursion limit.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Example</strong>: Consider a Protobuf with the following recursive field:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">message</span> <span class="n">Person</span> <span class="p">{</span> <span class="n">string</span> <span class="n">name</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">Person</span> <span class="n">friend</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>The following lists the end schema with different values for this setting:</p>
+<ul class="simple">
+<li><p>Option set to 1: <code class="docutils literal notranslate"><span class="pre">STRUCT&lt;name:</span> <span class="pre">STRING&gt;</span></code></p></li>
+<li><p>Option set to 2: <code class="docutils literal notranslate"><span class="pre">STRUCT&lt;name</span> <span class="pre">STRING,</span> <span class="pre">friend:</span> <span class="pre">STRUCT&lt;name:</span> <span class="pre">STRING&gt;&gt;</span></code></p></li>
+<li><p>Option set to 3: <code class="docutils literal notranslate"><span class="pre">STRUCT&lt;name</span> <span class="pre">STRING,</span> <span class="pre">friend:</span> <span class="pre">STRUCT&lt;name</span> <span class="pre">STRING,</span> <span class="pre">friend:</span> <span class="pre">STRUCT&lt;name:</span> <span class="pre">STRING&gt;&gt;&gt;</span></code></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>convert.any.fields.to.json</strong>: This option enables converting Protobuf <a class="reference external" href="https://protobuf.dev/programming-guides/proto3/#any">Any</a> fields to JSON. This feature should be enabled carefully. JSON conversion and processing are inefficient.  In addition, the JSON string field loses Protobuf schema safety making downstream processing prone to errors.</p>
+<ul>
+<li><p><strong>Values</strong>:</p>
+<ul class="simple">
+<li><p>False (default): At runtime, such wildcard fields can contain arbitrary Protobuf messages as binary data. By default such fields are handled like a normal Protobuf message. It has two fields with schema <code class="docutils literal notranslate"><span class="pre">(STRUCT&lt;type_url:</span> <span class="pre">STRING,</span> <span class="pre">value:</span> <span class="pre">BINARY&gt;)</span></code>. By default, the binary <code class="docutils literal notranslate"><span class="pre">value</span></code> field is not interpreted in any way. But the binary data might not be convenient in practice to work in some applications.</p></li>
+<li><p>True: Setting this value to True enables converting <code class="docutils literal notranslate"><span class="pre">Any</span></code> fields to JSON strings at runtime. With this option, the binary is parsed and the Protobuf message is deserialized into a JSON string.</p></li>
+</ul>
+</li>
+<li><p><strong>Example</strong>: Consider two Protobuf types defined as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">message</span> <span class="n">ProtoWithAny</span> <span class="p">{</span>
+   <span class="n">string</span> <span class="n">event_name</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+   <span class="n">google</span><span class="o">.</span><span class="n">protobuf</span><span class="o">.</span><span class="n">Any</span> <span class="n">details</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">message</span> <span class="n">Person</span> <span class="p">{</span>
+   <span class="n">string</span> <span class="n">name</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+   <span class="n">int32</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>With this option enabled, the schema for <code class="docutils literal notranslate"><span class="pre">from_protobuf(&quot;col&quot;,</span> <span class="pre">messageName</span> <span class="pre">=&quot;ProtoWithAny&quot;)</span></code> would be: <code class="docutils literal notranslate"><span class="pre">STRUCT&lt;event_name:</span> <span class="pre">STRING,</span> <span class="pre">details:</span> <span class="pre">STRING&gt;</span></code>.</p>
+<p>At run time, if <code class="docutils literal notranslate"><span class="pre">details</span></code> field contains <code class="docutils literal notranslate"><span class="pre">Person</span></code> Protobuf message, the returned value looks like this: <code class="docutils literal notranslate"><span class="pre">('click',</span> <span class="pre">'{&quot;&#64;type&quot;:&quot;type.googleapis.com/...ProtoWithAny&quot;,&quot;name&quot;:&quot;Mario&quot;,&quot;id&quot;:100}')</span></code>.</p>
+</li>
+<li><p><strong>Requirements</strong>:</p>
+<ul class="simple">
+<li><p>The definitions for all the possible Protobuf types that are used in <code class="docutils literal notranslate"><span class="pre">Any</span></code> fields should be available in the Protobuf descriptor file passed to <code class="docutils literal notranslate"><span class="pre">from_protobuf()</span></code>.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">Any</span></code> Protobuf is not found, it will result in an error for that record.</p></li>
+<li><p>This feature is currently not supported with schema-registry.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>emit.default.values</strong>: Enables rendering fields with zero values when deserializing Protobuf to a Spark struct. This option should be used sparingly. It is usually not advisable to depend on such finer differences in semantics.</p>
+<ul>
+<li><p><strong>Values</strong></p>
+<ul class="simple">
+<li><p>False (default): When a field is empty in the serialized Protobuf, the resulting field in the Spark struct is by default null. It is simpler to not enable this option and treat <code class="docutils literal notranslate"><span class="pre">null</span></code> as the default value.</p></li>
+<li><p>True: When this option is enabled, such fields are filled with corresponding default values.</p></li>
+</ul>
+</li>
+<li><p><strong>Example</strong>: Consider the following Protobuf with the Protobuf constructed like <code class="docutils literal notranslate"><span class="pre">Person(age=0,</span> <span class="pre">middle_name=&quot;&quot;)</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">syntax</span> <span class="o">=</span> <span class="s2">&quot;proto3&quot;</span><span class="p">;</span>
+
+<span class="n">message</span> <span class="n">Person</span> <span class="p">{</span>
+   <span class="n">string</span> <span class="n">name</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+   <span class="n">int64</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+   <span class="n">optional</span> <span class="n">string</span> <span class="n">middle_name</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+   <span class="n">optional</span> <span class="n">int64</span> <span class="n">salary</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>With this option set to False, the Spark struct after calling <code class="docutils literal notranslate"><span class="pre">from_protobuf()</span></code> would be all nulls: <code class="docutils literal notranslate"><span class="pre">{&quot;name&quot;:</span> <span class="pre">null,</span> <span class="pre">&quot;age&quot;:</span> <span class="pre">null,</span> <span class="pre">&quot;middle_name&quot;:</span> <span class="pre">&quot;&quot;,</span> <span class="pre">&quot;salary&quot;:</span> <span class="pre">null}</span></code>. Even though two fields (<code class="docutils literal notranslate"><span class="pre">age</span></code> and <code class="docutils literal notranslate"><span class="pre">middle_name</span></code>) had values set, Protobuf does not include them in wire-format since they are default values.</p></li>
+<li><p>With this option set to True, the Spark struct after calling <code class="docutils literal notranslate"><span class="pre">from_protobuf()</span></code> would be: <code class="docutils literal notranslate"><span class="pre">{&quot;name&quot;:</span> <span class="pre">&quot;&quot;,</span> <span class="pre">&quot;age&quot;:</span> <span class="pre">0,</span> <span class="pre">&quot;middle_name&quot;:</span> <span class="pre">&quot;&quot;,</span> <span class="pre">&quot;salary&quot;:</span> <span class="pre">null}</span></code>. The <code class="docutils literal notranslate"><span class="pre">salary</span></code> field remains null since it is explicitly declared <code class="docutils literal notranslate"><span class="pre">optional</span></code> and it is not set in the input record.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>enums.as.ints</strong>: When enabled, enum fields in Protobuf are rendered as integer fields in Spark.</p>
+<ul>
+<li><p><strong>Values</strong></p>
+<ul class="simple">
+<li><p>False (default)</p></li>
+<li><p>True: When enabled, enum fields in Protobuf are rendered as integer fields in Spark.</p></li>
+</ul>
+</li>
+<li><p><strong>Example</strong>: Consider the following Protobuf:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">syntax</span> <span class="o">=</span> <span class="s2">&quot;proto3&quot;</span><span class="p">;</span>
+
+<span class="n">message</span> <span class="n">Person</span> <span class="p">{</span>
+   <span class="n">enum</span> <span class="n">Job</span> <span class="p">{</span>
+     <span class="n">NONE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+     <span class="n">ENGINEER</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+     <span class="n">DOCTOR</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+     <span class="n">NURSE</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="n">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Given a Protobuf message like <code class="docutils literal notranslate"><span class="pre">Person(job</span> <span class="pre">=</span> <span class="pre">ENGINEER)</span></code>:</p>
+<ul class="simple">
+<li><p>With this option disabled, the corresponding Spark struct would be <code class="docutils literal notranslate"><span class="pre">{&quot;job&quot;:</span> <span class="pre">&quot;ENGINEER&quot;}</span></code>.</p></li>
+<li><p>With this option enabled, the corresponding Spark struct would be <code class="docutils literal notranslate"><span class="pre">{&quot;job&quot;:</span> <span class="pre">1}</span></code>.</p></li>
+</ul>
+<p>Notice that the schema for these fields is different in each case (integer rather than default string). Such a change can affect the schema of downstream tables.</p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="schema-registry-options">
+<h2>Schema Registry Options<a class="headerlink" href="#schema-registry-options" title="Permalink to this headline"> </a></h2>
+<p>The following schema registry options are relevant while using schema registry with Protobuf functions.</p>
+<ul class="simple">
+<li><p><strong>schema.registry.subject</strong></p>
+<ul>
+<li><p>Required</p></li>
+<li><p>Specifies subject for schema in Schema Registry, such as “client-event”</p></li>
+</ul>
+</li>
+<li><p><strong>schema.registry.address</strong></p>
+<ul>
+<li><p>Required</p></li>
+<li><p>URL for schema registry, such as <code class="docutils literal notranslate"><span class="pre">https://schema-registry.example.com:8081</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>schema.registry.protobuf.name</strong></p>
+<ul>
+<li><p>Optional</p></li>
+<li><p>Default: <code class="docutils literal notranslate"><span class="pre">&lt;NONE&gt;</span></code>.</p></li>
+<li><p>A schema-registry entry for a subject can contain multiple Protobuf definitions, just like a single <code class="docutils literal notranslate"><span class="pre">proto</span></code> file. When this option is not specified, the first Protobuf is used for the schema. Specify the name of the Protobuf message when it is not the first one in the entry. For example, consider an entry with two Protobuf definitions: “Person” and “Location” in that order. If the stream corresponds to “Location” rather than “Person”, set this option to “Location” (or its full name including package “com.example.protos.Location”).</p></li>
+</ul>
+</li>
+<li><p><strong>schema.registry.schema.evolution.mode</strong></p>
+<ul>
+<li><p>Default: “restart”.</p></li>
+<li><p>Supported modes:</p>
+<ul>
+<li><p>“restart”</p></li>
+<li><p>“none”</p></li>
+</ul>
+</li>
+<li><p>This option sets schema-evolution mode for <code class="docutils literal notranslate"><span class="pre">from_protobuf()</span></code>. At the start of a query, Spark records the latest schema-id for the given subject. This determines the schema for <code class="docutils literal notranslate"><span class="pre">from_protobuf()</span></code>. A new schema might be published to the schema registry after the query starts. When a newer schema-id is noticed in an incoming record, it indicates a change to the schema. This option determines how such a change to schema is handled:</p>
+<ul>
+<li><p><strong>restart</strong> (default): Triggers an <code class="docutils literal notranslate"><span class="pre">UnknownFieldException</span></code> when a newer schema-id is noticed. This terminates the query. Databricks recommends configuring workflows to restart on query failure to pick up schema changes.</p></li>
+<li><p><strong>none</strong>: Schema-id changes are ignored. The records with newer schema-id are parsed with the same schema that was observed at the start of the query. Newer Protobuf definitions are expected to be backward compatible, and new fields are ignored.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>confluent.schema.registry.<code class="docutils literal notranslate"><span class="pre">&lt;schema-registy-client-option&gt;</span></code></strong></p>
+<ul>
+<li><p>Optional</p></li>
+<li><p>Schema-registry connects to Confluent schema-registry using the <a class="reference external" href="https://docs.confluent.io/platform/current/schema-registry/develop/using.html">Confluent Schema Registry client</a>. Any configuration options supported by the client can be specified with the prefix “confluent.schema.registry”. For example, the following two settings provide “USER_INFO” authentication credentials:</p>
+<ul>
+<li><p>“confluent.schema.registry.basic.auth.credentials.source”: ‘USER_INFO’</p></li>
+<li><p>“confluent.schema.registry.basic.auth.user.info”: “<code class="docutils literal notranslate"><span class="pre">&lt;KEY&gt;</span></code> : <code class="docutils literal notranslate"><span class="pre">&lt;SECRET&gt;</span></code>”</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

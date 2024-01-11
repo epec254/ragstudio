@@ -1,0 +1,633 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn best practices when creating and configuring Databricks clusters." name="description" />
+<meta content="single-node" name="keywords" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Best practices: Cluster configuration">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Best practices: Cluster configuration &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/compute/cluster-config-best-practices.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/compute/cluster-config-best-practices.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/compute/cluster-config-best-practices.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/compute/cluster-config-best-practices.html" class="notranslate">English</option>
+    <option value="../../ja/compute/cluster-config-best-practices.html" class="notranslate">日本語</option>
+    <option value="../../pt/compute/cluster-config-best-practices.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Best practices: Cluster configuration</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="best-practices-cluster-configuration">
+<h1>Best practices: Cluster configuration<a class="headerlink" href="#best-practices-cluster-configuration" title="Permalink to this headline"> </a></h1>
+<p>Databricks provides a number of options when you create and configure clusters to help you get the best performance at the lowest cost. This flexibility, however, can create challenges when you’re trying to determine optimal configurations for your workloads. Carefully considering how users will utilize clusters will help guide configuration options when you create new clusters or configure existing clusters. Some of the things to consider when determining configuration options are:</p>
+<ul class="simple">
+<li><p>What type of user will be using the cluster? A data scientist may be running different job types with different requirements than a data engineer or data analyst.</p></li>
+<li><p>What types of workloads will users run on the cluster? For example, batch extract, transform, and load (ETL) jobs will likely have different requirements than analytical workloads.</p></li>
+<li><p>What level of service level agreement (SLA) do you need to meet?</p></li>
+<li><p>What budget constraints do you have?</p></li>
+</ul>
+<p>This article provides cluster configuration recommendations for different scenarios based on these considerations. This article also discusses specific features of Databricks clusters and the considerations to keep in mind for those features.</p>
+<p>Your configuration decisions will require a tradeoff between cost and performance. The primary cost of a cluster includes the Databricks Units (DBUs) consumed by the cluster and the cost of the underlying resources needed to run the cluster. What may not be obvious are the secondary costs such as the cost to your business of not meeting an SLA, decreased employee efficiency, or possible waste of resources because of poor controls.</p>
+<div class="section" id="cluster-features">
+<span id="cluster-features-overview"></span><h2>Cluster features<a class="headerlink" href="#cluster-features" title="Permalink to this headline"> </a></h2>
+<p>Before discussing more detailed cluster configuration scenarios, it’s important to understand some features of Databricks clusters and how best to use those features.</p>
+<div class="section" id="all-purpose-clusters-and-job-clusters">
+<span id="cluster-types"></span><h3>All-purpose clusters and job clusters<a class="headerlink" href="#all-purpose-clusters-and-job-clusters" title="Permalink to this headline"> </a></h3>
+<p>When you <a class="reference internal" href="configure.html"><span class="doc">create a cluster</span></a> you select a cluster type: an all-purpose cluster or a job cluster. All-purpose clusters can be shared by multiple users and are best for performing ad-hoc analysis, data exploration, or development. Once you’ve completed implementing your processing and are ready to operationalize your code, switch to running it on a job cluster. Job clusters terminate when your job ends, reducing resource usage and cost.</p>
+</div>
+<div class="section" id="cluster-mode">
+<span id="cluster-modes"></span><h3>Cluster mode<a class="headerlink" href="#cluster-mode" title="Permalink to this headline"> </a></h3>
+<p>At the top of the create cluster UI, you can select whether you want your cluster to be <strong>Multi Node</strong> or <strong>Single Node</strong>.</p>
+<p>Single Node clusters are intended for jobs that use small amounts of data or non-distributed workloads such as single-node machine learning libraries. Multi Node clusters are for larger jobs with distributed workloads.</p>
+</div>
+<div class="section" id="on-demand-and-spot-instances">
+<span id="instance-types-aws"></span><h3>On-demand and spot instances<a class="headerlink" href="#on-demand-and-spot-instances" title="Permalink to this headline"> </a></h3>
+<p>Amazon Web Services has two tiers of EC2 instances: on-demand and spot. For on-demand instances, you pay for compute capacity by the second with no long-term commitments. Spot instances allow you to use spare Amazon EC2 computing capacity and choose the maximum price you are willing to pay. Spot pricing changes in real-time based on the supply and demand on AWS compute capacity. If the current spot market price is above the max spot price, the spot instances are terminated. Since spot instances are often available at a discount compared to on-demand pricing you can significantly reduce the cost of running your applications, grow your application’s compute capacity, and increase throughput.</p>
+<p>Databricks supports creating clusters using a combination of on-demand and spot instances with a custom spot price, allowing you to tailor your cluster according to your use cases. For example, this image illustrates a  configuration that specifies that the driver node and four worker nodes should be launched as on-demand instances and the remaining four workers should be launched as spot instances where the maximum spot price is 100% of the on-demand price.</p>
+<div class="figure align-default">
+<img alt="Configure on-demand and spot instances" src="../_images/demand-spot-composition.png" />
+</div>
+<div class="figure align-default">
+<img alt="Max spot price" src="../_images/spot-price.png" />
+</div>
+<p>Databricks recommends launching the cluster so that the Spark driver is on an on-demand instance, which allows saving the state of the cluster even after losing spot instance nodes. If you choose to use all spot instances including the driver, any cached data or tables are deleted if you lose the driver instance due to changes in the spot market.</p>
+<p>Another important setting is <strong>Spot fall back to On-demand</strong>. If you are running a hybrid cluster (that is, a mix of on-demand and spot instances), and if spot instance acquisition fails or you lose the spot instances, Databricks falls back to using on-demand instances and provides you with the desired capacity. Without this option you will lose the capacity supplied by the spot instances for the cluster, causing delay or failure of your workload. Databricks recommends setting the mix of on-demand and spot instances in your cluster based on the criticality of jobs, tolerance to delays and failures due to loss of instances, and cost sensitivity for each type of use case.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can use the <a class="reference external" href="https://aws.amazon.com/ec2/spot/instance-advisor/">Amazon Spot Instance Advisor</a> to determine a suitable price for your instance type and region.</p>
+</div>
+</div>
+<div class="section" id="protect-spot-instances-from-preemption-with-decommissioning">
+<span id="cluster-mode"></span><h3>Protect spot instances from preemption with decommissioning<a class="headerlink" href="#protect-spot-instances-from-preemption-with-decommissioning" title="Permalink to this headline"> </a></h3>
+<p>While spot instances can save you money, they can be preempted by cloud provider scheduling mechanisms. The preemption of spot instances can cause issues with running jobs like shuffle fetch failures, shuffle data loss, RDD data loss, and job failure.</p>
+<p>To help address these issues, you can enable decommissioning on your clusters. For more information, see <a class="reference internal" href="clusters-manage.html#decommission"><span class="std std-ref">Decommission spot instances</span></a>.</p>
+</div>
+<div class="section" id="autoscaling">
+<span id="cluster-autoscaling"></span><h3>Autoscaling<a class="headerlink" href="#autoscaling" title="Permalink to this headline"> </a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Compute auto-scaling has limitations scaling down cluster size for Structured Streaming workloads. Databricks recommends using Delta Live Tables with Enhanced Autoscaling for streaming workloads. See <a class="reference internal" href="../delta-live-tables/auto-scaling.html"><span class="doc">What is Enhanced Autoscaling?</span></a>.</p>
+</div>
+<p><a class="reference internal" href="configure.html#autoscaling"><span class="std std-ref">Autoscaling</span></a> allows clusters to resize automatically based on workloads. Autoscaling can benefit many use cases and scenarios from both a cost and performance perspective, but it can be challenging to understand when and how to use autoscaling. The following are some considerations for determining whether to use autoscaling and how to get the most benefit:</p>
+<ul class="simple">
+<li><p>Autoscaling typically reduces costs compared to a fixed-size cluster.</p></li>
+<li><p>Autoscaling workloads can run faster compared to an under-provisioned fixed-size cluster.</p></li>
+<li><p>Some workloads are not compatible with autoscaling clusters, including spark-submit jobs and some Python packages.</p></li>
+<li><p>With single-user all-purpose clusters, users may find autoscaling is slowing down their development or analysis when the minimum number of workers is set too low. This is because the commands or queries they’re running are often several minutes apart, time in which the cluster is idle and may scale down to save on costs. When the next command is executed, the cluster manager will attempt to scale up, taking a few minutes while retrieving instances from the cloud provider. During this time, jobs might run with insufficient resources, slowing the time to retrieve results. While increasing the minimum number of workers helps, it also increases cost. This is another example where cost and performance need to be balanced.</p></li>
+<li><p>If <a class="reference internal" href="../optimizations/disk-cache.html"><span class="doc">Delta Caching</span></a> is being used, it’s important to remember that any cached data on a node is lost if that node is terminated. If retaining cached data is important for your workload, consider using a fixed-size cluster.</p></li>
+<li><p>If you have a job cluster running an ETL workload, you can sometimes size your cluster appropriately when tuning if you know your job is unlikely to change. However, autoscaling gives you flexibility if your data sizes increase. It’s also worth noting that optimized autoscaling can reduce expense with long-running jobs if there are long periods when the cluster is underutilized or waiting on results from another process. Once again, though, your job may experience minor delays as the cluster attempts to scale up appropriately. If you have tight SLAs for a job, a fixed-sized cluster may be a better choice or consider using a Databricks <a class="reference internal" href="#pools"><span class="std std-ref">pool</span></a> to reduce cluster start times.</p></li>
+</ul>
+<p>Databricks also supports <a class="reference internal" href="configure.html#autoscaling-local-storage"><span class="std std-ref">autoscaling local storage</span></a>. With autoscaling local storage, Databricks monitors the amount of free disk space available on your cluster’s Spark workers. If a worker begins to run low on disk, Databricks automatically attaches a new managed volume to the worker before it runs out of disk space.</p>
+</div>
+<div class="section" id="pools">
+<span id="instance-pools"></span><h3>Pools<a class="headerlink" href="#pools" title="Permalink to this headline"> </a></h3>
+<p><a class="reference internal" href="pools.html"><span class="doc">Create a pool</span></a> reduce cluster start and scale-up times by maintaining a set of available, ready-to-use instances. Databricks recommends taking advantage of pools to improve processing time while minimizing cost.</p>
+</div>
+<div class="section" id="databricks-runtime-versions">
+<span id="dbr-versions"></span><h3>Databricks Runtime versions<a class="headerlink" href="#databricks-runtime-versions" title="Permalink to this headline"> </a></h3>
+<p>Databricks recommends using the latest Databricks Runtime version for all-purpose clusters. Using the most current version will ensure you have the latest optimizations and most up-to-date compatibility between your code and preloaded packages.</p>
+<p>For job clusters running operational workloads, consider using the Long Term Support (LTS) Databricks Runtime version. Using the LTS version will ensure you don’t run into compatibility issues and can thoroughly test your workload before upgrading. If you have an advanced use case around machine learning, consider the specialized Databricks Runtime version.</p>
+</div>
+<div class="section" id="cluster-policies">
+<span id="policies"></span><h3>Cluster policies<a class="headerlink" href="#cluster-policies" title="Permalink to this headline"> </a></h3>
+<p>Databricks <a class="reference internal" href="../administration-guide/clusters/policies.html"><span class="doc">cluster policies</span></a> allow administrators to enforce controls over the creation and configuration of clusters. Databricks recommends using cluster policies to help apply the recommendations discussed in this guide.</p>
+</div>
+<div class="section" id="automatic-termination">
+<span id="auto-termination"></span><h3>Automatic termination<a class="headerlink" href="#automatic-termination" title="Permalink to this headline"> </a></h3>
+<p>Many users won’t think to terminate their clusters when they’re finished using them. Fortunately, clusters are automatically terminated after a set period, with a default of 120 minutes.</p>
+<p>Administrators can change this default setting when creating cluster policies. Decreasing this setting can lower cost by reducing the time that clusters are idle. It’s important to remember that when a cluster is terminated all state is lost, including all variables, temp tables, caches, functions, objects, and so forth. All of this state will need to be restored when the cluster starts again. If a developer steps out for a 30-minute lunch break, it would be wasteful to spend that same amount of time to get a notebook back to the same state as before.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Idle clusters continue to accumulate DBU and cloud instance charges during the inactivity period before termination.</p>
+</div>
+</div>
+<div class="section" id="garbage-collection">
+<span id="garbage-collection-considerations"></span><h3>Garbage collection<a class="headerlink" href="#garbage-collection" title="Permalink to this headline"> </a></h3>
+<p>While it may be less obvious than other considerations discussed in this article, paying attention to garbage collection can help optimize job performance on your clusters. Providing a large amount of RAM can help jobs perform more efficiently but can also lead to delays during garbage collection.</p>
+<p>To minimize the impact of long garbage collection sweeps, avoid deploying clusters with large amounts of RAM configured for each instance. Having more RAM allocated to the executor will lead to longer garbage collection times. Instead, configure instances with smaller RAM sizes, and deploy more instances if you need more memory for your jobs. However, there are cases where fewer nodes with more RAM are recommended, for example, workloads that require a lot of shuffles, as discussed in <a class="reference internal" href="#cluster-sizing-considerations"><span class="std std-ref">Cluster sizing considerations</span></a>.</p>
+</div>
+<div class="section" id="cluster-access-control">
+<span id="cluster-permissions"></span><h3>Cluster access control<a class="headerlink" href="#cluster-access-control" title="Permalink to this headline"> </a></h3>
+<p>You can configure two types of cluster permissions:</p>
+<ul class="simple">
+<li><p>The <strong>Allow Cluster Creation</strong> permission controls the ability of users to create clusters.</p></li>
+<li><p>Cluster-level permissions control the ability to use and modify a specific cluster.</p></li>
+</ul>
+<p>To learn more about configuring cluster permissions, see <a class="reference internal" href="../security/auth-authz/access-control/cluster-acl.html"><span class="doc">cluster access control</span></a>.</p>
+<p>You can create a cluster if you have either cluster create permissions or access to a cluster policy, which allows you to create any cluster within the policy’s specifications. The cluster creator is the owner and has Can Manage permissions, which will enable them to share it with any other user within the constraints of the data access permissions of the cluster.</p>
+<p>Understanding cluster permissions and cluster policies are important when deciding on cluster configurations for <a class="reference internal" href="#common-scenarios"><span class="std std-ref">common scenarios</span></a>.</p>
+</div>
+<div class="section" id="cluster-tags">
+<span id="cluster-tagging"></span><h3>Cluster tags<a class="headerlink" href="#cluster-tags" title="Permalink to this headline"> </a></h3>
+<p><a class="reference internal" href="configure.html#tags"><span class="std std-ref">Cluster tags</span></a> allow you to easily monitor the cost of cloud resources used by different groups in your organization. You can specify tags as key-value strings when creating a cluster, and Databricks applies these tags to cloud resources. See <a class="reference internal" href="../administration-guide/account-settings/usage-detail-tags.html#policy"><span class="std std-ref">Tag enforcement with policies</span></a> to learn more about tag enforcement.</p>
+</div>
+</div>
+<div class="section" id="cluster-sizing-considerations">
+<span id="cluster-sizing"></span><h2>Cluster sizing considerations<a class="headerlink" href="#cluster-sizing-considerations" title="Permalink to this headline"> </a></h2>
+<p>Databricks runs one executor per worker node. Therefore the terms executor and worker are used interchangeably in the context of the Databricks architecture. People often think of cluster size in terms of the number of workers, but there are other important factors to consider:</p>
+<ul class="simple">
+<li><p>Total executor cores (compute): The total number of cores across all executors. This determines the maximum parallelism of a cluster.</p></li>
+<li><p>Total executor memory: The total amount of RAM across all executors. This determines how much data can be stored in memory before spilling it to disk.</p></li>
+<li><p>Executor local storage: The type and amount of local disk storage. Local disk is primarily used in the case of spills during shuffles and caching.</p></li>
+</ul>
+<p>Additional considerations include worker instance type and size, which also influence the factors above. When sizing your cluster, consider:</p>
+<ul class="simple">
+<li><p>How much data will your workload consume?</p></li>
+<li><p>What’s the computational complexity of your workload?</p></li>
+<li><p>Where are you reading data from?</p></li>
+<li><p>How is the data partitioned in external storage?</p></li>
+<li><p>How much parallelism do you need?</p></li>
+</ul>
+<p>Answering these questions will help you determine optimal cluster configurations based on workloads. For simple ETL style workloads that use narrow transformations only (transformations where each input partition will contribute to only one output partition), focus on a compute-optimized configuration. If you expect a lot of shuffles, then the amount of memory is important, as well as storage to account for data spills. Fewer large instances can reduce network I/O when transferring data between machines during shuffle-heavy workloads.</p>
+<p>There’s a balancing act between the number of workers and the size of worker instance types. A cluster with two workers, each with 40 cores and 100 GB of RAM, has the same compute and memory as an eight worker cluster with 10 cores and 25 GB of RAM.</p>
+<p>If you expect many re-reads of the same data, then your workloads may benefit from caching. Consider a storage optimized configuration with Delta Cache.</p>
+<div class="section" id="cluster-sizing-examples">
+<span id="sizing-examples"></span><h3>Cluster sizing examples<a class="headerlink" href="#cluster-sizing-examples" title="Permalink to this headline"> </a></h3>
+<p>The following examples show cluster recommendations based on specific types of workloads. These examples also include configurations to avoid and why those configurations are not suitable for the workload types.</p>
+<div class="section" id="data-analysis">
+<span id="data-analysis-sizing-example"></span><h4>Data analysis<a class="headerlink" href="#data-analysis" title="Permalink to this headline"> </a></h4>
+<p>Data analysts typically perform processing requiring data from multiple partitions, leading to many shuffle operations. A cluster with a smaller number of nodes can reduce the network and disk I/O needed to perform these shuffles. Cluster A in the following diagram is likely the best choice, particularly for clusters supporting a single analyst.</p>
+<p>Cluster D will likely provide the worst performance since a larger number of nodes with less memory and storage will require more shuffling of data to complete the processing.</p>
+<div class="figure align-default">
+<img alt="Data analysis cluster sizing" src="../_images/cluster-sizing-analysis-etl.png" />
+</div>
+<p>Analytical workloads will likely require reading the same data repeatedly, so recommended worker types are storage optimized with Delta Cache enabled.</p>
+<p>Additional features recommended for analytical workloads include:</p>
+<ul class="simple">
+<li><p>Enable auto termination to ensure clusters are terminated after a period of inactivity.</p></li>
+<li><p>Consider enabling autoscaling based on the analyst’s typical workload.</p></li>
+<li><p>Consider using pools, which will allow restricting clusters to pre-approved instance types and ensure consistent cluster configurations.</p></li>
+</ul>
+<p>Features that are probably not useful:</p>
+<ul class="simple">
+<li><p>Storage autoscaling, since this user will probably not produce a lot of data.</p></li>
+<li><p>No isolation shared and shared clusters, since this cluster is for a single user.</p></li>
+</ul>
+</div>
+<div class="section" id="basic-batch-etl">
+<span id="basic-etl-sizing-example"></span><h4>Basic batch ETL<a class="headerlink" href="#basic-batch-etl" title="Permalink to this headline"> </a></h4>
+<p>Simple batch ETL jobs that don’t require wide transformations, such as joins or aggregations, typically benefit from clusters that are compute-optimized. For these types of workloads, any of the clusters in the following diagram are likely acceptable.</p>
+<div class="figure align-default">
+<img alt="Basic batch ETL cluster sizing" src="../_images/cluster-sizing-basic-etl.png" />
+</div>
+<p>Compute-optimized worker types are recommended; these will be cheaper, and these workloads will likely not require significant memory or storage.</p>
+<p>Using a pool might provide a benefit for clusters supporting simple ETL jobs by decreasing cluster launch times and reducing total runtime when running job pipelines. However, since these types of workloads typically run as scheduled jobs where the cluster runs only long enough to complete the job, using a pool might not be your best option.</p>
+<p>The following features probably aren’t useful:</p>
+<ul class="simple">
+<li><p>Delta Caching, since re-reading data is not expected.</p></li>
+<li><p>Auto termination probably isn’t required since these are likely scheduled jobs.</p></li>
+<li><p>Autoscaling is not recommended since compute and storage should be pre-configured for the use case.</p></li>
+<li><p>No Isolation Shared and Shared clusters are intended for multi-users and won’t benefit a cluster running a single job.</p></li>
+</ul>
+</div>
+<div class="section" id="complex-batch-etl">
+<span id="complex-etl-sizing-example"></span><h4>Complex batch ETL<a class="headerlink" href="#complex-batch-etl" title="Permalink to this headline"> </a></h4>
+<p>More complex ETL jobs, such as processing that requires unions and joins across multiple tables, will probably work best when you can minimize the amount of data shuffled. Since reducing the number of workers in a cluster will help minimize shuffles, you should consider a smaller cluster like cluster A in the following diagram over a larger cluster like cluster D.</p>
+<div class="figure align-default">
+<img alt="Complex ETL cluster sizing" src="../_images/cluster-sizing-analysis-etl.png" />
+</div>
+<p>Complex transformations can be compute-intensive, so for some workloads reaching an optimal number of cores may require adding additional nodes to the cluster.</p>
+<p>Like simple ETL jobs, compute-optimized worker types are recommended; these will be cheaper, and these workloads will likely not require significant memory or storage. Also, like simple ETL jobs, the main cluster feature to consider is pools to decrease cluster launch times and reduce total runtime when running job pipelines.</p>
+<p>The following features probably aren’t useful:</p>
+<ul class="simple">
+<li><p>Delta Caching, since re-reading data is not expected.</p></li>
+<li><p>Auto termination probably isn’t required since these are likely scheduled jobs.</p></li>
+<li><p>Autoscaling is not recommended since compute and storage should be pre-configured for the use case.</p></li>
+<li><p>No Isolation Shared and Shared clusters are intended for multi-users and won’t benefit a cluster running a single job.</p></li>
+</ul>
+</div>
+<div class="section" id="training-machine-learning-models">
+<span id="ml-models-sizing-example"></span><h4>Training machine learning models<a class="headerlink" href="#training-machine-learning-models" title="Permalink to this headline"> </a></h4>
+<p>Since initial iterations of training a machine learning model are often experimental, a smaller cluster such as cluster A is a good choice. A smaller cluster will also reduce the impact of shuffles.</p>
+<p>If stability is a concern, or for more advanced stages, a larger cluster such as cluster B or C may be a good choice.</p>
+<p>A large cluster such as cluster D is not recommended due to the overhead of shuffling data between nodes.</p>
+<div class="figure align-default">
+<img alt="Machine learning cluster sizing" src="../_images/cluster-sizing-ml-training.png" />
+</div>
+<p>Recommended worker types are storage optimized with Delta Caching enabled to account for repeated reads of the same data and to enable caching of training data. If the compute and storage options provided by storage optimized nodes are not sufficient, consider GPU optimized nodes. A possible downside is the lack of Delta Caching support with these nodes.</p>
+<p>Additional features recommended for machine learning workloads include:</p>
+<ul class="simple">
+<li><p>Enable auto termination to ensure clusters are terminated after a period of inactivity.</p></li>
+<li><p>Use pools, which will allow restricting clusters to pre-approved instance types and ensure consistent cluster configurations.</p></li>
+</ul>
+<p>Features that are probably not useful:</p>
+<ul class="simple">
+<li><p>Autoscaling, since cached data can be lost when nodes are removed as a cluster scales down. Additionally, typical machine learning jobs will often consume all available nodes, in which case autoscaling will provide no benefit.</p></li>
+<li><p>Storage autoscaling, since this user will probably not produce a lot of data.</p></li>
+<li><p>No isolation shared and shared clusters, since this cluster is for a single user.</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="common-scenarios">
+<span id="common-cluster-patterns"></span><h2>Common scenarios<a class="headerlink" href="#common-scenarios" title="Permalink to this headline"> </a></h2>
+<p>The following sections provide additional recommendations for configuring clusters for common cluster usage patterns:</p>
+<ul class="simple">
+<li><p>Multiple users running data analysis and ad-hoc processing.</p></li>
+<li><p>Specialized use cases like machine learning.</p></li>
+<li><p>Support scheduled batch jobs.</p></li>
+</ul>
+<div class="section" id="multi-user-clusters">
+<span id="multi-user-cluster-example"></span><h3>Multi-user clusters<a class="headerlink" href="#multi-user-clusters" title="Permalink to this headline"> </a></h3>
+<div class="section" id="scenario">
+<span id="multi-user-cluster-example-scenario"></span><h4>Scenario<a class="headerlink" href="#scenario" title="Permalink to this headline"> </a></h4>
+<p>You need to provide multiple users access to data for running data analysis and ad-hoc queries. Cluster usage might fluctuate over time, and most jobs are not very resource-intensive. The users mostly require read-only access to the data and want to perform analyses or create dashboards through a simple user interface.</p>
+<p>The recommended approach for cluster provisioning is a hybrid approach for node provisioning in the cluster along with autoscaling. A hybrid approach involves defining the number of on-demand instances and spot instances for the cluster and enabling autoscaling between the minimum and the maximum number of instances.</p>
+<div class="figure align-default">
+<img alt="Multi-user scenario" src="../_images/scenario-1-1.png" />
+</div>
+<p>This cluster is always available and shared by the users belonging to a group by default. Enabling autoscaling allows the cluster to scale up and down depending upon the load.</p>
+<p>Users do not have access to start/stop the cluster, but the initial on-demand instances are immediately available to respond to user queries. If the user query requires more capacity, autoscaling automatically provisions more nodes (mostly Spot instances) to accommodate the workload.</p>
+<p>Databricks has other features to further improve multi-tenancy use cases:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="query-watchdog.html"><span class="doc">Handling large queries in interactive workflows</span></a> describes a process to automatically manage queries that will never finish.</p></li>
+<li><p><a class="reference internal" href="preemption.html"><span class="doc">Task preemption</span></a> improves how long-running jobs and shorter jobs work together.</p></li>
+<li><p><a class="reference internal" href="configure.html#autoscaling-local-storage"><span class="std std-ref">Autoscaling local storage</span></a> helps prevent running out of storage space in a multi-tenant environment.</p></li>
+</ul>
+<p>This approach keeps the overall cost down by:</p>
+<ul class="simple">
+<li><p>Using a shared cluster model.</p></li>
+<li><p>Using a mix of on-demand and spot instances.</p></li>
+<li><p>Using autoscaling to avoid paying for underutilized clusters.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="specialized-workloads">
+<span id="specialized-cluster-example"></span><h3>Specialized workloads<a class="headerlink" href="#specialized-workloads" title="Permalink to this headline"> </a></h3>
+<div class="section" id="scenario">
+<span id="scenario-1"></span><span id="specialized-cluster-example-scenario"></span><h4>Scenario<a class="headerlink" href="#scenario" title="Permalink to this headline"> </a></h4>
+<p>You need to provide clusters for specialized use cases or teams within your organization, for example, data scientists running complex data exploration and machine learning algorithms. A typical pattern is that a user needs a cluster for a short period to run their analysis.</p>
+<p>The best approach for this kind of workload is to create cluster policies with pre-defined configurations for default, fixed, and settings ranges. These settings might include the number of instances, instance types, spot versus on-demand instances, roles, libraries to be installed, and so forth. Using cluster policies allows users with more advanced requirements to quickly spin up clusters that they can configure as needed for their use case and enforce cost and compliance with policies.</p>
+<div class="figure align-default">
+<img alt="Specialized workloads" src="../_images/scenario-2.png" />
+</div>
+<p>This approach provides more control to users while maintaining the ability to keep cost under control by pre-defining cluster configurations. This also allows you to configure clusters for different groups of users with permissions to access different data sets.</p>
+<p>One downside to this approach is that users have to work with administrators for any changes to clusters, such as configuration, installed libraries, and so forth.</p>
+</div>
+</div>
+<div class="section" id="batch-workloads">
+<span id="batch-cluster-example"></span><h3>Batch workloads<a class="headerlink" href="#batch-workloads" title="Permalink to this headline"> </a></h3>
+<div class="section" id="scenario">
+<span id="scenario-2"></span><span id="batch-cluster-example-scenario"></span><h4>Scenario<a class="headerlink" href="#scenario" title="Permalink to this headline"> </a></h4>
+<p>You need to provide clusters for scheduled batch jobs, such as production ETL jobs that perform data preparation. The suggested best practice is to launch a new cluster for each job run. Running each job on a new cluster helps avoid failures and missed SLAs caused by other workloads running on a shared cluster. Depending on the level of criticality for the job, you could use all on-demand instances to meet SLAs or balance between spot and on-demand instances for cost savings.</p>
+<div class="figure align-default">
+<img alt="Scheduled batch workloads" src="../_images/scenario-3.png" />
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

@@ -1,0 +1,146 @@
+---
+title: "KNN Regression RStudio and Databricks Demo"
+author: "Hossein Falaki, Denny Lee"
+date: "6/23/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This RMarkdown notebook is a demonstration of running KNN regression with RStudio and Databricks integration.  For more information, refer to [Databricks RStudio Integration](http://databricks.com/rstudio).  
+
+## Set up your RStudio and Databricks integration
+
+* Follow the instructions at [RStudio on Azure Databricks](https://docs.azuredatabricks.net/spark/latest/sparkr/rstudio.html).  
+* Restart your cluster
+* Install the `plotly`, `combinat`, and `FNN` R-packages to all of the worker nodes of your Databricks cluster via [Upload a CRAN library](https://docs.databricks.com/user-guide/libraries.html#upload-a-cran-library)
+
+
+### Identify the existing SparkR backend port
+```{r get backend port}
+Sys.getenv("EXISTING_SPARKR_BACKEND_PORT")
+```
+
+### Attach SparkR library
+```{r attach SparkR}
+library(SparkR)
+```
+
+### Establish SparkR session
+```{r SparkR session}
+sparkR.session()
+```
+
+## Run the KNN regression demo
+
+### Prepare input data
+```{r Prepare Input Data}
+library(ggplot2)
+write.csv(diamonds, "/dbfs/tmp/diamonds.csv", row.names = F)
+```
+
+
+### Review the diamonds dataset
+The diamond dataset contains 10 features of 50K diamonds, including price. We are going to use other features of diamonds to predict price using a well-known non-parametric model called [k-nearest neighbors](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm) (KNN) regression. We will be using the [FNN](https://cran.r-project.org/web/packages/FNN/index.html) package for this purpose. We first create a library on Databricks workspace and attach it to our serverless pool so that FNN will be available on all workers.
+
+```{r view data}
+library(magrittr)
+
+diamonds <- read.csv("/dbfs/tmp/diamonds.csv", header = T)
+temp.data <- subset(diamonds, select = -price)
+summary(diamonds)
+```
+
+
+### Create function using the KNN algorithm
+This simple function uses KNN algorithm for a given K and subset of columns of diamonds dataset. It returns the leave-one-out cross-validation (LOOCV) sum of squared residuals.
+
+```{r knn function}
+run.knn <- function(params) {
+  library(FNN)
+  library(magrittr)
+  
+  k <- params$k
+  columns <- unlist(params$columns[[1]])
+  id <- paste0(sort(columns), collapse = '')
+  
+  diamonds <- read.csv("/dbfs/tmp/diamonds.csv", header = T)
+  temp.train.df <- diamonds %>% subset(select = -price) %>% sapply(as.numeric) %>% as.data.frame
+  train.df <- temp.train.df[, columns]
+  
+  response <- diamonds$price
+  
+  knn.fit <- knn.reg(train = train.df,  y = response, k = k)
+  c(PRESS = sum(knn.fit$PRESS), R2pred = knn.fit$R2Pred, numColumns = length(columns), k = k, id = id)
+}
+```
+
+
+### What is the optimal subset of features and number of neighbors for this model?
+We will be using grid-search on top of Apache Spark to find the optimal solution. To do so, we first build a grid of all possible combinations of feature subsets and vary K from 1 to 25. This results in 12,775 possibilities. 
+```{r optimal subset of features}
+library(combinat)
+
+col.search <- sapply(1:ncol(temp.data), function(n) {
+  combn(1:ncol(temp.data), n) %>% as.data.frame %>% t %>% split(seq(nrow(.)))
+}) %>% unlist(recursive=F) 
+k <- 1:25
+grid <- expand.grid(columns = col.search, k = k) %>% split(seq(nrow(.)))
+
+length(grid)
+```
+
+
+### Compare test-error
+To compare test-error across all these possibilities we will parallelize it using SparkR::spark.lapply() function. We construct a data.frame of input parameters and corresponding test error values.
+
+```{r compare test error}
+#library(SparkR)
+#sparkR.session()
+grid.search <- spark.lapply(grid, run.knn)
+
+id <- sapply(grid.search, function(x) { x[[5]] })
+k <- sapply(grid.search, function(x) { x[[4]] })
+n <- sapply(grid.search, function(x) { x[[3]] })
+r2 <- sapply(grid.search, function(x) { x[[2]] })
+press <- sapply(grid.search, function(x) { x[[1]] })
+```
+
+
+### Visualize the results
+A key part of identifying optimal values is visual exploration of the result, which we can do using [plot.ly](https://plot.ly/r/) and [ggplot2](https://ggplot2.tidyverse.org/).
+
+```{r plot setup}
+plot.data <- data.frame(
+  id = as.factor(id),
+  k = as.numeric(k),
+  n = as.factor(n),
+  press = as.numeric(press))
+
+library(plotly)
+plot_ly(plot.data, x = ~k, y = ~n, z = ~press, color = ~n) %>% add_markers()
+
+library(plyr)
+min.surface <- ddply(plot.data, .(k, n), summarize, press = min(press))
+plot_ly(min.surface, x = ~k, y = ~n, z = ~press, color = ~n) %>% add_markers()
+
+
+ggplot(min.surface, aes(k, press, color = n)) + 
+  geom_point() +
+  geom_line(aes(group = n)) +
+  geom_label(data = subset(min.surface, k == 1), aes(label = n)) +
+  theme_bw() + geom_hline(yintercept = min(plot.data$press), size = 1.2) 
+```
+
+
+Finally we can find the minimum value to identify optimal combinations of columns and K.
+
+```{r visualize}
+plot.data[which(plot.data$press == min(plot.data$press)), ]
+
+diamonds[, c(1, 3, 4)] %>% head
+```
+
+

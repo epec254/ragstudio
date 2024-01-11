@@ -1,0 +1,725 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn about disaster recovery planning with Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Disaster recovery">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Disaster recovery &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/administration-guide/disaster-recovery.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/administration-guide/disaster-recovery.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/administration-guide/disaster-recovery.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/administration-guide/disaster-recovery.html" class="notranslate">English</option>
+    <option value="../../ja/administration-guide/disaster-recovery.html" class="notranslate">日本語</option>
+    <option value="../../pt/administration-guide/disaster-recovery.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Disaster recovery</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="disaster-recovery">
+<h1>Disaster recovery<a class="headerlink" href="#disaster-recovery" title="Permalink to this headline"> </a></h1>
+<p>A clear disaster recovery pattern is critical for a cloud-native data analytics platform such as Databricks. It’s critical that your data teams can use the Databricks platform even in the rare case of a regional service-wide cloud-service provider outage, whether caused by a regional disaster like a hurricane or earthquake, or other source.</p>
+<p>Databricks is often a core part of an overall data ecosystem that includes many services, including upstream data ingestion services (batch/streaming), cloud native storage such as Amazon S3, downstream tools and services such as business intelligence apps, and orchestration tooling. Some of your use cases might be particularly sensitive to a regional service-wide outage.</p>
+<p>This article describes concepts and best practices for a successful interregional disaster recovery solution for the Databricks platform.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<ul class="simple">
+<li><p>This article mentions the term <em>compute plane</em>, which is the compute layer of the Databricks platform. In the context of this article, compute plane refers to the classic compute plane in your AWS account. By contrast, the serverless compute plane that supports <a class="reference internal" href="../compute/sql-warehouse/serverless.html"><span class="doc">serverless SQL warehouses</span></a> runs in your Databricks account. To learn more, see <a class="reference internal" href="../serverless-compute/index.html"><span class="doc">Serverless compute</span></a>.</p></li>
+<li><p>Previously, Databricks referred to the compute plane as the data plane.</p></li>
+</ul>
+</div>
+<div class="section" id="disaster-recovery-overview">
+<h2>Disaster recovery overview<a class="headerlink" href="#disaster-recovery-overview" title="Permalink to this headline"> </a></h2>
+<p>Disaster recovery involves a set of policies, tools, and procedures that enable the recovery or continuation of vital technology infrastructure and systems following a natural or human-induced disaster. A large cloud service like AWS serves many customers and has built-in guards against a single failure. For example, a region is a group of buildings connected to different power sources to guarantee that a single power loss will not shut down a region. However, cloud region failures can happen, and the degree of disruption and its impact on your organization can vary.</p>
+<p>Before implementing a disaster recovery plan, it’s important to understand the difference between <a class="reference external" href="https://en.wikipedia.org/wiki/Disaster_recovery">disaster recovery</a> (DR) and <a class="reference external" href="https://en.wikipedia.org/wiki/High_availability">high availability</a> (HA).</p>
+<p>High availability is a resiliency characteristic of a system. High availability ensures a minimum level of operational performance that is usually defined in terms of consistent uptime or percentage of uptime. High availability is implemented in place (in the same region as your primary system) by designing it as a feature of the primary system. For example, cloud services like AWS have high-availability services such as Amazon S3. High availability does not require significant explicit preparation from the Databricks customer.</p>
+<p>In contrast, a <em>disaster recovery</em> plan requires decisions and solutions that work for your specific organization to handle a larger regional outage for critical systems. This article discusses common disaster recovery terminology, common solutions, and some best practices for disaster recovery plans with Databricks.</p>
+</div>
+<div class="section" id="terminology">
+<h2>Terminology<a class="headerlink" href="#terminology" title="Permalink to this headline"> </a></h2>
+<div class="section" id="region-terminology">
+<h3>Region terminology<a class="headerlink" href="#region-terminology" title="Permalink to this headline"> </a></h3>
+<p>This article uses the following definitions for regions:</p>
+<ul>
+<li><p><strong>Primary region</strong>: The geographic region in which users run typical daily interactive and automated data analytics workloads.</p></li>
+<li><p><strong>Secondary region</strong>: The geographic region in which IT teams move data analytics workloads temporarily during an outage in the primary region.</p></li>
+<li><p><strong>Geo-redundant storage</strong>: AWS has <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html">geo-redundant storage across regions</a> for persisted buckets using an asynchronous storage replication process.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>For disaster recovery processes, Databricks recommends that you do <em>not</em> rely on geo-redundant storage for cross-region duplication of data such as your root S3 bucket. In general, use Deep Clone for Delta Tables and convert data to Delta format to use Deep Clone if possible for other data formats.</p>
+</div>
+</li>
+</ul>
+<p></p>
+</div>
+<div class="section" id="deployment-status-terminology">
+<h3>Deployment status terminology<a class="headerlink" href="#deployment-status-terminology" title="Permalink to this headline"> </a></h3>
+<p>This article uses the following definitions of deployment status:</p>
+<ul>
+<li><p><strong>Active deployment</strong>: Users can connect to an active deployment of a Databricks workspace and  run workloads. Jobs are scheduled periodically using Databricks scheduler or other mechanism. Data streams can be executed on this deployment as well. Some documents might refer to an active deployment as a <em>hot deployment</em>.</p></li>
+<li><p><strong>Passive deployment</strong>: Processes do not run on a passive deployment. IT teams can setup automated procedures to deploy code, configuration, and other Databricks objects to the passive deployment. A deployment becomes active <em>only</em> if a current active deployment is down. Some documents might refer to a passive deployment as a <em>cold deployment</em>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>A project can optionally include multiple passive deployments in different regions to provide additional options for resolving regional outages.</p>
+</div>
+</li>
+</ul>
+<p>Generally speaking, a team has only one active deployment at a time, in what is called an <a class="reference internal" href="#active-passive"><span class="std std-ref">active-passive</span></a> disaster recovery strategy. There is a less common disaster recovery solution strategy called <a class="reference internal" href="#active-active"><span class="std std-ref">active-active</span></a>, in which there are two simultaneous active deployments.</p>
+</div>
+<div class="section" id="disaster-recovery-industry-terminology">
+<span id="dr-terminology"></span><h3>Disaster recovery industry terminology<a class="headerlink" href="#disaster-recovery-industry-terminology" title="Permalink to this headline"> </a></h3>
+<p>There are two important industry terms that you must understand and define for your team:</p>
+<ul>
+<li><p><strong>Recovery point objective</strong>: A <a class="reference external" href="https://en.wikipedia.org/wiki/Disaster_recovery#Recovery_Point_Objective">recovery point objective (RPO)</a> is the maximum targeted period in which data (transactions) might be lost from an IT service due to a major incident. Your Databricks deployment does not store your main customer data. That is stored in separate systems such as Amazon S3 or other data sources under your control. The Databricks control plane stores some objects in part or in full, such as jobs and notebooks. For Databricks, the RPO is defined as the maximum targeted period in which objects such as job and notebook changes can be lost. Additionally, you are responsible for defining the RPO for your own customer data in Amazon S3 or other data sources under your control.</p></li>
+<li><p><strong>Recovery time objective</strong>: The <a class="reference external" href="https://en.wikipedia.org/wiki/Disaster_recovery#Recovery_Time_Objective">recovery time objective (RTO)</a> is the targeted duration of time and a service level within which a business process must be restored after a disaster.</p>
+<div class="figure align-default">
+<img alt="Disaster recovery RPO and RTO" src="../_images/disaster-recovery-rpo-rto.png" />
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="disaster-recovery-and-data-corruption">
+<h3>Disaster recovery and data corruption<a class="headerlink" href="#disaster-recovery-and-data-corruption" title="Permalink to this headline"> </a></h3>
+<p>A disaster recovery solution does <strong>not</strong> mitigate data corruption. Corrupted data in the primary region is replicated from the primary region to a secondary region and is corrupted in both regions. There are other ways to mitigate this kind of failure, for example <a class="reference internal" href="../delta/history.html"><span class="doc">Delta time travel</span></a>.</p>
+</div>
+</div>
+<div class="section" id="typical-recovery-workflow">
+<h2>Typical recovery workflow<a class="headerlink" href="#typical-recovery-workflow" title="Permalink to this headline"> </a></h2>
+<p>A Databricks disaster recovery scenario typically plays out in the following way:</p>
+<ol class="arabic">
+<li><p>A failure occurs in a critical service you use in your primary region. This can be a data source service or a network that impacts the Databricks deployment.</p></li>
+<li><p>You investigate the situation with the cloud provider.</p></li>
+<li><p>If you conclude that your company cannot wait for the problem to be remediated in the primary region, you may decide you need failover to a secondary region.</p></li>
+<li><p>Verify that the same problem does not also impact your secondary region.</p></li>
+<li><p>Fail over to a secondary region.</p>
+<ol class="loweralpha simple">
+<li><p>Stop all activities in the workspace. Users stop workloads. Users or administrators are instructed to make a backup of the recent changes if possible. Jobs are shut down if they haven’t already failed due to the outage.</p></li>
+<li><p>Start the recovery procedure in the secondary region. The recovery procedure updates routing and renaming of the connections and network traffic to the secondary region.</p></li>
+<li><p>After testing, declare the secondary region operational. Production workloads can now resume. Users can log in to the now active deployment. You can retrigger scheduled or delayed jobs.</p></li>
+</ol>
+<p>For detailed steps in a Databricks context, see <a class="reference internal" href="#failover"><span class="std std-ref">Test failover</span></a>.</p>
+</li>
+<li><p>At some point, the problem in the primary region is mitigated and you confirm this fact.</p></li>
+<li><p>Restore (fail back) to your primary region.</p>
+<ol class="loweralpha simple">
+<li><p>Stop all work on the secondary region.</p></li>
+<li><p>Start the recovery procedure in the primary region. The recovery procedure handles routing and renaming of the connection and network traffic back to the primary region.</p></li>
+<li><p>Replicate data back to the primary region as needed. To reduce complexity, perhaps minimize how much data needs to be replicated. For example, if some jobs are read-only when run in the secondary deployment, you may not need to replicate that data back to your primary deployment in the primary region. However, you may have one production job that needs to run and may need data replication back to the primary region.</p></li>
+<li><p>Test the deployment in the primary region.</p></li>
+<li><p>Declare your primary region operational and that it is your active deployment. Resume production workloads.</p></li>
+</ol>
+<p>For more information about restoring to your primary region, see <a class="reference internal" href="#failback"><span class="std std-ref">Test restore (failback)</span></a>.</p>
+</li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>During these steps, some data loss might happen. Your organization must define how much data loss is acceptable and what you can do to mitigate this loss.</p>
+</div>
+</div>
+<div class="section" id="step-1-understand-your-business-needs">
+<h2>Step 1: Understand your business needs<a class="headerlink" href="#step-1-understand-your-business-needs" title="Permalink to this headline"> </a></h2>
+<p>Your first step is to define and understand your business needs. Define which data services are critical and what is their expected <a class="reference internal" href="#dr-terminology"><span class="std std-ref">RPO and RTO</span></a>.</p>
+<p>Research the real-world tolerance of each system, and remember that disaster recovery failover and failback can be costly and carries other risks. Other risks might include data corruption, data duplicated if you write to the wrong storage location, and users who log in and make changes in the wrong places.</p>
+<p>Map all of the Databricks integration points that affect your business:</p>
+<ul class="simple">
+<li><p>Does your disaster recovery solution need to accommodate interactive processes, automated processes, or both?</p></li>
+<li><p>Which data services do you use? Some may be on-premises.</p></li>
+<li><p>How does input data get to the cloud?</p></li>
+<li><p>Who consumes this data? What processes consume it downstream?</p></li>
+<li><p>Are there third-party integrations that need to be aware of disaster recovery changes?</p></li>
+</ul>
+<p>Determine the tools or communication strategies that can support your disaster recovery plan:</p>
+<ul class="simple">
+<li><p>What tools will you use to modify network configurations quickly?</p></li>
+<li><p>Can you predefine your configuration and make it modular to accommodate disaster recovery solutions in a natural and maintainable way?</p></li>
+<li><p>Which communication tools and channels will notify internal teams and third-parties (integrations, downstream consumers) of disaster recovery failover and failback changes? And how will you confirm their acknowledgement?</p></li>
+<li><p>What tools or special support will be needed?</p></li>
+<li><p>What services if any will be shut down until complete recovery is in place?</p></li>
+</ul>
+</div>
+<div class="section" id="step-2-choose-a-process-that-meets-your-business-needs">
+<h2>Step 2: Choose a process that meets your business needs<a class="headerlink" href="#step-2-choose-a-process-that-meets-your-business-needs" title="Permalink to this headline"> </a></h2>
+<p>Your solution must replicate the correct data in both control plane, compute plane, and data sources. Redundant workspaces for disaster recovery must map to different control planes in different regions. You must keep that data in sync periodically using a script-based solution, either <a class="reference internal" href="#tooling"><span class="std std-ref">a synchronization tool or a CI/CD workflow</span></a>. There is no need to synchronize data from within the compute plane network itself, such as from Databricks Runtime workers.</p>
+<p>If you use the customer-managed VPC feature (not available with all subscription and deployment types), you can consistently deploy these networks in both regions using template-based tooling such as <a class="reference internal" href="../dev-tools/terraform/index.html"><span class="doc">Terraform</span></a>.</p>
+<p></p>
+<p>Additionally, you need to ensure that your data sources are replicated as needed across regions.</p>
+<div class="figure align-default">
+<img alt="Disaster recovery - What needs to be replicated?" src="../_images/disaster-recovery-what-to-replicate-aws.png" />
+</div>
+<div class="section" id="general-best-practices">
+<h3>General best practices<a class="headerlink" href="#general-best-practices" title="Permalink to this headline"> </a></h3>
+<p>General best practices for a successful disaster recovery plan include:</p>
+<ol class="arabic">
+<li><p>Understand which processes are critical to the business and have to run in disaster recovery.</p></li>
+<li><p>Clearly identify which services are involved, which data is being processed, what the data flow is and where it is stored</p></li>
+<li><p>Isolate the services and data as much as possible. For example, create a special cloud storage container for the data for disaster recovery or move Databricks objects that are needed during a disaster to a separate workspace.</p></li>
+<li><p>It is your responsibility to maintain integrity between primary and secondary deployments for other objects that are not stored in the Databricks Control Plane.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is a best practice <em>not</em> to store any data elements in the root Amazon S3 bucket that is used for root DBFS access for the workspace. That root DBFS storage is not supported for production customer data. However, you might store other objects such as libraries, configuration files, init scripts, and similar data. Either develop an automated process to replicate these objects, or remember to have processes in place to update the secondary deployment for manual deployment.</p>
+</div>
+</li>
+<li><p>For data sources, where possible, it is recommended that you use native AWS tools for replication and redundancy to replicate data to the disaster recovery regions.</p></li>
+</ol>
+</div>
+<div class="section" id="choose-a-recovery-solution-strategy">
+<h3>Choose a recovery solution strategy<a class="headerlink" href="#choose-a-recovery-solution-strategy" title="Permalink to this headline"> </a></h3>
+<p>Typical disaster recovery solutions involve two (or possibly more) workspaces. There are several strategies you can choose. Consider the potential length of the disruption (hours or maybe even a day), the effort to ensure that the workspace is fully operational, and the effort to restore (fail back) to the primary region.</p>
+<div class="section" id="active-passive-solution-strategy">
+<span id="active-passive"></span><h4>Active-passive solution strategy<a class="headerlink" href="#active-passive-solution-strategy" title="Permalink to this headline"> </a></h4>
+<p>An active-passive solution is the most common and the easiest solution, and this type of solution is the focus of this article. An active-passive solution synchronizes data and object changes from your active deployment to your passive deployment. If you prefer, you could have multiple passive deployments in different regions, but this article focuses on the single passive deployment approach. During a disaster recovery event, the passive deployment in the secondary region becomes your active deployment.</p>
+<p>There are two main variants of this strategy:</p>
+<ul class="simple">
+<li><p>Unified (enterprise-wise) solution: Exactly one set of active and passive deployments that  support the entire organization.</p></li>
+<li><p>Solution by department or project: Each department or project domain maintains a separate disaster recovery solution. Some organizations want to decouple disaster recovery details between departments and use different primary and secondary regions for each team based on the unique needs of each team.</p></li>
+</ul>
+<p>There are other variants, such as using a passive deployment for read-only use cases. If you have workloads that are read-only, for example user queries, they can run on a passive solution at any time if they do not modify data or Databricks objects such as notebooks or jobs.</p>
+</div>
+<div class="section" id="active-active-solution-strategy">
+<span id="active-active"></span><h4>Active-active solution strategy<a class="headerlink" href="#active-active-solution-strategy" title="Permalink to this headline"> </a></h4>
+<p>In an active-active solution, you run all data processes in both regions at all times in parallel. Your operations team must ensure that a data process such as a job is marked as complete only <em>when it finishes successfully on both regions</em>. Objects cannot be changed in production and must follow a strict CI/CD promotion from development/staging to production.</p>
+<p>An active-active solution is the most complex strategy, and because jobs run in both regions, there is additional financial cost.</p>
+<p>Just as with the active-passive strategy, you can implement this as a unified organization solution or by department.</p>
+<p>You may not need an equivalent workspace in the secondary system for all workspaces, depending on your workflow. For example, perhaps a development or staging workspace may not need a duplicate. With a well-designed development pipeline, you may be able to reconstruct those workspaces easily if needed.</p>
+</div>
+</div>
+<div class="section" id="choose-your-tooling">
+<span id="tooling"></span><h3>Choose your tooling<a class="headerlink" href="#choose-your-tooling" title="Permalink to this headline"> </a></h3>
+<p>There are two main approaches for tools to keep data as similar as possible between workspaces in your primary and secondary regions:</p>
+<ul class="simple">
+<li><p><strong>Synchronization client that copies from primary to secondary</strong>: A sync client pushes production data and assets from the primary region to the secondary region. Typically this runs on a scheduled basis.</p></li>
+<li><p><strong>CI/CD tooling for parallel deployment</strong>: For production code and assets, use <a class="reference internal" href="../dev-tools/terraform/index.html"><span class="doc">CI/CD tooling</span></a> that pushes changes to production systems simultaneously to both regions. For example, when pushing code and assets from staging/development to production, a CI/CD system makes it available in both regions at the same time. The core idea is to treat all artifacts in a Databricks workspace as infrastructure-as-code. Most artifacts could be co-deployed to both primary and secondary workspaces, while some artifacts may need to be deployed only after a disaster recovery event. For tools, see <a class="reference internal" href="#automation"><span class="std std-ref">Automation scripts, samples, and prototypes</span></a>.</p></li>
+</ul>
+<p>The following diagram contrasts these two approaches.</p>
+<div class="figure align-default">
+<img alt="Disaster recovery options" src="../_images/disaster-recovery-tooling-options.png" />
+</div>
+<p>Depending on your needs, you could combine the approaches. For example, use CI/CD for notebook source code but use synchronization for configuration like pools and access controls.</p>
+<p>The following table describes how to handle different types of data with each tooling option.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Description</p></th>
+<th class="head"><p>How to handle with CI/CD tooling</p></th>
+<th class="head"><p>How to handle with sync tool</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Source code: notebook source exports and source code for packaged libraries</p></td>
+<td><p>Co-deploy both to primary and secondary.</p></td>
+<td><p>Synchronize source code from primary to secondary.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Users and groups</p></td>
+<td><p>Manage metadata as config in Git. Alternatively, use the same identity provider (IdP) for both workspaces. Co-deploy user and group data to primary and secondary deployments.</p></td>
+<td><p>Use <a class="reference internal" href="users-groups/scim/index.html"><span class="doc">SCIM</span></a> or other automation for both regions. Manual creation is <em>not</em> recommended, but if used must be done for both at the same time. If you use a manual setup, create a scheduled automated process to compare the list of users and group between the two deployments.</p></td>
+</tr>
+<tr class="row-even"><td><p>Pool configurations</p></td>
+<td><p>Can be templates in Git. Co-deploy to primary and secondary. However, <code class="docutils literal notranslate"><span class="pre">min_idle_instances</span></code> in secondary must be zero until the disaster recovery event.</p></td>
+<td><p>Pools created with any <code class="docutils literal notranslate"><span class="pre">min_idle_instances</span></code> when they are synced to secondary workspace using the API or CLI.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Job configurations</p></td>
+<td><p>Can be templates in Git. For primary deployment, deploy the job definition as is. For secondary deployment, deploy the job and set the concurrencies to zero. This disables the job in this deployment and prevents extra runs. Change the concurrencies value after the secondary deployment becomes active.</p></td>
+<td><p>If the jobs run on existing <code class="docutils literal notranslate"><span class="pre">&lt;interactive&gt;</span></code> clusters for some reason, then the sync client needs to map to the corresponding <code class="docutils literal notranslate"><span class="pre">cluster_id</span></code> in the secondary workspace.</p></td>
+</tr>
+<tr class="row-even"><td><p>Access control lists (ACLs)</p></td>
+<td><p>Can be templates in Git. Co-deploy to primary and secondary deployments for notebooks, folders, and clusters. However, hold the data for jobs until the disaster recovery event.</p></td>
+<td><p>The <a class="reference external" href="https://docs.databricks.com/api/workspace/permissions">Permissions API</a> can set access controls for clusters, jobs, pools, notebooks, and folders. A sync client needs to map to corresponding object IDs for each object in the secondary workspace. Databricks recommends creating a map of object IDs from primary to secondary workspace while syncing those objects <em>before</em> replicating the access controls.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Libraries</p></td>
+<td><p>Include in source code and cluster/job templates.</p></td>
+<td><p>Sync custom libraries from centralized repositories, DBFS, or cloud storage (can be mounted).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../init-scripts/index.html"><span class="doc">Cluster init scripts</span></a></p></td>
+<td><p>Include in source code if you prefer.</p></td>
+<td><p>For simpler synchronization, store init scripts in the primary workspace in a common folder or in a small set of folders if possible.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Mount points</p></td>
+<td><p>Include in source code if created only through notebook-based jobs or <a class="reference external" href="https://docs.databricks.com/api/workspace/commandexecution">Command API</a>.</p></td>
+<td><p>Use jobs. Note that the storage endpoints might change, given that workspaces would be in different regions. This depends a lot on your data disaster recovery strategy as well.</p></td>
+</tr>
+<tr class="row-even"><td><p>Table metadata</p></td>
+<td><p>Include with source code if created only through notebook-based jobs or <a class="reference external" href="https://docs.databricks.com/api/workspace/commandexecution">Command API</a>. This applies to both internal Databricks metastore or external configured metastore.</p></td>
+<td><p>Compare the metadata definitions between the metastores using <a class="reference external" href="https://github.com/apache/spark/blob/master/python/pyspark/sql/catalog.py">Spark Catalog API</a> or Show Create Table via a notebook or scripts. Note that the tables for underlying storage can be region-based and will be different between metastore instances.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Secrets</p></td>
+<td><p>Include in source code if created only through <a class="reference external" href="https://docs.databricks.com/api/workspace/commandexecution">Command API</a>. Note that some secrets content might need to change between the primary and secondary.</p></td>
+<td><p>Secrets are created in both workspaces via the API. Note that some secrets content might need to change between the primary and secondary.</p></td>
+</tr>
+<tr class="row-even"><td><p>Cluster configurations</p></td>
+<td><p>Can be templates in Git. Co-deploy to primary and secondary deployments, although the ones in secondary deployment should be terminated until the disaster recovery event.</p></td>
+<td><p>Clusters are created after they are synced to the secondary workspace using the API or CLI. Those can be explicitly terminated if you want, depending on auto-termination settings.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Notebook, job, and folder permissions</p></td>
+<td><p>Can be templates in Git. Co-deploy to primary and secondary deployments.</p></td>
+<td><p>Replicate using the <a class="reference external" href="https://docs.databricks.com/api/workspace/permissions">Permissions API</a>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="choose-regions-and-multiple-secondary-workspaces">
+<h3>Choose regions and multiple secondary workspaces<a class="headerlink" href="#choose-regions-and-multiple-secondary-workspaces" title="Permalink to this headline"> </a></h3>
+<p>You need full control of your disaster recovery trigger. You may decide to trigger this at any time or for any reason. You must take responsibility for disaster recovery stabilization before you can restart your operation failback (normal production) mode. Typically this means that you need to create multiple Databricks workspaces to serve your production and disaster recovery needs, and choose your secondary failover region.</p>
+<p>In AWS, you can have full control of the chosen secondary region. Ensure that all of your resources and products are available there, such as EC2. Some Databricks services are available <a class="reference internal" href="../resources/supported-regions.html"><span class="doc">only in some regions</span></a>. If your Databricks account is on the E2 version of the platform, you must choose among the supported AWS regions for the E2 version of the platform.</p>
+</div>
+</div>
+<div class="section" id="step-3-prep-workspaces-and-do-a-one-time-copy">
+<h2>Step 3: Prep workspaces and do a one-time copy<a class="headerlink" href="#step-3-prep-workspaces-and-do-a-one-time-copy" title="Permalink to this headline"> </a></h2>
+<p>If a workspace is already in production, it is typical to run a <strong>one-time copy</strong> operation to synchronize your passive deployment with your active deployment. This one time copy handles the following:</p>
+<ul class="simple">
+<li><p><strong>Data replication</strong>: Replicate using a cloud replication solution or Delta Deep Clone operation.</p></li>
+<li><p><strong>Token generation</strong>: Use token generation to automate the replication and future workloads.</p></li>
+<li><p><strong>Workspace replication</strong>: Use workspace replication using the methods described in <a class="reference internal" href="#prepare-data-sources"><span class="std std-ref">Step 4: Prepare your data sources</span></a>.</p></li>
+<li><p><strong>Workspace validation</strong>: - test to make sure that the workspace and the process can execute successfully and provide the expected results.</p></li>
+</ul>
+<p>After your initial one-time copy operation, subsequent copy and sync actions are faster and any logging from your tools is also a log of what changed and when it changed.</p>
+</div>
+<div class="section" id="step-4-prepare-your-data-sources">
+<span id="prepare-data-sources"></span><h2>Step 4: Prepare your data sources<a class="headerlink" href="#step-4-prepare-your-data-sources" title="Permalink to this headline"> </a></h2>
+<p>Databricks can process a large variety of data sources using batch processing or data streams.</p>
+<div class="section" id="batch-processing-from-data-sources">
+<h3>Batch processing from data sources<a class="headerlink" href="#batch-processing-from-data-sources" title="Permalink to this headline"> </a></h3>
+<p>When data is processed in batch, it usually resides in a data source that can be replicated easily or delivered into another region.</p>
+<p>For example, data might regularly be uploaded to a cloud storage location. In disaster recovery mode for your secondary region, you must ensure that the files will be uploaded to your secondary region storage. Workloads must read the secondary region storage and write to the secondary region storage.</p>
+</div>
+<div class="section" id="data-streams">
+<h3>Data streams<a class="headerlink" href="#data-streams" title="Permalink to this headline"> </a></h3>
+<p>Processing a data stream is a bigger challenge. Streaming data can be ingested from various  sources and be processed and sent to a streaming solution:</p>
+<ul class="simple">
+<li><p>Message queue such as Kafka</p></li>
+<li><p>Database change data capture stream</p></li>
+<li><p>File-based continuous processing</p></li>
+<li><p>File-based scheduled processing, also known as trigger once</p></li>
+</ul>
+<p>In all of these cases, you must configure your data sources to handle disaster recovery mode and to use your secondary deployment in your secondary region.</p>
+<p>A stream writer stores a checkpoint with information about the data that has been processed. This checkpoint can contain a data location (usually cloud storage) that has to be modified to a new location to ensure a successful restart of the stream.  For example, the <code class="docutils literal notranslate"><span class="pre">source</span></code> subfolder under the checkpoint might store the file-based cloud folder.</p>
+<p>This checkpoint must be replicated in a timely manner. Consider synchronization of the checkpoint interval with any new cloud replication solution.</p>
+<p>The checkpoint update is a function of the writer and therefore applies to data stream ingestion or processing and storing on another streaming source.</p>
+<p>For streaming workloads, ensure that checkpoints are configured in customer-managed storage so that they can be replicated to the secondary region for workload resumption from the point of last failure. You might also choose to run the secondary streaming process in parallel to the primary process.</p>
+</div>
+</div>
+<div class="section" id="step-5-implement-and-test-your-solution">
+<h2>Step 5: Implement and test your solution<a class="headerlink" href="#step-5-implement-and-test-your-solution" title="Permalink to this headline"> </a></h2>
+<p>Periodically test your disaster recovery setup to ensure that it functions correctly. There’s no value in maintaining a disaster recovery solution if you cannot use it when you need it. Some companies switch between regions every few months. Switching regions on a regular schedule tests your assumptions and processes and ensures that they meet your recovery needs. This also ensures that your organization is familiar with the policies and procedures for emergencies.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Regularly test your disaster recovery solution in real-world conditions.</p>
+</div>
+<p>If you discover that you are missing an object or template and still need to rely on the information stored in your primary workspace, modify your plan to remove these obstacles, replicate this information in the secondary system, or make it available in some other way.</p>
+<p>Test any required organizational changes to your processes and to configuration in general. Your disaster recovery plan impacts your deployment pipeline, and it is important that your team knows what needs to be kept in sync. After you set up your disaster recovery workspaces, you must ensure that your infrastructure (manual or code), jobs, notebook, libraries, and other workspace objects are available in your secondary region.</p>
+<p>Talk with your team about how to expand standard work processes and configuration pipelines to deploy changes to all workspaces. Manage user identities in all workspaces. Remember to configure tools such as job automation and monitoring for new workspaces.</p>
+<p>Plan for and test changes to configuration tooling:</p>
+<ul class="simple">
+<li><p>Ingestion: Understand where your data sources are and where those sources get their data. Where possible, parameterize the source and ensure that you have a separate configuration template for working with your secondary deployments and secondary regions. Prepare a plan for failover and test all assumptions.</p></li>
+<li><p>Execution changes: If you have a scheduler to trigger jobs or other actions, you may need to configure a separate scheduler that works with the secondary deployment or its data sources. Prepare a plan for failover and test all assumptions.</p></li>
+<li><p>Interactive connectivity: Consider how configuration, authentication, and network connections might be affected by regional disruptions for any use of REST APIs, CLI tools, or other services such as JDBC/ODBC. Prepare a plan for failover and test all assumptions.</p></li>
+<li><p>Automation changes: For all automation tools, prepare a plan for failover and test all assumptions.</p></li>
+<li><p>Outputs: For any tools that generate output data or logs, prepare a plan for failover and test all assumptions.</p></li>
+</ul>
+<div class="section" id="test-failover">
+<span id="failover"></span><h3>Test failover<a class="headerlink" href="#test-failover" title="Permalink to this headline"> </a></h3>
+<p>Disaster recovery can be triggered by many different scenarios. It can be triggered by an unexpected break. Some core functionality may be down, including the cloud network, cloud storage, or another core service. You do not have access to shut down the system gracefully and must try to recover. However, the process could be triggered by a shutdown or planned outage, or even by periodic switching of your active deployments between two regions.</p>
+<p>When you test failover, connect to the system and run a shutdown process. Ensure that all jobs are complete and the clusters are terminated.</p>
+<p>A sync client (or CI/CD tooling) can replicate relevant Databricks objects and resources to the secondary workspace. To activate your secondary workspace, your process might include some or all of the following:</p>
+<ol class="arabic simple">
+<li><p>Run tests to confirm that the platform is up to date.</p></li>
+<li><p>Disable pools and clusters on the primary region so that if the failed service returns online, the primary region does not start processing new data.</p></li>
+<li><p>Recovery process:</p>
+<ol class="loweralpha simple">
+<li><p>Check the date of the latest synced data. See <a class="reference internal" href="#dr-terminology"><span class="std std-ref">Disaster recovery industry terminology</span></a>. The details of this step vary based on how you synchronize data and your unique business needs.</p></li>
+<li><p>Stabilize your data sources and ensure that they are all available. Include all external data sources, such as AWS RDS, as well as your Delta Lake, Parquet, or other files.</p></li>
+<li><p>Find your streaming recovery point. Set up the process to restart from there and have a process ready to identify and eliminate potential duplicates (Delta Lake Lake makes this easier).</p></li>
+<li><p>Complete the data flow process and inform the users.</p></li>
+</ol>
+</li>
+<li><p>Start relevant pools (or increase the <code class="docutils literal notranslate"><span class="pre">min_idle_instances</span></code> to relevant number).</p></li>
+<li><p>Start relevant clusters (if not terminated).</p></li>
+<li><p>Change the concurrent run for jobs and run relevant jobs. These could be one-time runs or periodic runs.</p></li>
+<li><p>For any outside tool that uses a URL or domain name for your Databricks workspace, update configurations to account for the new control plane. For example, update URLs for REST APIs and JDBC/ODBC connections. The Databricks web application’s customer-facing URL changes when the control plane changes, so notify your organization’s users of the new URL.</p></li>
+</ol>
+</div>
+<div class="section" id="test-restore-failback">
+<span id="failback"></span><h3>Test restore (failback)<a class="headerlink" href="#test-restore-failback" title="Permalink to this headline"> </a></h3>
+<p>Failback is easier to control and can be done in a maintenance window. This plan can include some or all of the following:</p>
+<ol class="arabic simple">
+<li><p>Get confirmation that the primary region is restored.</p></li>
+<li><p>Disable pools and clusters on the secondary region so it will not start processing new data.</p></li>
+<li><p>Sync any new or modified assets in the secondary workspace back to the primary deployment. Depending on the design of your failover scripts, you might be able to run the same scripts to sync the objects from the secondary (disaster recovery) region to the primary (production) region.</p></li>
+<li><p>Sync any new data updates back to the primary deployment. You can use the audit trails of logs and Delta tables to guarantee no loss of data.</p></li>
+<li><p>Shut down all workloads in the disaster recovery region.</p></li>
+<li><p>Change the jobs and users URL to the primary region.</p></li>
+<li><p>Run tests to confirm that the platform is up to date.</p></li>
+<li><p>Start relevant pools (or increase the <code class="docutils literal notranslate"><span class="pre">min_idle_instances</span></code> to a relevant number) .</p></li>
+<li><p>Start relevant clusters (if not terminated).</p></li>
+<li><p>Change the concurrent run for jobs, and run relevant jobs. These could be one-time runs or periodic runs.</p></li>
+<li><p>As needed, set up your secondary region again for future disaster recovery.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="automation-scripts-samples-and-prototypes">
+<span id="automation"></span><h2>Automation scripts, samples, and prototypes<a class="headerlink" href="#automation-scripts-samples-and-prototypes" title="Permalink to this headline"> </a></h2>
+<p>Automation scripts to consider for your disaster recovery projects:</p>
+<ul class="simple">
+<li><p>Databricks recommends that you use the <a class="reference internal" href="../dev-tools/terraform/index.html"><span class="doc">Databricks Terraform Provider</span></a> to help develop your own sync process.</p></li>
+<li><p>See also <a class="reference external" href="https://github.com/databrickslabs/migrate">Databricks Workspace Migration Tools</a> for sample automation and prototype scripts.</p></li>
+<li><p>The <a class="reference external" href="https://github.com/databrickslabs/databricks-sync">Databricks Sync (DBSync)</a> project is an object synchronization tool that backs up, restores, and syncs Databricks workspaces.</p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

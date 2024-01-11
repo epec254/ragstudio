@@ -1,0 +1,625 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to understand audit log schemas for output from monitoring agents of the compliance security profile and Enhanced Security Monitoring." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Audit log schemas for security monitoring">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Audit log schemas for security monitoring &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/archive/security/monitor-log-schemas.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/archive/security/monitor-log-schemas.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/archive/security/monitor-log-schemas.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/archive/security/monitor-log-schemas.html" class="notranslate">English</option>
+    <option value="../../../ja/archive/security/monitor-log-schemas.html" class="notranslate">日本語</option>
+    <option value="../../../pt/archive/security/monitor-log-schemas.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Audit log schemas for security monitoring</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="audit-log-schemas-for-security-monitoring">
+<h1>Audit log schemas for security monitoring<a class="headerlink" href="#audit-log-schemas-for-security-monitoring" title="Permalink to this headline"> </a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This article has been retired and might not be updated. Security monitoring logs are now documented in <a class="reference internal" href="../../administration-guide/account-settings/audit-logs.html#security"><span class="std std-ref">Additional security monitoring events</span></a>.</p>
+</div>
+<p>For Databricks compute resources in the <a class="reference internal" href="../../getting-started/overview.html"><span class="doc">classic compute plane</span></a>, such as VMs for clusters and pro or classic SQL warehouses, the following features enable additional monitoring agents:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../security/privacy/enhanced-security-monitoring.html"><span class="doc">Enhanced Security Monitoring</span></a></p></li>
+<li><p><a class="reference internal" href="../../security/privacy/security-profile.html"><span class="doc">Compliance security profile</span></a>. The compliance security profile is required for the compliance controls for <a class="reference internal" href="../../security/privacy/pci.html"><span class="doc">PCI-DSS</span></a>, <a class="reference internal" href="../../security/privacy/hipaa.html"><span class="doc">HIPAA</span></a>, and <a class="reference internal" href="../../security/privacy/fedramp.html"><span class="doc">FedRAMP Moderate</span></a>.</p></li>
+</ul>
+<p>For serverless SQL warehouses, the monitoring agents run if the compliance security profile is enabled and <a class="reference internal" href="../../compute/sql-warehouse/serverless.html#security-profile"><span class="std std-ref">the region supports serverless SQL warehouses with the compliance security profile</span></a>.</p>
+<p>The output for the monitoring tools for these features are available within Databricks <a class="reference internal" href="../../administration-guide/account-settings/audit-logs.html"><span class="doc">audit logs</span></a>.</p>
+<p>To access logs:</p>
+<ol class="arabic simple">
+<li><p>As an admin, set up <a class="reference internal" href="../../administration-guide/account-settings/audit-log-delivery.html"><span class="doc">audit log delivery</span></a> to your own Amazon S3 bucket.</p></li>
+<li><p>Regularly review the logs for new rows based on the following sections.</p></li>
+</ol>
+<div class="section" id="schema-for-file-integrity-monitoring">
+<span id="file-integrity"></span><h2>Schema for file integrity monitoring<a class="headerlink" href="#schema-for-file-integrity-monitoring" title="Permalink to this headline"> </a></h2>
+<p>For the overall schema of audit logs, see <a class="reference internal" href="../../administration-guide/account-settings/audit-logs.html#schema"><span class="std std-ref">Audit log example schema</span></a>.</p>
+<p>Audit log fields that are important for file integrity monitoring:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">serviceName</span></code>: Always <code class="docutils literal notranslate"><span class="pre">capsule8-alerts-dataplane</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timestamp</span></code>: Time that the tool created this event.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">workspaceId</span></code>: The workspace associated with this event.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">requestId</span></code>: The unique UUID for the original event.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">requestParams</span></code>: This request parameters JSON object always has only one <code class="docutils literal notranslate"><span class="pre">instanceId</span></code> field, which is the <code class="docutils literal notranslate"><span class="pre">instance-id</span></code> (the ID of the host) that emitted this audit log entry.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">response</span></code>: A JSON object.</p>
+<ul>
+<li><p>This always has a <code class="docutils literal notranslate"><span class="pre">statusCode</span></code> property set to 200.</p></li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">result</span></code> field that contains the original JSON value of the event. The JSON can vary based on the detection that triggers it. For the complete schema reference, see the following <a class="reference external" href="https://documentation.capsule8.com/hc/en-us/articles/360048410053-Reference-Alert-Template-Schema">third-party documentation article on the alert JSON schema</a>. The JSON value is encoded as a single string object instead of a nested JSON value, so expect escaped quote signs like the following:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;response&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{\&quot;actionName\&quot;: \&quot;Wget Program Blacklist\&quot;}&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">accountId</span></code>: The Databricks account ID for this workspace.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">auditLevel</span></code>: Always <code class="docutils literal notranslate"><span class="pre">WORKSPACE_LEVEL</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">actionName</span></code>: Action name. One of the following values:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Heartbeat</span></code>: A regular event to confirm the monitor is on. Currently runs every 10 minutes, but this might change in the future.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Memory</span> <span class="pre">Marked</span> <span class="pre">Executable</span></code>: Memory is often marked executable in order to allow malicious code to execute when an application is being exploited. Alerts when a program sets heap or stack memory permissions to executable. This can cause false positives for certain application servers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">Integrity</span> <span class="pre">Monitor</span></code>: Monitors the integrity of important system files. Alerts on any unauthorized changes to those files. Databricks defines specific sets of system paths on the image, and this set of paths may change over time.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Systemd</span> <span class="pre">Unit</span> <span class="pre">File</span> <span class="pre">Modified</span></code>: Changes to systemd units could result in security controls being relaxed or disabled, or the installation of a malicious service. Alerts whenever a <code class="docutils literal notranslate"><span class="pre">systemd</span></code> unit file is modified by a program other than <code class="docutils literal notranslate"><span class="pre">systemctl</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Repeated</span> <span class="pre">Program</span> <span class="pre">Crashes</span></code>: Repeated program crashes could indicate that an attacker is attempting to exploit a memory corruption vulnerability, or that there is a stability issue in the affected application. Alerts when more than 5 instances of an individual program crash via segmentation fault.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Userfaultfd</span> <span class="pre">Usage</span></code>: Certain Linux functionality is almost exclusively used when exploiting kernel vulnerabilities, usually with the goal of privilege escalation. Alerts when a binary executes the <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> system call.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">New</span> <span class="pre">File</span> <span class="pre">Executed</span> <span class="pre">in</span> <span class="pre">Container</span></code>: As containers are typically static workloads, this alert could indicate that an attacker has compromised the container and is attempting to install and run a backdoor. Alerts when a file that has been created or modified within 30 minutes is then executed within a container.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Suspicious</span> <span class="pre">Interactive</span> <span class="pre">Shell</span></code>: Interactive shells are rare occurrences on modern production infrastructure. Alerts when an interactive shell is started with arguments commonly used for reverse shells.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">User</span> <span class="pre">Command</span> <span class="pre">Logging</span> <span class="pre">Evasion</span></code>: Evading command logging is common practice for attackers, but may also indicate that a legitimate user is performing unauthorized actions or trying to evade policy. Alerts when a change to user command history logging is detected, indicating that a user is attempting to evade command logging.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BPF</span> <span class="pre">Program</span> <span class="pre">Executed</span></code>: Detects some types of kernel backdoors. The loading of a new Berkeley Packet Filter (BPF) program could indicate that an attacker is loading a BPF-based rootkit to gain persistence and avoid detection. Alerts when a process loads a new privileged BPF program, if the process that is already part of an ongoing incident.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Kernel</span> <span class="pre">Module</span> <span class="pre">Loaded</span></code>: Attackers commonly load malicious kernel modules (rootkits) to evade detection and maintain persistence on a compromised node. Alerts when a kernel module is loaded, if the program is already part of an ongoing incident.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Suspicious</span> <span class="pre">Program</span> <span class="pre">Name</span> <span class="pre">Executed-Space</span> <span class="pre">After</span> <span class="pre">File</span></code>: Attackers may create or rename malicious binaries to include a space at the end of the name in an effort to impersonate a legitimate system program or service. Alerts when a program is executed with a space after the program name.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Illegal</span> <span class="pre">Elevation</span> <span class="pre">Of</span> <span class="pre">Privileges</span></code>: Kernel privilege escalation exploits commonly enable an unprivileged user to gain root privileges without passing standard gates for privilege changes. Alerts when a program attempts to elevate privileges through unusual means. This can issue false positive alerts on nodes with significant workloads.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Kernel</span> <span class="pre">Exploit</span></code>: Internal kernel functions are not accessible to regular programs, and if called, are a strong indicator that a kernel exploit has executed and that the attacker has full control of the node. Alerts when a kernel function unexpectedly returns to user space.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Processor-Level</span> <span class="pre">Protections</span> <span class="pre">Disabled</span></code>: SMEP and SMAP are processor-level protections that increase difficulty for kernel exploits to succeed, and disabling these restrictions is a common early step in kernel exploits. Alerts when a program tampers with the kernel SMEP/SMAP configuration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Container</span> <span class="pre">Escape</span> <span class="pre">via</span> <span class="pre">Kernel</span> <span class="pre">Exploitation</span></code>: Alerts when a program uses kernel functions commonly used in container escape exploits, indicating that an attacker is escalating privileges from container-access to node-access.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Privileged</span> <span class="pre">Container</span> <span class="pre">Launched</span></code>: Privileged containers have direct access to host resources, leading to a greater impact when compromised. Alerts when a privileged container is launched, if the container isn’t a known privileged image such as kube-proxy. This can issue unwanted alerts for legitimate privileged containers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Userland</span> <span class="pre">Container</span> <span class="pre">Escape</span></code>: Many container escapes coerce the host to execute an in-container binary, resulting in the attacker gaining full control of the affected node. Alerts when a container-created file is executed from outside a container.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AppArmor</span> <span class="pre">Disabled</span> <span class="pre">In</span> <span class="pre">Kernel</span></code>: Modification of certain AppArmor attributes can only occur in-kernel, indicating that AppArmor has been disabled by a kernel exploit or rootkit. Alerts when the AppArmor state is changed from the AppArmor configuration detected when the sensor starts.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AppArmor</span> <span class="pre">Profile</span> <span class="pre">Modified</span></code>: Attackers may attempt to disable enforcement of AppArmor profiles as part of evading detection. Alerts when a command for modifying an AppArmor profile is executed, if it was not executed by a user in an SSH session.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Boot</span> <span class="pre">Files</span> <span class="pre">Modified</span></code>: If not performed by a trusted source (such as a package manager or configuration management tool), modification of boot files could indicate an attacker modifying the kernel or its options in order to gain persistent access to a host. Alerts when changes are made to files in <code class="docutils literal notranslate"><span class="pre">/boot</span></code>, indicating installation of a new kernel or boot configuration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Log</span> <span class="pre">Files</span> <span class="pre">Deleted</span></code>: Log deletion not performed by a log management tool could indicate that an attacker is trying to remove indicators of compromise. Alerts on deletion of system log files.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">New</span> <span class="pre">File</span> <span class="pre">Executed</span></code>: Newly created files from sources other than system update programs may be backdoors, kernel exploits, or part of an exploitation chain. Alerts when a file that has been created or modified within 30 minutes is then executed, excluding files created by system update programs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Root</span> <span class="pre">Certificate</span> <span class="pre">Store</span> <span class="pre">Modified</span></code>: Modification of the root certificate store could indicate the installation of a rogue certificate authority, enabling interception of network traffic or bypass of code signature verification. Alerts when a system CA certificate store is changed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Setuid/Setgid</span> <span class="pre">Bit</span> <span class="pre">Set</span> <span class="pre">On</span> <span class="pre">File</span></code>: Setting <code class="docutils literal notranslate"><span class="pre">setuid</span></code>/<code class="docutils literal notranslate"><span class="pre">setgid</span></code> bits can be used to provide a persistent method for privilege escalation on a node. Alerts when the <code class="docutils literal notranslate"><span class="pre">setuid</span></code> or <code class="docutils literal notranslate"><span class="pre">setgid</span></code> bit is set on a file with the <code class="docutils literal notranslate"><span class="pre">chmod</span></code> family of system calls.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Hidden</span> <span class="pre">File</span> <span class="pre">Created</span></code>: Attackers often create hidden files as a means of obscuring tools and payloads on a compromised host. Alerts when a hidden file is created by a process associated with an ongoing incident.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Modification</span> <span class="pre">Of</span> <span class="pre">Common</span> <span class="pre">System</span> <span class="pre">Utilities</span></code>: Attackers may modify system utilities in order to execute malicious payloads whenever these utilities are run. Alerts when a common system utility is modified by an unauthorized process.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Network</span> <span class="pre">Service</span> <span class="pre">Scanner</span> <span class="pre">Executed</span></code>: An attacker or rogue user may use or install these programs to survey connected networks for additional nodes to compromise. Alerts when common network scanning program tools are executed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Network</span> <span class="pre">Service</span> <span class="pre">Created</span></code>: Attackers may start a new network service to provide easy access to a host after compromise. Alerts when a program starts a new network service, if the program is already part of an ongoing incident.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Network</span> <span class="pre">Sniffing</span> <span class="pre">Program</span> <span class="pre">Executed</span></code>: An attacker or rogue user may execute network sniffing commands to capture credentials, personally-identifiable information (PII), or other sensitive information. Alerts when a program is executed that allows network capture.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Remote</span> <span class="pre">File</span> <span class="pre">Copy</span> <span class="pre">Detected</span></code>: Use of file transfer tools could indicate that an attacker is attempting to move toolsets to additional hosts or exfiltrate data to a remote system. Alerts when a program associated with remote file copying is executed, if the program is already part of an ongoing incident.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Unusual</span> <span class="pre">Outbound</span> <span class="pre">Connection</span> <span class="pre">Detected</span></code>: Command and Control channels and cryptocoin miners often create new outbound network connections on unusual ports. Alerts when a program initiates a new connection on an uncommon port, if the program is already part of an ongoing incident.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Archived</span> <span class="pre">Via</span> <span class="pre">Program</span></code>: After gaining access to a system, an attacker may create a compressed archive of files to reduce the size of data for exfiltration. Alerts when a data compression program is executed, if the program is already part of an ongoing incident.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Process</span> <span class="pre">Injection</span></code>: Use of process injection techniques commonly indicates that a user is debugging a program, but may also indicate that an attacker is reading secrets from or injecting code into other processes. Alerts when a program uses <code class="docutils literal notranslate"><span class="pre">ptrace</span></code> (debugging) mechanisms to interact with another process.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Account</span> <span class="pre">Enumeration</span> <span class="pre">Via</span> <span class="pre">Program</span></code>: Attackers will often use account enumeration programs to determine their level of access and to see if other users are currently logged in to the node. Alerts when a program associated with account enumeration is executed, if the program is already part of an ongoing incident.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">and</span> <span class="pre">Directory</span> <span class="pre">Discovery</span> <span class="pre">Via</span> <span class="pre">Program</span></code>: Exploring file systems is common post-exploitation behavior for an attacker looking for credentials and data of interest. Alerts when a program associated with file and directory enumeration is executed, if the program is already part of an ongoing incident.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Network</span> <span class="pre">Configuration</span> <span class="pre">Enumeration</span> <span class="pre">Via</span> <span class="pre">Program</span></code>: Attackers can interrogate local network and route information to identify adjacent hosts and networks ahead of lateral movement. Alerts when a program associated with network configuration enumeration is executed, if the program is already part of an ongoing incident.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Process</span> <span class="pre">Enumeration</span> <span class="pre">Via</span> <span class="pre">Program</span></code>: Attackers often list running programs in order to identify the purpose of a node and whether any security or monitoring tools are in place. Alerts when a program associated with process enumeration is executed, if the program is already part of an ongoing incident.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">System</span> <span class="pre">Information</span> <span class="pre">Enumeration</span> <span class="pre">Via</span> <span class="pre">Program</span></code>: Attackers commonly execute system enumeration commands to determine Linux kernel and distribution versions and features, often to identify if the node is affected by specific vulnerabilities. Alerts when a program associated with system information enumeration is executed, if the program is already part of an ongoing incident.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Scheduled</span> <span class="pre">Tasks</span> <span class="pre">Modified</span> <span class="pre">Via</span> <span class="pre">Program</span></code>: Modifying scheduled tasks is a common method for establishing persistence on a compromised node. Alerts when the <code class="docutils literal notranslate"><span class="pre">crontab</span></code>, <code class="docutils literal notranslate"><span class="pre">at</span></code>, or <code class="docutils literal notranslate"><span class="pre">batch</span></code> commands are used to modify scheduled task configurations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Systemctl</span> <span class="pre">Usage</span> <span class="pre">Detected</span></code>: Changes to systemd units could result in security controls being relaxed or disabled, or the installation of a malicious service. Alerts when the <code class="docutils literal notranslate"><span class="pre">systemctl</span></code> command is used to modify systemd units.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">User</span> <span class="pre">Execution</span> <span class="pre">Of</span> <span class="pre">su</span> <span class="pre">Command</span></code>: Explicit escalation to the root user decreases the ability to correlate privileged activity to a specific user. Alerts when the <code class="docutils literal notranslate"><span class="pre">su</span></code> command is executed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">User</span> <span class="pre">Execution</span> <span class="pre">Of</span> <span class="pre">sudo</span> <span class="pre">Command</span></code>: Alerts when the <code class="docutils literal notranslate"><span class="pre">sudo</span></code> command is executed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">User</span> <span class="pre">Command</span> <span class="pre">History</span> <span class="pre">Cleared</span></code>: Deleting the history file is unusual, commonly performed by attackers hiding activity, or by legitimate users intending to evade audit controls. Alerts when command line history files are deleted.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">New</span> <span class="pre">System</span> <span class="pre">User</span> <span class="pre">Added</span></code>: An attacker may add a new user to a host to provide a reliable method of access. Alerts if a new user entity is added to the local account management file <code class="docutils literal notranslate"><span class="pre">/etc/passwd</span></code>, if the entity is not added by a system update program.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Password</span> <span class="pre">Database</span> <span class="pre">Modification</span></code>: Attackers may directly modify identity-related files to add a new user to the system. Alerts when a file related to user passwords is modified by a program unrelated to updating existing user information.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SSH</span> <span class="pre">Authorized</span> <span class="pre">Keys</span> <span class="pre">Modification</span></code>: Adding a new SSH public key is a common method for gaining persistent access to a compromised host. Alerts when an attempt to write to a user’s SSH <code class="docutils literal notranslate"><span class="pre">authorized_keys</span></code> file is observed, if the program is already part of an ongoing incident.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">User</span> <span class="pre">Account</span> <span class="pre">Created</span> <span class="pre">Via</span> <span class="pre">CLI</span></code>: Adding a new user is a common step for attackers when establishing persistence on a compromised node. Alerts when an identity management program is executed by a program other than a package manager.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">User</span> <span class="pre">Configuration</span> <span class="pre">Changes</span></code>: User profile and configuration files are often modified as a method of persistence in order to execute a program whenever a user logs in. Alerts when .bash_profile and bashrc (as well as related files) are modified by a program other than a system update tool.</p></li>
+</ul>
+</li>
+</ul>
+<p>The following is an example file integrity monitoring audit log entry:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1625959170109</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;workspaceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2417130538620110&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;serviceName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;capsule8-alerts-dataplane&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;actionName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Wget Program Blacklist&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;requestId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;318a87db-4cfe-4532-9110-09edc262275e&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;requestParams&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;instanceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;i-0a3c9d63bb295eb4f&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;response&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;original-alert-json&gt;&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;accountId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;82d65820-b5e4-4ab0-96e6-0cba825a5687&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;auditLevel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;WORKSPACE_LEVEL&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="schema-for-antivirus-monitoring">
+<span id="antivirus"></span><h2>Schema for antivirus monitoring<a class="headerlink" href="#schema-for-antivirus-monitoring" title="Permalink to this headline"> </a></h2>
+<p>For the overall schema of audit logs, see <a class="reference internal" href="../../administration-guide/account-settings/audit-logs.html#schema"><span class="std std-ref">Audit log example schema</span></a>.</p>
+<p>Audit log fields that are important for antivirus monitoring:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">serviceName</span></code>: Always <code class="docutils literal notranslate"><span class="pre">clamAVScanService-dataplane</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">actionName</span></code>: Always <code class="docutils literal notranslate"><span class="pre">clamAVScanAction</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timestamp</span></code>: The time when the tool generates this log row.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">workspaceId</span></code>: The workspace ID associated with this log.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">requestId</span></code>: The unique UUID for the original scanning event.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">requestParams</span></code>: This request parameters JSON object always has only one <code class="docutils literal notranslate"><span class="pre">instanceId</span></code> field, which is the <code class="docutils literal notranslate"><span class="pre">instance-id</span></code> (the ID of the host) that emitted this audit log entry.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">response</span></code>: This is response JSON object always has a <code class="docutils literal notranslate"><span class="pre">statusCode</span></code> of 200 and a <code class="docutils literal notranslate"><span class="pre">result</span></code> field that includes one line of the original scan result. Each scan result is represented typically by multiple audit log records, one for each line of the original scan output. For details of what could appear in this file, see the following <a class="reference external" href="https://docs.clamav.net/">third-party documentation</a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">accountId</span></code>: The Databricks account ID associated with this log.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">auditLevel</span></code>: Always <code class="docutils literal notranslate"><span class="pre">WORKSPACE_LEVEL</span></code>.</p></li>
+</ul>
+<p>The following is an example antivirus audit log entry that shows the beginning of a scan in the <code class="docutils literal notranslate"><span class="pre">response.result</span></code> field:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1625959170109</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;workspaceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2417130538620110&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;serviceName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;clamAVScanService-dataplane&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;actionName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;clamAVScanAction&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;requestId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;318a87db-4cfe-4532-9110-09edc262275e&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;requestParams&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;instanceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;i-0a3c9d63bb295eb4f&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;response&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;begin daily clamav scan : Mon Oct 25 06:25:01 UTC 2021\\n&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;accountId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;82d65820-b5e4-4ab0-96e6-0cba825a5687&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;auditLevel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;WORKSPACE_LEVEL&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>An example antivirus log file:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>----------- SCAN SUMMARY -----------
+Known viruses: 8556227
+Engine version: 0.103.2
+Scanned directories: 6
+Scanned files: 446
+Infected files: 0
+Data scanned: 74.50 MB
+Data read: 164.43 MB (ratio 0.45:1)
+Time: 37.874 sec (0 m 37 s)
+Start Date: 2021:07:27 21:47:36
+End Date:   2021:07:27 21:48:14
+</pre></div>
+</div>
+</div>
+<div class="section" id="schema-for-the-system-logs">
+<h2>Schema for the system logs<a class="headerlink" href="#schema-for-the-system-logs" title="Permalink to this headline"> </a></h2>
+<p>For the overall schema of audit logs, see <a class="reference internal" href="../../administration-guide/account-settings/audit-logs.html#schema"><span class="std std-ref">Audit log example schema</span></a>.</p>
+<p>Audit log fields that are important for the system log:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">serviceName</span></code>: Always <code class="docutils literal notranslate"><span class="pre">syslog</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">actionName</span></code>: Always <code class="docutils literal notranslate"><span class="pre">processEvent</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timestamp</span></code>: The time when the system log generates this log row.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">workspaceId</span></code>: The workspace ID associated with this log.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">requestId</span></code>: The unique UUID for the original system log event.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">requestParams</span></code>: This request parameters JSON object has the following keys:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">instanceId</span></code>: The <code class="docutils literal notranslate"><span class="pre">instance-id</span></code> (the ID of the host) that emitted this audit log entry.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">processName</span></code>: Name of the internal process that generated this event. This field is intended for advanced diagnostics and its contents are subject to change.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">response</span></code>: A JSON object with a <code class="docutils literal notranslate"><span class="pre">statusCode</span></code> of 200 and a <code class="docutils literal notranslate"><span class="pre">result</span></code> field that includes the original system log content.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">accountId</span></code>: The Databricks account ID associated with this log.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">auditLevel</span></code>: Always <code class="docutils literal notranslate"><span class="pre">WORKSPACE_LEVEL</span></code>.</p></li>
+</ul>
+<p>An example event for the system log:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="mi">1633220481000</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;workspaceId&quot;</span><span class="p">:</span><span class="s2">&quot;2417130538620110&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;sessionId&quot;</span><span class="p">:</span><span class="s2">&quot;2710&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;serviceName&quot;</span><span class="p">:</span><span class="s2">&quot;syslog&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;actionName&quot;</span><span class="p">:</span><span class="s2">&quot;processEvent&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;requestId&quot;</span><span class="p">:</span><span class="s2">&quot;1054f4c8-741d-3d80-b168-ca2cb891aa7a&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;requestParams&quot;</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">&quot;instanceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;i-00edf5b73b4c68221&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;processName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;process-name&gt;&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;response&quot;</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="mi">200</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;syslog content&gt;&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;accountId&quot;</span><span class="p">:</span><span class="s2">&quot;82d65820-b5e4-4ab0-96e6-0cba825a5687&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;auditLevel&quot;</span><span class="p">:</span><span class="s2">&quot;WORKSPACE_LEVEL&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="schema-for-the-process-monitor">
+<h2>Schema for the process monitor<a class="headerlink" href="#schema-for-the-process-monitor" title="Permalink to this headline"> </a></h2>
+<p>For the overall schema of audit logs, see <a class="reference internal" href="../../administration-guide/account-settings/audit-logs.html#schema"><span class="std std-ref">Audit log example schema</span></a>.</p>
+<p>Audit log fields that are important for the process monitor log:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">serviceName</span></code>: Always <code class="docutils literal notranslate"><span class="pre">monit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">actionName</span></code>: One of the following: <code class="docutils literal notranslate"><span class="pre">processNotRunning</span></code> (the monitor is running), <code class="docutils literal notranslate"><span class="pre">processRestarting</span></code> (the monitor is restarting), <code class="docutils literal notranslate"><span class="pre">processStarted</span></code> (the monitor started), or <code class="docutils literal notranslate"><span class="pre">processRunning</span></code> (the monitor is running).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timestamp</span></code>: The time when the monitor log generates this log row.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">workspaceId</span></code>: The workspace ID associated with this log.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">requestId</span></code>: The unique UUID for the original system log event.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">requestParams</span></code>: This request parameters JSON object has the following keys:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">instanceId</span></code>: The <code class="docutils literal notranslate"><span class="pre">instance-id</span></code> (the ID of the host) that emitted this audit log entry.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">processName</span></code>: Name of the internal process that is being monitored. This field is intended for advanced diagnostics and its contents are subject to change.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">response</span></code>: A JSON object with a <code class="docutils literal notranslate"><span class="pre">statusCode</span></code> of 200.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">accountId</span></code>: The Databricks account ID associated with this log.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">auditLevel</span></code>: Always <code class="docutils literal notranslate"><span class="pre">WORKSPACE_LEVEL</span></code>.</p></li>
+</ul>
+<p>An example event for the process monitor log:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="mi">1626857554000</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;workspaceId&quot;</span><span class="p">:</span><span class="s2">&quot;2417130538620110&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;serviceName&quot;</span><span class="p">:</span><span class="s2">&quot;monit&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;actionName&quot;</span><span class="p">:</span><span class="s2">&quot;processRestarting&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;requestId&quot;</span><span class="p">:</span><span class="s2">&quot;48bb4060-7685-3a19-9dbb-f83d2afaf346&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;requestParams&quot;</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">&quot;instanceId&quot;</span><span class="p">:</span><span class="s2">&quot;i-0c48619b79d4056f2&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;processName&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;process-name&gt;&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;response&quot;</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="mi">200</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;accountId&quot;</span><span class="p">:</span><span class="s2">&quot;82d65820-b5e4-4ab0-96e6-0cba825a5687&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;auditLevel&quot;</span><span class="p">:</span><span class="s2">&quot;WORKSPACE_LEVEL&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

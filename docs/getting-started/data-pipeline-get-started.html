@@ -1,0 +1,647 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn what a data pipeline is and how to create and deploy an end-to-end data processing pipeline using Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Build an end-to-end data pipeline in Databricks">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Build an end-to-end data pipeline in Databricks &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/getting-started/data-pipeline-get-started.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/getting-started/data-pipeline-get-started.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/getting-started/data-pipeline-get-started.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/getting-started/data-pipeline-get-started.html" class="notranslate">English</option>
+    <option value="../../ja/getting-started/data-pipeline-get-started.html" class="notranslate">日本語</option>
+    <option value="../../pt/getting-started/data-pipeline-get-started.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Build an end-to-end data pipeline in Databricks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="build-an-end-to-end-data-pipeline-in-databricks">
+<h1>Build an end-to-end data pipeline in Databricks<a class="headerlink" href="#build-an-end-to-end-data-pipeline-in-databricks" title="Permalink to this headline"> </a></h1>
+<p>This article shows you how to create and deploy an end-to-end data processing pipeline, including how to ingest raw data, transform the data, and run analyses on the processed data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although this article demonstrates how to create a complete data pipeline using Databricks <a class="reference internal" href="../notebooks/index.html"><span class="doc">notebooks</span></a> and a Databricks <a class="reference internal" href="../workflows/index.html#what-is-jobs"><span class="std std-ref">job</span></a> to orchestrate a workflow, Databricks recommends using <a class="reference internal" href="../delta-live-tables/index.html"><span class="doc">Delta Live Tables</span></a>, a declarative interface for building reliable, maintainable, and testable data processing pipelines.</p>
+</div>
+<div class="section" id="what-is-a-data-pipeline">
+<h2>What is a data pipeline?<a class="headerlink" href="#what-is-a-data-pipeline" title="Permalink to this headline"> </a></h2>
+<p>A data pipeline implements the steps required to move data from source systems, transform that data based on requirements, and store the data in a target system. A data pipeline includes all the processes necessary to turn raw data into prepared data that users can consume. For example, a data pipeline might prepare data so data analysts and data scientists can extract value from the data through analysis and reporting.</p>
+<p>An extract, transform, and load (ETL) workflow is a common example of a data pipeline. In ETL processing, data is ingested from source systems and written to a staging area, transformed based on requirements (ensuring data quality, deduplicating records, and so forth), and then written to a target system such as a data warehouse or data lake.</p>
+</div>
+<div class="section" id="data-pipeline-steps">
+<h2>Data pipeline steps<a class="headerlink" href="#data-pipeline-steps" title="Permalink to this headline"> </a></h2>
+<p>To help you get started building data pipelines on Databricks, the example included in this article walks through creating a data processing workflow:</p>
+<ul class="simple">
+<li><p>Use Databricks features to explore a raw dataset.</p></li>
+<li><p>Create a Databricks notebook to ingest raw source data and write the raw data to a target table.</p></li>
+<li><p>Create a Databricks notebook to transform the raw source data and write the transformed data to a target table.</p></li>
+<li><p>Create a Databricks notebook to query the transformed data.</p></li>
+<li><p>Automate the data pipeline with a Databricks job.</p></li>
+</ul>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>You’re logged into Databricks and in the Data Science &amp; Engineering workspace.</p></li>
+<li><p>You have <a class="reference internal" href="../compute/clusters-manage.html#control-access-to-clusters"><span class="std std-ref">permission to create a cluster</span></a> or <a class="reference internal" href="../compute/clusters-manage.html#display-clusters"><span class="std std-ref">access to a cluster</span></a>.</p></li>
+<li><p>(Optional) To publish tables to Unity Catalog, you must create a <a class="reference internal" href="../data-governance/unity-catalog/create-catalogs.html"><span class="doc">catalog</span></a> and <a class="reference internal" href="../data-governance/unity-catalog/create-schemas.html"><span class="doc">schema</span></a> in Unity Catalog.</p></li>
+</ul>
+</div>
+<div class="section" id="example-million-song-dataset">
+<h2>Example: Million Song dataset<a class="headerlink" href="#example-million-song-dataset" title="Permalink to this headline"> </a></h2>
+<p>The dataset used in this example is a subset of the <a class="reference external" href="http://labrosa.ee.columbia.edu/millionsong/">Million Song Dataset</a>, a collection of features and metadata for contemporary music tracks. This dataset is available in the <a class="reference internal" href="../discover/databricks-datasets.html#databricks-datasets-databricks-datasets"><span class="std std-ref">sample datasets</span></a> included in your Databricks workspace.</p>
+</div>
+<div class="section" id="step-1-create-a-cluster">
+<span id="create-a-cluster"></span><h2>Step 1: Create a cluster<a class="headerlink" href="#step-1-create-a-cluster" title="Permalink to this headline"> </a></h2>
+<p>To perform the data processing and analysis in this example, create a cluster to provide the compute resources needed to run commands.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Because this example uses a sample dataset stored in DBFS and recommends persisting tables to <a class="reference internal" href="../data-governance/unity-catalog/index.html"><span class="doc">Unity Catalog</span></a>, you will create a cluster configured with <em>single user access</em> mode. A Single User access provides full access to DBFS while also enabling access to Unity Catalog. See <a class="reference internal" href="../dbfs/unity-catalog.html"><span class="doc">Best practices for DBFS and Unity Catalog</span></a>.</p>
+</div>
+<ol class="arabic simple">
+<li><p>Click <strong>Compute</strong> in the sidebar.</p></li>
+<li><p>On the Compute page, click <strong>Create Cluster</strong>.</p></li>
+<li><p>On the New Cluster page, enter a unique name for the cluster.</p></li>
+<li><p>In <strong>Access mode</strong>, select <strong>Single User</strong>.</p></li>
+<li><p>In <strong>Single user or service principal access</strong>, select your user name.</p></li>
+<li><p>Leave the remaining values in their default state, and click <strong>Create Cluster</strong>.</p></li>
+</ol>
+<p>To learn more about Databricks clusters, see <a class="reference internal" href="../compute/index.html"><span class="doc">Compute</span></a>.</p>
+</div>
+<div class="section" id="step-2-explore-the-source-data">
+<h2>Step 2: Explore the source data<a class="headerlink" href="#step-2-explore-the-source-data" title="Permalink to this headline"> </a></h2>
+<p>To learn how to use the Databricks interface to explore the raw source data, see <a class="reference internal" href="data-pipeline-explore-data.html"><span class="doc">Explore the source data for a data pipeline</span></a>. If you want to go directly to ingesting and preparing the data, continue to <a class="reference internal" href="#ingest-prepare-data"><span class="std std-ref">Step 3: Ingest the raw data</span></a>.</p>
+</div>
+<div class="section" id="step-3-ingest-the-raw-data">
+<span id="ingest-prepare-data"></span><h2>Step 3: Ingest the raw data<a class="headerlink" href="#step-3-ingest-the-raw-data" title="Permalink to this headline"> </a></h2>
+<p>In this step, you load the raw data into a table to make it available for further processing. To manage data assets on the Databricks platform such as tables, Databricks recommends <a class="reference internal" href="../data-governance/unity-catalog/index.html"><span class="doc">Unity Catalog</span></a>. However, if you don’t have permissions to create the required catalog and schema to publish tables to Unity Catalog, you can still complete the following steps by publishing tables to the Hive metastore.</p>
+<p>To ingest data, Databricks recommends using <a class="reference internal" href="../ingestion/auto-loader/index.html"><span class="doc">Auto Loader</span></a>. Auto Loader automatically detects and processes new files as they arrive in cloud object storage.</p>
+<p>You can configure Auto Loader to automatically detect the schema of loaded data, allowing you to initialize tables without explicitly declaring the data schema and evolve the table schema as new columns are introduced. This eliminates the need to manually track and apply schema changes over time. Databricks recommends schema inference when using Auto Loader. However, as seen in the data exploration step, the songs data does not contain header information. Because the header is not stored with the data, you’ll need to explicitly define the schema, as shown in the next example.</p>
+<ol class="arabic">
+<li><p>In the sidebar, click <img alt="New Icon" src="../_images/create-icon.png" /> <strong>New</strong> and select <strong>Notebook</strong> from the menu. The <strong>Create Notebook</strong> dialog appears.</p></li>
+<li><p>Enter a name for the notebook, for example, <code class="docutils literal notranslate"><span class="pre">Ingest</span> <span class="pre">songs</span> <span class="pre">data</span></code>. By default:</p>
+<ul class="simple">
+<li><p><strong>Python</strong> is the selected language.</p></li>
+<li><p>The notebook is attached to the last cluster you used. In this case, the cluster you created in <a class="reference internal" href="#create-a-cluster"><span class="std std-ref">Step 1: Create a cluster</span></a>.</p></li>
+</ul>
+</li>
+<li><p>Click <strong>Create</strong>.</p></li>
+<li><p>Enter the following into the first cell of the notebook:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">DoubleType</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">StructType</span><span class="p">,</span> <span class="n">StructField</span>
+
+<span class="c1"># Define variables used in the code below</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot;/databricks-datasets/songs/data-001/&quot;</span>
+<span class="n">table_name</span> <span class="o">=</span> <span class="s2">&quot;&lt;table-name&gt;&quot;</span>
+<span class="n">checkpoint_path</span> <span class="o">=</span> <span class="s2">&quot;/tmp/pipeline_get_started/_checkpoint/song_data&quot;</span>
+
+<span class="n">schema</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">(</span>
+  <span class="p">[</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;artist_id&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;artist_lat&quot;</span><span class="p">,</span> <span class="n">DoubleType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;artist_long&quot;</span><span class="p">,</span> <span class="n">DoubleType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;artist_location&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;artist_name&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;duration&quot;</span><span class="p">,</span> <span class="n">DoubleType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;end_of_fade_in&quot;</span><span class="p">,</span> <span class="n">DoubleType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;key&quot;</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;key_confidence&quot;</span><span class="p">,</span> <span class="n">DoubleType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;loudness&quot;</span><span class="p">,</span> <span class="n">DoubleType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;release&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;song_hotnes&quot;</span><span class="p">,</span> <span class="n">DoubleType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;song_id&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;start_of_fade_out&quot;</span><span class="p">,</span> <span class="n">DoubleType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;tempo&quot;</span><span class="p">,</span> <span class="n">DoubleType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;time_signature&quot;</span><span class="p">,</span> <span class="n">DoubleType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;time_signature_confidence&quot;</span><span class="p">,</span> <span class="n">DoubleType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;partial_sequence&quot;</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">)</span>
+  <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">readStream</span>
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;cloudFiles&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;cloudFiles.format&quot;</span><span class="p">,</span> <span class="s2">&quot;csv&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;sep&quot;</span><span class="p">,</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">writeStream</span>
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;checkpointLocation&quot;</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">trigger</span><span class="p">(</span><span class="n">availableNow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">toTable</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>If you are using Unity Catalog, replace <code class="docutils literal notranslate"><span class="pre">&lt;table-name&gt;</span></code> with a catalog, schema, and table name to contain the ingested records  (for example, <code class="docutils literal notranslate"><span class="pre">data_pipelines.songs_data.raw_song_data</span></code>). Otherwise, replace <code class="docutils literal notranslate"><span class="pre">&lt;table-name&gt;</span></code> with the name of a table to contain the ingested records, for example, <code class="docutils literal notranslate"><span class="pre">raw_song_data</span></code>.</p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;checkpoint-path&gt;</span></code> with a path to a directory in DBFS to maintain checkpoint files, for example, <code class="docutils literal notranslate"><span class="pre">/tmp/pipeline_get_started/_checkpoint/song_data</span></code>.</p>
+</li>
+<li><p>Click <img alt="Run Menu" src="../_images/run-menu.png" />, and select <strong>Run Cell</strong>. This example defines the data schema using the information from the <code class="docutils literal notranslate"><span class="pre">README</span></code>, ingests the songs data from all of the files contained in <code class="docutils literal notranslate"><span class="pre">file_path</span></code>, and writes the data to the table specified by <code class="docutils literal notranslate"><span class="pre">table_name</span></code>.</p></li>
+</ol>
+</div>
+<div class="section" id="step-4-prepare-the-raw-data">
+<h2>Step 4: Prepare the raw data<a class="headerlink" href="#step-4-prepare-the-raw-data" title="Permalink to this headline"> </a></h2>
+<p>To prepare the raw data for analysis, the following steps transform the raw songs data by filtering out unneeded columns and adding a new field containing a timestamp for the creation of the new record.</p>
+<ol class="arabic">
+<li><p>In the sidebar, click <img alt="New Icon" src="../_images/create-icon.png" /> <strong>New</strong> and select <strong>Notebook</strong> from the menu. The <strong>Create Notebook</strong> dialog appears.</p></li>
+<li><p>Enter a name for the notebook. For example, <code class="docutils literal notranslate"><span class="pre">Prepare</span> <span class="pre">songs</span> <span class="pre">data</span></code>. Change the default language to <strong>SQL</strong>.</p></li>
+<li><p>Click <strong>Create</strong>.</p></li>
+<li><p>Enter the following in the first cell of the notebook:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">TABLE</span>
+<span class="w">  </span><span class="o">&lt;</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">artist_id</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">    </span><span class="n">artist_name</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">    </span><span class="n">duration</span><span class="w"> </span><span class="n">DOUBLE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">release</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">    </span><span class="n">tempo</span><span class="w"> </span><span class="n">DOUBLE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">time_signature</span><span class="w"> </span><span class="n">DOUBLE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="w">    </span><span class="k">year</span><span class="w"> </span><span class="n">DOUBLE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">processed_time</span><span class="w"> </span><span class="k">TIMESTAMP</span>
+<span class="w">  </span><span class="p">);</span>
+
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span>
+<span class="w">  </span><span class="o">&lt;</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="k">SELECT</span>
+<span class="w">  </span><span class="n">artist_id</span><span class="p">,</span>
+<span class="w">  </span><span class="n">artist_name</span><span class="p">,</span>
+<span class="w">  </span><span class="n">duration</span><span class="p">,</span>
+<span class="w">  </span><span class="n">release</span><span class="p">,</span>
+<span class="w">  </span><span class="n">tempo</span><span class="p">,</span>
+<span class="w">  </span><span class="n">time_signature</span><span class="p">,</span>
+<span class="w">  </span><span class="n">title</span><span class="p">,</span>
+<span class="w">  </span><span class="k">year</span><span class="p">,</span>
+<span class="w">  </span><span class="k">current_timestamp</span><span class="p">()</span>
+<span class="k">FROM</span>
+<span class="w">  </span><span class="o">&lt;</span><span class="n">raw</span><span class="o">-</span><span class="n">songs</span><span class="o">-</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>If you are using Unity Catalog, replace <code class="docutils literal notranslate"><span class="pre">&lt;table-name&gt;</span></code> with a catalog, schema, and table name to contain the filtered and transformed records (for example, <code class="docutils literal notranslate"><span class="pre">data_pipelines.songs_data.prepared_song_data</span></code>). Otherwise, replace <code class="docutils literal notranslate"><span class="pre">&lt;table-name&gt;</span></code> with the name of a table to contain the filtered and transformed records (for example, <code class="docutils literal notranslate"><span class="pre">prepared_song_data</span></code>).</p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;raw-songs-table-name&gt;</span></code> with the name of the table containing the raw songs records ingested in the previous step.</p>
+</li>
+<li><p>Click <img alt="Run Menu" src="../_images/run-menu.png" />, and select <strong>Run Cell</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="step-5-query-the-transformed-data">
+<h2>Step 5: Query the transformed data<a class="headerlink" href="#step-5-query-the-transformed-data" title="Permalink to this headline"> </a></h2>
+<p>In this step, you extend the processing pipeline by adding queries to analyze the songs data. These queries use the prepared records created in the previous step.</p>
+<ol class="arabic">
+<li><p>In the sidebar, click <img alt="New Icon" src="../_images/create-icon.png" /> <strong>New</strong> and select <strong>Notebook</strong> from the menu. The <strong>Create Notebook</strong> dialog appears.</p></li>
+<li><p>Enter a name for the notebook. For example, <code class="docutils literal notranslate"><span class="pre">Analyze</span> <span class="pre">songs</span> <span class="pre">data</span></code>. Change the default language to <strong>SQL</strong>.</p></li>
+<li><p>Click <strong>Create</strong>.</p></li>
+<li><p>Enter the following in the first cell of the notebook:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Which artists released the most songs each year?</span>
+<span class="k">SELECT</span>
+<span class="w">  </span><span class="n">artist_name</span><span class="p">,</span>
+<span class="w">  </span><span class="k">count</span><span class="p">(</span><span class="n">artist_name</span><span class="p">)</span>
+<span class="k">AS</span>
+<span class="w">  </span><span class="n">num_songs</span><span class="p">,</span>
+<span class="w">  </span><span class="k">year</span>
+<span class="k">FROM</span>
+<span class="w">  </span><span class="o">&lt;</span><span class="n">prepared</span><span class="o">-</span><span class="n">songs</span><span class="o">-</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="k">WHERE</span>
+<span class="w">  </span><span class="k">year</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span>
+<span class="w">  </span><span class="n">artist_name</span><span class="p">,</span>
+<span class="w">  </span><span class="k">year</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span>
+<span class="w">  </span><span class="n">num_songs</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span>
+<span class="w">  </span><span class="k">year</span><span class="w"> </span><span class="k">DESC</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;prepared-songs-table-name&gt;</span></code> with the name of the table containing prepared data. For example, <code class="docutils literal notranslate"><span class="pre">data_pipelines.songs_data.prepared_song_data</span></code>.</p>
+</li>
+<li><p>Click <img alt="Down Caret" src="../_images/down-caret.png" /> in the cell actions menu, select <strong>Add Cell Below</strong> and enter the following in the new cell:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="c1">-- Find songs for your DJ list</span>
+<span class="w"> </span><span class="k">SELECT</span>
+<span class="w">   </span><span class="n">artist_name</span><span class="p">,</span>
+<span class="w">   </span><span class="n">title</span><span class="p">,</span>
+<span class="w">   </span><span class="n">tempo</span>
+<span class="w"> </span><span class="k">FROM</span>
+<span class="w">   </span><span class="o">&lt;</span><span class="n">prepared</span><span class="o">-</span><span class="n">songs</span><span class="o">-</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="w"> </span><span class="k">WHERE</span>
+<span class="w">   </span><span class="n">time_signature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">   </span><span class="k">AND</span>
+<span class="w">   </span><span class="n">tempo</span><span class="w"> </span><span class="k">between</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="mi">140</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;prepared-songs-table-name&gt;</span></code> with the name of the prepared table created in the previous step. For example, <code class="docutils literal notranslate"><span class="pre">data_pipelines.songs_data.prepared_song_data</span></code>.</p>
+</li>
+<li><p>To run the queries and view the output, click <strong>Run all</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="step-6-create-a-databricks-job-to-run-the-pipeline">
+<h2>Step 6: Create a Databricks job to run the pipeline<a class="headerlink" href="#step-6-create-a-databricks-job-to-run-the-pipeline" title="Permalink to this headline"> </a></h2>
+<p>You can create a workflow to automate running the data ingestion, processing, and analysis steps using a Databricks job.</p>
+<ol class="arabic simple">
+<li><p>In your Data Science &amp; Engineering workspace, do one of the following:</p>
+<ul class="simple">
+<li><p>Click <img alt="Jobs Icon" src="../_images/jobs-icon.png" /> <strong>Workflows</strong> in the sidebar and click <img alt="Create Job Button" src="../_images/create-job.png" />.</p></li>
+<li><p>In the sidebar, click <img alt="New Icon" src="../_images/create-icon.png" /> <strong>New</strong> and select <strong>Job</strong>.</p></li>
+</ul>
+</li>
+<li><p>In the task dialog box on the <strong>Tasks</strong> tab, replace <strong>Add a name for your job…</strong> with your job name. For example, “Songs workflow”.</p></li>
+<li><p>In <strong>Task name</strong>, enter a name for the first task, for example, <code class="docutils literal notranslate"><span class="pre">Ingest_songs_data</span></code>.</p></li>
+<li><p>In <strong>Type</strong>, select the <strong>Notebook</strong> task type.</p></li>
+<li><p>In <strong>Source</strong>, select <strong>Workspace</strong>.</p></li>
+<li><p>Use the file browser to find the data ingestion notebook, click the notebook name, and click <strong>Confirm</strong>.</p></li>
+<li><p>In <strong>Cluster</strong>, select <strong>Shared_job_cluster</strong> or the cluster you created in the <code class="docutils literal notranslate"><span class="pre">Create</span> <span class="pre">a</span> <span class="pre">cluster</span></code> step.</p></li>
+<li><p>Click <strong>Create</strong>.</p></li>
+<li><p>Click <img alt="Add Task Button" src="../_images/add-task.png" /> below the task you just created and select <strong>Notebook</strong>.</p></li>
+<li><p>In <strong>Task name</strong>, enter a name for the task, for example, <code class="docutils literal notranslate"><span class="pre">Prepare_songs_data</span></code>.</p></li>
+<li><p>In <strong>Type</strong>, select the <strong>Notebook</strong> task type.</p></li>
+<li><p>In <strong>Source</strong>, select <strong>Workspace</strong>.</p></li>
+<li><p>Use the file browser to find the data preparation notebook, click the notebook name, and click <strong>Confirm</strong>.</p></li>
+<li><p>In <strong>Cluster</strong>, select <strong>Shared_job_cluster</strong> or the cluster you created in the <code class="docutils literal notranslate"><span class="pre">Create</span> <span class="pre">a</span> <span class="pre">cluster</span></code> step.</p></li>
+<li><p>Click <strong>Create</strong>.</p></li>
+<li><p>Click <img alt="Add Task Button" src="../_images/add-task.png" /> below the task you just created and select <strong>Notebook</strong>.</p></li>
+<li><p>In <strong>Task name</strong>, enter a name for the task, for example, <code class="docutils literal notranslate"><span class="pre">Analyze_songs_data</span></code>.</p></li>
+<li><p>In <strong>Type</strong>, select the <strong>Notebook</strong> task type.</p></li>
+<li><p>In <strong>Source</strong>, select <strong>Workspace</strong>.</p></li>
+<li><p>Use the file browser to find the data analysis notebook, click the notebook name, and click <strong>Confirm</strong>.</p></li>
+<li><p>In <strong>Cluster</strong>, select <strong>Shared_job_cluster</strong> or the cluster you created in the <code class="docutils literal notranslate"><span class="pre">Create</span> <span class="pre">a</span> <span class="pre">cluster</span></code> step.</p></li>
+<li><p>Click <strong>Create</strong>.</p></li>
+<li><p>To run the workflow, Click <img alt="Run Now Button" src="../_images/run-now-button.png" />. To view <a class="reference internal" href="../workflows/jobs/monitor-job-runs.html#job-run-details"><span class="std std-ref">details for the run</span></a>, click the link in the <strong>Start time</strong> column for the run in the <a class="reference internal" href="../workflows/jobs/monitor-job-runs.html#view-job-run-list"><span class="std std-ref">job runs</span></a> view. Click each task to view details for the task run.</p></li>
+<li><p>To view the results when the workflow completes, click the final data analysis task. The <strong>Output</strong> page appears and displays the query results.</p></li>
+</ol>
+</div>
+<div class="section" id="step-7-schedule-the-data-pipeline-job">
+<h2>Step 7: Schedule the data pipeline job<a class="headerlink" href="#step-7-schedule-the-data-pipeline-job" title="Permalink to this headline"> </a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To demonstrate using a Databricks job to orchestrate a scheduled workflow, this getting started example separates the ingestion, preparation, and analysis steps into separate notebooks, and each notebook is then used to create a task in the job. If all of the processing is contained in a single notebook, you can easily schedule the notebook directly from the Databricks notebook UI. See <a class="reference internal" href="../notebooks/schedule-notebook-jobs.html"><span class="doc">Create and manage scheduled notebook jobs</span></a>.</p>
+</div>
+<p>A common requirement is to run a data pipeline on a scheduled basis. To define a schedule for the job that runs the pipeline:</p>
+<ol class="arabic simple">
+<li><p>Click <img alt="Jobs Icon" src="../_images/jobs-icon.png" /> <strong>Workflows</strong> in the sidebar.</p></li>
+<li><p>In the <strong>Name</strong> column, click the job name. The side panel displays the <strong>Job details</strong>.</p></li>
+<li><p>Click <strong>Add trigger</strong> in the <strong>Job details</strong> panel and select <strong>Scheduled</strong> in <strong>Trigger type</strong>.</p></li>
+<li><p>Specify the period, starting time, and time zone. Optionally select the <strong>Show Cron Syntax</strong> checkbox to display and edit the schedule in <a class="reference external" href="http://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html">Quartz Cron Syntax</a>.</p></li>
+<li><p>Click <strong>Save</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="learn-more">
+<h2>Learn more<a class="headerlink" href="#learn-more" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>To learn more about Databricks notebooks, see <a class="reference internal" href="../notebooks/index.html"><span class="doc">Introduction to Databricks notebooks</span></a>.</p></li>
+<li><p>To learn more about Databricks Jobs, see <a class="reference internal" href="../workflows/index.html#what-is-jobs"><span class="std std-ref">What is Databricks Jobs?</span></a>.</p></li>
+<li><p>To learn more about Delta Lake, see <a class="reference internal" href="../delta/index.html"><span class="doc">What is Delta Lake?</span></a>.</p></li>
+<li><p>To learn more about data processing pipelines with Delta Live Tables, see <a class="reference internal" href="../delta-live-tables/index.html"><span class="doc">What is Delta Live Tables?</span></a>.</p></li>
+</ul>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

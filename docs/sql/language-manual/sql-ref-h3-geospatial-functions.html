@@ -1,0 +1,649 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn about H3 geospatial functions in Databricks SQL. H3 is a global grid indexing system used for processing and analyzing spatial data." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="H3 geospatial functions">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>H3 geospatial functions &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/sql/language-manual/sql-ref-h3-geospatial-functions.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/sql/language-manual/sql-ref-h3-geospatial-functions.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/sql/language-manual/sql-ref-h3-geospatial-functions.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/sql/language-manual/sql-ref-h3-geospatial-functions.html" class="notranslate">English</option>
+    <option value="../../../ja/sql/language-manual/sql-ref-h3-geospatial-functions.html" class="notranslate">日本語</option>
+    <option value="../../../pt/sql/language-manual/sql-ref-h3-geospatial-functions.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>H3 geospatial functions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="h3-geospatial-functions">
+<h1>H3 geospatial functions<a class="headerlink" href="#h3-geospatial-functions" title="Permalink to this headline"> </a></h1>
+<p><strong>Applies to:</strong> <img alt="check marked yes" src="../../_images/check.png" /> Databricks SQL <img alt="check marked yes" src="../../_images/check.png" /> Databricks Runtime</p>
+<p>H3 is a global grid indexing system. Grid systems use a shape, like rectangles or triangles, to tessellate a surface, which in this case is the Earth’s surface. The H3 system was designed to use hexagons (and a few pentagons), and offers 16 levels of resolutions within its hierarchy. At higher resolutions, the tesselated shapes are smaller.</p>
+<p>H3 expressions are only supported in Photon-enabled clusters and Databricks SQL warehouses at the Databricks SQL pro and serverless tiers.</p>
+<p>Read more about <a class="reference external" href="https://h3geo.org/docs/core-library/restable">H3 resolutions</a>, and about <a class="reference external" href="https://www.uber.com/blog/h3/">the origins of H3</a>.</p>
+<p>See also:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sql-ref-h3-geospatial-functions-quickstart.html">H3 Quickstart (Databricks SQL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sql-ref-h3-geospatial-functions-examples.html">H3 geospatial functions example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sql-ref-h3-geospatial-functions-alpha.html">Alphabetical list of H3 geospatial functions</a></li>
+</ul>
+</div>
+<div class="section" id="h3-for-geospatial-analytics">
+<h2>H3 for Geospatial Analytics<a class="headerlink" href="#h3-for-geospatial-analytics" title="Permalink to this headline"> </a></h2>
+<p>H3 supports a common pattern for processing and analyzing spatial data. Start by indexing geospatial data from standard formats (latitude and longitude, <a class="reference external" href="https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry">Well-known text (WKT)</a>, <a class="reference external" href="https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry#Well-known_binary">Well-known binary (WKB)</a>, or <a class="reference external" href="https://en.wikipedia.org/wiki/GeoJSON">GeoJSON</a> to H3 cell IDs. With a single dataset, you can aggregate by cell ID to answer location-driven questions. With multiple indexed datasets, you can combine them using the cell IDs, revealing how disparate datasets relate to one another. This joining of datasets is semantically a spatial join, but without the need for a spatial predicate.</p>
+</div>
+<div class="section" id="what-are-the-benefits-of-using-h3-within-databricks">
+<h2>What are the benefits of using H3 within Databricks?<a class="headerlink" href="#what-are-the-benefits-of-using-h3-within-databricks" title="Permalink to this headline"> </a></h2>
+<p>Leverage Delta Lake features for efficient storage and layout of your H3 indexed data. Delta Lake’s <a class="reference internal" href="delta-optimize.html"><span class="doc">OPTIMIZE operation</span></a> with Z-ordering (on H3 cell IDs) allows you to spatially co-locate data. Further, Delta Lake’s data skipping algorithms use co-locality to intelligently reduce the volume of data that needs to be read.</p>
+<p>You have flexibility in how you work with the data. You can choose to work with H3 cell IDs stored as big integers or strings. For the best performance using H3 cell IDs, use the big integer representation. For detailed use of H3 expressions refer to the <a class="reference internal" href="sql-ref-h3-geospatial-functions-alpha.html"><span class="doc">SQL reference guide</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You do not need to install the H3 library. It is included as a visible dependency in Databricks Runtime, starting with <a class="reference internal" href="../../archive/runtime-release-notes/11.2.html"><span class="doc">Databricks Runtime 11.2</span></a>, using version 3.7.0 of the H3 Java library.</p>
+</div>
+</div>
+<div class="section" id="import-databricks-functions-to-get-h3-databricks-runtime">
+<span id="import-databricks-functions-to-get-h3-dbr"></span><h2>Import Databricks functions to get H3 (Databricks Runtime)<a class="headerlink" href="#import-databricks-functions-to-get-h3-databricks-runtime" title="Permalink to this headline"> </a></h2>
+<p>No import needed for Databricks SQL and Spark SQL.</p>
+<p>To import H3 functions for Python or Scala in notebooks, use the following commands:</p>
+<div class="js-code-language-tabs js-code-language-tabs--literal compound">
+<div class="compound-first highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.databricks.sql</span> <span class="kn">import</span> <span class="n">functions</span> <span class="k">as</span> <span class="n">dbf</span>
+</pre></div>
+</div>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">com</span><span class="p">.</span><span class="nn">databricks</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">functions</span><span class="p">.</span><span class="n">_</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="list-of-h3-geospatial-functions-databricks-sql">
+<span id="list-of-h3-geospatial-functions-dbsql"></span><h2>List of H3 geospatial functions (Databricks SQL)<a class="headerlink" href="#list-of-h3-geospatial-functions-databricks-sql" title="Permalink to this headline"> </a></h2>
+<div class="section" id="import">
+<h3>Import<a class="headerlink" href="#import" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_coverash3.html"><span class="doc">h3_coverash3(geographyExpr, resolutionExpr)</span></a></p></td>
+<td><p>Returns an ARRAY of H3 cell IDs (represented as BIGINT) corresponding to the minimal set of hexagons or pentagons, of the specified resolution, that fully cover the input linear or areal geography.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/h3_coverash3string.html"><span class="doc">h3_coverash3string(geographyExpr, resolutionExpr)</span></a></p></td>
+<td><p>Returns an ARRAY of H3 cell IDs (represented as STRING) corresponding to the minimal set of hexagons or pentagons, of the specified resolution, that fully cover the input linear or areal geography.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_longlatash3.html"><span class="doc">h3_longlatash3(longitudeExpr, latitudeExpr, resolutionExpr)</span></a></p></td>
+<td><p>Returns the H3 cell ID (as a BIGINT) corresponding to the provided longitude and latitude at the specified resolution.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/h3_longlatash3string.html"><span class="doc">h3_longlatash3string(longitudeExpr, latitudeExpr, resolutionExpr)</span></a></p></td>
+<td><p>Returns the H3 cell ID (as a hexadecimal STRING) corresponding to the provided longitude and latitude at the specified resolution.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_pointash3.html"><span class="doc">h3_pointash3(geographyExpr, resolutionExpr)</span></a></p></td>
+<td><p>Returns the H3 cell ID (as a BIGINT) corresponding to the provided point at the specified resolution.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/h3_pointash3string.html"><span class="doc">h3_pointash3string(geographyExpr, resolutionExpr)</span></a></p></td>
+<td><p>Returns the H3 cell ID (as a STRING) corresponding to the provided point at the specified resolution.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_polyfillash3.html"><span class="doc">h3_polyfillash3(geographyExpr, resolutionExpr)</span></a></p></td>
+<td><p>Returns an ARRAY of H3 cell IDs (represented as BIGINT) corresponding to hexagons or pentagons, of the specified resolution, that are contained by the input areal geography.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/h3_polyfillash3string.html"><span class="doc">h3_polyfillash3string(geographyExpr, resolutionExpr)</span></a></p></td>
+<td><p>Returns an ARRAY of H3 cell IDs (represented as STRING) corresponding to hexagons or pentagons, of the specified resolution, that are contained by the input areal geography.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_try_polyfillash3.html"><span class="doc">h3_try_polyfillash3(geographyExpr, resolutionExpr)</span></a></p></td>
+<td><p>Returns an ARRAY of H3 cell IDs (represented as BIGINT) corresponding to hexagons or pentagons, of the specified resolution, that are contained by the input areal geography.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/h3_try_polyfillash3string.html"><span class="doc">h3_try_polyfillash3string(geographyExpr, resolutionExpr)</span></a></p></td>
+<td><p>Returns an ARRAY of H3 cell IDs (represented as STRING) corresponding to hexagons or pentagons, of the specified resolution, that are contained by the input areal geography.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="export">
+<h3>Export<a class="headerlink" href="#export" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_boundaryasgeojson.html"><span class="doc">h3_boundaryasgeojson(h3CellIdExpr)</span></a></p></td>
+<td><p>Returns the polygonal boundary of the input H3 cell in <a class="reference external" href="https://en.wikipedia.org/wiki/GeoJSON">GeoJSON</a> format.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/h3_boundaryaswkb.html"><span class="doc">h3_boundaryaswkb(h3CellIdExpr)</span></a></p></td>
+<td><p>Returns the polygonal boundary of the input H3 cell in <a class="reference external" href="https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry#Well-known_binary">WKB</a> format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_boundaryaswkt.html"><span class="doc">h3_boundaryaswkt(h3CellIdExpr)</span></a></p></td>
+<td><p>Returns the polygonal boundary of the input H3 cell in <a class="reference external" href="https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry">WKT</a> format.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/h3_centerasgeojson.html"><span class="doc">h3_centerasgeojson(h3CellIdExpr)</span></a></p></td>
+<td><p>Returns the center of the input H3 cell as a point in <a class="reference external" href="https://en.wikipedia.org/wiki/GeoJSON">GeoJSON</a> format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_centeraswkb.html"><span class="doc">h3_centeraswkb(h3CellIdExpr)</span></a></p></td>
+<td><p>Returns the center of the input H3 cell as a point in <a class="reference external" href="https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry#Well-known_binary">WKB</a> format.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/h3_centeraswkt.html"><span class="doc">h3_centeraswkt(h3CellIdExpr)</span></a></p></td>
+<td><p>Returns the center of the input H3 cell as a point in <a class="reference external" href="https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry">WKT</a> format.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="conversions">
+<h3>Conversions<a class="headerlink" href="#conversions" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_h3tostring.html"><span class="doc">h3_h3tostring(h3CellIdExpr)</span></a></p></td>
+<td><p>Converts the input H3 cell ID to its equivalent hexadecimal string representation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/h3_stringtoh3.html"><span class="doc">h3_stringtoh3(h3CellIdStringExpr)</span></a></p></td>
+<td><p>Converts the input string, which is expected to be a hexadecimal string representing an H3 cell ID, to the corresponding BIGINT representation of the H3 cell ID.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="predicates">
+<h3>Predicates<a class="headerlink" href="#predicates" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_ischildof.html"><span class="doc">h3_ischildof(h3CellId1Expr, h3CellId2Expr)</span></a></p></td>
+<td><p>Returns true if the first H3 cell ID is equal to or a child of the second H3 cell ID.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/h3_ispentagon.html"><span class="doc">h3_ispentagon(h3CellIdExpr)</span></a></p></td>
+<td><p>Returns true if the input BIGINT or hexadecimal STRING corresponds to a pentagonal H3 cell or not.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="validity">
+<h3>Validity<a class="headerlink" href="#validity" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_isvalid.html"><span class="doc">h3_isvalid(expr)</span></a></p></td>
+<td><p>Returns true if the input BIGINT or STRING is a valid H3 cell ID.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/h3_try_validate.html"><span class="doc">h3_try_validate(h3CellIdExpr)</span></a></p></td>
+<td><p>Returns the input value, that is of type BIGINT or STRING, if it corresponds to a valid H3 cell ID, or NULL otherwise.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_validate.html"><span class="doc">h3_validate(h3CellIdExpr)</span></a></p></td>
+<td><p>Returns the input value, that is of type BIGINT or STRING, if it corresponds to a valid H3 cell ID, or emits an error otherwise.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="distance-related">
+<h3>Distance related<a class="headerlink" href="#distance-related" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_distance.html"><span class="doc">h3_distance(h3CellId1Expr, h3CellId2Expr)</span></a></p></td>
+<td><p>Returns the grid distance of the two input H3 cell IDs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/h3_hexring.html"><span class="doc">h3_hexring(h3CellIdExpr, kExpr)</span></a></p></td>
+<td><p>Returns an array of H3 cell IDs that form a hollow hexagonal ring centered at the origin H3 cell and that are at grid distance <code class="docutils literal notranslate"><span class="pre">k</span></code> from the origin H3 cell.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_kring.html"><span class="doc">h3_kring(h3CellIdExpr, kExpr)</span></a></p></td>
+<td><p>Returns the H3 cell IDs that are within (grid) distance <code class="docutils literal notranslate"><span class="pre">k</span></code> of the origin cell ID.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/h3_kringdistances.html"><span class="doc">h3_kringdistances(h3CellIdExpr, kExpr)</span></a></p></td>
+<td><p>Returns all H3 cell IDs (represented as long integers or strings) within grid distance <code class="docutils literal notranslate"><span class="pre">k</span></code> from the origin H3 cell ID, along with their distance from the origin H3 cell ID.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_try_distance.html"><span class="doc">h3_try_distance(h3CellId1Expr, h3CellId2Expr)</span></a></p></td>
+<td><p>Returns the grid distance of the two input H3 cell IDs of the same resolution, or NULL if the distance is undefined.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="traversal">
+<h3>Traversal<a class="headerlink" href="#traversal" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_maxchild.html"><span class="doc">h3_maxchild(h3CellIdExpr, resolutionExpr)</span></a></p></td>
+<td><p>Returns the child of maximum value of the input H3 cell at the specified resolution.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/h3_minchild.html"><span class="doc">h3_minchild(h3CellIdExpr, resolutionExpr)</span></a></p></td>
+<td><p>Returns the child of minimum value of the input H3 cell at the specified resolution.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_resolution.html"><span class="doc">h3_resolution(h3CellIdExpr)</span></a></p></td>
+<td><p>Returns the resolution of the input H3 cell ID.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/h3_tochildren.html"><span class="doc">h3_tochildren(h3CellIdExpr, resolutionExpr)</span></a></p></td>
+<td><p>Returns an array of the children H3 cell IDs of the input H3 cell ID at the specified resolution.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_toparent.html"><span class="doc">h3_toparent(h3CellIdExpr, resolutionExpr)</span></a></p></td>
+<td><p>Returns the parent H3 cell ID of the input H3 cell ID at the specified resolution.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="compaction">
+<h3>Compaction<a class="headerlink" href="#compaction" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/h3_compact.html"><span class="doc">h3_compact(h3CellIdsExpr)</span></a></p></td>
+<td><p>Compacts the input set of H3 cell IDs as best as possible.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/h3_uncompact.html"><span class="doc">h3_uncompact(h3CellIdsExpr, resolutionExpr)</span></a></p></td>
+<td><p>Uncompacts the input set of H3 cell IDs to the specified resolution.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

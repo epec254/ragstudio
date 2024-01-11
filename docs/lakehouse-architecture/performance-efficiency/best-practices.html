@@ -1,0 +1,578 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="This article covers best practices supporting principles of performance efficiency on the data lakehouse on Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Best practices for performance efficiency">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Best practices for performance efficiency &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/lakehouse-architecture/performance-efficiency/best-practices.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/lakehouse-architecture/performance-efficiency/best-practices.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/lakehouse-architecture/performance-efficiency/best-practices.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/lakehouse-architecture/performance-efficiency/best-practices.html" class="notranslate">English</option>
+    <option value="../../../ja/lakehouse-architecture/performance-efficiency/best-practices.html" class="notranslate">日本語</option>
+    <option value="../../../pt/lakehouse-architecture/performance-efficiency/best-practices.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Best practices for performance efficiency</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="best-practices-for-performance-efficiency">
+<h1>Best practices for performance efficiency<a class="headerlink" href="#best-practices-for-performance-efficiency" title="Permalink to this headline"> </a></h1>
+<p>This article covers best practices for <strong>performance efficiency</strong>, organized by architectural principles listed in the following sections.</p>
+<div class="section" id="vertical-scaling-horizontal-scaling-and-linear-scalability">
+<h2>Vertical scaling, horizontal scaling, and linear scalability<a class="headerlink" href="#vertical-scaling-horizontal-scaling-and-linear-scalability" title="Permalink to this headline"> </a></h2>
+<p>Before discussing the best practices, let’s first look at a few concepts around distributed computing: horizontal and vertical scaling, and linear scalability:</p>
+<ul class="simple">
+<li><p><strong>Vertical scaling</strong> by adding or removing resources from a single computer, typically CPUs, memory, or GPUs. Usually, this means stopping the workload, moving it to a bigger machine, and restarting it again. Vertical scaling has limits: There might not be a bigger machine, or the price for the next bigger machine is prohibitively high.</p></li>
+<li><p><strong>Horizontal scaling</strong> by adding or removing nodes from a distributed system: When the limits of vertical scaling are reached, scaling horizontally is the solution: Distributed computing uses systems with several machines (called <a class="reference external" href="https://en.wikipedia.org/wiki/Computer_cluster">clusters</a>) to run the workloads. It is essential to understand that for this to be possible, the workloads need to be prepared for parallel execution, as supported by the engines of the Databricks lakehouse, Apache Spark, and Photon. This allows combining multiple reasonably priced machines into a larger computing system. If one needs more compute resources, then horizontal scaling adds more nodes to the cluster and removes them when no longer needed. While technically there is no limit (and the Spark engine will take over the complex part of distributing the loads), large numbers of nodes do increase the management complexity.</p></li>
+<li><p><strong>Linear scalability</strong>, meaning that when you add more resources to a system, the relationship between throughput and used resources is linear. This is only possible if the parallel tasks are independent. If not, intermediate results on one set of nodes will be needed on another set of nodes in the cluster for further computation. This data exchange between nodes involves transporting the results over the network from one set of nodes to another set of nodes, which takes considerable time. In general, distributed computing will always have some overhead for managing the distribution and exchange of data. As a result, small data set workloads that can be analyzed on a single node may be even slower when run on a distributed system. The Databricks Data Intelligence Platform provides flexible computing (single node and distributed) to meet the unique needs of your workloads.</p></li>
+</ul>
+</div>
+<div class="section" id="use-serverless-architectures">
+<span id="vertical-scaling-horizontal-scaling-and-linear-scalability"></span><h2>Use serverless architectures<a class="headerlink" href="#use-serverless-architectures" title="Permalink to this headline"> </a></h2>
+<div class="section" id="use-serverless-compute">
+<h3>Use serverless compute<a class="headerlink" href="#use-serverless-compute" title="Permalink to this headline"> </a></h3>
+<p>With the <a class="reference internal" href="../../serverless-compute/index.html"><span class="doc">serverless compute</span></a> on the Databricks Data Intelligence Platform, the compute layer runs in the customer’s Databricks account. Workspace admins can create serverless SQL warehouses that enable instant compute and are managed by Databricks. A serverless SQL warehouse uses compute clusters hosted in the Databricks customer account. Use them with Databricks SQL queries just like you usually would with the original Databricks SQL warehouses. Serverless compute comes with a very fast starting time for SQL warehouses (10s and below), and the infrastructure is managed by Databricks.</p>
+<p>This leads to improved productivity:</p>
+<ul class="simple">
+<li><p>Cloud administrators no longer have to manage complex cloud environments, for example by adjusting quotas, creating and maintaining networking assets, and joining billing sources.</p></li>
+<li><p>Users benefit from near-zero waiting times for cluster start and improved concurrency on their queries.</p></li>
+<li><p>Cloud administrators can refocus their time on higher-value projects instead of managing low-level cloud components.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="design-workloads-for-performance">
+<h2>Design workloads for performance<a class="headerlink" href="#design-workloads-for-performance" title="Permalink to this headline"> </a></h2>
+<div class="section" id="understand-your-data-ingestion-and-access-patterns">
+<h3>Understand your data ingestion and access patterns<a class="headerlink" href="#understand-your-data-ingestion-and-access-patterns" title="Permalink to this headline"> </a></h3>
+<p>From a performance perspective, data access patterns - such as “aggregations versus point access” or “scan versus search” - behave differently depending on the data size. Large files are more efficient for scan queries and smaller files better for search since you have to read fewer data to find the specific row(s).</p>
+<p>For ingestion patterns, it’s common to use DML statements. DML statements are most performant when the data is clustered, and you can simply isolate the section of data. Keeping the data clustered and isolatable on ingestion is important: Consider keeping a natural time sort order and apply as many filters as possible to the ingest target table. For append-only and overwrite ingestion workloads, there isn’t much to consider, as this is a relatively cheap operation.</p>
+<p>The ingestion and access patterns often point to an obvious data layout and clustering. If they do not, decide what is more important to your business and skew toward how to solve that goal better.</p>
+</div>
+<div class="section" id="use-parallel-computation-where-it-is-beneficial">
+<h3>Use parallel computation where it is beneficial<a class="headerlink" href="#use-parallel-computation-where-it-is-beneficial" title="Permalink to this headline"> </a></h3>
+<p>Time to value is an important dimension when working with data. While many use cases can be easily implemented on a single machine (small data, few and simple computation steps), often use cases come up that:</p>
+<ul class="simple">
+<li><p>Need to process large data sets.</p></li>
+<li><p>Have long running times due to complicated algorithms.</p></li>
+<li><p>Must be repeated 100s and 1000s of times.</p></li>
+</ul>
+<p>The cluster environment of the Databricks platform is a great environment to distribute these workloads efficiently. It automatically parallelizes SQL queries across all nodes of a cluster and it provides libraries for <a class="reference internal" href="../../getting-started/dataframes-python.html"><span class="doc">Python</span></a> and <a class="reference internal" href="../../getting-started/dataframes-scala.html"><span class="doc">Scala</span></a> to do the same. Under the hood, the engines Apache Spark and Photon analyze the queries, determine the optimal way of parallel execution, and manage the distributed execution in a resilient way.</p>
+<p>In the same way as batch tasks, <a class="reference internal" href="../../structured-streaming/index.html"><span class="doc">Structured Streaming</span></a> distributes streaming jobs across the cluster for best performance.</p>
+<p>One of the easiest way to use parallel computing are <a class="reference internal" href="../../delta-live-tables/index.html"><span class="doc">Delta Live Tables</span></a>. You declare tasks and dependencies of a job in SQL or Python, and then Delta Live Tables takes over the execution planning, efficient infrastructure setup, job execution, and monitoring.</p>
+<p>For data scientists, <a class="reference external" href="https://pandas.pydata.org/">pandas</a> is a Python package that provides easy-to-use data structures and data analysis tools for the Python programming language. However, Pandas does not scale out to big data. <a class="reference internal" href="../../pandas/pandas-on-spark.html"><span class="doc">Pandas API on Spark</span></a> fills this gap by providing pandas equivalent APIs that work on Apache Spark.</p>
+<p>Additionally, the platform comes with parallelized algorithms for machine learning called <a class="reference external" href="https://spark.apache.org/docs/latest/ml-guide.html">MLlib</a>. It supports out-of-the-box leveraging multi-GPU and distributed deep learning compute, such as by Horovod Runner. See <a class="reference internal" href="../../machine-learning/train-model/distributed-training/horovod-runner.html"><span class="doc">HorovodRunner: distributed deep learning with Horovod</span></a>. Specific libraries also  coming with the platform help distribute massively repeated tasks to all cluster nodes, cutting time to value down in a near-linear fashion. For example, <a class="reference internal" href="../../machine-learning/automl-hyperparam-tuning/index.html"><span class="doc">Hyperopt</span></a> for parallel hyperparameter optimization in ML.</p>
+</div>
+<div class="section" id="analyze-the-whole-chain-of-execution">
+<h3>Analyze the whole chain of execution<a class="headerlink" href="#analyze-the-whole-chain-of-execution" title="Permalink to this headline"> </a></h3>
+<p>Most pipelines or consumption patterns use a chain of systems. For example, for BI tools the performance is impacted by several factors:</p>
+<ul class="simple">
+<li><p>The BI tool itself.</p></li>
+<li><p>The connector that connects the BI tool and the SQL engine.</p></li>
+<li><p>The SQL engine where the BI tool sends the query.</p></li>
+</ul>
+<p>For best-in-class performance, the whole chain needs to be taken into account and selected/tuned for best performance.</p>
+</div>
+<div class="section" id="prefer-larger-clusters">
+<h3>Prefer larger clusters<a class="headerlink" href="#prefer-larger-clusters" title="Permalink to this headline"> </a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="../../serverless-compute/index.html"><span class="doc">Serverless compute</span></a> manages clusters automatically, so this is not needed for serverless compute.</p>
+</div>
+<p>Plan for larger clusters, especially when the workload scales linearly. In that case, it is not more expensive to use a large cluster for a workload than to use a smaller one. It’s just faster. The key is that you’re renting the cluster for the length of the workload. So, if you spin up two worker clusters and it takes an hour, you’re paying for those workers for the full hour. Similarly, if you spin up a four-worker cluster and it takes only half an hour (here comes the linear scalability into play), the costs are the same.  If costs are the primary driver with a very flexible SLA, an autoscaling cluster is almost always going to be the cheapest but not necessarily the fastest.</p>
+</div>
+<div class="section" id="use-native-spark-operations">
+<h3>Use native Spark operations<a class="headerlink" href="#use-native-spark-operations" title="Permalink to this headline"> </a></h3>
+<p>User Defined Functions (UDFs) are a great way to extend the functionality of Spark SQL. However, don’t use Python or Scala UDFs if a native function exists:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://spark.apache.org/docs/latest/api/sql/index.html">Spark SQL</a></p></li>
+<li><p><a class="reference external" href="https://spark.apache.org/docs/latest/api/python/user_guide/pandas_on_spark/index.html">PySpark</a></p></li>
+</ul>
+<p>Reasons:</p>
+<ul class="simple">
+<li><p>To transfer data between Python and Spark, serialization is needed. This drastically slows down queries.</p></li>
+<li><p>Higher efforts for implementing and testing functionality already existing in the platform.</p></li>
+</ul>
+<p>If native functions are missing and should be implemented as Python UDFs, use <a class="reference internal" href="../../udf/pandas.html"><span class="doc">Pandas UDFs</span></a>. <a class="reference external" href="https://arrow.apache.org/">Apache Arrow</a> ensures data moves efficiently back and forth between Spark and Python.</p>
+</div>
+<div class="section" id="use-photon">
+<h3>Use Photon<a class="headerlink" href="#use-photon" title="Permalink to this headline"> </a></h3>
+<p><a class="reference internal" href="../../compute/photon.html"><span class="doc">Photon</span></a> is the engine on Databricks that provides fast query performance at low cost – from data ingestion, ETL, streaming, data science, and interactive queries – directly on your data lake. Photon is compatible with Apache Spark APIs, so getting started is as easy as turning it on – no code changes and no lock-in.</p>
+<p>Photon is part of a high-performance runtime that runs your existing SQL and DataFrame API calls faster and reduces your total cost per workload. Photon is used by default in Databricks SQL warehouses.</p>
+</div>
+<div class="section" id="understand-your-hardware-and-workload-type">
+<h3>Understand your hardware and workload type<a class="headerlink" href="#understand-your-hardware-and-workload-type" title="Permalink to this headline"> </a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="../../serverless-compute/index.html"><span class="doc">Serverless compute</span></a> manages clusters automatically, so this is not needed for serverless compute.</p>
+</div>
+<p>Not all cloud VMs are created equally. The different families of machines offered by cloud providers are all different enough to matter. There are obvious differences - RAM and cores - and more subtle differences - processor type and generation, network bandwidth guarantees, and local high-speed storage versus local disk versus remote disk. There are also differences in the “spot” markets. These should be understood before deciding on the best VM type for your workload.</p>
+</div>
+<div class="section" id="use-caching">
+<h3>Use caching<a class="headerlink" href="#use-caching" title="Permalink to this headline"> </a></h3>
+<p>There are two types of caching available in Databricks: Delta caching and Spark caching. Here are the characteristics of each type:</p>
+<ul>
+<li><p><strong>Use Disk Cache</strong></p>
+<p>The <a class="reference internal" href="../../optimizations/disk-cache.html"><span class="doc">Disk cache</span></a> (formerly known as “Delta cache”) stores copies of remote data on the local disks (for example, SSD) of the virtual machines. It can improve the performance of a wide range of queries but cannot be used to store the results of arbitrary subqueries. The disk cache automatically detects when data files are created or deleted and updates its content accordingly. The recommended (and easiest) way to use disk caching is to choose a worker type with SSD volumes when you configure your cluster. Such workers are enabled and configured for disk caching.</p>
+</li>
+<li><p><strong>Avoid Spark Caching</strong></p>
+<p>The <a class="reference external" href="https://spark.apache.org/docs/latest/sql-performance-tuning.html#caching-data-in-memory">Spark cache</a> (by using <code class="docutils literal notranslate"><span class="pre">.persist()</span></code> and <code class="docutils literal notranslate"><span class="pre">.unpersist()</span></code>) can store the result of any subquery data and data stored in formats other than Parquet (such as CSV, JSON, and ORC). However, if used at the wrong locations in a query, it might eat up all memory and can even slow down queries substantially. As a rule of thumb, avoid Spark caching unless you know exactly the impact. See <a class="reference internal" href="../../delta/best-practices.html#spark-caching"><span class="std std-ref">Spark caching</span></a>.</p>
+</li>
+<li><p><strong>Query Result Cache</strong></p>
+<p>Per cluster <a class="reference internal" href="../../sql/admin/query-caching.html"><span class="doc">caching of query results</span></a> for all queries through SQL warehouses. To benefit from query result caching, focus on deterministic queries that for example, don’t use predicates like <code class="docutils literal notranslate"><span class="pre">=</span> <span class="pre">NOW()</span></code>. When a query is deterministic, and the underlying data is in Delta format and unchanged, SQL Warehouses will return the result directly from the query result cache.</p>
+</li>
+<li><p><strong>Databricks SQL UI caching</strong></p>
+<p>Per user caching of all query and dashboard results in the <a class="reference internal" href="../../sql/user/queries/index.html"><span class="doc">Databricks SQL UI</span></a>.</p>
+</li>
+<li><p><strong>Prewarm clusters</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note: <a class="reference internal" href="../../serverless-compute/index.html"><span class="doc">Serverless compute</span></a> manages clusters automatically, so this is not needed for serverless compute.</p>
+</div>
+<p>Independent of query and data format, the first query on a cluster will always be slower than subsequent queries. This has to do with all the different subsystems that will be started and read all the data they need. Take this into account for performance benchmarking. An easy way to ensure the cluster is warmed up is to prewarm the Delta cache. It is also possible to attach a cluster to a ready-to-use pool. See <a class="reference internal" href="../../compute/pools.html"><span class="doc">Create a pool</span></a>.</p>
+</li>
+<li><p><strong>Prewarm Delta cache for BI workloads</strong></p>
+<p>Caches the data accessed by the specified simple SELECT query in the Delta cache. You can choose a subset of columns to be cached by providing a list of column names and choose a subset of rows by providing a predicate.</p>
+</li>
+</ul>
+<p>See <a class="reference internal" href="../../sql/language-manual/delta-cache.html"><span class="doc">CACHE SELECT</span></a>.</p>
+</div>
+<div class="section" id="use-compaction">
+<h3>Use compaction<a class="headerlink" href="#use-compaction" title="Permalink to this headline"> </a></h3>
+<p>Delta Lake on Databricks can improve the speed of reading queries from a table. One way to improve this speed is to coalesce small files into larger ones. You trigger compaction by running the OPTIMIZE command. See <a class="reference internal" href="../../delta/optimize.html"><span class="doc">Compact data files with optimize on Delta Lake</span></a>.</p>
+<p>You can also compact small files automatically using Auto Optimize. See <a class="reference internal" href="#consider-auto-optimize"><span class="std std-ref">Consider file size tuning</span></a>.</p>
+</div>
+<div class="section" id="use-data-skipping">
+<h3>Use data skipping<a class="headerlink" href="#use-data-skipping" title="Permalink to this headline"> </a></h3>
+<p><strong>Data skipping:</strong> To achieve this, data skipping information is collected automatically when you write data into a Delta table (by default Delta Lake on Databricks collects statistics on the first 32 columns defined in your table schema). Delta Lake on Databricks takes advantage of this information (minimum and maximum values) at query time to provide faster queries. See <a class="reference internal" href="../../delta/data-skipping.html"><span class="doc">Data skipping with Z-order indexes for Delta Lake</span></a>.</p>
+<p>For best results, apply <a class="reference internal" href="../../delta/data-skipping.html#delta-zorder"><span class="std std-ref">Z-ordering</span></a>, a technique to collocate related information in the same set of files. This co-locality is automatically used on Databricks by Delta Lake data-skipping algorithms. This behavior dramatically reduces the amount of data Delta Lake on Databricks needs to read.</p>
+<p><strong>Dynamic file pruning:</strong> <a class="reference internal" href="../../optimizations/dynamic-file-pruning.html"><span class="doc">Dynamic file pruning</span></a> (DFP) can significantly improve the performance of many queries on Delta tables. DFP is especially efficient for non-partitioned tables or joins on non-partitioned columns.</p>
+</div>
+<div class="section" id="avoid-over-partitioning">
+<h3>Avoid over-partitioning<a class="headerlink" href="#avoid-over-partitioning" title="Permalink to this headline"> </a></h3>
+<p>In the past, partitioning was the most common way to skip data. However, partitioning is static and manifests as a file system hierarchy. There is no easy way to change partitions if the access patterns change over time. Often, partitioning leads to over-partitioning - in other words, too many partitions with too small files, which results in bad query performance. See <a class="reference internal" href="../../sql/language-manual/sql-ref-partition.html"><span class="doc">Partitions</span></a>.</p>
+<p>In the meantime, a much better choice than partitioning is Z-ordering.</p>
+</div>
+<div class="section" id="consider-file-size-tuning">
+<span id="consider-auto-optimize"></span><h3>Consider file size tuning<a class="headerlink" href="#consider-file-size-tuning" title="Permalink to this headline"> </a></h3>
+<p>The term <em>auto optimize</em> is sometimes used to describe functionality controlled by the settings <code class="docutils literal notranslate"><span class="pre">delta.autoCompact</span></code> and <code class="docutils literal notranslate"><span class="pre">delta.optimizeWrite</span></code>. This term has been retired in favor of describing each setting individually. See <a class="reference internal" href="../../delta/tune-file-size.html"><span class="doc">Configure Delta Lake to control data file size</span></a>.</p>
+<p>Auto Optimize is particularly useful in the following scenarios:</p>
+<ul class="simple">
+<li><p>Streaming use cases where latency in the order of minutes is acceptable.</p></li>
+<li><p>MERGE INTO is the preferred method of writing into Delta Lake.</p></li>
+<li><p>CREATE TABLE AS SELECT or INSERT INTO are commonly used operations.</p></li>
+</ul>
+</div>
+<div class="section" id="optimize-join-performance">
+<h3>Optimize join performance<a class="headerlink" href="#optimize-join-performance" title="Permalink to this headline"> </a></h3>
+<ul>
+<li><p>Consider range join optimization. See <a class="reference internal" href="../../optimizations/range-join.html"><span class="doc">Range join optimization</span></a>.</p>
+<p>A range join occurs when two relations are joined using a point in interval or interval overlap condition. The range join optimization support in Databricks Runtime can bring orders of magnitude improvement in query performance but requires careful manual tuning.</p>
+</li>
+<li><p>Consider skew join optimization.</p>
+<p>Data skew is a condition in which a table’s data is unevenly distributed among partitions in the cluster. Data skew can severely downgrade the performance of queries, especially those with joins. Joins between big tables require shuffling data, and the skew can lead to an extreme imbalance of work in the cluster. It’s likely that data skew is affecting a query if a query appears to be stuck finishing very few tasks. To ameliorate skew, Delta Lake on Databricks SQL accepts skew hints in queries. With the information from a skew hint, Databricks Runtime can construct a better query plan that does not suffer from data skew. There are two options:</p>
+<ul class="simple">
+<li><p>If the skew is known, manual skew hints can be provided. See <a class="reference internal" href="../../optimizations/skew-join.html"><span class="doc">Skew join optimization</span></a>.</p></li>
+<li><p>With Databricks Runtime 7.3 and above, skew join hints are not required. Skew is automatically taken care of if <a class="reference internal" href="../../optimizations/aqe.html"><span class="doc">adaptive query execution</span></a> (AQE) and <code class="docutils literal notranslate"><span class="pre">spark.sql.adaptive.skewJoin.enabled</span></code> are both enabled.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="run-analyze-table-to-collect-table-statistics">
+<h3>Run analyze table to collect table statistics<a class="headerlink" href="#run-analyze-table-to-collect-table-statistics" title="Permalink to this headline"> </a></h3>
+<p>Run analyze table to collect statistics on the entire table for the query planner. See <a class="reference internal" href="../../sql/language-manual/sql-ref-syntax-aux-analyze-table.html"><span class="doc">ANALYZE TABLE</span></a>.</p>
+<div class="highlight-SQL notranslate"><div class="highlight"><pre><span></span><span class="k">ANALYZE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">mytable</span><span class="w"> </span><span class="n">COMPUTE</span><span class="w"> </span><span class="k">STATISTICS</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="n">COLUMNS</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>This information is persisted in the metastore and helps the query optimizer by:</p>
+<ul class="simple">
+<li><p>Choosing the proper join type.</p></li>
+<li><p>Selecting the correct build side in a hash-join.</p></li>
+<li><p>Calibrating the join order in a multi-way join.</p></li>
+</ul>
+<p>It should be run alongside OPTIMIZE on a daily basis and is recommended on tables &lt; 5TB. The only caveat is that analyze table is not incremental.</p>
+</div>
+</div>
+<div class="section" id="run-performance-testing-in-the-scope-of-development">
+<h2>Run performance testing in the scope of development<a class="headerlink" href="#run-performance-testing-in-the-scope-of-development" title="Permalink to this headline"> </a></h2>
+<div class="section" id="test-on-data-representative-of-production-data">
+<h3>Test on data representative of production data<a class="headerlink" href="#test-on-data-representative-of-production-data" title="Permalink to this headline"> </a></h3>
+<p>Run performance testing on production data (read-only) or similar data. When using similar data, characteristics like volume, file layout, and data skews should be like production data, since this has a significant impact on performance.</p>
+</div>
+<div class="section" id="take-prewarming-of-resources-into-account">
+<h3>Take prewarming of resources into account<a class="headerlink" href="#take-prewarming-of-resources-into-account" title="Permalink to this headline"> </a></h3>
+<p>The first query on a new cluster is slower than all the others:</p>
+<ul class="simple">
+<li><p>In general, cluster resources need to initialize on multiple layers.</p></li>
+<li><p>When caching is part of the setup, the first run ensures that the data is in the cache, which speeds up subsequent jobs.</p></li>
+</ul>
+<p>Prewarming resources - running specific queries for the sake of initializing resources and filling caches (for example, after a cluster restart) - can significantly increase the performance of the first queries. So, to understand the behavior for the different scenarios, test the performance of the first execution (with and without prewarming) and subsequent executions.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Interactive workloads like dashboard refreshes can significantly benefit from prewarming. However, this does not apply to job clusters, where the load by design is executed only once.</p>
+</div>
+</div>
+<div class="section" id="identify-bottlenecks">
+<h3>Identify bottlenecks<a class="headerlink" href="#identify-bottlenecks" title="Permalink to this headline"> </a></h3>
+<p>Bottlenecks are areas in your workload that might worsen the overall performance when the load in production increases. Identifying these at design time and testing against higher workloads will help to keep the workloads stable in production.</p>
+</div>
+</div>
+<div class="section" id="monitor-performance">
+<h2>Monitor performance<a class="headerlink" href="#monitor-performance" title="Permalink to this headline"> </a></h2>
+<p>See <a class="reference internal" href="../operational-excellence/best-practices.html#system-monitoring"><span class="std std-ref">Operational Excellence - Set up monitoring, alerting and logging</span></a>.</p>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

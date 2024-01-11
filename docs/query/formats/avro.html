@@ -1,0 +1,700 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to read and write data to Avro files using Databricks." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Avro file">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Avro file &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/query/formats/avro.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/query/formats/avro.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/query/formats/avro.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/query/formats/avro.html" class="notranslate">English</option>
+    <option value="../../../ja/query/formats/avro.html" class="notranslate">日本語</option>
+    <option value="../../../pt/query/formats/avro.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Avro file</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="avro-file">
+<h1>Avro file<a class="headerlink" href="#avro-file" title="Permalink to this headline"> </a></h1>
+<p><a class="reference external" href="https://avro.apache.org/">Apache Avro</a> is a data serialization system. Avro provides:</p>
+<ul class="simple">
+<li><p>Rich data structures.</p></li>
+<li><p>A compact, fast, binary data format.</p></li>
+<li><p>A container file, to store persistent data.</p></li>
+<li><p>Remote procedure call (RPC).</p></li>
+<li><p>Simple integration with dynamic languages. Code generation is not required to read or write data files nor to use or implement RPC protocols. Code generation as an optional optimization, only worth implementing for statically typed languages.</p></li>
+</ul>
+<p>The <a class="reference external" href="https://spark.apache.org/docs/latest/sql-data-sources-avro.html">Avro data source</a> supports:</p>
+<ul class="simple">
+<li><p>Schema conversion: Automatic conversion between Apache Spark SQL and Avro records.</p></li>
+<li><p>Partitioning: Easily reading and writing partitioned data without any extra configuration.</p></li>
+<li><p>Compression: Compression to use when writing Avro out to disk. The supported types are <code class="docutils literal notranslate"><span class="pre">uncompressed</span></code>, <code class="docutils literal notranslate"><span class="pre">snappy</span></code>, and <code class="docutils literal notranslate"><span class="pre">deflate</span></code>. You can also specify the deflate level.</p></li>
+<li><p>Record names: Record name and namespace by passing a map of parameters with <code class="docutils literal notranslate"><span class="pre">recordName</span></code> and <code class="docutils literal notranslate"><span class="pre">recordNamespace</span></code>.</p></li>
+</ul>
+<p>Also see <a class="reference internal" href="../../structured-streaming/avro-dataframe.html"><span class="doc">Read and write streaming Avro data</span></a>.</p>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline"> </a></h2>
+<p>You can change the behavior of an Avro data source using various configuration parameters.</p>
+<p>To ignore files without the <code class="docutils literal notranslate"><span class="pre">.avro</span></code> extension when reading, you can set the parameter <code class="docutils literal notranslate"><span class="pre">avro.mapred.ignore.inputs.without.extension</span></code> in the Hadoop configuration. The default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span>
+<span class="w">  </span><span class="p">.</span><span class="n">sparkContext</span>
+<span class="w">  </span><span class="p">.</span><span class="n">hadoopConfiguration</span>
+<span class="w">  </span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;avro.mapred.ignore.inputs.without.extension&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To configure compression when writing, set the following Spark properties:</p>
+<ul class="simple">
+<li><p>Compression codec: <code class="docutils literal notranslate"><span class="pre">spark.sql.avro.compression.codec</span></code>. Supported codecs are <code class="docutils literal notranslate"><span class="pre">snappy</span></code> and <code class="docutils literal notranslate"><span class="pre">deflate</span></code>. The default codec is <code class="docutils literal notranslate"><span class="pre">snappy</span></code>.</p></li>
+<li><p>If the compression codec is <code class="docutils literal notranslate"><span class="pre">deflate</span></code>, you can set the compression level with: <code class="docutils literal notranslate"><span class="pre">spark.sql.avro.deflate.level</span></code>. The default level is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p></li>
+</ul>
+<p>You can set these properties in the cluster <a class="reference internal" href="../../compute/configure.html#spark-configuration"><span class="std std-ref">Spark configuration</span></a> or at runtime using <code class="docutils literal notranslate"><span class="pre">spark.conf.set()</span></code>. For example:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;spark.sql.avro.compression.codec&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;deflate&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;spark.sql.avro.deflate.level&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For <a class="reference internal" href="../../release-notes/runtime/9.1lts.html"><span class="doc">Databricks Runtime 9.1 LTS</span></a> and above, you can change the default schema inference behavior in Avro by providing the <code class="docutils literal notranslate"><span class="pre">mergeSchema</span></code> option when reading files. Setting <code class="docutils literal notranslate"><span class="pre">mergeSchema</span></code> to <code class="docutils literal notranslate"><span class="pre">true</span></code> will infer a schema from a set of Avro files in the target directory and merge them rather than infer the read schema from a single file.</p>
+</div>
+<div class="section" id="supported-types-for-avro---spark-sql-conversion">
+<h2>Supported types for Avro -&gt; Spark SQL conversion<a class="headerlink" href="#supported-types-for-avro---spark-sql-conversion" title="Permalink to this headline"> </a></h2>
+<p>This library supports reading all Avro types. It uses the following
+mapping from Avro types to Spark SQL types:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 39%" />
+<col style="width: 61%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Avro type</p></th>
+<th class="head"><p>Spark SQL type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>boolean</p></td>
+<td><p>BooleanType</p></td>
+</tr>
+<tr class="row-odd"><td><p>int</p></td>
+<td><p>IntegerType</p></td>
+</tr>
+<tr class="row-even"><td><p>long</p></td>
+<td><p>LongType</p></td>
+</tr>
+<tr class="row-odd"><td><p>float</p></td>
+<td><p>FloatType</p></td>
+</tr>
+<tr class="row-even"><td><p>double</p></td>
+<td><p>DoubleType</p></td>
+</tr>
+<tr class="row-odd"><td><p>bytes</p></td>
+<td><p>BinaryType</p></td>
+</tr>
+<tr class="row-even"><td><p>string</p></td>
+<td><p>StringType</p></td>
+</tr>
+<tr class="row-odd"><td><p>record</p></td>
+<td><p>StructType</p></td>
+</tr>
+<tr class="row-even"><td><p>enum</p></td>
+<td><p>StringType</p></td>
+</tr>
+<tr class="row-odd"><td><p>array</p></td>
+<td><p>ArrayType</p></td>
+</tr>
+<tr class="row-even"><td><p>map</p></td>
+<td><p>MapType</p></td>
+</tr>
+<tr class="row-odd"><td><p>fixed</p></td>
+<td><p>BinaryType</p></td>
+</tr>
+<tr class="row-even"><td><p>union</p></td>
+<td><p>See <a class="reference internal" href="#union-types"><span class="std std-ref">Union types</span></a>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="union-types">
+<h3>Union types<a class="headerlink" href="#union-types" title="Permalink to this headline"> </a></h3>
+<p>The Avro data source supports reading <code class="docutils literal notranslate"><span class="pre">union</span></code> types. Avro considers the following three types to be <code class="docutils literal notranslate"><span class="pre">union</span></code> types:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">union(int,</span> <span class="pre">long)</span></code> maps to <code class="docutils literal notranslate"><span class="pre">LongType</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">union(float,</span> <span class="pre">double)</span></code> maps to <code class="docutils literal notranslate"><span class="pre">DoubleType</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">union(something,</span> <span class="pre">null)</span></code>, where <code class="docutils literal notranslate"><span class="pre">something</span></code> is any supported Avro type. This maps to the same Spark SQL type as that of
+<code class="docutils literal notranslate"><span class="pre">something</span></code>, with <code class="docutils literal notranslate"><span class="pre">nullable</span></code> set to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
+</ul>
+<p>All other <code class="docutils literal notranslate"><span class="pre">union</span></code> types are complex types. They map to
+<code class="docutils literal notranslate"><span class="pre">StructType</span></code> where field names are <code class="docutils literal notranslate"><span class="pre">member0</span></code>, <code class="docutils literal notranslate"><span class="pre">member1</span></code>, and so on, in
+accordance with members of the <code class="docutils literal notranslate"><span class="pre">union</span></code>. This is consistent with the
+behavior when converting between Avro and Parquet.</p>
+</div>
+<div class="section" id="logical-types">
+<h3>Logical types<a class="headerlink" href="#logical-types" title="Permalink to this headline"> </a></h3>
+<p>The Avro data source supports reading the following <a class="reference external" href="https://avro.apache.org/docs/1.8.2/spec.html#Logical+Types">Avro logical types</a>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 25%" />
+<col style="width: 35%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Avro logical type</p></th>
+<th class="head"><p>Avro type</p></th>
+<th class="head"><p>Spark SQL type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>date</p></td>
+<td><p>int</p></td>
+<td><p>DateType</p></td>
+</tr>
+<tr class="row-odd"><td><p>timestamp-millis</p></td>
+<td><p>long</p></td>
+<td><p>TimestampType</p></td>
+</tr>
+<tr class="row-even"><td><p>timestamp-micros</p></td>
+<td><p>long</p></td>
+<td><p>TimestampType</p></td>
+</tr>
+<tr class="row-odd"><td><p>decimal</p></td>
+<td><p>fixed</p></td>
+<td><p>DecimalType</p></td>
+</tr>
+<tr class="row-even"><td><p>decimal</p></td>
+<td><p>bytes</p></td>
+<td><p>DecimalType</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Avro data source ignores docs, aliases, and other properties present in the Avro file.</p>
+</div>
+</div>
+</div>
+<div class="section" id="supported-types-for-spark-sql---avro-conversion">
+<h2>Supported types for Spark SQL -&gt; Avro conversion<a class="headerlink" href="#supported-types-for-spark-sql---avro-conversion" title="Permalink to this headline"> </a></h2>
+<p>This library supports writing of all Spark SQL types into Avro. For most
+types, the mapping from Spark types to Avro types is straightforward
+(for example <code class="docutils literal notranslate"><span class="pre">IntegerType</span></code> gets converted to <code class="docutils literal notranslate"><span class="pre">int</span></code>); the following is a list of the few special cases:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 27%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Spark SQL type</p></th>
+<th class="head"><p>Avro type</p></th>
+<th class="head"><p>Avro logical type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ByteType</p></td>
+<td><p>int</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>ShortType</p></td>
+<td><p>int</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>BinaryType</p></td>
+<td><p>bytes</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>DecimalType</p></td>
+<td><p>fixed</p></td>
+<td><p>decimal</p></td>
+</tr>
+<tr class="row-even"><td><p>TimestampType</p></td>
+<td><p>long</p></td>
+<td><p>timestamp-micros</p></td>
+</tr>
+<tr class="row-odd"><td><p>DateType</p></td>
+<td><p>int</p></td>
+<td><p>date</p></td>
+</tr>
+</tbody>
+</table>
+<p>You can also specify the whole output Avro schema with the option <code class="docutils literal notranslate"><span class="pre">avroSchema</span></code>, so that Spark SQL types can be converted into other Avro types.
+The following conversions are not applied by default and require user specified Avro schema:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 27%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Spark SQL type</p></th>
+<th class="head"><p>Avro type</p></th>
+<th class="head"><p>Avro logical type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ByteType</p></td>
+<td><p>fixed</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>StringType</p></td>
+<td><p>enum</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>DecimalType</p></td>
+<td><p>bytes</p></td>
+<td><p>decimal</p></td>
+</tr>
+<tr class="row-odd"><td><p>TimestampType</p></td>
+<td><p>long</p></td>
+<td><p>timestamp-millis</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"> </a></h2>
+<p>These examples use the <a class="reference external" href="/_static/examples/episodes.avro">episodes.avro</a> file.</p>
+<div class="js-code-language-tabs compound">
+<div class="compound-first compound" lang="scala">
+<div class="compound-first highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// The Avro records are converted to Spark types, filtered, and</span>
+<span class="c1">// then written back out as Avro records</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;avro&quot;</span><span class="p">).</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;/tmp/episodes.avro&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="s">&quot;doctor &gt; 5&quot;</span><span class="p">).</span><span class="n">write</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;avro&quot;</span><span class="p">).</span><span class="n">save</span><span class="p">(</span><span class="s">&quot;/tmp/output&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="compound-middle">This example demonstrates a custom Avro schema:</p>
+<div class="compound-middle highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">avro</span><span class="p">.</span><span class="nc">Schema</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">Schema</span><span class="p">.</span><span class="nc">Parser</span><span class="p">().</span><span class="n">parse</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="nc">File</span><span class="p">(</span><span class="s">&quot;episode.avsc&quot;</span><span class="p">))</span>
+
+<span class="n">spark</span>
+<span class="w">  </span><span class="p">.</span><span class="n">read</span>
+<span class="w">  </span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;avro&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;avroSchema&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">schema</span><span class="p">.</span><span class="n">toString</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;/tmp/episodes.avro&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="compound-middle">This example demonstrates Avro compression options:</p>
+<div class="compound-middle highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// configuration to use deflate compression</span>
+<span class="n">spark</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;spark.sql.avro.compression.codec&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;deflate&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;spark.sql.avro.deflate.level&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;5&quot;</span><span class="p">)</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;avro&quot;</span><span class="p">).</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;/tmp/episodes.avro&quot;</span><span class="p">)</span>
+
+<span class="c1">// writes out compressed Avro records</span>
+<span class="n">df</span><span class="p">.</span><span class="n">write</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;avro&quot;</span><span class="p">).</span><span class="n">save</span><span class="p">(</span><span class="s">&quot;/tmp/output&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="compound-middle">This example demonstrates partitioned Avro records:</p>
+<div class="compound-middle highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nc">SparkSession</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">spark</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">SparkSession</span><span class="p">.</span><span class="n">builder</span><span class="p">().</span><span class="n">master</span><span class="p">(</span><span class="s">&quot;local&quot;</span><span class="p">).</span><span class="n">getOrCreate</span><span class="p">()</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">createDataFrame</span><span class="p">(</span>
+<span class="w">  </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">    </span><span class="p">(</span><span class="mi">2012</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Batman&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">9.8</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="mi">2012</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Hero&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">8.7</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="mi">2012</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Robot&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">5.5</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="mi">2011</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Git&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">))</span>
+<span class="w">  </span><span class="p">).</span><span class="n">toDF</span><span class="p">(</span><span class="s">&quot;year&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;month&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;title&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;rating&quot;</span><span class="p">)</span>
+
+<span class="n">df</span><span class="p">.</span><span class="n">toDF</span><span class="p">.</span><span class="n">write</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;avro&quot;</span><span class="p">).</span><span class="n">partitionBy</span><span class="p">(</span><span class="s">&quot;year&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;month&quot;</span><span class="p">).</span><span class="n">save</span><span class="p">(</span><span class="s">&quot;/tmp/output&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="compound-middle">This example demonstrates the record name and namespace:</p>
+<div class="compound-last highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;avro&quot;</span><span class="p">).</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;/tmp/episodes.avro&quot;</span><span class="p">)</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;AvroTest&quot;</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">namespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;org.foo&quot;</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">parameters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span><span class="s">&quot;recordName&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;recordNamespace&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">namespace</span><span class="p">)</span>
+
+<span class="n">df</span><span class="p">.</span><span class="n">write</span><span class="p">.</span><span class="n">options</span><span class="p">(</span><span class="n">parameters</span><span class="p">).</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;avro&quot;</span><span class="p">).</span><span class="n">save</span><span class="p">(</span><span class="s">&quot;/tmp/output&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-middle compound" lang="python">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a DataFrame from a specified directory</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;avro&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;/tmp/episodes.avro&quot;</span><span class="p">)</span>
+
+<span class="c1">#  Saves the subset of the Avro records read in</span>
+<span class="n">subset</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s2">&quot;doctor &gt; 5&quot;</span><span class="p">)</span>
+<span class="n">subset</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;avro&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;/tmp/output&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="compound-last compound" lang="sql">
+<p class="compound-first">To query Avro data in SQL, register the data file as a table or temporary view:</p>
+<div class="compound-last highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TEMPORARY</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">episodes</span>
+<span class="k">USING</span><span class="w"> </span><span class="n">avro</span>
+<span class="k">OPTIONS</span><span class="w"> </span><span class="p">(</span><span class="n">path</span><span class="w"> </span><span class="ss">&quot;/tmp/episodes.avro&quot;</span><span class="p">)</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">episodes</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="notebook-example-read-and-write-avro-files">
+<h2>Notebook example: Read and write Avro files<a class="headerlink" href="#notebook-example-read-and-write-avro-files" title="Permalink to this headline"> </a></h2>
+<p>The following notebook demonstrates how to read and write Avro files.</p>
+<div class="embedded-notebook-section section" id="read-and-write-avro-files-notebook">
+<span id="read-avro-files"></span><h3>Read and write Avro files notebook<a class="headerlink" href="#read-and-write-avro-files-notebook" title="Permalink to this headline"> </a></h3>
+<div class="embedded-notebook">
+    <p class="notebook-import-help">
+        <a href="/_extras/notebooks/source/read-avro-files.html"            target="_blank">Open notebook in new tab</a>
+        <button class="embedded-notebook-copy-to-clipboard"                copy-path-to-clipboard-on-click="/_extras/notebooks/source/read-avro-files.html">            <img src="/_static/clippy.svg"                alt="Copy to clipboard">            Copy link for import        </button>    <div class="embedded-notebook-container">        <div class="loading-spinner"></div>        <iframe data-src="/_extras/notebooks/source/read-avro-files.html"            id="959c09838f38433718dc06622490d205034c710652687b3687c8d1e1effd6da5" height="1000px" width="100%"            style="overflow-y:hidden;" scrolling="no"></iframe>    </div></div></div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

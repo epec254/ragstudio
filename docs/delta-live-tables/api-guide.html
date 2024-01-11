@@ -1,0 +1,2435 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to create, edit, delete, run, and manage pipelines using the Databricks Delta Live Tables API." name="description" />
+<meta content="noindex" name="robots" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Delta Live Tables API guide">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Delta Live Tables API guide &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/delta-live-tables/api-guide.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/delta-live-tables/api-guide.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/delta-live-tables/api-guide.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/delta-live-tables/api-guide.html" class="notranslate">English</option>
+    <option value="../../ja/delta-live-tables/api-guide.html" class="notranslate">日本語</option>
+    <option value="../../pt/delta-live-tables/api-guide.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Delta Live Tables API guide</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="delta-live-tables-api-guide">
+<span id="dlt-api-guide"></span><h1>Delta Live Tables API guide<a class="headerlink" href="#delta-live-tables-api-guide" title="Permalink to this headline"> </a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This article’s content has been retired and might not be updated. See <a class="reference external" href="https://docs.databricks.com/api/workspace/pipelines">Delta Live Tables</a> in the Databricks REST API Reference.</p>
+</div>
+<p>The Delta Live Tables API allows you to create, edit, delete, start, and view details about pipelines.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>To access Databricks REST APIs, you must <a class="reference internal" href="../dev-tools/auth/index.html"><span class="doc">authenticate</span></a>.</p>
+</div>
+<div class="section" id="create-a-pipeline">
+<span id="dlt-create-pipeline"></span><h2>Create a pipeline<a class="headerlink" href="#create-a-pipeline" title="Permalink to this headline"> </a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 61%" />
+<col style="width: 39%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Endpoint</p></th>
+<th class="head"><p>HTTP Method</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">2.0/pipelines</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">POST</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Creates a new Delta Live Tables pipeline.</p>
+<div class="section" id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline"> </a></h3>
+<p>This example creates a new triggered pipeline.</p>
+<div class="section" id="request">
+<h4>Request<a class="headerlink" href="#request" title="Permalink to this headline"> </a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--netrc<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+https://&lt;databricks-instance&gt;/api/2.0/pipelines<span class="w"> </span><span class="se">\</span>
+--data<span class="w"> </span>@pipeline-settings.json
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pipeline-settings.json</span></code>:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Wikipedia pipeline (SQL)&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;storage&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/username/data&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;clusters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;autoscale&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;min_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ENHANCED&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;libraries&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;notebook&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/username/DLT Notebooks/Delta Live Tables quickstart (SQL)&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;continuous&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Replace:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;databricks-instance&gt;</span></code> with the Databricks <a class="reference internal" href="../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace instance name</span></a>, for example <code class="docutils literal notranslate"><span class="pre">dbc-a1b2345c-d6e7.cloud.databricks.com</span></code>.</p></li>
+</ul>
+<p>This example uses a <a class="reference external" href="https://everything.curl.dev/usingcurl/netrc">.netrc</a> file.</p>
+</div>
+<div class="section" id="response">
+<h4>Response<a class="headerlink" href="#response" title="Permalink to this headline"> </a></h4>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;pipeline_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="request-structure">
+<h3>Request structure<a class="headerlink" href="#request-structure" title="Permalink to this headline"> </a></h3>
+<p>See <a class="reference internal" href="#pipeline-spec"><span class="std std-ref">PipelineSettings</span></a>.</p>
+</div>
+<div class="section" id="response-structure">
+<h3>Response structure<a class="headerlink" href="#response-structure" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 15%" />
+<col style="width: 68%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>pipeline_id</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The unique identifier for the newly created pipeline.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="edit-a-pipeline">
+<span id="dlt-edit-pipeline"></span><h2>Edit a pipeline<a class="headerlink" href="#edit-a-pipeline" title="Permalink to this headline"> </a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 69%" />
+<col style="width: 31%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Endpoint</p></th>
+<th class="head"><p>HTTP Method</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">2.0/pipelines/{pipeline_id}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PUT</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Updates the settings for an existing pipeline.</p>
+<div class="section" id="example">
+<span id="example-1"></span><h3>Example<a class="headerlink" href="#example" title="Permalink to this headline"> </a></h3>
+<p>This example adds a <code class="docutils literal notranslate"><span class="pre">target</span></code> parameter to the pipeline with ID <code class="docutils literal notranslate"><span class="pre">a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5</span></code>:</p>
+<div class="section" id="request">
+<span id="request-1"></span><h4>Request<a class="headerlink" href="#request" title="Permalink to this headline"> </a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--netrc<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
+https://&lt;databricks-instance&gt;/api/2.0/pipelines/a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5<span class="w"> </span><span class="se">\</span>
+--data<span class="w"> </span>@pipeline-settings.json
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pipeline-settings.json</span></code></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Wikipedia pipeline (SQL)&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;storage&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/username/data&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;clusters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;autoscale&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;min_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ENHANCED&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;libraries&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;notebook&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/username/DLT Notebooks/Delta Live Tables quickstart (SQL)&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wikipedia_quickstart_data&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;continuous&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Replace:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;databricks-instance&gt;</span></code> with the Databricks <a class="reference internal" href="../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace instance name</span></a>, for example <code class="docutils literal notranslate"><span class="pre">dbc-a1b2345c-d6e7.cloud.databricks.com</span></code>.</p></li>
+</ul>
+<p>This example uses a <a class="reference external" href="https://everything.curl.dev/usingcurl/netrc">.netrc</a> file.</p>
+</div>
+</div>
+<div class="section" id="request-structure">
+<span id="request-structure-1"></span><h3>Request structure<a class="headerlink" href="#request-structure" title="Permalink to this headline"> </a></h3>
+<p>See <a class="reference internal" href="#pipeline-spec"><span class="std std-ref">PipelineSettings</span></a>.</p>
+</div>
+</div>
+<div class="section" id="delete-a-pipeline">
+<h2>Delete a pipeline<a class="headerlink" href="#delete-a-pipeline" title="Permalink to this headline"> </a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 73%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Endpoint</p></th>
+<th class="head"><p>HTTP Method</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">2.0/pipelines/{pipeline_id}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DELETE</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Deletes a pipeline from the Delta Live Tables system.</p>
+<div class="section" id="example">
+<span id="example-2"></span><h3>Example<a class="headerlink" href="#example" title="Permalink to this headline"> </a></h3>
+<p>This example deletes the pipeline with ID <code class="docutils literal notranslate"><span class="pre">a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5</span></code>:</p>
+<div class="section" id="request">
+<span id="request-2"></span><h4>Request<a class="headerlink" href="#request" title="Permalink to this headline"> </a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--netrc<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
+https://&lt;databricks-instance&gt;/api/2.0/pipelines/a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5
+</pre></div>
+</div>
+<p>Replace:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;databricks-instance&gt;</span></code> with the Databricks <a class="reference internal" href="../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace instance name</span></a>, for example <code class="docutils literal notranslate"><span class="pre">dbc-a1b2345c-d6e7.cloud.databricks.com</span></code>.</p></li>
+</ul>
+<p>This example uses a <a class="reference external" href="https://everything.curl.dev/usingcurl/netrc">.netrc</a> file.</p>
+</div>
+</div>
+</div>
+<div class="section" id="start-a-pipeline-update">
+<span id="start-update"></span><h2>Start a pipeline update<a class="headerlink" href="#start-a-pipeline-update" title="Permalink to this headline"> </a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 73%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Endpoint</p></th>
+<th class="head"><p>HTTP Method</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">2.0/pipelines/{pipeline_id}/updates</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">POST</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Starts an update for a pipeline. You can start an update for the entire pipeline graph, or a selective update of specific tables.</p>
+<div class="section" id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"> </a></h3>
+<div class="section" id="start-a-full-refresh">
+<h4>Start a full refresh<a class="headerlink" href="#start-a-full-refresh" title="Permalink to this headline"> </a></h4>
+<p>This example starts an update with full refresh for the pipeline with ID <code class="docutils literal notranslate"><span class="pre">a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5</span></code>:</p>
+<div class="section" id="request">
+<span id="request-3"></span><h5>Request<a class="headerlink" href="#request" title="Permalink to this headline"> </a></h5>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--netrc<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+https://&lt;databricks-instance&gt;/api/2.0/pipelines/a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5/updates<span class="w"> </span><span class="se">\</span>
+--data<span class="w"> </span><span class="s1">&#39;{ &quot;full_refresh&quot;: &quot;true&quot; }&#39;</span>
+</pre></div>
+</div>
+<p>Replace:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;databricks-instance&gt;</span></code> with the Databricks <a class="reference internal" href="../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace instance name</span></a>, for example <code class="docutils literal notranslate"><span class="pre">dbc-a1b2345c-d6e7.cloud.databricks.com</span></code>.</p></li>
+</ul>
+<p>This example uses a <a class="reference external" href="https://everything.curl.dev/usingcurl/netrc">.netrc</a> file.</p>
+</div>
+<div class="section" id="response">
+<span id="response-1"></span><h5>Response<a class="headerlink" href="#response" title="Permalink to this headline"> </a></h5>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;update_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a1b23c4d-5e6f-78gh-91i2-3j4k5lm67no8&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a1b23c4d-5e6f-78gh-91i2-3j4k5lm67no8&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="start-an-update-of-selected-tables">
+<h4>Start an update of selected tables<a class="headerlink" href="#start-an-update-of-selected-tables" title="Permalink to this headline"> </a></h4>
+<p>This example starts an update that refreshes the <code class="docutils literal notranslate"><span class="pre">sales_orders_cleaned</span></code> and <code class="docutils literal notranslate"><span class="pre">sales_order_in_chicago</span></code> tables in the pipeline with ID <code class="docutils literal notranslate"><span class="pre">a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5</span></code>:</p>
+<div class="section" id="request">
+<span id="request-4"></span><h5>Request<a class="headerlink" href="#request" title="Permalink to this headline"> </a></h5>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--netrc<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+https://&lt;databricks-instance&gt;/api/2.0/pipelines/a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5/updates<span class="w"> </span><span class="se">\</span>
+--data<span class="w"> </span><span class="s1">&#39;{ &quot;refresh_selection&quot;: [&quot;sales_orders_cleaned&quot;, &quot;sales_order_in_chicago&quot;] }&#39;</span>
+</pre></div>
+</div>
+<p>Replace:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;databricks-instance&gt;</span></code> with the Databricks <a class="reference internal" href="../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace instance name</span></a>, for example <code class="docutils literal notranslate"><span class="pre">dbc-a1b2345c-d6e7.cloud.databricks.com</span></code>.</p></li>
+</ul>
+<p>This example uses a <a class="reference external" href="https://everything.curl.dev/usingcurl/netrc">.netrc</a> file.</p>
+</div>
+<div class="section" id="response">
+<span id="response-2"></span><h5>Response<a class="headerlink" href="#response" title="Permalink to this headline"> </a></h5>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;update_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a1b23c4d-5e6f-78gh-91i2-3j4k5lm67no8&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a1b23c4d-5e6f-78gh-91i2-3j4k5lm67no8&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="start-a-full-update-of-selected-tables">
+<h4>Start a full update of selected tables<a class="headerlink" href="#start-a-full-update-of-selected-tables" title="Permalink to this headline"> </a></h4>
+<p>This example starts an update of the <code class="docutils literal notranslate"><span class="pre">sales_orders_cleaned</span></code> and <code class="docutils literal notranslate"><span class="pre">sales_order_in_chicago</span></code> tables, and an update with full refresh of the <code class="docutils literal notranslate"><span class="pre">customers</span></code> and <code class="docutils literal notranslate"><span class="pre">sales_orders_raw</span></code> tables in the pipeline with ID <code class="docutils literal notranslate"><span class="pre">a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5</span></code>.</p>
+<div class="section" id="request">
+<span id="request-5"></span><h5>Request<a class="headerlink" href="#request" title="Permalink to this headline"> </a></h5>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--netrc<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+https://&lt;databricks-instance&gt;/api/2.0/pipelines/a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5/updates<span class="w"> </span><span class="se">\</span>
+--data<span class="w"> </span><span class="s1">&#39;{ &quot;refresh_selection&quot;: [&quot;sales_orders_cleaned&quot;, &quot;sales_order_in_chicago&quot;], &quot;full_refresh_selection&quot;: [&quot;customers&quot;, &quot;sales_orders_raw&quot;] }&#39;</span>
+</pre></div>
+</div>
+<p>Replace:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;databricks-instance&gt;</span></code> with the Databricks <a class="reference internal" href="../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace instance name</span></a>, for example <code class="docutils literal notranslate"><span class="pre">dbc-a1b2345c-d6e7.cloud.databricks.com</span></code>.</p></li>
+</ul>
+<p>This example uses a <a class="reference external" href="https://everything.curl.dev/usingcurl/netrc">.netrc</a> file.</p>
+</div>
+<div class="section" id="response">
+<span id="response-3"></span><h5>Response<a class="headerlink" href="#response" title="Permalink to this headline"> </a></h5>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;update_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a1b23c4d-5e6f-78gh-91i2-3j4k5lm67no8&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a1b23c4d-5e6f-78gh-91i2-3j4k5lm67no8&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="request-structure">
+<span id="request-structure-2"></span><h3>Request structure<a class="headerlink" href="#request-structure" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 23%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">full_refresh</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BOOLEAN</span></code></p></td>
+<td><p>Whether to reprocess all data. If <code class="docutils literal notranslate"><span class="pre">true</span></code>,
+the Delta Live Tables system resets all tables that
+are resettable before running the pipeline.</p>
+<p>This field is optional.</p>
+<p>The default value is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+<p>An error is returned if <code class="docutils literal notranslate"><span class="pre">full_refesh</span></code> is
+true and either <code class="docutils literal notranslate"><span class="pre">refresh_selection</span></code>
+or <code class="docutils literal notranslate"><span class="pre">full_refresh_selection</span></code> is set.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">refresh_selection</span></code></p></td>
+<td><p>An array of <code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>A list of tables to update. Use
+<code class="docutils literal notranslate"><span class="pre">refresh_selection</span></code> to start a refresh of
+a selected set of tables in the pipeline
+graph.</p>
+<p>This field is optional. If both
+<code class="docutils literal notranslate"><span class="pre">refresh_selection</span></code> and
+<code class="docutils literal notranslate"><span class="pre">full_refresh_selection</span></code> are empty, the
+entire pipeline graph is refreshed.</p>
+<p>An error is returned if:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">full_refesh</span></code> is true and
+<code class="docutils literal notranslate"><span class="pre">refresh_selection</span></code> is set.</p></li>
+<li><p>One or more of the specified tables does
+not exist in the pipeline graph.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">full_refresh_selection</span></code></p></td>
+<td><p>An array of <code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>A list of tables to update with full
+refresh. Use <code class="docutils literal notranslate"><span class="pre">full_refresh_selection</span></code> to
+start an update of a selected set of tables.
+The states of the specified tables are reset
+before the Delta Live Tables system starts the update.</p>
+<p>This field is optional. If both
+<code class="docutils literal notranslate"><span class="pre">refresh_selection</span></code> and
+<code class="docutils literal notranslate"><span class="pre">full_refresh_selection</span></code> are empty, the
+entire pipeline graph is refreshed.</p>
+<p>An error is returned if:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">full_refesh</span></code> is true and
+<code class="docutils literal notranslate"><span class="pre">refresh_selection</span></code> is set.</p></li>
+<li><p>One or more of the specified tables does
+not exist in the pipeline graph.</p></li>
+<li><p>One or more of the specified tables is not
+resettable.</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="response-structure">
+<span id="response-structure-1"></span><h3>Response structure<a class="headerlink" href="#response-structure" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 14%" />
+<col style="width: 70%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">update_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The unique identifier of the newly created update.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">request_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The unique identifier of the request that started the update.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="get-the-status-of-a-pipeline-update-request">
+<h2>Get the status of a pipeline update request<a class="headerlink" href="#get-the-status-of-a-pipeline-update-request" title="Permalink to this headline"> </a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 78%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Endpoint</p></th>
+<th class="head"><p>HTTP Method</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">2.0/pipelines/{pipeline_id}/requests/{request_id}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Gets the status and information for the pipeline update associated with <code class="docutils literal notranslate"><span class="pre">request_id</span></code>, where <code class="docutils literal notranslate"><span class="pre">request_id</span></code> is a unique identifier for the request initiating the pipeline update. If the update is retried or restarted, then the new update inherits the request_id.</p>
+<div class="section" id="example">
+<span id="example-3"></span><h3>Example<a class="headerlink" href="#example" title="Permalink to this headline"> </a></h3>
+<p>For the pipeline with ID <code class="docutils literal notranslate"><span class="pre">a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5</span></code>, this example returns status and information for the update associated with request ID <code class="docutils literal notranslate"><span class="pre">a83d9f7c-d798-4fd5-aa39-301b6e6f4429</span></code>:</p>
+<div class="section" id="request">
+<span id="request-6"></span><h4>Request<a class="headerlink" href="#request" title="Permalink to this headline"> </a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--netrc<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+https://&lt;databricks-instance&gt;/api/2.0/pipelines/a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5/requests/a83d9f7c-d798-4fd5-aa39-301b6e6f4429
+</pre></div>
+</div>
+<p>Replace:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;databricks-instance&gt;</span></code> with the Databricks <a class="reference internal" href="../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace instance name</span></a>, for example <code class="docutils literal notranslate"><span class="pre">dbc-a1b2345c-d6e7.cloud.databricks.com</span></code>.</p></li>
+</ul>
+<p>This example uses a <a class="reference external" href="https://everything.curl.dev/usingcurl/netrc">.netrc</a> file.</p>
+</div>
+<div class="section" id="response">
+<span id="response-4"></span><h4>Response<a class="headerlink" href="#response" title="Permalink to this headline"> </a></h4>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TERMINATED&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;latest_update&quot;</span><span class="p">:{</span>
+<span class="w">     </span><span class="nt">&quot;pipeline_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="nt">&quot;update_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;90da8183-89de-4715-b5a9-c243e67f0093&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="nt">&quot;config&quot;</span><span class="p">:{</span>
+<span class="w">       </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;aae89b88-e97e-40c4-8e1a-1b7ac76657e8&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Retail sales (SQL)&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="nt">&quot;storage&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/username/data&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="nt">&quot;configuration&quot;</span><span class="p">:{</span>
+<span class="w">         </span><span class="nt">&quot;pipelines.numStreamRetryAttempts&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5&quot;</span>
+<span class="w">       </span><span class="p">},</span>
+<span class="w">       </span><span class="nt">&quot;clusters&quot;</span><span class="p">:[</span>
+<span class="w">         </span><span class="p">{</span>
+<span class="w">           </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+<span class="w">           </span><span class="nt">&quot;autoscale&quot;</span><span class="p">:{</span>
+<span class="w">             </span><span class="nt">&quot;min_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">             </span><span class="nt">&quot;max_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">             </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ENHANCED&quot;</span>
+<span class="w">           </span><span class="p">}</span>
+<span class="w">         </span><span class="p">}</span>
+<span class="w">       </span><span class="p">],</span>
+<span class="w">       </span><span class="nt">&quot;libraries&quot;</span><span class="p">:[</span>
+<span class="w">         </span><span class="p">{</span>
+<span class="w">           </span><span class="nt">&quot;notebook&quot;</span><span class="p">:{</span>
+<span class="w">             </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/username/DLT Notebooks/Delta Live Tables quickstart (SQL)&quot;</span>
+<span class="w">           </span><span class="p">}</span>
+<span class="w">         </span><span class="p">}</span>
+<span class="w">       </span><span class="p">],</span>
+<span class="w">       </span><span class="nt">&quot;continuous&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">       </span><span class="nt">&quot;development&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">       </span><span class="nt">&quot;photon&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">       </span><span class="nt">&quot;edition&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;advanced&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="nt">&quot;channel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CURRENT&quot;</span>
+<span class="w">     </span><span class="p">},</span>
+<span class="w">     </span><span class="nt">&quot;cause&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;API_CALL&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="nt">&quot;cluster_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1234-567891-abcde123&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="nt">&quot;creation_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1664304117145</span><span class="p">,</span>
+<span class="w">     </span><span class="nt">&quot;full_refresh&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">     </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a83d9f7c-d798-4fd5-aa39-301b6e6f4429&quot;</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="response-structure">
+<span id="response-structure-2"></span><h3>Response structure<a class="headerlink" href="#response-structure" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 26%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">status</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The status of the pipeline update request. One of</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ACTIVE</span></code>: An update for this request is actively running or
+may be retried in a new update.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TERMINATED</span></code>: The request is terminated and will not be
+retried or restarted.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pipeline_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The unique identifier of the pipeline.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">update_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The unique identifier of the update.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">config</span></code></p></td>
+<td><p><a class="reference internal" href="#pipeline-spec"><span class="std std-ref">PipelineSettings</span></a></p></td>
+<td><p>The pipeline settings.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cause</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The trigger for the update. One of <code class="docutils literal notranslate"><span class="pre">API_CALL</span></code>,
+<code class="docutils literal notranslate"><span class="pre">RETRY_ON_FAILURE</span></code>, <code class="docutils literal notranslate"><span class="pre">SERVICE_UPGRADE</span></code>, <code class="docutils literal notranslate"><span class="pre">SCHEMA_CHANGE</span></code>,
+<code class="docutils literal notranslate"><span class="pre">JOB_TASK</span></code>, or <code class="docutils literal notranslate"><span class="pre">USER_ACTION</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">state</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The state of the update. One of <code class="docutils literal notranslate"><span class="pre">QUEUED</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATED</span></code>
+<code class="docutils literal notranslate"><span class="pre">WAITING_FOR_RESOURCES</span></code>, <code class="docutils literal notranslate"><span class="pre">INITIALIZING</span></code>, <code class="docutils literal notranslate"><span class="pre">RESETTING</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SETTING_UP_TABLES</span></code>, <code class="docutils literal notranslate"><span class="pre">RUNNING</span></code>, <code class="docutils literal notranslate"><span class="pre">STOPPING</span></code>, <code class="docutils literal notranslate"><span class="pre">COMPLETED</span></code>,
+<code class="docutils literal notranslate"><span class="pre">FAILED</span></code>, or <code class="docutils literal notranslate"><span class="pre">CANCELED</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cluster_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The identifier of the cluster running the update.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">creation_time</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">INT64</span></code></p></td>
+<td><p>The timestamp when the update was created.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">full_refresh</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BOOLEAN</span></code></p></td>
+<td><p>Whether this update resets all tables before running</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">refresh_selection</span></code></p></td>
+<td><p>An array of <code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>A list of tables to update without full refresh.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">full_refresh_selection</span></code></p></td>
+<td><p>An array of <code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>A list of tables to update with full refresh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">request_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The unique identifier of the request that started the update.
+This is the value returned by the <a class="reference internal" href="#start-update"><span class="std std-ref">update</span></a>
+request.
+If the update is retried or restarted, then the new update
+inherits the request_id. However, the <code class="docutils literal notranslate"><span class="pre">update_id</span></code> will be
+different.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="stop-any-active-pipeline-update">
+<h2>Stop any active pipeline update<a class="headerlink" href="#stop-any-active-pipeline-update" title="Permalink to this headline"> </a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 73%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Endpoint</p></th>
+<th class="head"><p>HTTP Method</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">2.0/pipelines/{pipeline_id}/stop</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">POST</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Stops any active pipeline update. If no update is running, this request is a no-op.</p>
+<p>For a continuous pipeline, the pipeline execution is paused. Tables currently processing finish refreshing, but downstream tables are not refreshed. On the next pipeline update, Delta Live Tables performs a selected refresh of tables that did not complete processing, and resumes processing of the remaining pipeline DAG.</p>
+<p>For a triggered pipeline, the pipeline execution is stopped. Tables currently processing finish refreshing, but downstream tables are not refreshed. On the next pipeline update, Delta Live Tables refreshes all tables.</p>
+<div class="section" id="example">
+<span id="example-4"></span><h3>Example<a class="headerlink" href="#example" title="Permalink to this headline"> </a></h3>
+<p>This example stops an update for the pipeline with ID <code class="docutils literal notranslate"><span class="pre">a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5</span></code>:</p>
+<div class="section" id="request">
+<span id="request-7"></span><h4>Request<a class="headerlink" href="#request" title="Permalink to this headline"> </a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--netrc<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+https://&lt;databricks-instance&gt;/api/2.0/pipelines/a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5/stop
+</pre></div>
+</div>
+<p>Replace:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;databricks-instance&gt;</span></code> with the Databricks <a class="reference internal" href="../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace instance name</span></a>, for example <code class="docutils literal notranslate"><span class="pre">dbc-a1b2345c-d6e7.cloud.databricks.com</span></code>.</p></li>
+</ul>
+<p>This example uses a <a class="reference external" href="https://everything.curl.dev/usingcurl/netrc">.netrc</a> file.</p>
+<p></p>
+</div>
+</div>
+</div>
+<div class="section" id="list-pipeline-events">
+<span id="list-events"></span><h2>List pipeline events<a class="headerlink" href="#list-pipeline-events" title="Permalink to this headline"> </a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 73%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Endpoint</p></th>
+<th class="head"><p>HTTP Method</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">2.0/pipelines/{pipeline_id}/events</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Retrieves events for a pipeline.</p>
+<div class="section" id="example">
+<span id="example-5"></span><h3>Example<a class="headerlink" href="#example" title="Permalink to this headline"> </a></h3>
+<p>This example retrieves a maximum of 5 events for the pipeline with ID <code class="docutils literal notranslate"><span class="pre">a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5</span></code>.</p>
+<div class="section" id="request">
+<span id="request-8"></span><h4>Request<a class="headerlink" href="#request" title="Permalink to this headline"> </a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--netrc<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+https://&lt;databricks-instance&gt;/api/2.0/pipelines/a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5/events?max_results<span class="o">=</span><span class="m">5</span>
+</pre></div>
+</div>
+<p>Replace:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;databricks-instance&gt;</span></code> with the Databricks <a class="reference internal" href="../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace instance name</span></a>, for example <code class="docutils literal notranslate"><span class="pre">dbc-a1b2345c-d6e7.cloud.databricks.com</span></code>.</p></li>
+</ul>
+<p>This example uses a <a class="reference external" href="https://everything.curl.dev/usingcurl/netrc">.netrc</a> file.</p>
+</div>
+</div>
+<div class="section" id="request-structure">
+<span id="request-structure-3"></span><h3>Request structure<a class="headerlink" href="#request-structure" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 24%" />
+<col style="width: 53%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">page_token</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>Page token returned by previous call. This field is mutually
+exclusive with all fields in this request except max_results.
+An error is returned if any fields other than max_results are
+set when this field is set.</p>
+<p>This field is optional.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">max_results</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">INT32</span></code></p></td>
+<td><p>The maximum number of entries to return in a single page. The
+system may return fewer than <code class="docutils literal notranslate"><span class="pre">max_results</span></code> events in a
+response, even if there are more events available.</p>
+<p>This field is optional.</p>
+<p>The default value is 25.</p>
+<p>The maximum value is 100. An error is returned if the value of
+<code class="docutils literal notranslate"><span class="pre">max_results</span></code> is greater than 100.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">order_by</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>A string indicating a sort order by timestamp for the results,
+for example, <code class="docutils literal notranslate"><span class="pre">[&quot;timestamp</span> <span class="pre">asc&quot;]</span></code>.</p>
+<p>The sort order can be ascending or descending. By default,
+events are returned in descending order by timestamp.</p>
+<p>This field is optional.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">filter</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>Criteria to select a subset of results, expressed using a
+SQL-like syntax. The supported filters are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">level='INFO'</span></code> (or <code class="docutils literal notranslate"><span class="pre">WARN</span></code> or <code class="docutils literal notranslate"><span class="pre">ERROR</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">level</span> <span class="pre">in</span> <span class="pre">('INFO',</span> <span class="pre">'WARN')</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">id='[event-id]'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timestamp</span> <span class="pre">&gt;</span> <span class="pre">'TIMESTAMP'</span></code> (or <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>,<code class="docutils literal notranslate"><span class="pre">&lt;</span></code>,<code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>,<code class="docutils literal notranslate"><span class="pre">=</span></code>)</p></li>
+</ul>
+<p>Composite expressions are supported, for example:
+<code class="docutils literal notranslate"><span class="pre">level</span> <span class="pre">in</span> <span class="pre">('ERROR',</span> <span class="pre">'WARN')</span> <span class="pre">AND</span> <span class="pre">timestamp&gt;</span> <span class="pre">'2021-07-22T06:37:33.083Z'</span></code></p>
+<p>This field is optional.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="response-structure">
+<span id="response-structure-3"></span><h3>Response structure<a class="headerlink" href="#response-structure" title="Permalink to this headline"> </a></h3>
+<p></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 26%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">events</span></code></p></td>
+<td><p>An array of pipeline events.</p></td>
+<td><p>The list of events matching the request criteria.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">next_page_token</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>If present, a token to fetch the next page of events.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">prev_page_token</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>If present, a token to fetch the previous page of events.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="get-pipeline-details">
+<h2>Get pipeline details<a class="headerlink" href="#get-pipeline-details" title="Permalink to this headline"> </a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 73%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Endpoint</p></th>
+<th class="head"><p>HTTP Method</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">2.0/pipelines/{pipeline_id}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Gets details about a pipeline, including the pipeline settings and recent updates.</p>
+<div class="section" id="example">
+<span id="example-6"></span><h3>Example<a class="headerlink" href="#example" title="Permalink to this headline"> </a></h3>
+<p>This example gets details for the pipeline with ID <code class="docutils literal notranslate"><span class="pre">a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5</span></code>:</p>
+<div class="section" id="request">
+<span id="request-9"></span><h4>Request<a class="headerlink" href="#request" title="Permalink to this headline"> </a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--netrc<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+https://&lt;databricks-instance&gt;/api/2.0/pipelines/a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5
+</pre></div>
+</div>
+<p>Replace:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;databricks-instance&gt;</span></code> with the Databricks <a class="reference internal" href="../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace instance name</span></a>, for example <code class="docutils literal notranslate"><span class="pre">dbc-a1b2345c-d6e7.cloud.databricks.com</span></code>.</p></li>
+</ul>
+<p>This example uses a <a class="reference external" href="https://everything.curl.dev/usingcurl/netrc">.netrc</a> file.</p>
+</div>
+<div class="section" id="response">
+<span id="response-5"></span><h4>Response<a class="headerlink" href="#response" title="Permalink to this headline"> </a></h4>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;pipeline_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;spec&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Wikipedia pipeline (SQL)&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;storage&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/username/data&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;clusters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;autoscale&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;min_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;max_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ENHANCED&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;libraries&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;notebook&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/username/DLT Notebooks/Delta Live Tables quickstart (SQL)&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wikipedia_quickstart_data&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;continuous&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IDLE&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;cluster_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1234-567891-abcde123&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Wikipedia pipeline (SQL)&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;creator_user_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;username&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;latest_updates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;update_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;8a0b6d02-fbd0-11eb-9a03-0242ac130003&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;creation_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2021-08-13T00:37:30.279Z&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;update_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a72c08ba-fbd0-11eb-9a03-0242ac130003&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CANCELED&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;creation_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2021-08-13T00:35:51.902Z&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;update_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ac37d924-fbd0-11eb-9a03-0242ac130003&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FAILED&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;creation_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2021-08-13T00:33:38.565Z&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;run_as_user_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;username&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="response-structure">
+<span id="response-structure-4"></span><h3>Response structure<a class="headerlink" href="#response-structure" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 26%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pipeline_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The unique identifier of the pipeline.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">spec</span></code></p></td>
+<td><p><a class="reference internal" href="#pipeline-spec"><span class="std std-ref">PipelineSettings</span></a></p></td>
+<td><p>The pipeline settings.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">state</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The state of the pipeline. One of <code class="docutils literal notranslate"><span class="pre">IDLE</span></code> or <code class="docutils literal notranslate"><span class="pre">RUNNING</span></code>.</p>
+<p>If state = <code class="docutils literal notranslate"><span class="pre">RUNNING</span></code>, then there is at least one active
+update.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cluster_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The identifier of the cluster running the pipeline.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The user-friendly name for this pipeline.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">creator_user_name</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The username of the pipeline creator.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">latest_updates</span></code></p></td>
+<td><p>An array of
+<a class="reference internal" href="#update-state-info"><span class="std std-ref">UpdateStateInfo</span></a></p></td>
+<td><p>Status of the most recent updates for the pipeline, ordered
+with the newest update first.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">run_as_user_name</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The username that the pipeline runs as.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="get-update-details">
+<span id="update-details"></span><h2>Get update details<a class="headerlink" href="#get-update-details" title="Permalink to this headline"> </a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 77%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Endpoint</p></th>
+<th class="head"><p>HTTP Method</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">2.0/pipelines/{pipeline_id}/updates/{update_id}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Gets details for a pipeline update.</p>
+<div class="section" id="example">
+<span id="example-7"></span><h3>Example<a class="headerlink" href="#example" title="Permalink to this headline"> </a></h3>
+<p>This example gets details for update <code class="docutils literal notranslate"><span class="pre">9a84f906-fc51-11eb-9a03-0242ac130003</span></code> for the pipeline with ID <code class="docutils literal notranslate"><span class="pre">a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5</span></code>:</p>
+<div class="section" id="request">
+<span id="request-10"></span><h4>Request<a class="headerlink" href="#request" title="Permalink to this headline"> </a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--netrc<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+https://&lt;databricks-instance&gt;/api/2.0/pipelines/a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5/updates/9a84f906-fc51-11eb-9a03-0242ac130003
+</pre></div>
+</div>
+<p>Replace:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;databricks-instance&gt;</span></code> with the Databricks <a class="reference internal" href="../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace instance name</span></a>, for example <code class="docutils literal notranslate"><span class="pre">dbc-a1b2345c-d6e7.cloud.databricks.com</span></code>.</p></li>
+</ul>
+<p>This example uses a <a class="reference external" href="https://everything.curl.dev/usingcurl/netrc">.netrc</a> file.</p>
+</div>
+<div class="section" id="response">
+<span id="response-6"></span><h4>Response<a class="headerlink" href="#response" title="Permalink to this headline"> </a></h4>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;update&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;pipeline_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;update_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;9a84f906-fc51-11eb-9a03-0242ac130003&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a12cd3e4-0ab1-1abc-1a2b-1a2bcd3e4fg5&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Wikipedia pipeline (SQL)&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;storage&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/username/data&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;configuration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;pipelines.numStreamRetryAttempts&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;clusters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;autoscale&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;min_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;max_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ENHANCED&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;libraries&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;notebook&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Users/username/DLT Notebooks/Delta Live Tables quickstart (SQL)&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wikipedia_quickstart_data&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;continuous&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;development&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;cause&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;API_CALL&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;creation_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1628815050279</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;full_refresh&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a83d9f7c-d798-4fd5-aa39-301b6e6f4429&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="response-structure">
+<span id="response-structure-5"></span><h3>Response structure<a class="headerlink" href="#response-structure" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 26%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pipeline_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The unique identifier of the pipeline.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">update_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The unique identifier of this update.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">config</span></code></p></td>
+<td><p><a class="reference internal" href="#pipeline-spec"><span class="std std-ref">PipelineSettings</span></a></p></td>
+<td><p>The pipeline settings.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cause</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The trigger for the update. One of <code class="docutils literal notranslate"><span class="pre">API_CALL</span></code>,
+<code class="docutils literal notranslate"><span class="pre">RETRY_ON_FAILURE</span></code>, <code class="docutils literal notranslate"><span class="pre">SERVICE_UPGRADE</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">state</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The state of the update. One of <code class="docutils literal notranslate"><span class="pre">QUEUED</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATED</span></code>
+<code class="docutils literal notranslate"><span class="pre">WAITING_FOR_RESOURCES</span></code>, <code class="docutils literal notranslate"><span class="pre">INITIALIZING</span></code>, <code class="docutils literal notranslate"><span class="pre">RESETTING</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SETTING_UP_TABLES</span></code>, <code class="docutils literal notranslate"><span class="pre">RUNNING</span></code>, <code class="docutils literal notranslate"><span class="pre">STOPPING</span></code>, <code class="docutils literal notranslate"><span class="pre">COMPLETED</span></code>,
+<code class="docutils literal notranslate"><span class="pre">FAILED</span></code>, or <code class="docutils literal notranslate"><span class="pre">CANCELED</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cluster_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The identifier of the cluster running the pipeline.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">creation_time</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">INT64</span></code></p></td>
+<td><p>The timestamp when the update was created.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">full_refresh</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BOOLEAN</span></code></p></td>
+<td><p>Whether this was a full refresh.
+If true, all pipeline tables were reset before running the
+update.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="list-pipelines">
+<h2>List pipelines<a class="headerlink" href="#list-pipelines" title="Permalink to this headline"> </a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Endpoint</p></th>
+<th class="head"><p>HTTP Method</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">2.0/pipelines/</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Lists pipelines defined in the Delta Live Tables system.</p>
+<div class="section" id="example">
+<span id="example-8"></span><h3>Example<a class="headerlink" href="#example" title="Permalink to this headline"> </a></h3>
+<p>This example retrieves details for pipelines where the name contains <code class="docutils literal notranslate"><span class="pre">quickstart</span></code>:</p>
+<div class="section" id="request">
+<span id="request-11"></span><h4>Request<a class="headerlink" href="#request" title="Permalink to this headline"> </a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--netrc<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+https://&lt;databricks-instance&gt;/api/2.0/pipelines?filter<span class="o">=</span>name%20LIKE%20%27%25quickstart%25%27
+</pre></div>
+</div>
+<p>Replace:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;databricks-instance&gt;</span></code> with the Databricks <a class="reference internal" href="../workspace/workspace-details.html#workspace-url"><span class="std std-ref">workspace instance name</span></a>, for example <code class="docutils literal notranslate"><span class="pre">dbc-a1b2345c-d6e7.cloud.databricks.com</span></code>.</p></li>
+</ul>
+<p>This example uses a <a class="reference external" href="https://everything.curl.dev/usingcurl/netrc">.netrc</a> file.</p>
+</div>
+<div class="section" id="response">
+<span id="response-7"></span><h4>Response<a class="headerlink" href="#response" title="Permalink to this headline"> </a></h4>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;statuses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;pipeline_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;e0f01758-fc61-11eb-9a03-0242ac130003&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IDLE&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DLT quickstart (Python)&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;latest_updates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;update_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ee9ae73e-fc61-11eb-9a03-0242ac130003&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;creation_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2021-08-13T00:34:21.871Z&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;creator_user_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;username&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;pipeline_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;f4c82f5e-fc61-11eb-9a03-0242ac130003&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IDLE&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;My DLT quickstart example&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;creator_user_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;username&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;next_page_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;eyJ...==&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;prev_page_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;eyJ..x9&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="request-structure">
+<span id="request-structure-4"></span><h3>Request structure<a class="headerlink" href="#request-structure" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 26%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">page_token</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>Page token returned by previous call.</p>
+<p>This field is optional.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">max_results</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">INT32</span></code></p></td>
+<td><p>The maximum number of entries to return in a single page. The
+system may return fewer than <code class="docutils literal notranslate"><span class="pre">max_results</span></code> events in a
+response, even if there are more events available.</p>
+<p>This field is optional.</p>
+<p>The default value is 25.</p>
+<p>The maximum value is 100. An error is returned if the value of
+<code class="docutils literal notranslate"><span class="pre">max_results</span></code> is greater than 100.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">order_by</span></code></p></td>
+<td><p>An array of <code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>A list of strings specifying the order of results, for example,
+<code class="docutils literal notranslate"><span class="pre">[&quot;name</span> <span class="pre">asc&quot;]</span></code>. Supported <code class="docutils literal notranslate"><span class="pre">order_by</span></code> fields are <code class="docutils literal notranslate"><span class="pre">id</span></code> and
+<code class="docutils literal notranslate"><span class="pre">name</span></code>. The default is <code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">asc</span></code>.</p>
+<p>This field is optional.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">filter</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>Select a subset of results based on the specified criteria.</p>
+<p>The supported filters are:</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;notebook='&lt;path&gt;'&quot;</span></code> to select pipelines that reference the
+provided notebook path.</p>
+<p><code class="docutils literal notranslate"><span class="pre">name</span> <span class="pre">LIKE</span> <span class="pre">'[pattern]'</span></code> to select pipelines with a name that
+matches <code class="docutils literal notranslate"><span class="pre">pattern</span></code>. Wildcards are supported, for example:
+<code class="docutils literal notranslate"><span class="pre">name</span> <span class="pre">LIKE</span> <span class="pre">'%shopping%'</span></code></p>
+<p>Composite filters are not supported.</p>
+<p>This field is optional.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="response-structure">
+<span id="response-structure-6"></span><h3>Response structure<a class="headerlink" href="#response-structure" title="Permalink to this headline"> </a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 29%" />
+<col style="width: 48%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">statuses</span></code></p></td>
+<td><p>An array of <a class="reference internal" href="#pipeline-state-info"><span class="std std-ref">PipelineStateInfo</span></a></p></td>
+<td><p>The list of events matching the request criteria.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">next_page_token</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>If present, a token to fetch the next page of events.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">prev_page_token</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>If present, a token to fetch the previous page of events.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="data-structures">
+<h2>Data structures<a class="headerlink" href="#data-structures" title="Permalink to this headline"> </a></h2>
+<div class="contents local topic" id="in-this-section">
+<p class="topic-title first">In this section:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#awsattributes" id="id37">AwsAttributes</a></p></li>
+<li><p><a class="reference internal" href="#awsavailability" id="id38">AwsAvailability</a></p></li>
+<li><p><a class="reference internal" href="#clusterlogconf" id="id39">ClusterLogConf</a></p></li>
+<li><p><a class="reference internal" href="#dbfsstorageinfo" id="id40">DbfsStorageInfo</a></p></li>
+<li><p><a class="reference internal" href="#ebsvolumetype" id="id41">EbsVolumeType</a></p></li>
+<li><p><a class="reference internal" href="#filestorageinfo" id="id42">FileStorageInfo</a></p></li>
+<li><p><a class="reference internal" href="#initscriptinfo" id="id43">InitScriptInfo</a></p></li>
+<li><p><a class="reference internal" href="#keyvalue" id="id44">KeyValue</a></p></li>
+<li><p><a class="reference internal" href="#notebooklibrary" id="id45">NotebookLibrary</a></p></li>
+<li><p><a class="reference internal" href="#pipelinesautoscale" id="id46">PipelinesAutoScale</a></p></li>
+<li><p><a class="reference internal" href="#pipelinelibrary" id="id47">PipelineLibrary</a></p></li>
+<li><p><a class="reference internal" href="#pipelinesnewcluster" id="id48">PipelinesNewCluster</a></p></li>
+<li><p><a class="reference internal" href="#pipelinesettings" id="id49">PipelineSettings</a></p></li>
+<li><p><a class="reference internal" href="#pipelinestateinfo" id="id50">PipelineStateInfo</a></p></li>
+<li><p><a class="reference internal" href="#s3storageinfo" id="id51">S3StorageInfo</a></p></li>
+<li><p><a class="reference internal" href="#updatestateinfo" id="id52">UpdateStateInfo</a></p></li>
+<li><p><a class="reference internal" href="#workspacestorageinfo" id="id53">WorkspaceStorageInfo</a></p></li>
+</ul>
+</div>
+<div class="section" id="awsattributes">
+<span id="clusterawsattributes"></span><h3><a class="toc-backref" href="#id37">AwsAttributes</a><a class="headerlink" href="#awsattributes" title="Permalink to this headline"> </a></h3>
+<p>Attributes set during cluster creation related to Amazon Web Services.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 19%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">first_on_demand</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">INT32</span></code></p></td>
+<td><p>The first first_on_demand nodes of the cluster will be placed on on-demand instances.
+If this value is greater than 0, the cluster driver node will be placed on an
+on-demand instance. If this value is greater than or equal to the current cluster size, all
+nodes will be placed on on-demand instances. If this value is less than the current cluster
+size, first_on_demand nodes will be placed on on-demand instances and the remainder will
+be placed on <code class="docutils literal notranslate"><span class="pre">availability</span></code> instances. This value does not affect
+cluster size and cannot be mutated over the lifetime of a cluster.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">availability</span></code></p></td>
+<td><p><a class="reference internal" href="#clusterawsavailability"><span class="std std-ref">AwsAvailability</span></a></p></td>
+<td><p>Availability type used for all subsequent nodes past the first_on_demand ones.
+<strong>Note:</strong> If first_on_demand is zero, this availability type will be used for the entire cluster.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zone_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>Identifier for the availability zone (AZ) in which the cluster resides. By default, the setting has a
+value of <strong>auto</strong>, otherwise known as Auto-AZ. With Auto-AZ, Databricks selects the AZ based on available IPs in
+the workspace subnets and retries in other availability zones if AWS returns insufficient capacity errors.</p>
+<p>If you want, you can also specify an availability zone to use. This benefits accounts that have reserved
+instances in a specific AZ. Specify the AZ as a string (for example, <code class="docutils literal notranslate"><span class="pre">&quot;us-west-2a&quot;</span></code>). The provided availability
+zone must be in the same region as the Databricks deployment. For example, “us-west-2a”
+is not a valid zone ID if the Databricks deployment resides in the “us-east-1” region.</p>
+<p>The list of available zones as well as the default value can be found by using the
+<a class="reference external" href="https://docs.databricks.com/api/workspace/clusters/listzones">GET /api/2.0/clusters/list-zones</a> call.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">instance_profile_arn</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>Nodes for this cluster will only be placed on AWS instances with this instance profile. If
+omitted, nodes will be placed on instances without an instance profile. The instance
+profile must have previously been added to the Databricks environment by an account
+administrator.</p>
+<p>This feature may only be available to certain customer plans.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">spot_bid_price_percent</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">INT32</span></code></p></td>
+<td><p>The max price for AWS spot instances, as a percentage of the corresponding instance type’s
+on-demand price.
+For example, if this field is set to 50, and the cluster needs a new <code class="docutils literal notranslate"><span class="pre">i3.xlarge</span></code> spot
+instance, then the max price is half of the price of
+on-demand <code class="docutils literal notranslate"><span class="pre">i3.xlarge</span></code> instances. Similarly, if this field is set to 200, the max price is twice
+the price of on-demand <code class="docutils literal notranslate"><span class="pre">i3.xlarge</span></code> instances. If not specified, the default value is 100.
+When spot instances are requested for this cluster, only spot instances whose max price
+percentage matches this field will be considered.
+For safety, we enforce this field to be no more than 10000.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ebs_volume_type</span></code></p></td>
+<td><p><a class="reference internal" href="#clusterebsvolumetype"><span class="std std-ref">EbsVolumeType</span></a></p></td>
+<td><p>The type of EBS volumes that will be launched with this cluster.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ebs_volume_count</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">INT32</span></code></p></td>
+<td><p>The number of volumes launched for each instance. You can choose up to 10 volumes.
+This feature is only enabled for supported node types. Legacy node types cannot specify
+custom EBS volumes.
+For node types with no instance store, at least one EBS volume needs to be specified;
+otherwise, cluster creation will fail.</p>
+<p>These EBS volumes will be mounted at <code class="docutils literal notranslate"><span class="pre">/ebs0</span></code>, <code class="docutils literal notranslate"><span class="pre">/ebs1</span></code>, and etc.
+Instance store volumes will be mounted at <code class="docutils literal notranslate"><span class="pre">/local_disk0</span></code>, <code class="docutils literal notranslate"><span class="pre">/local_disk1</span></code>, and etc.</p>
+<p>If EBS volumes are attached, Databricks will configure Spark to use only the EBS volumes for
+scratch storage because heterogeneously sized scratch devices can lead to inefficient disk
+utilization. If no EBS volumes are attached, Databricks will configure Spark to use instance
+store volumes.</p>
+<p>If EBS volumes are specified, then the Spark configuration <code class="docutils literal notranslate"><span class="pre">spark.local.dir</span></code>
+will be overridden.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ebs_volume_size</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">INT32</span></code></p></td>
+<td><p>The size of each EBS volume (in GiB) launched for each instance. For general purpose
+SSD, this value must be within the range 100 - 4096. For throughput optimized HDD,
+this value must be within the range 500 - 4096.
+Custom EBS volumes cannot be specified for the legacy node types (<em>memory-optimized</em> and
+<em>compute-optimized</em>).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ebs_volume_iops</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">INT32</span></code></p></td>
+<td><p>The number of IOPS per EBS gp3 volume.</p>
+<p>This value must be between 3000 and 16000.</p>
+<p>The value of IOPS and throughput is calculated based on AWS documentation to match the maximum
+performance of a gp2 volume with the same volume size.</p>
+<p>For more information, see the
+<a class="reference external" href="https://github.com/awslabs/aws-support-tools/tree/master/EBS/VolumeLimitCalculator">EBS volume limit calculator</a>.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ebs_volume_throughput</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">INT32</span></code></p></td>
+<td><p>The throughput per EBS gp3 volume, in MiB per second.</p>
+<p>This value must be between 125 and 1000.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>If neither <code class="docutils literal notranslate"><span class="pre">ebs_volume_iops</span></code> nor <code class="docutils literal notranslate"><span class="pre">ebs_volume_throughput</span></code> is specified, the values are inferred from the disk size:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 51%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Disk size</p></th>
+<th class="head"><p>IOPS</p></th>
+<th class="head"><p>Throughput</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Greater than 1000</p></td>
+<td><p>3 times the disk size, up to 16000</p></td>
+<td><p>250</p></td>
+</tr>
+<tr class="row-odd"><td><p>Between 170 and 1000</p></td>
+<td><p>3000</p></td>
+<td><p>250</p></td>
+</tr>
+<tr class="row-even"><td><p>Below 170</p></td>
+<td><p>3000</p></td>
+<td><p>125</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="awsavailability">
+<span id="clusterawsavailability"></span><h3><a class="toc-backref" href="#id38">AwsAvailability</a><a class="headerlink" href="#awsavailability" title="Permalink to this headline"> </a></h3>
+<p>The set of AWS availability types supported when setting up nodes for a cluster.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 81%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SPOT</span></code></p></td>
+<td><p>Use spot instances.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ON_DEMAND</span></code></p></td>
+<td><p>Use on-demand instances.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SPOT_WITH_FALLBACK</span></code></p></td>
+<td><p>Preferably use spot instances, but fall back to on-demand instances if spot instances cannot
+be acquired (for example, if AWS spot prices are too high).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="clusterlogconf">
+<span id="clusterclusterlogconf"></span><h3><a class="toc-backref" href="#id39">ClusterLogConf</a><a class="headerlink" href="#clusterlogconf" title="Permalink to this headline"> </a></h3>
+<p>Path to cluster log.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 41%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dbfs</span></code>
+OR
+<code class="docutils literal notranslate"><span class="pre">s3</span></code></p></td>
+<td><p><a class="reference internal" href="#clusterclusterlogconfdbfsstorageinfo"><span class="std std-ref">DbfsStorageInfo</span></a></p>
+<p><a class="reference internal" href="#clusterclusterinitscriptinfos3storageinfo"><span class="std std-ref">S3StorageInfo</span></a></p>
+</td>
+<td><p>DBFS location of cluster log. Destination must be provided. For example,
+<code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">&quot;dbfs&quot;</span> <span class="pre">:</span> <span class="pre">{</span> <span class="pre">&quot;destination&quot;</span> <span class="pre">:</span> <span class="pre">&quot;dbfs:/home/cluster_log&quot;</span> <span class="pre">}</span> <span class="pre">}</span></code></p>
+<p>S3 location of cluster log.
+<code class="docutils literal notranslate"><span class="pre">destination</span></code> and either <code class="docutils literal notranslate"><span class="pre">region</span></code> or <code class="docutils literal notranslate"><span class="pre">warehouse</span></code> must be provided. For example,
+<code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">&quot;s3&quot;:</span> <span class="pre">{</span> <span class="pre">&quot;destination&quot;</span> <span class="pre">:</span> <span class="pre">&quot;s3://cluster_log_bucket/prefix&quot;,</span> <span class="pre">&quot;region&quot;</span> <span class="pre">:</span> <span class="pre">&quot;us-west-2&quot;</span> <span class="pre">}</span> <span class="pre">}</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="dbfsstorageinfo">
+<span id="clusterclusterlogconfdbfsstorageinfo"></span><h3><a class="toc-backref" href="#id40">DbfsStorageInfo</a><a class="headerlink" href="#dbfsstorageinfo" title="Permalink to this headline"> </a></h3>
+<p>DBFS storage information.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 18%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">destination</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>DBFS destination. Example: <code class="docutils literal notranslate"><span class="pre">dbfs:/my/path</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ebsvolumetype">
+<span id="clusterebsvolumetype"></span><h3><a class="toc-backref" href="#id41">EbsVolumeType</a><a class="headerlink" href="#ebsvolumetype" title="Permalink to this headline"> </a></h3>
+<p>Databricks supports gp2 and gp3 EBS volume types. Follow the instructions at <a class="reference internal" href="../administration-guide/clusters/manage-ssd.html"><span class="doc">Manage SSD storage</span></a> to select gp2 or gp3 for your workspace.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GENERAL_PURPOSE_SSD</span></code></p></td>
+<td><p>Provision extra storage using AWS EBS volumes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">THROUGHPUT_OPTIMIZED_HDD</span></code></p></td>
+<td><p>Provision extra storage using AWS st1 volumes.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="filestorageinfo">
+<span id="dbfsstorageinfo"></span><span id="clusterclusterinitscriptinfofilestorageinfo"></span><h3><a class="toc-backref" href="#id42">FileStorageInfo</a><a class="headerlink" href="#filestorageinfo" title="Permalink to this headline"> </a></h3>
+<p>File storage information.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This location type is only available for clusters set up using <a class="reference internal" href="../compute/custom-containers.html"><span class="doc">Databricks Container Services</span></a>.</p>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 18%" />
+<col style="width: 64%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">destination</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>File destination. Example: <code class="docutils literal notranslate"><span class="pre">file:/my/file.sh</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="initscriptinfo">
+<span id="clusterclusterinitscriptinfo"></span><span id="pipelines-autoscale"></span><h3><a class="toc-backref" href="#id43">InitScriptInfo</a><a class="headerlink" href="#initscriptinfo" title="Permalink to this headline"> </a></h3>
+<p>Path to an init script.</p>
+<p>For instructions on using init scripts with <a class="reference internal" href="../compute/custom-containers.html"><span class="doc">Databricks Container Services</span></a>, see <a class="reference internal" href="../compute/custom-containers.html#containers-init-script"><span class="std std-ref">Use an init script</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The file storage type (field name: <code class="docutils literal notranslate"><span class="pre">file</span></code>) is only available for clusters set up using <a class="reference internal" href="../compute/custom-containers.html"><span class="doc">Databricks Container Services</span></a>. See <a class="reference internal" href="#clusterclusterinitscriptinfofilestorageinfo"><span class="std std-ref">FileStorageInfo</span></a>.</p>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 42%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">workspace</span></code>
+OR
+<code class="docutils literal notranslate"><span class="pre">dbfs</span></code> (deprecated)</p>
+<p>OR
+<code class="docutils literal notranslate"><span class="pre">S3</span></code></p>
+</td>
+<td><p><a class="reference internal" href="#clusterclusterinitscriptinfoworkspacestorageinfo"><span class="std std-ref">WorkspaceStorageInfo</span></a></p>
+<p><a class="reference internal" href="#clusterclusterlogconfdbfsstorageinfo"><span class="std std-ref">DbfsStorageInfo</span></a> (deprecated)</p>
+<p><a class="reference internal" href="#clusterclusterinitscriptinfos3storageinfo"><span class="std std-ref">S3StorageInfo</span></a></p>
+</td>
+<td><p>Workspace location of init script. Destination must be provided. For example,
+<code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">&quot;workspace&quot;</span> <span class="pre">:</span> <span class="pre">{</span> <span class="pre">&quot;destination&quot;</span> <span class="pre">:</span> <span class="pre">&quot;/Users/someone&#64;domain.com/init_script.sh&quot;</span> <span class="pre">}</span> <span class="pre">}</span></code></p>
+<p>(Deprecated) DBFS location of init script. Destination must be provided. For example,
+<code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">&quot;dbfs&quot;</span> <span class="pre">:</span> <span class="pre">{</span> <span class="pre">&quot;destination&quot;</span> <span class="pre">:</span> <span class="pre">&quot;dbfs:/home/init_script&quot;</span> <span class="pre">}</span> <span class="pre">}</span></code></p>
+<p>S3 location of init script.
+Destination and either region or warehouse must be provided. For example,
+<code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">&quot;s3&quot;:</span> <span class="pre">{</span> <span class="pre">&quot;destination&quot;</span> <span class="pre">:</span> <span class="pre">&quot;s3://init_script_bucket/prefix&quot;,</span> <span class="pre">&quot;region&quot;</span> <span class="pre">:</span> <span class="pre">&quot;us-west-2&quot;</span> <span class="pre">}</span> <span class="pre">}</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="keyvalue">
+<span id="pipelines-keyvalue"></span><h3><a class="toc-backref" href="#id44">KeyValue</a><a class="headerlink" href="#keyvalue" title="Permalink to this headline"> </a></h3>
+<p>A key-value pair that specifies configuration parameters.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 21%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">key</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The configuration property name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">value</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The configuration property value.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="notebooklibrary">
+<span id="pipelines-notebook-library"></span><h3><a class="toc-backref" href="#id45">NotebookLibrary</a><a class="headerlink" href="#notebooklibrary" title="Permalink to this headline"> </a></h3>
+<p>A specification for a notebook containing pipeline code.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 22%" />
+<col style="width: 65%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The absolute path to the notebook.</p>
+<p>This field is required.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="pipelinesautoscale">
+<h3><a class="toc-backref" href="#id46">PipelinesAutoScale</a><a class="headerlink" href="#pipelinesautoscale" title="Permalink to this headline"> </a></h3>
+<p>Attributes defining an autoscaling cluster.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 11%" />
+<col style="width: 76%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">min_workers</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">INT32</span></code></p></td>
+<td><p>The minimum number of workers to which the cluster can scale down when underutilized.
+It is also the initial number of workers the cluster will have after creation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">max_workers</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">INT32</span></code></p></td>
+<td><p>The maximum number of workers to which the cluster can scale up when overloaded.
+max_workers must be strictly greater than min_workers.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mode</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The autoscaling mode for the cluster:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ENHANCED</span></code> to use
+<a class="reference internal" href="auto-scaling.html"><span class="doc">enhanced autoscaling</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LEGACY</span></code> to use the
+<a class="reference internal" href="../compute/configure.html#autoscaling"><span class="std std-ref">cluster autoscaling functionality</span></a>.</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="pipelinelibrary">
+<span id="pipeline-library"></span><h3><a class="toc-backref" href="#id47">PipelineLibrary</a><a class="headerlink" href="#pipelinelibrary" title="Permalink to this headline"> </a></h3>
+<p>A specification for pipeline dependencies.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 29%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">notebook</span></code></p></td>
+<td><p><a class="reference internal" href="#pipelines-notebook-library"><span class="std std-ref">NotebookLibrary</span></a></p></td>
+<td><p>The path to a notebook defining Delta Live Tables datasets. The path must be in the
+Databricks workspace, for example:
+<code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">&quot;notebook&quot;</span> <span class="pre">:</span> <span class="pre">{</span> <span class="pre">&quot;path&quot;</span> <span class="pre">:</span> <span class="pre">&quot;/my-pipeline-notebook-path&quot;</span> <span class="pre">}</span> <span class="pre">}</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="pipelinesnewcluster">
+<span id="pipelines-new-cluster"></span><h3><a class="toc-backref" href="#id48">PipelinesNewCluster</a><a class="headerlink" href="#pipelinesnewcluster" title="Permalink to this headline"> </a></h3>
+<p>A pipeline cluster specification.</p>
+<p>The Delta Live Tables system sets the following attributes. These attributes cannot be configured by users:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">spark_version</span></code></p></li>
+</ul>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 34%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">label</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>A label for the cluster specification, either
+<code class="docutils literal notranslate"><span class="pre">default</span></code> to configure the default cluster, or
+<code class="docutils literal notranslate"><span class="pre">maintenance</span></code> to configure the maintenance
+cluster.</p>
+<p> This field is optional. The default value is <code class="docutils literal notranslate"><span class="pre">default</span></code>.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">spark_conf</span></code></p></td>
+<td><p><a class="reference internal" href="#pipelines-keyvalue"><span class="std std-ref">KeyValue</span></a></p></td>
+<td><p>An object containing a set of optional, user-specified Spark configuration key-value pairs.
+You can also pass in a string of extra JVM options to the driver and the executors via
+<code class="docutils literal notranslate"><span class="pre">spark.driver.extraJavaOptions</span></code> and <code class="docutils literal notranslate"><span class="pre">spark.executor.extraJavaOptions</span></code> respectively.</p>
+<p>Example Spark confs:
+<code class="docutils literal notranslate"><span class="pre">{&quot;spark.speculation&quot;:</span> <span class="pre">true,</span> <span class="pre">&quot;spark.streaming.ui.retainedBatches&quot;:</span> <span class="pre">5}</span></code> or
+<code class="docutils literal notranslate"><span class="pre">{&quot;spark.driver.extraJavaOptions&quot;:</span> <span class="pre">&quot;-verbose:gc</span> <span class="pre">-XX:+PrintGCDetails&quot;}</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">aws_attributes</span></code></p></td>
+<td><p><a class="reference internal" href="#clusterawsattributes"><span class="std std-ref">AwsAttributes</span></a></p></td>
+<td><p>Attributes related to clusters running on Amazon Web Services.
+If not specified at cluster creation, a set of default values will be used.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">node_type_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>This field encodes, through a single value, the resources available to each of the Spark nodes
+in this cluster.
+For example, the Spark nodes can be provisioned and optimized for
+memory or compute intensive workloads
+A list of available node types can be retrieved by using the
+<a class="reference external" href="https://docs.databricks.com/api/workspace/clusters/listnodetypes">GET 2.0/clusters/list-node-types</a> call.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">driver_node_type_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The node type of the Spark driver.
+This field is optional; if unset, the driver node type will be set as the same value
+as <code class="docutils literal notranslate"><span class="pre">node_type_id</span></code> defined above.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ssh_public_keys</span></code></p></td>
+<td><p>An array of <code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>SSH public key contents that will be added to each Spark node in this cluster. The
+corresponding private keys can be used to login with the user name <code class="docutils literal notranslate"><span class="pre">ubuntu</span></code> on port <code class="docutils literal notranslate"><span class="pre">2200</span></code>.
+Up to 10 keys can be specified.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">custom_tags</span></code></p></td>
+<td><p><a class="reference internal" href="#pipelines-keyvalue"><span class="std std-ref">KeyValue</span></a></p></td>
+<td><p>An object containing a set of tags for cluster resources. Databricks tags all cluster resources
+with these tags in addition to default_tags.</p>
+<p><strong>Note</strong>:</p>
+<ul class="simple">
+<li><p>Tags are not supported on legacy node types such as compute-optimized and memory-optimized</p></li>
+<li><p>Databricks allows at most 45 custom tags.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cluster_log_conf</span></code></p></td>
+<td><p><a class="reference internal" href="#clusterclusterlogconf"><span class="std std-ref">ClusterLogConf</span></a></p></td>
+<td><p>The configuration for delivering Spark logs to a long-term storage destination.
+Only one destination can be specified for one cluster.
+If this configuration is provided, the logs will be delivered to the destination every
+<code class="docutils literal notranslate"><span class="pre">5</span> <span class="pre">mins</span></code>. The destination of driver logs is <code class="docutils literal notranslate"><span class="pre">&lt;destination&gt;/&lt;cluster-ID&gt;/driver</span></code>, while
+the destination of executor logs is <code class="docutils literal notranslate"><span class="pre">&lt;destination&gt;/&lt;cluster-ID&gt;/executor</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">spark_env_vars</span></code></p></td>
+<td><p><a class="reference internal" href="#pipelines-keyvalue"><span class="std std-ref">KeyValue</span></a></p></td>
+<td><p>An object containing a set of optional, user-specified environment variable key-value pairs.
+Key-value pairs of the form (X,Y) are exported as is (that is,
+<code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">X='Y'</span></code>) while launching the driver and workers.</p>
+<p>In order to specify an additional set of <code class="docutils literal notranslate"><span class="pre">SPARK_DAEMON_JAVA_OPTS</span></code>, Databricks recommends appending
+them to <code class="docutils literal notranslate"><span class="pre">$SPARK_DAEMON_JAVA_OPTS</span></code> as shown in the following example. This ensures that all
+default Databricks managed environmental variables are included as well.</p>
+<p>Example Spark environment variables:
+<code class="docutils literal notranslate"><span class="pre">{&quot;SPARK_WORKER_MEMORY&quot;:</span> <span class="pre">&quot;28000m&quot;,</span> <span class="pre">&quot;SPARK_LOCAL_DIRS&quot;:</span> <span class="pre">&quot;/local_disk0&quot;}</span></code> or
+<code class="docutils literal notranslate"><span class="pre">{&quot;SPARK_DAEMON_JAVA_OPTS&quot;:</span> <span class="pre">&quot;$SPARK_DAEMON_JAVA_OPTS</span> <span class="pre">-Dspark.shuffle.service.enabled=true&quot;}</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">init_scripts</span></code></p></td>
+<td><p>An array of <a class="reference internal" href="#clusterclusterinitscriptinfo"><span class="std std-ref">InitScriptInfo</span></a></p></td>
+<td><p>The configuration for storing init scripts. Any number of destinations can be specified.
+The scripts are executed sequentially in the order provided.
+If <code class="docutils literal notranslate"><span class="pre">cluster_log_conf</span></code> is specified, init script logs are sent to
+<code class="docutils literal notranslate"><span class="pre">&lt;destination&gt;/&lt;cluster-ID&gt;/init_scripts</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">instance_pool_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The optional ID of the instance pool to which the cluster belongs.
+See <a class="reference internal" href="../compute/pools.html"><span class="doc">Create a pool</span></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">driver_instance_pool_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The optional ID of the instance pool to use for the driver node. You must also specify
+<code class="docutils literal notranslate"><span class="pre">instance_pool_id</span></code>. See <a class="reference external" href="https://docs.databricks.com/api/workspace/instancepools">Instance Pools API</a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">policy_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>A <a class="reference external" href="https://docs.databricks.com/api/workspace/clusterpolicies">cluster policy</a> ID.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">num_workers</span> <span class="pre">OR</span> <span class="pre">autoscale</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">INT32</span></code> OR <a class="reference internal" href="#pipelines-autoscale"><span class="std std-ref">InitScriptInfo</span></a></p></td>
+<td><p>If num_workers, number of worker nodes that this cluster should have. A cluster has one Spark
+driver and num_workers executors for a total of num_workers + 1 Spark nodes.</p>
+<p>When reading the properties of a cluster, this field reflects the desired number
+of workers rather than the actual number of workers. For instance, if a cluster
+is resized from 5 to 10 workers, this field is updated to reflect
+the target size of 10 workers, whereas the workers listed in executors gradually
+increase from 5 to 10 as the new nodes are provisioned.</p>
+<p>If autoscale, parameters needed to automatically scale clusters up and down based on load.</p>
+<p>This field is optional.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">apply_policy_default_values</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BOOLEAN</span></code></p></td>
+<td><p>Whether to use <a class="reference external" href="https://docs.databricks.com/api/workspace/clusterpolicies">policy</a> default
+values for missing cluster attributes.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="pipelinesettings">
+<span id="pipeline-spec"></span><h3><a class="toc-backref" href="#id49">PipelineSettings</a><a class="headerlink" href="#pipelinesettings" title="Permalink to this headline"> </a></h3>
+<p>The settings for a pipeline deployment.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 26%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The unique identifier for this pipeline.</p>
+<p>The identifier is created by the Delta Live Tables system, and must not
+be provided when creating a pipeline.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>A user-friendly name for this pipeline.</p>
+<p>This field is optional.</p>
+<p>By default, the pipeline name must be unique. To use a
+duplicate name, set <code class="docutils literal notranslate"><span class="pre">allow_duplicate_names</span></code> to <code class="docutils literal notranslate"><span class="pre">true</span></code> in the
+pipeline configuration.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">storage</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>A path to a DBFS directory for storing checkpoints and tables
+created by the pipeline.</p>
+<p>This field is optional.</p>
+<p>The system uses a default location if this field is empty.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">configuration</span></code></p></td>
+<td><p>A map of <code class="docutils literal notranslate"><span class="pre">STRING:STRING</span></code></p></td>
+<td><p>A list of key-value pairs to add to the Spark configuration
+of the cluster that will run the pipeline.</p>
+<p>This field is optional.</p>
+<p>Elements must be formatted as key:value pairs.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">clusters</span></code></p></td>
+<td><p>An array of
+<a class="reference internal" href="#pipelines-new-cluster"><span class="std std-ref">PipelinesNewCluster</span></a></p></td>
+<td><p>An array of specifications for the clusters to run the
+pipeline.</p>
+<p>This field is optional.</p>
+<p>If this is not specified, the system will select a default
+cluster configuration for the pipeline.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">libraries</span></code></p></td>
+<td><p>An array of
+<a class="reference internal" href="#pipeline-library"><span class="std std-ref">PipelineLibrary</span></a></p></td>
+<td><p>The notebooks containing the pipeline code and any
+dependencies required to run the pipeline.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">target</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>A database name for persisting pipeline output data.</p>
+<p>See <a class="reference internal" href="publish.html"><span class="doc">Publish data from Delta Live Tables pipelines to the Hive metastore</span></a> for more information.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">continuous</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BOOLEAN</span></code></p></td>
+<td><p>Whether this is a continuous pipeline.</p>
+<p>This field is optional.</p>
+<p>The default value is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">development</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BOOLEAN</span></code></p></td>
+<td><p>Whether to run the pipeline in development mode.</p>
+<p>This field is optional.</p>
+<p>The default value is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">photon</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BOOLEAN</span></code></p></td>
+<td><p>Whether Photon acceleration is enabled for this pipeline.</p>
+<p>This field is optional.</p>
+<p>The default value is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">channel</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The Delta Live Tables release channel specifying the runtime version to
+use for this pipeline. Supported values are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">preview</span></code> to test the pipeline with upcoming changes to the
+Delta Live Tables runtime.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">current</span></code> to use the current Delta Live Tables runtime version.</p></li>
+</ul>
+<p>This field is optional.</p>
+<p>The default value is <code class="docutils literal notranslate"><span class="pre">current</span></code>.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">edition</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The Delta Live Tables product edition to run the pipeline:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CORE</span></code> supports streaming ingest workloads.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PRO</span></code> also supports streaming ingest workloads and adds
+support for change data capture (CDC) processing.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ADVANCED</span></code> supports all the features of the <code class="docutils literal notranslate"><span class="pre">PRO</span></code> edition
+and adds support for workloads that require Delta Live Tables
+expectations to enforce data quality constraints.</p></li>
+</ul>
+<p>This field is optional.</p>
+<p>The default value is <code class="docutils literal notranslate"><span class="pre">advanced</span></code>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="pipelinestateinfo">
+<span id="pipeline-state-info"></span><h3><a class="toc-backref" href="#id50">PipelineStateInfo</a><a class="headerlink" href="#pipelinestateinfo" title="Permalink to this headline"> </a></h3>
+<p>The state of a pipeline, the status of the most recent updates, and information about associated resources.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 26%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">state</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The state of the pipeline. One of <code class="docutils literal notranslate"><span class="pre">IDLE</span></code> or <code class="docutils literal notranslate"><span class="pre">RUNNING</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pipeline_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The unique identifier of the pipeline.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cluster_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The unique identifier of the cluster running the pipeline.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The user-friendly name of the pipeline.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">latest_updates</span></code></p></td>
+<td><p>An array of
+<a class="reference internal" href="#update-state-info"><span class="std std-ref">UpdateStateInfo</span></a></p></td>
+<td><p>Status of the most recent updates for the pipeline, ordered
+with the newest update first.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">creator_user_name</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The username of the pipeline creator.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">run_as_user_name</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The username that the pipeline runs as. This is a read only
+value derived from the pipeline owner.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="s3storageinfo">
+<span id="pipelinestateinfo"></span><span id="clusterclusterinitscriptinfos3storageinfo"></span><h3><a class="toc-backref" href="#id51">S3StorageInfo</a><a class="headerlink" href="#s3storageinfo" title="Permalink to this headline"> </a></h3>
+<p>S3 storage information.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 7%" />
+<col style="width: 82%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">destination</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>S3 destination. For example: <code class="docutils literal notranslate"><span class="pre">s3://my-bucket/some-prefix</span></code>
+You must configure the cluster with an instance profile and the instance profile must have write access to the
+destination. You <em>cannot</em> use AWS keys.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">region</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>S3 region. For example: <code class="docutils literal notranslate"><span class="pre">us-west-2</span></code>. Either region or warehouse must be set. If both are set,
+warehouse is used.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">warehouse</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>S3 warehouse. For example: <code class="docutils literal notranslate"><span class="pre">https://s3-us-west-2.amazonaws.com</span></code>.
+Either region or warehouse must be set. If both are set, warehouse is used.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">enable_encryption</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BOOL</span></code></p></td>
+<td><p>(Optional)Enable server side encryption, <code class="docutils literal notranslate"><span class="pre">false</span></code> by default.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">encryption_type</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>(Optional) The encryption type, it could be <code class="docutils literal notranslate"><span class="pre">sse-s3</span></code> or <code class="docutils literal notranslate"><span class="pre">sse-kms</span></code>. It is used only when
+encryption is enabled and the default type is <code class="docutils literal notranslate"><span class="pre">sse-s3</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">kms_key</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>(Optional) KMS key used if encryption is enabled and encryption type is set to <code class="docutils literal notranslate"><span class="pre">sse-kms</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">canned_acl</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>(Optional) Set canned access control list. For example: <code class="docutils literal notranslate"><span class="pre">bucket-owner-full-control</span></code>.
+If canned_acl is set, the cluster instance profile must have <code class="docutils literal notranslate"><span class="pre">s3:PutObjectAcl</span></code> permission on
+the destination bucket and prefix. The full list of possible canned ACLs can be found at
+<a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html#canned-acl">https://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html#canned-acl</a>.
+By default only the object owner gets full control. If you are using cross account
+role for writing data, you may want to set <code class="docutils literal notranslate"><span class="pre">bucket-owner-full-control</span></code> to make bucket owner able to
+read the logs.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="updatestateinfo">
+<span id="update-state-info"></span><h3><a class="toc-backref" href="#id52">UpdateStateInfo</a><a class="headerlink" href="#updatestateinfo" title="Permalink to this headline"> </a></h3>
+<p>The current state of a pipeline update.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 26%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">update_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The unique identifier for this update.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">state</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>The state of the update. One of <code class="docutils literal notranslate"><span class="pre">QUEUED</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATED</span></code>,
+<code class="docutils literal notranslate"><span class="pre">WAITING_FOR_RESOURCES</span></code>, <code class="docutils literal notranslate"><span class="pre">INITIALIZING</span></code>, <code class="docutils literal notranslate"><span class="pre">RESETTING</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SETTING_UP_TABLES</span></code>, <code class="docutils literal notranslate"><span class="pre">RUNNING</span></code>, <code class="docutils literal notranslate"><span class="pre">STOPPING</span></code>, <code class="docutils literal notranslate"><span class="pre">COMPLETED</span></code>,
+<code class="docutils literal notranslate"><span class="pre">FAILED</span></code>, or <code class="docutils literal notranslate"><span class="pre">CANCELED</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">creation_time</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>Timestamp when this update was created.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="workspacestorageinfo">
+<span id="clusterclusterinitscriptinfoworkspacestorageinfo"></span><h3><a class="toc-backref" href="#id53">WorkspaceStorageInfo</a><a class="headerlink" href="#workspacestorageinfo" title="Permalink to this headline"> </a></h3>
+<p>Workspace storage information.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 14%" />
+<col style="width: 71%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">destination</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">STRING</span></code></p></td>
+<td><p>File destination. Example: <code class="docutils literal notranslate"><span class="pre">/Users/someone&#64;domain.com/init_script.sh</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

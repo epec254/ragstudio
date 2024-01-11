@@ -1,0 +1,944 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how to connect to AWS Glue Data Catalog as the metastore in Databricks." name="description" />
+<meta content="noindex" name="robots" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="Use AWS Glue Data Catalog as a metastore (legacy)">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>Use AWS Glue Data Catalog as a metastore (legacy) &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/archive/external-metastores/aws-glue-metastore.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/archive/external-metastores/aws-glue-metastore.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/archive/external-metastores/aws-glue-metastore.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../../en/archive/external-metastores/aws-glue-metastore.html" class="notranslate">English</option>
+    <option value="../../../ja/archive/external-metastores/aws-glue-metastore.html" class="notranslate">日本語</option>
+    <option value="../../../pt/archive/external-metastores/aws-glue-metastore.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>Use AWS Glue Data Catalog as a metastore (legacy)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="use-aws-glue-data-catalog-as-a-metastore-legacy">
+<h1>Use AWS Glue Data Catalog as a metastore (legacy)<a class="headerlink" href="#use-aws-glue-data-catalog-as-a-metastore-legacy" title="Permalink to this headline"> </a></h1>
+<p>You can configure Databricks Runtime to use the AWS Glue Data Catalog as its metastore. This can serve as a drop-in replacement for a Hive metastore.</p>
+<p>Each AWS account owns a single catalog in an AWS region whose catalog ID is the same as the AWS account ID. Using the Glue Catalog as the metastore for Databricks can potentially enable a shared metastore across AWS services, applications, or AWS accounts.</p>
+<p>You can configure multiple Databricks workspaces to share the same metastore.</p>
+<p>This article shows how to securely access a Glue Data Catalog in Databricks using instance profiles.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Using external metastores is a legacy data governance model. Databricks recommends that you upgrade to Unity Catalog. Unity Catalog simplifies security and governance of your data by providing a central place to administer and audit data access across multiple workspaces in your account. See <a class="reference internal" href="../../data-governance/unity-catalog/index.html"><span class="doc">What is Unity Catalog?</span></a>.</p>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>You must have AWS administrator access to IAM roles and policies in the AWS account where Databricks is deployed and in the AWS account containing the Glue Data Catalog.</p></li>
+<li><p>If the Glue Data Catalog is in a different AWS account from where Databricks is deployed, a <a class="reference external" href="https://docs.aws.amazon.com/glue/latest/dg/cross-account-access.html">cross-account access policy</a> must allow access to the catalog from the AWS account where Databricks is deployed. Note that we only support granting cross-account access using a resource policy for Glue.</p></li>
+<li><p>Built-in mode requires Databricks Runtime 8.4 or above, or Databricks Runtime 7.3 LTS.</p></li>
+</ul>
+</div>
+<div class="section" id="configure-glue-data-catalog-as-the-metastore">
+<h2>Configure Glue Data Catalog as the metastore<a class="headerlink" href="#configure-glue-data-catalog-as-the-metastore" title="Permalink to this headline"> </a></h2>
+<p>To enable Glue Catalog integration, set the  <a class="reference internal" href="../../compute/configure.html#spark-configuration"><span class="std std-ref">Spark configuration</span></a> <code class="docutils literal notranslate"><span class="pre">spark.databricks.hive.metastore.glueCatalog.enabled</span> <span class="pre">true</span></code>. This configuration is disabled by default. That is, the default is to use the Databricks hosted Hive metastore, or some other external metastore if configured.</p>
+<p>For interactive or jobs clusters, set the configuration in the cluster configuration <em>before</em> cluster startup.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This configuration option <em>cannot</em> be modified in a running cluster.</p>
+</div>
+<p>When running <code class="docutils literal notranslate"><span class="pre">spark-submit</span></code> jobs,  set this config option either in the <code class="docutils literal notranslate"><span class="pre">spark-submit</span></code> parameters using <code class="docutils literal notranslate"><span class="pre">--conf</span> <span class="pre">spark.databricks.hive.metastore.glueCatalog.enabled=true</span></code> or set it in code <em>before</em> creating the <code class="docutils literal notranslate"><span class="pre">SparkSession</span></code> or <code class="docutils literal notranslate"><span class="pre">SparkContext</span></code>. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+
+<span class="c1"># Set the Glue confs here directly instead of using the --conf option in spark-submit</span>
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span>           \
+  <span class="n">appName</span><span class="p">(</span><span class="s2">&quot;ExamplePySparkSubmitTask&quot;</span><span class="p">)</span><span class="o">.</span>  \
+  <span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.databricks.hive.metastore.glueCatalog.enabled&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="o">.</span> \
+  <span class="n">enableHiveSupport</span><span class="p">()</span><span class="o">.</span> \
+  <span class="n">getOrCreate</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">getConf</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;spark.databricks.hive.metastore.glueCatalog.enabled&quot;</span><span class="p">))</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;show databases&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>How you configure Glue Catalog access depends on whether Databricks and the Glue Catalog are in the same AWS account and region, in different accounts, or in different regions. Follow the appropriate steps in the remainder of this article:</p>
+<ul class="simple">
+<li><p><strong>Same AWS account and region</strong>: Follow step 1, then steps 3-5.</p></li>
+<li><p><strong>Cross-account</strong>: Follow steps 1-6.</p></li>
+<li><p><strong>Cross-region</strong>: Follow step 1, then steps 3-6.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The AWS Glue Data Catalog policies define only the access permissions to the metadata. The S3 policies define the access permissions to the content itself. These steps set up a policy on the AWS Glue Data Catalog. They <em>do not</em> set up the related S3 bucket or object level policies. See <a class="reference internal" href="../../connect/storage/tutorial-s3-instance-profile.html"><span class="doc">Tutorial: Configure S3 access with an instance profile</span></a> for setting up S3 permissions for Databricks.</p>
+<p>For more information, see <a class="reference external" href="https://aws.amazon.com/blogs/big-data/restrict-access-to-your-aws-glue-data-catalog-with-resource-level-iam-permissions-and-resource-based-policies/">Restrict access to your AWS Glue Data Catalog with resource-level IAM permissions and resource-based policies</a>.</p>
+</div>
+</div>
+<div class="section" id="step-1-create-an-instance-profile-to-access-a-glue-data-catalog">
+<h2>Step 1: Create an instance profile to access a Glue Data Catalog<a class="headerlink" href="#step-1-create-an-instance-profile-to-access-a-glue-data-catalog" title="Permalink to this headline"> </a></h2>
+<ol class="arabic">
+<li><p>In the AWS console, go to the IAM service.</p></li>
+<li><p>Click the Roles tab in the sidebar.</p></li>
+<li><p>Click <strong>Create role</strong>.</p>
+<ol class="loweralpha">
+<li><p>Under Select type of trusted entity, select <strong>AWS service</strong>.</p></li>
+<li><p>Click the <strong>EC2</strong> service.</p></li>
+<li><p>Under Select your use case, click <strong>EC2</strong>.</p>
+<div class="figure align-default">
+<img alt="Select service" src="../../_images/select-service.png" />
+</div>
+</li>
+<li><p>Click <strong>Next: Permissions</strong> and click <strong>Next: Review</strong>.</p></li>
+<li><p>In the Role name field, type a role name.</p></li>
+<li><p>Click <strong>Create role</strong>. The list of roles displays.</p></li>
+</ol>
+</li>
+<li><p>In the role list, click the role.</p></li>
+<li><p>Add an inline policy to the Glue Catalog.</p>
+<ol class="loweralpha">
+<li><p>In the Permissions tab, click <img alt="Inline policy" src="../../_images/add-inline-policy.png" />.</p></li>
+<li><p>Click the <strong>JSON</strong> tab.</p></li>
+<li><p>Copy and paste this policy into the tab.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GrantCatalogAccessToGlue&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;glue:BatchCreatePartition&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:BatchDeletePartition&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:BatchGetPartition&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:CreateDatabase&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:CreateTable&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:CreateUserDefinedFunction&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:DeleteDatabase&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:DeletePartition&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:DeleteTable&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:DeleteUserDefinedFunction&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:GetDatabase&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:GetDatabases&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:GetPartition&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:GetPartitions&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:GetTable&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:GetTables&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:GetUserDefinedFunction&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:GetUserDefinedFunctions&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:UpdateDatabase&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:UpdatePartition&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:UpdateTable&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:UpdateUserDefinedFunction&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;*&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</li>
+</ol>
+<p>For fine-grained configuration of allowed resources (catalog, database, table, userDefinedFunction), see <a class="reference external" href="https://docs.aws.amazon.com/glue/latest/dg/glue-specifying-resource-arns.html#data-catalog-resource-arns">Specifying AWS Glue Resource ARNs</a>.</p>
+<p>If the list of allowed actions in the policy above is insufficient, contact Databricks Support with the error information. The simplest workaround is to use a policy that gives full access to Glue:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GrantFullAccessToGlue&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;glue:*&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-2-create-a-policy-for-the-target-glue-catalog">
+<h2>Step 2: Create a policy for the target Glue Catalog<a class="headerlink" href="#step-2-create-a-policy-for-the-target-glue-catalog" title="Permalink to this headline"> </a></h2>
+<p>Follow this step only if the target Glue Catalog is in <em>a different AWS account</em> than the one used for the Databricks deployment.</p>
+<ol class="arabic">
+<li><p>Log in to the AWS account of the target Glue Catalog and go to the Glue Console.</p></li>
+<li><p>In Settings, paste in the following policy into the Permissions box. Set <code class="docutils literal notranslate"><span class="pre">&lt;aws-account-id-databricks&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;iam-role-for-glue-access&gt;</span></code> from Step 1, <code class="docutils literal notranslate"><span class="pre">&lt;aws-region-target-glue-catalog&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;aws-account-id-target-glue-catalog&gt;</span></code>, accordingly.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Example permission&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;AWS&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::&lt;aws-account-id-databricks&gt;:role/&lt;iam-role-for-glue-access&gt;&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;glue:BatchCreatePartition&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:BatchDeletePartition&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:BatchGetPartition&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:CreateDatabase&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:CreateTable&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:CreateUserDefinedFunction&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:DeleteDatabase&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:DeletePartition&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:DeleteTable&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:DeleteUserDefinedFunction&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:GetDatabase&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:GetDatabases&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:GetPartition&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:GetPartitions&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:GetTable&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:GetTables&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:GetUserDefinedFunction&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:GetUserDefinedFunctions&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:UpdateDatabase&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:UpdatePartition&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:UpdateTable&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;glue:UpdateUserDefinedFunction&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:glue:&lt;aws-region-target-glue-catalog&gt;:&lt;aws-account-id-target-glue-catalog&gt;:*&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="step-3-look-up-the-iam-role-used-to-create-the-databricks-deployment">
+<h2>Step 3: Look up the IAM role used to create the Databricks deployment<a class="headerlink" href="#step-3-look-up-the-iam-role-used-to-create-the-databricks-deployment" title="Permalink to this headline"> </a></h2>
+<p>This IAM role is the role you used when you set up the Databricks account.</p>
+<p>The following steps are different for accounts on the <a class="reference internal" href="../../getting-started/overview.html#e2-architecture"><span class="std std-ref">E2 version of the platform</span></a> than for accounts on another version of the Databricks platform All new Databricks accounts and most existing accounts are now E2.</p>
+<p>If you are on an <a class="reference internal" href="../../administration-guide/account-settings/index.html"><span class="doc">E2 account</span></a>:</p>
+<ol class="arabic">
+<li><p>As the account owner or an acount admin, log in to the <a class="reference internal" href="../../administration-guide/account-settings/index.html#account-console"><span class="std std-ref">account console</span></a>.</p></li>
+<li><p>Go to <strong>Workspaces</strong> and click your workspace name.</p></li>
+<li><p>In the <strong>Credentials</strong> box, note the role name at the end of the Role ARN.</p>
+<p>For example, in the Role ARN <code class="docutils literal notranslate"><span class="pre">arn:aws:iam::123456789123:role/finance-prod</span></code>, finance-prod is the role name.</p>
+</li>
+</ol>
+<p>If you are not on an E2 account:</p>
+<ol class="arabic">
+<li><p>As the account owner, log in to the <a class="reference internal" href="../../administration-guide/account-settings/index.html#account-console"><span class="std std-ref">account console</span></a>.</p></li>
+<li><p>Click the <strong>AWS Account</strong> tab.</p></li>
+<li><p>Note the role name at the end of the Role ARN, here <strong>testco-role</strong>.</p>
+<div class="figure align-default">
+<img alt="IAM role" src="../../_images/iam-role.png" />
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="step-4-add-the-glue-catalog-instance-profile-to-the-ec2-policy">
+<h2>Step 4: Add the Glue Catalog instance profile to the EC2 policy<a class="headerlink" href="#step-4-add-the-glue-catalog-instance-profile-to-the-ec2-policy" title="Permalink to this headline"> </a></h2>
+<ol class="arabic">
+<li><p>In the AWS console, go to the IAM service.</p></li>
+<li><p>Click the <strong>Roles</strong> tab in the sidebar.</p></li>
+<li><p>Click the role you noted in Step 3.</p></li>
+<li><p>On the Permissions tab, click the policy.</p></li>
+<li><p>Click <strong>Edit Policy</strong>.</p></li>
+<li><p>Modify the policy to allow Databricks to pass the instance profile you created in Step 1 to the EC2 instances for the Spark clusters. Here is an example of what the new policy should look like. Replace <code class="docutils literal notranslate"><span class="pre">&lt;iam-role-for-glue-access&gt;</span></code> with the role you created in Step 1.</p>
+<ul>
+<li><p>For accounts on the <a class="reference internal" href="../../getting-started/overview.html#e2-architecture"><span class="std std-ref">E2 version of the platform</span></a>:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Stmt1403287045000&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;ec2:AssociateDhcpOptions&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:AssociateIamInstanceProfile&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:AssociateRouteTable&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:AttachInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:AttachVolume&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:AuthorizeSecurityGroupEgress&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:AuthorizeSecurityGroupIngress&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CancelSpotInstanceRequests&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateDhcpOptions&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreatePlacementGroup&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateRoute&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateSecurityGroup&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateSubnet&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateTags&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateVolume&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateVpc&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:CreateVpcPeeringConnection&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeleteInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeletePlacementGroup&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeleteRoute&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeleteRouteTable&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeleteSecurityGroup&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeleteSubnet&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeleteTags&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeleteVolume&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DeleteVpc&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeAvailabilityZones&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeIamInstanceProfileAssociations&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeInstanceStatus&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeInstances&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribePlacementGroups&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribePrefixLists&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeReservedInstancesOfferings&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeRouteTables&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeSecurityGroups&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeSpotInstanceRequests&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeSpotPriceHistory&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeSubnets&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeVolumes&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DescribeVpcs&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DetachInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:DisassociateIamInstanceProfile&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:ModifyVpcAttribute&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:ReplaceIamInstanceProfileAssociation&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:RequestSpotInstances&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:RevokeSecurityGroupEgress&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:RevokeSecurityGroupIngress&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:RunInstances&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ec2:TerminateInstances&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;*&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;iam:PassRole&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::&lt;aws-account-id-databricks&gt;:role/&lt;iam-role-for-glue-access&gt;&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul>
+<li><p>For accounts on other versions of the platform:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="p">{</span>
+<span class="w"> </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">   </span><span class="p">{</span>
+<span class="w">     </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Stmt1403287045000&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">     </span><span class="s2">&quot;ec2:AssociateDhcpOptions&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:AssociateIamInstanceProfile&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:AssociateRouteTable&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:AttachInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:AttachVolume&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:AuthorizeSecurityGroupEgress&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:AuthorizeSecurityGroupIngress&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:CancelSpotInstanceRequests&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:CreateDhcpOptions&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:CreateInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:CreateKeyPair&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:CreateRoute&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:CreateSecurityGroup&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:CreateSubnet&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:CreateTags&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:CreateVolume&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:CreateVpc&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:CreateVpcPeeringConnection&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DeleteInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DeleteKeyPair&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DeleteRoute&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DeleteRouteTable&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DeleteSecurityGroup&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DeleteSubnet&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DeleteTags&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DeleteVolume&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DeleteVpc&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DescribeAvailabilityZones&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DescribeIamInstanceProfileAssociations&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DescribeInstanceStatus&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DescribeInstances&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DescribePrefixLists&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DescribeReservedInstancesOfferings&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DescribeRouteTables&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DescribeSecurityGroups&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DescribeSpotInstanceRequests&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DescribeSpotPriceHistory&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DescribeSubnets&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DescribeVolumes&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DescribeVpcs&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DetachInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:DisassociateIamInstanceProfile&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:ModifyVpcAttribute&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:ReplaceIamInstanceProfileAssociation&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:RequestSpotInstances&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:RevokeSecurityGroupEgress&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:RevokeSecurityGroupIngress&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:RunInstances&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="s2">&quot;ec2:TerminateInstances&quot;</span>
+<span class="w">   </span><span class="p">],</span>
+<span class="w">     </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">       </span><span class="s2">&quot;*&quot;</span>
+<span class="w">     </span><span class="p">]</span>
+<span class="w">   </span><span class="p">},</span>
+<span class="w">   </span><span class="p">{</span>
+<span class="w">     </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;iam:PassRole&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::&lt;aws-account-id-databricks&gt;:role/&lt;iam-role-for-glue-access&gt;&quot;</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="w"> </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Click <strong>Review policy</strong>.</p></li>
+<li><p>Click <strong>Save changes</strong>.</p></li>
+</ol>
+</div>
+<div class="section" id="step-5-add-the-glue-catalog-instance-profile-to-a-databricks-workspace">
+<h2>Step 5: Add the Glue Catalog instance profile to a Databricks workspace<a class="headerlink" href="#step-5-add-the-glue-catalog-instance-profile-to-a-databricks-workspace" title="Permalink to this headline"> </a></h2>
+<ol class="arabic">
+<li><p>Go to the admin settings page.</p></li>
+<li><p>Click the <strong>Instance Profiles</strong> tab.</p></li>
+<li><p>Click the <strong>Add Instance Profile</strong> button. A dialog appears.</p></li>
+<li><p>Paste in the Instance Profile ARN from Step 1.</p>
+<div class="figure align-default">
+<img alt="Instance profile ARN" src="../../_images/add-instanceprofile-arn.png" />
+</div>
+<p>Databricks validates that this Instance Profile ARN is both syntactically and semantically correct. To validate semantic correctness, Databricks does a dry run by launching a cluster with this instance profile. Any failure in this dry run produces a validation error in the UI.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The validation of the instance profile can fail if it contains the tag-enforcement policy, preventing you from adding a legitimate instance profile. If the validation fails and you still want to add the instance profile to Databricks, use the Instance Profiles API and specify <code class="docutils literal notranslate"><span class="pre">skip_validation</span></code>.</p>
+</div>
+</li>
+<li><p>Click <strong>Add</strong>.</p></li>
+<li><p>Optionally specify the users who can launch clusters with the instance profile.</p>
+<div class="figure align-default">
+<img alt="Add users" src="../../_images/add-permissions.png" />
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="step-6-launch-a-cluster-with-the-glue-catalog-instance-profile">
+<span id="configure-cluster"></span><h2>Step 6: Launch a cluster with the Glue Catalog instance profile<a class="headerlink" href="#step-6-launch-a-cluster-with-the-glue-catalog-instance-profile" title="Permalink to this headline"> </a></h2>
+<ol class="arabic">
+<li><p>Create a cluster.</p></li>
+<li><p>Click the <strong>Instances</strong> tab on the cluster creation page.</p></li>
+<li><p>In the <strong>Instance Profiles</strong> drop-down list, select the instance profile.</p>
+<div class="figure align-default">
+<img alt="Select instance profile" src="../../_images/create-cluster-with-instance-profile.png" />
+</div>
+</li>
+<li><p>Verify that you can access the Glue Catalog, using the following command in a notebook:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="k">show</span><span class="w"> </span><span class="n">databases</span><span class="p">;</span>
+</pre></div>
+</div>
+<p> If the command succeeds, this Databricks Runtime cluster is configured to use Glue. Depending on your AWS account and Glue region, you might need to perform two additional steps:</p>
+<ul>
+<li><p>If the AWS account of the Databricks deployment and the AWS account of the Glue Data Catalog are different, extra cross-account setup is needed.</p>
+<p>Set <code class="docutils literal notranslate"><span class="pre">spark.hadoop.hive.metastore.glue.catalogid</span> <span class="pre">&lt;aws-account-id-for-glue-catalog&gt;</span></code> in <a class="reference internal" href="../../compute/configure.html#spark-configuration"><span class="std std-ref">Spark configuration</span></a>.</p>
+</li>
+<li><p>If the target Glue Catalog is in a different region than the Databricks deployment, also specify <code class="docutils literal notranslate"><span class="pre">spark.hadoop.aws.region</span> <span class="pre">&lt;aws-region-for-glue-catalog&gt;</span></code>.</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>A reminder that spark.databricks.hive.metastore.glueCatalog.enabled true is a required configuration for connection to AWS Glue.</p>
+</div>
+</li>
+<li><p>Spark includes built-in support for Hive, but whether this is used depends on the Databricks Runtime version.</p>
+<ul class="simple">
+<li><p><strong>Isolation mode</strong>: Built-in support for Hive is disabled. Libraries for Hive 1.2.1.spark2 are loaded from <code class="docutils literal notranslate"><span class="pre">/databricks/glue/</span></code>. In Databricks Runtime 8.3, isolation mode is enabled and can’t be disabled. In Databricks Runtime 7.3 LTS and Databricks Runtime 8.4 and above, isolation mode is the default, but can be disabled.</p></li>
+<li><p><strong>Built-in mode</strong>: Built-in support for Hive is enabled, and the Hive version depends upon the Spark version. In Databricks Runtime 7.3 LTS and Databricks Runtime 8.4 and above, you can enable built-in mode by setting <code class="docutils literal notranslate"><span class="pre">spark.databricks.hive.metastore.glueCatalog.isolation.enabled</span> <span class="pre">false</span></code> on the cluster.</p></li>
+</ul>
+</li>
+<li><p>To enable credential passthrough, set <code class="docutils literal notranslate"><span class="pre">spark.databricks.passthrough.enabled</span> <span class="pre">true</span></code>. This requires Databricks Runtime 7.3 LTS or Databricks Runtime 8.4 or above. On Databricks Runtime 7.3 LTS and Databricks Runtime 8.4 and above, this setting also automatically enables built-in mode.</p></li>
+</ol>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline"> </a></h2>
+<ul class="simple">
+<li><p>Using AWS Glue Data Catalog as the metastore in Databricks has the potential for higher latency than the default Hive metastore. For more information, see <a class="reference internal" href="#latency"><span class="std std-ref">Experiencing higher latency with Glue Catalog than Databricks Hive metastore</span></a> in the Troubleshooting section.</p></li>
+<li><p>The default database is created with a location set to a URI using the <code class="docutils literal notranslate"><span class="pre">dbfs:</span></code> (Databricks File System) scheme. This location is not accessible from AWS applications outside Databricks such as AWS EMR or AWS Athena. As a workaround, use the <code class="docutils literal notranslate"><span class="pre">LOCATION</span></code> clause to specify a bucket location, such as <code class="docutils literal notranslate"><span class="pre">s3://mybucket/</span></code>, when you call <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code>. Alternatively, create tables within a database other than the default database and set the <code class="docutils literal notranslate"><span class="pre">LOCATION</span></code> of that database to an S3 location.</p></li>
+<li><p>You cannot dynamically switch between Glue Catalog and a Hive metastore. You must to restart the cluster for new Spark configurations to take effect.</p></li>
+<li><p>Credential passthrough is supported only in Databricks Runtime 8.4 and above.</p></li>
+<li><p>The following features are not supported:</p>
+<ul>
+<li><p><a class="reference internal" href="../../dev-tools/databricks-connect/index.html"><span class="doc">Databricks Connect</span></a></p></li>
+<li><p>Cross-system interactions where you share the same metadata catalog or actual table data across multiple systems.</p></li>
+</ul>
+</li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>When you specify a schema location, you must include a trailing slash in the URI, such as <code class="docutils literal notranslate"><span class="pre">s3://mybucket/</span></code> rather than <code class="docutils literal notranslate"><span class="pre">s3://mybucket</span></code>. Omitting the slash can result in exceptions.</p>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline"> </a></h2>
+<div class="contents local topic" id="in-this-section">
+<p class="topic-title first">In this section:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#higher-latency-with-glue-catalog-than-databricks-hive-metastore" id="id1">Higher latency with Glue Catalog than Databricks Hive metastore</a></p></li>
+<li><p><a class="reference internal" href="#no-instance-profile-attached-to-the-databricks-runtime-cluster" id="id2">No instance profile attached to the Databricks Runtime cluster</a></p></li>
+<li><p><a class="reference internal" href="#insufficient-glue-catalog-permission" id="id3">Insufficient Glue Catalog permission</a></p></li>
+<li><p><a class="reference internal" href="#permission-error-on-gluegetdatabase-when-running-sql-directly-on-files" id="id4">Permission error on <code class="docutils literal notranslate"><span class="pre">glue:GetDatabase</span></code> when running SQL directly on files</a></p></li>
+<li><p><a class="reference internal" href="#mismatched-glue-catalog-id" id="id5">Mismatched Glue Catalog ID</a></p></li>
+<li><p><a class="reference internal" href="#athena-catalog-conflicts-with-glue-catalog" id="id6">Athena Catalog conflicts with Glue Catalog</a></p></li>
+<li><p><a class="reference internal" href="#creating-a-table-in-a-database-with-empty-location" id="id7">Creating a table in a database with empty <code class="docutils literal notranslate"><span class="pre">LOCATION</span></code></a></p></li>
+<li><p><a class="reference internal" href="#accessing-tables-between-databricks-workspaces-from-a-shared-glue-catalog" id="id8">Accessing tables between Databricks workspaces from a shared Glue Catalog</a></p></li>
+<li><p><a class="reference internal" href="#accessing-tables-and-views-created-in-other-system" id="id9">Accessing tables and views created in other system</a></p></li>
+</ul>
+</div>
+<div class="section" id="higher-latency-with-glue-catalog-than-databricks-hive-metastore">
+<span id="latency"></span><h3><a class="toc-backref" href="#id1">Higher latency with Glue Catalog than Databricks Hive metastore</a><a class="headerlink" href="#higher-latency-with-glue-catalog-than-databricks-hive-metastore" title="Permalink to this headline"> </a></h3>
+<p>Using Glue Data Catalog as the external metastore may incur higher latency than the default Databricks hosted Hive metastore. Databricks recommends enabling client-side caching in the Glue Catalog client. The following sections show how to configure client-side caching for tables and databases. You can configure client-side caching for <a class="reference internal" href="../../compute/configure.html#spark-configuration"><span class="std std-ref">clusters</span></a> and <a class="reference internal" href="../../compute/sql-warehouse/data-access-configuration.html#data-access-properties"><span class="std std-ref">SQL warehouses</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Client-side caching is not available for the listing table operation <code class="docutils literal notranslate"><span class="pre">getTables</span></code>.</p></li>
+<li><p>The time-to-live (TTL) configuration is a tradeoff between effectiveness of the cache and the tolerable staleness of the metadata. Choose a TTL value that makes sense for the specific scenario.</p></li>
+</ul>
+</div>
+<p>For more details, see <a class="reference external" href="https://github.com/awslabs/aws-glue-data-catalog-client-for-apache-hive-metastore#enabling-client-side-caching-for-catalog">Enabling client side caching for Glue Catalog</a> in the AWS documentation.</p>
+<div class="section" id="tables">
+<h4>Tables<a class="headerlink" href="#tables" title="Permalink to this headline"> </a></h4>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">spark.hadoop.aws.glue.cache.table.enable true</span>
+<span class="na">spark.hadoop.aws.glue.cache.table.size 1000</span>
+<span class="na">spark.hadoop.aws.glue.cache.table.ttl-mins 30</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="databases">
+<h4>Databases<a class="headerlink" href="#databases" title="Permalink to this headline"> </a></h4>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">spark.hadoop.aws.glue.cache.db.enable true</span>
+<span class="na">spark.hadoop.aws.glue.cache.db.size 1000</span>
+<span class="na">spark.hadoop.aws.glue.cache.db.ttl-mins 30</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="no-instance-profile-attached-to-the-databricks-runtime-cluster">
+<span id="no-instance-profile-attached-to-the-dbr-cluster"></span><h3><a class="toc-backref" href="#id2">No instance profile attached to the Databricks Runtime cluster</a><a class="headerlink" href="#no-instance-profile-attached-to-the-databricks-runtime-cluster" title="Permalink to this headline"> </a></h3>
+<p>If no instance profile is attached to the Databricks Runtime cluster, then the following exception occurs when you run any operation that requires metastore lookup:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">org.apache.spark.sql.AnalysisException: java.lang.RuntimeException: com.amazonaws.SdkClientException: Unable to load AWS credentials from any provider in the chain: [EnvironmentVariableCredentialsProvider: Unable to load AWS credentials from environment variables (AWS_ACCESS_KEY_ID (or AWS_ACCESS_KEY) and AWS_SECRET_KEY (or AWS_SECRET_ACCESS_KEY)), SystemPropertiesCredentialsProvider: Unable to load AWS credentials from Java system properties (aws.accessKeyId and aws.secretKey), com.amazonaws.auth.profile.ProfileCredentialsProvider@2245a35d: profile file cannot be null, com.amazonaws.auth.EC2ContainerCredentialsProviderWrapper@52be6b57: The requested metadata is not found at https://169.254.169.254/latest/meta-data/iam/security-credentials/];</span>
+</pre></div>
+</div>
+<p>Attach an instance profile that has sufficient permissions to access the desired Glue Catalog.</p>
+</div>
+<div class="section" id="insufficient-glue-catalog-permission">
+<h3><a class="toc-backref" href="#id3">Insufficient Glue Catalog permission</a><a class="headerlink" href="#insufficient-glue-catalog-permission" title="Permalink to this headline"> </a></h3>
+<p>When the instance profile doesn’t grant a permission that is required to perform a metastore operation, an exception like the following occurs:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">org.apache.spark.sql.AnalysisException: java.lang.RuntimeException: MetaException(message:Unable to verify existence of default database: com.amazonaws.services.glue.model.AccessDeniedException: User: arn:aws:sts::&lt;aws-account-id&gt;:assumed-role/&lt;role-id&gt;/... is not authorized to perform: glue:GetDatabase on resource: arn:aws:glue:&lt;aws-region-for-glue-catalog&gt;:&lt;aws-account-id-for-glue-catalog&gt;:catalog (Service: AWSGlue; Status Code: 400; Error Code: AccessDeniedException; Request ID: &lt;request-id&gt;));</span>
+</pre></div>
+</div>
+<p>Check that the attached instance profile specifies sufficient permissions. For example, in the previous exception, add <code class="docutils literal notranslate"><span class="pre">glue:GetDatabase</span></code> to the instance profile.</p>
+</div>
+<div class="section" id="permission-error-on-gluegetdatabase-when-running-sql-directly-on-files">
+<h3><a class="toc-backref" href="#id4">Permission error on <code class="docutils literal notranslate"><span class="pre">glue:GetDatabase</span></code> when running SQL directly on files</a><a class="headerlink" href="#permission-error-on-gluegetdatabase-when-running-sql-directly-on-files" title="Permalink to this headline"> </a></h3>
+<p>In Databricks Runtime versions below 8.0, when running a SQL query <a class="reference external" href="https://spark.apache.org/docs/latest/sql-data-sources-load-save-functions.html#run-sql-on-files-directly">directly on files</a>, for example,</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">parquet</span><span class="p">.</span><span class="o">`</span><span class="n">path</span><span class="o">-</span><span class="k">to</span><span class="o">-</span><span class="k">data</span><span class="o">`</span>
+</pre></div>
+</div>
+<p>you may encounter an error like the following:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Error in SQL statement: AnalysisException ... is not authorized to perform: glue:GetDatabase on resource: &lt;glue-account&gt;:database/parquet</span>
+</pre></div>
+</div>
+<p>This happens when the IAM policy does not grant the permission to perform <code class="docutils literal notranslate"><span class="pre">glue:GetDatabase</span></code> on the resource <code class="docutils literal notranslate"><span class="pre">database/&lt;datasource-format&gt;</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;datasource-format&gt;</span></code> is a data source format such as <code class="docutils literal notranslate"><span class="pre">parquet</span></code> or <code class="docutils literal notranslate"><span class="pre">delta</span></code>.</p>
+<p>Add permissions to the IAM policy to allow <code class="docutils literal notranslate"><span class="pre">glue:GetDatabase</span></code> on <code class="docutils literal notranslate"><span class="pre">database/&lt;datasource-format&gt;</span></code>.</p>
+<p>There is a limitation in the implementation of the Spark SQL analyzer, where it attempts to resolve a relation against the catalog before falling back to attempting resolve against registered data source for SQL on file. The fallback only works when the initial attempt to resolve against the catalog returns without an exception.</p>
+<p>Even though the resource <code class="docutils literal notranslate"><span class="pre">database/&lt;datasource-format&gt;</span></code> might not exist, for the fallback to SQL query on file to run successfully, the IAM policy for Glue Catalog must allow performing the <code class="docutils literal notranslate"><span class="pre">glue:GetDatabase</span></code> action on it.</p>
+<p>In Databricks Runtime 8.0 and above, this issue is handled automatically and this workaround is no longer needed.</p>
+</div>
+<div class="section" id="mismatched-glue-catalog-id">
+<h3><a class="toc-backref" href="#id5">Mismatched Glue Catalog ID</a><a class="headerlink" href="#mismatched-glue-catalog-id" title="Permalink to this headline"> </a></h3>
+<p>By default, a Databricks cluster tries to connect to the Glue Catalog in the same AWS account as the one used for the Databricks deployment.</p>
+<p>If the target Glue Catalog is in a different AWS account or region from the Databricks deployment, and the <code class="docutils literal notranslate"><span class="pre">spark.hadoop.hive.metastore.glue.catalogid</span></code> Spark configuration is not set, the cluster will connect to the Glue Catalog in the AWS account of the Databricks deployment instead of the target catalog.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">spark.hadoop.hive.metastore.glue.catalogid</span></code> configuration is set, but the configurations in Step 2 were not properly done, any access to the metastore causes an exception like the following:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">org.apache.spark.sql.AnalysisException: java.lang.RuntimeException: MetaException(message:Unable to verify existence of default database: com.amazonaws.services.glue.model.AccessDeniedException: User:</span>
+<span class="go">arn:aws:sts::&lt;aws-account-id&gt;:assumed-role/&lt;role-id&gt;/... is not authorized to perform: glue:GetDatabase on resource: arn:aws:glue:&lt;aws-region-for-glue-catalog&gt;:&lt;aws-account-id-for-glue-catalog&gt;:catalog (Service: AWSGlue; Status Code: 400; Error Code: AccessDeniedException; Request ID: &lt;request-id&gt;));</span>
+</pre></div>
+</div>
+<p>Verify that the configuration aligns with steps 2 and 6 in this article.</p>
+</div>
+<div class="section" id="athena-catalog-conflicts-with-glue-catalog">
+<h3><a class="toc-backref" href="#id6">Athena Catalog conflicts with Glue Catalog</a><a class="headerlink" href="#athena-catalog-conflicts-with-glue-catalog" title="Permalink to this headline"> </a></h3>
+<p>If you created tables using Amazon Athena or Amazon Redshift Spectrum before August 14, 2017, databases and tables are stored in an Athena-managed catalog, which is separate from the AWS Glue Data Catalog. To integrate Databricks Runtime with these tables, you must upgrade to the AWS Glue Data Catalog. Otherwise, Databricks Runtime fails to connect to the Glue Catalog or fails to create and access some databases, and the exception message may be cryptic.</p>
+<p>For example, if the “default” database exists in the Athena Catalog but not in the Glue Catalog, an exception will occur with message like:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">AWSCatalogMetastoreClient: Unable to verify existence of default database:</span>
+<span class="go">com.amazonaws.services.glue.model.AccessDeniedException: Please migrate your Catalog to enable access to this database (Service: AWSGlue; Status Code: 400; Error Code: AccessDeniedException; Request ID: &lt;request-id&gt;)</span>
+</pre></div>
+</div>
+<p>Follow the instructions in <a class="reference external" href="https://docs.aws.amazon.com/athena/latest/ug/glue-upgrade.html">Upgrading to the AWS Glue Data Catalog in the Amazon Athena User Guide</a>.</p>
+</div>
+<div class="section" id="creating-a-table-in-a-database-with-empty-location">
+<h3><a class="toc-backref" href="#id7">Creating a table in a database with empty <code class="docutils literal notranslate"><span class="pre">LOCATION</span></code></a><a class="headerlink" href="#creating-a-table-in-a-database-with-empty-location" title="Permalink to this headline"> </a></h3>
+<p>Databases in the Glue Catalog may be created from various sources. Databases created by Databricks Runtime have a non-empty LOCATION field by default. Databases created in the Glue Console directly or imported from other sources, could have an empty <code class="docutils literal notranslate"><span class="pre">LOCATION</span></code> field.</p>
+<p>When Databricks Runtime tries to create a table in a database with an empty <code class="docutils literal notranslate"><span class="pre">LOCATION</span></code> field, an exception occurs like the following: like:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">IllegalArgumentException: Can not create a Path from an empty string</span>
+</pre></div>
+</div>
+<p>Create the database in the Glue Catalog with a valid non-empty path in the <code class="docutils literal notranslate"><span class="pre">LOCATION</span></code> field, specify the <code class="docutils literal notranslate"><span class="pre">LOCATION</span></code> when creating the table in SQL, or specify <code class="docutils literal notranslate"><span class="pre">option(&quot;path&quot;,</span> <span class="pre">&lt;some-valid-path&gt;</span></code>) in the DataFrame API.</p>
+<p>When you create a database in the AWS Glue Console, only the name is required; both the “Description” and “Location” are marked as optional. However, Hive metastore operations depend on “Location”, so you must specify it for databases that will be used in Databricks Runtime.</p>
+</div>
+<div class="section" id="accessing-tables-between-databricks-workspaces-from-a-shared-glue-catalog">
+<h3><a class="toc-backref" href="#id8">Accessing tables between Databricks workspaces from a shared Glue Catalog</a><a class="headerlink" href="#accessing-tables-between-databricks-workspaces-from-a-shared-glue-catalog" title="Permalink to this headline"> </a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">LOCATION</span></code> keyword can be set at a database level (controlling the default location for all tables) or as part of the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> statement. If the path specified by <code class="docutils literal notranslate"><span class="pre">LOCATION</span></code> is a mounted bucket, you must use the same mount name in all Databricks workspaces that share the Glue Catalog. Because the Glue Catalog stores references to data using the path specified by the <code class="docutils literal notranslate"><span class="pre">LOCATION</span></code> value, using the same mount point name ensures that each workspace can access database objects stored in the S3 bucket.</p>
+</div>
+<div class="section" id="accessing-tables-and-views-created-in-other-system">
+<h3><a class="toc-backref" href="#id9">Accessing tables and views created in other system</a><a class="headerlink" href="#accessing-tables-and-views-created-in-other-system" title="Permalink to this headline"> </a></h3>
+<p>Accessing tables and views created by other systems, such as AWS Athena or Presto, may or may not work in Databricks Runtime or Spark, and these operations not supported. They may fail with cryptic error messages. For example, accessing a view created by Athena, Databricks Runtime, or Spark may throw an exception like:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">IllegalArgumentException: Can not create a Path from an empty string</span>
+</pre></div>
+</div>
+<p>This exception occurs because Athena and Presto store view metadata in a format that is different from what Databricks Runtime and Spark expect.</p>
+<p></p>
+</div>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../../_static/jquery.js"></script>
+  <script type="text/javascript" src="../../_static/underscore.js"></script>
+  <script type="text/javascript" src="../../_static/doctools.js"></script>
+  <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>

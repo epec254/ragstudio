@@ -1,0 +1,465 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+  <!-- cookie consent -->
+  
+    <!-- Combined Onetrust and Rudderstack Implementation Scripts -->
+    <!-- Onetrust Initialization -->
+    <script type="text/javascript" src="https://cdn.cookielaw.org/consent/92466579-1717-44d3-809d-a05fb02843ed-test/OtAutoBlock.js"></script>
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="92466579-1717-44d3-809d-a05fb02843ed-test"></script>
+    <link rel="stylesheet" id="db-onetrust-style" href="https://www.databricks.com/wp-content/uploads/db_onetrust.css" media="all" />
+    <!-- Setting Rudderstack Write Key -->
+    <script>window.rudderstackKey = "2SOR9fvSr5Fi6tN2ihPbVHnX1SZ" </script>
+    <!-- Rudderstack Initialization + Onetrust Integration + Rudderstack Custom Events -->
+    <script type="text/javascript" src="https://www.databricks.com/sites/default/files/rudderstack/v1/db-rudderstack-events.js"></script>
+
+  <!-- cookie consent -->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <meta content="Learn how Databricks leverages deletion vectors to accelerate deletes and updates to data stored in Delta tables." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta property="og:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:title" content="What are deletion vectors?">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.databricks.com">
+  <meta property="og:description" content="" id="og-description">
+  <meta name="twitter:image" content="https://www.databricks.com/wp-content/uploads/2020/04/og-databricks.png">
+  <meta name="twitter:site" content="@databricks">
+  <meta name="twitter:creator" content="@databricks">
+  <meta property="twitter:description" content="">
+  
+  <title>What are deletion vectors? &#124; Databricks on AWS</title>
+  
+  
+  <link rel="canonical" href="https://docs.databricks.com/en/delta/deletion-vectors.html">
+  <!-- Start hreflang tag -->
+  <link rel="alternate" hreflang="en" href="https://docs.databricks.com/en/delta/deletion-vectors.html" />
+<link rel="alternate" hreflang="x-default" href="https://docs.databricks.com/en/delta/deletion-vectors.html" />
+  <!-- End hreflang tag -->
+  
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico" />
+  
+
+  
+
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T85FQ33');</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+j.setAttributeNode(d.createAttribute('data-ot-ignore'));
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TWTKQQ');</script>
+    
+  <!-- End Google Tag Manager -->
+
+
+  <!-- MaxMind / GEO IP -->
+  <script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+  <!-- End MaxMind / GEO IP -->
+
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="../_static/fonts/DMSans-Bold.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMSans-Regular.ttf" as="font">
+  <link rel="preload" href="../_static/fonts/DMMono-Regular.ttf" as="font">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/cloud-provider-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/translation-selector.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/searchunify/main.css" type="text/css" />
+
+  
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="top" title="Databricks on AWS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T85FQ33"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWTKQQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  
+  <nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+    
+<nav class="wy-nav-top header su_header" role="navigation" aria-label="top navigation">
+  <div class="container-logo">
+    <ul class="mobile-menu-toggle">
+        <li class="menu-toggle">
+            <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+            
+            <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+              alt="Databricks" /></a>   
+               
+              </li>
+    </ul>
+    <ul class="su_nav-menu">
+      <li class="menu-toggle">
+        <i data-toggle="wy-nav-top" class="wy-nav-top-menu-button db-icon db-icon-menu pull-left"></i>
+        
+          
+        
+        <a href="https://www.databricks.com/" class="wy-nav-top-logo"><img src="../_static/small-scale-lockup-full-color-rgb.svg" width="137" height="21"
+            alt="Databricks" /></a></li>
+        <!-- 
+<li><a href="https://help.databricks.com/s/">Help Center</a></li>
+<li class="active"><a href="https://docs.databricks.com/en/">Documentation</a></li>
+<li><a href="https://kb.databricks.com/">Knowledge Base</a></li>
+ -->
+    </ul>
+  </div>
+  <div class="su_nav-right">
+    <ul class="su_link-mobile">
+  <!-- Mobile header code can go here -->
+</ul>
+<ul class="right-try-list">
+   
+</ul>
+  </div>
+</nav>
+  </nav>
+
+  <div class="su_sub-header">
+    <div class="container">
+      <div class="su_sub-header-inner">
+        <!-- <div class="su_subnav-menu-right">
+  <div id="auto" style="width: 100%;">
+    <div ng-controller="SearchautoController">
+      <div bind-html-compile="autocompleteHtml">
+        <form class="su__search-box-1" disabled="disabled">
+          <input class="su__search-input" type="search" name="Search box" id="su__search-b" placeholder="Search Documentation" disabled="disabled"/>
+          <button class="su__search-button" type="submit" class="button button-success" disabled="disabled">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="#333"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+        <div class="search-lng-gap"></div>
+        <div style="margin-left: 16px; margin-right: 16px;">
+          <!-- <select name="lng selector" id="lng-selector">
+    <option value="../../en/delta/deletion-vectors.html" class="notranslate">English</option>
+    <option value="../../ja/delta/deletion-vectors.html" class="notranslate">日本語</option>
+    <option value="../../pt/delta/deletion-vectors.html" class="notranslate">Português (Brasil)</option>
+</select> -->
+        </div>
+        <div class="cloud-selector-container">
+          <!-- <select name="cloud provider selector" id="cloud-provider-selector">
+    <option value="aws" selected class="notranslate">
+        Amazon Web Services
+    </option>
+    <option value="azure"  class="notranslate">
+        Microsoft Azure
+    </option>
+    <option value="gcp"  class="notranslate">
+        Google Cloud Platform
+    </option>
+</select> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <page class="js-page-container">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side su_nav-side">
+<div class="wy-side-scroll">
+  <div class="wy-side-nav-search">
+    
+
+    
+
+    
+
+    
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+      <a href="../index.html" class="main-navigation-home">Databricks on AWS</a>
+    
+
+    
+      
+
+      
+        <p class="caption"><span class="caption-text">Load &amp; manage data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rag-temp/index.html">RAG Studio</a></li>
+</ul>
+
+      
+    
+  </div>
+
+  <div role="contentinfo">
+    
+  <p class="build_info notranslate"data-last-edit="December 23, 2023">
+    Updated Jan 11, 2024
+  </p>
+<script>
+  window.addEventListener('DOMContentLoaded',function(){
+    var h1=document.querySelector('h1');
+    var bi=document.querySelector('[data-last-edit]');
+    if(h1 && bi){
+      var ver = document.createElement('p');
+      ver.className = 'version_info';
+      ver.textContent = bi.getAttribute('data-last-edit');
+      h1.parentElement.insertBefore(ver, h1.nextElementSibling);
+    }
+  });
+</script>
+
+    <p>
+      
+        <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+      
+    </p>
+  </div>
+</div>
+</nav>
+    
+    
+<main class="wy-grid-for-nav su_nav-grid">
+  <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    <div class="wy-nav-content su__nav_content">
+      <div class="rst-content">
+        
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation" class="wy-breadcrumbs-wrapper">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Documentation</a> <span class="db-icon db-icon-chevron-right"></span></li>
+    
+    
+      <li>What are deletion vectors?</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+</div>
+        
+        <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+          <div itemprop="articleBody">
+            
+    
+  <div class="section" id="what-are-deletion-vectors">
+<h1>What are deletion vectors?<a class="headerlink" href="#what-are-deletion-vectors" title="Permalink to this headline"> </a></h1>
+<p>Deletion vectors are a storage optimization feature that can be enabled on Delta Lake tables. By default, when a single row in a data file is deleted, the entire Parquet file containing the record must be rewritten. With deletion vectors enabled for the table, <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> and <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code> operations use deletion vectors to mark existing rows as removed or changed without rewriting the Parquet file. Subsequent reads on the table resolve current table state by applying the deletions noted by deletion vectors to the most recent table version.</p>
+<p>Databricks recommends using Databricks Runtime 14.1 and above to write tables with deletion vectors to leverage all optimizations. You can read tables with deletion vectors enabled in Databricks Runtime 12.1 and above.</p>
+<p>In Databricks Runtime 14.2 and above, tables with deletion vectors support row-level concurrency. See <a class="reference internal" href="../optimizations/isolation-level.html#rlc-conflicts"><span class="std std-ref">Write conflicts with row-level concurrency</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Photon leverages deletion vectors for predictive I/O updates, accelerating <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>, <code class="docutils literal notranslate"><span class="pre">MERGE</span></code>, and <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code> operations. All clients that support reading deletion vectors can read updates that produced deletion vectors, regardless of whether these updates were produced by predictive I/O. See <a class="reference internal" href="../optimizations/predictive-io.html#updates"><span class="std std-ref">Use predictive I/O to accelerate updates</span></a>.</p>
+</div>
+<div class="section" id="enable-deletion-vectors">
+<span id="enable"></span><h2>Enable deletion vectors<a class="headerlink" href="#enable-deletion-vectors" title="Permalink to this headline"> </a></h2>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>A workspace admin setting controls whether deletion vectors are auto-enabled for new Delta tables. See <a class="reference internal" href="../administration-guide/workspace-settings/deletion-vectors.html"><span class="doc">Auto-enable deletion vectors</span></a>.</p>
+</div>
+<p>You enable support for deletion vectors on a Delta Lake table by setting a Delta Lake table property. You enable deletion vectors during table creation or alter an existing table, as in the following examples:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">[</span><span class="k">options</span><span class="p">]</span><span class="w"> </span><span class="n">TBLPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;delta.enableDeletionVectors&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">);</span>
+
+<span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">table</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">TBLPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;delta.enableDeletionVectors&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When you enable deletion vectors, the table protocol is upgraded. After upgrading, the table will not be readable by Delta Lake clients that do not support deletion vectors. See <a class="reference internal" href="feature-compatibility.html"><span class="doc">How does Databricks manage Delta Lake feature compatibility?</span></a>.</p>
+<p>In Databricks Runtime 14.1 and above, you can drop the deletion vectors table feature to enable compatibility with other Delta clients. See <a class="reference internal" href="drop-feature.html"><span class="doc">Drop Delta table features</span></a>.</p>
+</div>
+</div>
+<div class="section" id="apply-changes-to-parquet-data-files">
+<h2>Apply changes to Parquet data files<a class="headerlink" href="#apply-changes-to-parquet-data-files" title="Permalink to this headline"> </a></h2>
+<p>Deletion vectors indicate changes to rows as soft-deletes that logically modify existing Parquet data files in the Delta Lake table. These changes are applied physically when data files are rewritten, as triggered by one of the following events:</p>
+<ul class="simple">
+<li><p>An <code class="docutils literal notranslate"><span class="pre">OPTIMIZE</span></code> command is run on the table.</p></li>
+<li><p>Auto-compaction triggers a rewrite of a data file with a deletion vector.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">REORG</span> <span class="pre">TABLE</span> <span class="pre">...</span> <span class="pre">APPLY</span> <span class="pre">(PURGE)</span></code> is run against the table.</p></li>
+</ul>
+<p>Events related to file compaction do not have strict guarantees for resolving changes recorded in deletion vectors, and some changes recorded in deletion vectors might not be applied if target data files would not otherwise be candidates for file compaction. <code class="docutils literal notranslate"><span class="pre">REORG</span> <span class="pre">TABLE</span> <span class="pre">...</span> <span class="pre">APPLY</span> <span class="pre">(PURGE)</span></code> rewrites all data files containing records with modifications recorded using deletion vectors. See <a class="reference internal" href="../sql/language-manual/delta-reorg-table.html"><span class="doc">REORG TABLE</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Modified data might still exist in the old files. You can run <a class="reference internal" href="../sql/language-manual/delta-vacuum.html"><span class="doc">VACUUM</span></a> to physically delete the old files. <code class="docutils literal notranslate"><span class="pre">REORG</span> <span class="pre">TABLE</span> <span class="pre">...</span> <span class="pre">APPLY</span> <span class="pre">(PURGE)</span></code> creates a new version of the table at the time it completes, which is the timestamp you must consider for the retention threshold for your <code class="docutils literal notranslate"><span class="pre">VACUUM</span></code> operation to fully remove deleted files. See <a class="reference internal" href="vacuum.html"><span class="doc">Remove unused data files with vacuum</span></a>.</p>
+</div>
+</div>
+<div class="section" id="compatibility-with-delta-clients">
+<span id="compatibility"></span><h2>Compatibility with Delta clients<a class="headerlink" href="#compatibility-with-delta-clients" title="Permalink to this headline"> </a></h2>
+<p>Databricks leverages deletion vectors to power predictive I/O for updates on Photon-enabled compute. See <a class="reference internal" href="../optimizations/predictive-io.html#updates"><span class="std std-ref">Use predictive I/O to accelerate updates</span></a>.</p>
+<p>Support for leveraging deletion vectors for reads and writes varies by client.</p>
+<p>The following table denotes required client versions for reading and writing Delta tables with deletion vectors enabled and specifies which write operations leverage deletion vectors:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 63%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Client</p></th>
+<th class="head"><p>Write deletion vectors</p></th>
+<th class="head"><p>Read deletion vectors</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p> Databricks Runtime with Photon</p></td>
+<td><p> Supports <code class="docutils literal notranslate"><span class="pre">MERGE</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, and <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> using Databricks Runtime 12.1 and above.</p></td>
+<td><p> Requires Databricks Runtime 12.1 or above.</p></td>
+</tr>
+<tr class="row-odd"><td><p> Databricks Runtime without Photon</p></td>
+<td><p> Supports <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> using Databricks Runtime 12.1 and above. Supports <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code> using Databricks Runtime 14.1 and above.</p></td>
+<td><p> Requires Databricks Runtime 12.1 or above.</p></td>
+</tr>
+<tr class="row-even"><td><p> OSS Apache Spark with OSS Delta Lake</p></td>
+<td><p> Supports <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> using OSS Delta 2.4.0 and above. Supports <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code> using OSS Delta 3.0.0 and above.</p></td>
+<td><p> Requires OSS Delta 2.3.0 or above.</p></td>
+</tr>
+<tr class="row-odd"><td><p> Delta Sharing recipients</p></td>
+<td><p> Not supported</p></td>
+<td><p> Not supported</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For support in other Delta clients, see the <a class="reference external" href="https://delta.io/integrations">OSS Delta Lake integrations documentation</a>.</p>
+</div>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline"> </a></h2>
+<p>You can enable deletion vectors for Materialized views. To disable deletion vectors for a Materialized view, you must drop the Materialized view and recreate it.</p>
+<p>In Databricks Runtime 12.1 and greater, the following limitations exist:</p>
+<ul class="simple">
+<li><p>Delta Sharing is not supported on tables with deletion vectors enabled.</p></li>
+<li><p>You cannot <a class="reference internal" href="generate-manifest.html"><span class="doc">generate a manifest file</span></a> for a table with deletion vectors present. Run <code class="docutils literal notranslate"><span class="pre">REORG</span> <span class="pre">TABLE</span> <span class="pre">...</span> <span class="pre">APPLY</span> <span class="pre">(PURGE)</span></code> and ensure no concurrent write operations are running in order to generate a manifest.</p></li>
+<li><p>You cannot <a class="reference external" href="https://docs.delta.io/latest/presto-integration.html#step-3-update-manifests">incrementally generate manifest files</a> for a table with deletion vectors enabled.</p></li>
+</ul>
+</div>
+</div>
+
+
+    
+          </div>
+        </div>
+        <div  class="suapp-rating">
+  <div id="suPageRateApp">
+     <su-app></su-app>
+   </div> 
+ </div>
+<hr> 
+<footer>
+  <div role="contentinfo">
+      <p class="copyright">
+          &copy; Databricks 2023. All rights reserved. Apache, Apache Spark, Spark, and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.
+      </p>
+      <p> 
+        
+          <a id='feedbacklink' href="mailto:doc-feedback@databricks.com?subject=Documentation Feedback">Send us feedback</a>
+        
+     | <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a></p>
+
+  </div> 
+
+</footer>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </page>
+  
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT: '../',
+      VERSION: '1.0',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE: 'false'
+    };
+  </script>
+  <script type="text/javascript" src="../_static/jquery.js"></script>
+  <script type="text/javascript" src="../_static/underscore.js"></script>
+  <script type="text/javascript" src="../_static/doctools.js"></script>
+  <script type="text/javascript" src="../_static/language_data.js"></script>
+  
+
+  <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery.waypoints.min.js"></script>
+
+  <!-- Select2 (https://select2.org/) -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- End Select2 -->
+
+  
+  
+  <script type="text/javascript" src="../_static/js/localized.js"></script>
+  <script type="text/javascript" src="../_static/js/custom.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+    jQuery(function () {
+      SphinxRtdTheme.StickyNav.enable();
+    });
+
+  </script>
+  
+ 
+
+
+
+  <script>
+  window.__searchunifyLoaderConfig = JSON.parse('{"clients": {"en": "02c2e804-27e9-11ee-aefb-0242ac120011", "ja": "6a42c3f2-2820-11ee-aefb-0242ac120011", "pt": "6a86badd-2821-11ee-aefb-0242ac120011"}}')
+</script>
+<script type="text/javascript" src="../_static/js/search-loader.js"></script>
+</body>
+<script type='text/javascript'>
+  window.onload = function () {
+    var description = document.querySelector('meta[name="description"]').getAttribute("content");
+    let titleText = document.querySelector('h1').textContent;
+    document.querySelector('meta[property="og:title"]').setAttribute("content", titleText);
+    document.querySelector('meta[property="og:description"]').setAttribute("content", description);
+    document.querySelector('meta[property="twitter:description"]').setAttribute("content", description);
+  };
+</script>
+
+</html>
